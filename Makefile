@@ -20,10 +20,14 @@
 SRCDIR = src
 OUTDIR = out
 BINDIR = $(OUTDIR)/bin
+DATADIR = $(OUTDIR)/data
 OBJDIR = $(OUTDIR)/obj
 ROMFILE = $(OUTDIR)/big2small.gb
+AHI_TO_2BPP = $(BINDIR)/ahi_to_2bpp
 
+AHIFILES := $(shell find $(SRCDIR) -name '*.ahi')
 ASMFILES := $(shell find $(SRCDIR) -name '*.asm')
+BPPFILES := $(patsubst $(SRCDIR)/%.ahi,$(DATADIR)/%.2bpp,$(AHIFILES))
 INCFILES := $(shell find $(SRCDIR) -name '*.inc')
 OBJFILES := $(patsubst $(SRCDIR)/%.asm,$(OBJDIR)/%.o,$(ASMFILES))
 
@@ -42,13 +46,30 @@ clean:
 
 #=============================================================================#
 
+$(AHI_TO_2BPP): build/ahi_to_2bpp.c
+	@mkdir -p $(@D)
+	cc -o $@ $<
+
+$(DATADIR)/%.2bpp: $(SRCDIR)/%.ahi $(AHI_TO_2BPP)
+	@mkdir -p $(@D)
+	$(AHI_TO_2BPP) < $< > $@
+
+#=============================================================================#
+
 $(ROMFILE): $(OBJFILES)
 	@mkdir -p $(@D)
 	rgblink --dmg -o $@ $^
 	rgbfix -v -p 0 $@
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.asm $(INCFILES)
+define compile-asm
 	@mkdir -p $(@D)
 	rgbasm -Wall -Werror -o $@ $<
+endef
+
+$(OBJDIR)/tiles.o: $(SRCDIR)/tiles.asm $(BPPFILES)
+	$(compile-asm)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.asm $(INCFILES)
+	$(compile-asm)
 
 #=============================================================================#

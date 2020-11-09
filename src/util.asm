@@ -52,6 +52,20 @@ Func_MemZero::
     dec bc
     jr .loop
 
+;;; Blocks until the next VBlank.
+Func_WaitForVblank::
+    di    ; "Lock"
+    xor a
+    ldh [Hram_VBlank_bool], a
+    .loop
+    ei    ; "Await condition variable" (which is "notified" when an interrupt
+    halt  ; occurs).  Note that the effect of an ei is delayed by one
+    di    ; instruction, so no interrupt can occur here between ei and halt.
+    ldh a, [Hram_VBlank_bool]
+    or a
+    jr z, .loop
+    reti  ; "Unlock"
+
 ;;; Blocks until the next VBlank, then performs an OAM DMA.
 Func_WaitForVblankAndPerformDma::
     di    ; "Lock"

@@ -28,7 +28,10 @@ UNION
     DS sizeof_OAM_ATTRS * OAM_COUNT
 NEXTU
 
-;;; TODO: Declare object slots.
+Ram_MouseL_oama::
+    DS sizeof_OAM_ATTRS
+Ram_MouseR_oama::
+    DS sizeof_OAM_ATTRS
 
 ENDU
 Ram_ShadowOam_end:

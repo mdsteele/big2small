@@ -32,16 +32,72 @@ SECTION "Main", ROM0[$0150]
 Main::
     ld sp, Ram_BottomOfStack
     call Func_InitDmaCode
+    ;; Initialize shadow OAM.
     call Func_ClearOam
+    ld a, 24
+    ld [Ram_MouseL_oama + OAMA_Y], a
+    ld [Ram_MouseR_oama + OAMA_Y], a
+    ld a, 80
+    ld [Ram_MouseL_oama + OAMA_X], a
+    add 8
+    ld [Ram_MouseR_oama + OAMA_X], a
+    ld a, 16
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    ld a, OAMF_XFLIP
+    ld [Ram_MouseL_oama + OAMA_FLAGS], a
+    ld [Ram_MouseR_oama + OAMA_FLAGS], a
     ;; Enable VBlank interrupt.
     ld a, IEF_VBLANK
     ldh [rIE], a
     ei
+    ;; Turn off the LCD.
+    call Func_WaitForVblank
+    ld a, LCDCF_OFF
+    ld [rLCDC], a
+    ;; Copy tiles to VRAM.
+    ld hl, Vram_BgTiles + 16 * "!"                    ; dest
+    ld de, Data_FontTiles_start                       ; src
+    ld bc, Data_FontTiles_end - Data_FontTiles_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_ObjTiles                            ; dest
+    ld de, Data_ObjTiles_start                      ; src
+    ld bc, Data_ObjTiles_end - Data_ObjTiles_start  ; count
+    call Func_MemCopy
+    ;; Initialize palettes.
+    ld a, %11100100
+    ldh [rBGP], a
+    ldh [rOBP0], a
+    ldh [rOBP1], a
+    ;; Copy strings to background map.
+    ld hl, Vram_BgMap + 6 + 13 * SCRN_VX_B        ; dest
+    ld de, Data_String1_start                     ; src
+    ld bc, Data_String1_end - Data_String1_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_BgMap + 6 + 15 * SCRN_VX_B        ; dest
+    ld de, Data_String2_start                     ; src
+    ld bc, Data_String2_end - Data_String2_start  ; count
+    call Func_MemCopy
+    ;; Turn on the LCD.
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WIN9C00
+    ldh [rLCDC], a
 Main_RunLoop:
     call Func_WaitForVblankAndPerformDma
     ldh a, [rSCX]
     add 1
     ldh [rSCX], a
     jr Main_RunLoop
+
+;;;=========================================================================;;;
+
+SECTION "Strings", ROM0
+
+Data_String1_start:
+    DB "NEW GAME"
+Data_String1_end:
+Data_String2_start:
+    DB "PASSWORD"
+Data_String2_end:
 
 ;;;=========================================================================;;;
