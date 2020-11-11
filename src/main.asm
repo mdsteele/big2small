@@ -82,8 +82,20 @@ Main::
     ;; Turn on the LCD.
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WIN9C00
     ldh [rLCDC], a
+    ;; Turn on audio.
+    ld a, AUDENA_ON
+    ldh [rAUDENA], a
+    ld a, $ff
+    ldh [rAUDTERM], a
+    ld a, $77
+    ldh [rAUDVOL], a
+    ;; Initialize music.
+    ld c, BANK(Data_TitleMusic_song)
+    ld hl, Data_TitleMusic_song
+    call Func_MusicStart
 Main_RunLoop:
     call Func_WaitForVblankAndPerformDma
+    call Func_MusicUpdate
     ldh a, [rSCX]
     add 1
     ldh [rSCX], a

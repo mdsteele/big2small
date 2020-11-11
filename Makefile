@@ -23,6 +23,7 @@ BINDIR = $(OUTDIR)/bin
 DATADIR = $(OUTDIR)/data
 OBJDIR = $(OUTDIR)/obj
 ROMFILE = $(OUTDIR)/big2small.gb
+SYMFILE = $(OUTDIR)/big2small.sym
 AHI_TO_2BPP = $(BINDIR)/ahi_to_2bpp
 
 AHIFILES := $(shell find $(SRCDIR) -name '*.ahi')
@@ -58,7 +59,7 @@ $(DATADIR)/%.2bpp: $(SRCDIR)/%.ahi $(AHI_TO_2BPP)
 
 $(ROMFILE): $(OBJFILES)
 	@mkdir -p $(@D)
-	rgblink --dmg -o $@ $^
+	rgblink --dmg --sym $(SYMFILE) -o $@ $^
 	rgbfix -v -p 0 $@
 
 define compile-asm
