@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/hardware.inc"
+INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -32,22 +33,6 @@ SECTION "Main", ROM0[$0150]
 Main::
     ld sp, Ram_BottomOfStack
     call Func_InitDmaCode
-    ;; Initialize shadow OAM.
-    call Func_ClearOam
-    ld a, 24
-    ld [Ram_MouseL_oama + OAMA_Y], a
-    ld [Ram_MouseR_oama + OAMA_Y], a
-    ld a, 80
-    ld [Ram_MouseL_oama + OAMA_X], a
-    add 8
-    ld [Ram_MouseR_oama + OAMA_X], a
-    ld a, 16
-    ld [Ram_MouseR_oama + OAMA_TILEID], a
-    add 2
-    ld [Ram_MouseL_oama + OAMA_TILEID], a
-    ld a, OAMF_XFLIP
-    ld [Ram_MouseL_oama + OAMA_FLAGS], a
-    ld [Ram_MouseR_oama + OAMA_FLAGS], a
     ;; Enable VBlank interrupt.
     ld a, IEF_VBLANK
     ldh [rIE], a
@@ -57,7 +42,11 @@ Main::
     ld a, LCDCF_OFF
     ld [rLCDC], a
     ;; Copy tiles to VRAM.
-    ld hl, Vram_BgTiles + 16 * "!"                    ; dest
+    ld hl, Vram_BgTiles + 0 * sizeof_TILE                   ; dest
+    ld de, Data_TerrainTiles_start                          ; src
+    ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_BgTiles + "!" * sizeof_TILE           ; dest
     ld de, Data_FontTiles_start                       ; src
     ld bc, Data_FontTiles_end - Data_FontTiles_start  ; count
     call Func_MemCopy
@@ -79,9 +68,6 @@ Main::
     ld de, Data_String2_start                     ; src
     ld bc, Data_String2_end - Data_String2_start  ; count
     call Func_MemCopy
-    ;; Turn on the LCD.
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WIN9C00
-    ldh [rLCDC], a
     ;; Turn on audio.
     ld a, AUDENA_ON
     ldh [rAUDENA], a
@@ -89,17 +75,8 @@ Main::
     ldh [rAUDTERM], a
     ld a, $77
     ldh [rAUDVOL], a
-    ;; Initialize music.
-    ld c, BANK(Data_TitleMusic_song)
-    ld hl, Data_TitleMusic_song
-    call Func_MusicStart
-Main_RunLoop:
-    call Func_WaitForVblankAndPerformDma
-    call Func_MusicUpdate
-    ldh a, [rSCX]
-    add 1
-    ldh [rSCX], a
-    jr Main_RunLoop
+    ;; Start puzzle mode.
+    jp Main_PuzzleScreen
 
 ;;;=========================================================================;;;
 

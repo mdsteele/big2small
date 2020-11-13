@@ -67,7 +67,7 @@ define compile-asm
 	rgbasm -Wall -Werror -o $@ $<
 endef
 
-$(OBJDIR)/tiles.o: $(SRCDIR)/tiles.asm $(BPPFILES)
+$(OBJDIR)/tiledata.o: $(SRCDIR)/tiledata.asm $(BPPFILES)
 	$(compile-asm)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.asm $(INCFILES)

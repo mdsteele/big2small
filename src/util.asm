@@ -52,6 +52,48 @@ Func_MemZero::
     dec bc
     jr .loop
 
+;;;=========================================================================;;;
+
+FADE_STEP_FRAMES EQU 7
+
+;;; Fades the screen in over the course of a number of frames.  Music will
+;;; continue to play during the fade.
+;;; @prereq LCD is off.
+Func_FadeIn::
+    ld a, %01000000
+    ldh [rBGP], a
+    ldh [rOBP0], a
+    ldh [rOBP1], a
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WIN9C00
+    ldh [rLCDC], a
+    ld b, FADE_STEP_FRAMES
+    .loop1
+    push bc
+    call Func_MusicUpdate
+    call Func_WaitForVblank
+    pop bc
+    dec b
+    jr nz, .loop1
+    ld a, %10010000
+    ldh [rBGP], a
+    ldh [rOBP0], a
+    ldh [rOBP1], a
+    ld b, FADE_STEP_FRAMES
+    .loop2
+    push bc
+    call Func_MusicUpdate
+    call Func_WaitForVblank
+    pop bc
+    dec b
+    jr nz, .loop2
+    ld a, %11100100
+    ldh [rBGP], a
+    ldh [rOBP0], a
+    ldh [rOBP1], a
+    ret
+
+;;;=========================================================================;;;
+
 ;;; Blocks until the next VBlank.
 Func_WaitForVblank::
     di    ; "Lock"
@@ -80,6 +122,8 @@ Func_WaitForVblankAndPerformDma::
     jr z, .loop
     call Func_PerformDma
     reti  ; "Unlock"
+
+;;;=========================================================================;;;
 
 ;;; Reads and returns state of D-pad/buttons.
 ;;; @return b The 8-bit button state.

@@ -30,3 +30,10 @@ Data_ObjTiles_start::
 Data_ObjTiles_end::
 
 ;;;=========================================================================;;;
+
+SECTION "TerrainTiles", ROM0
+Data_TerrainTiles_start::
+    INCBIN "out/data/terrain.2bpp"
+Data_TerrainTiles_end::
+
+;;;=========================================================================;;;

@@ -61,6 +61,7 @@ Func_InitDmaCode::
     jp Func_MemCopy
 
 Data_DmaCode_start:
+    ASSERT LOW(Ram_ShadowOam_start) == 0
     ld a, HIGH(Ram_ShadowOam_start)
     ldh [rDMA], a  ; Start DMA transfer.
     ;; We need to wait 160 microseconds for the transfer to complete; the
