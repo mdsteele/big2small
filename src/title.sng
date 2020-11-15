@@ -1,0 +1,44 @@
+!SONG "TitleMusic" "SN|ABC"
+=tempo q28
+=key 0N
+
+!PART S
+
+1 { E(10, -4) D(1/4) }
+2 { E(10, -4) D(1/4) }
+3 { W(86420024689a989a989a989abcdefeca) }
+4 { E(15, -7) }
+
+!PART N
+
+2| g5s ge g g gs ' ge g g g |
+1| g4s ge g g gs ' ge g g g |
+
+!PART A
+
+3| c4q ' g3 ' d4 ' g3 | e4e f ' g ds c ' dq ' g3 |
+ | c4q ' g3 ' d4 ' g3 | e4e f ' g ds c ' dh |
+4| c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+
+!PART B
+
+2| c6h b5q g | a c6 g5 e | f d e c | d g gh |
+3| c4q ' g3 ' d4 ' g3 | e4e f ' g ds c ' dq ' g3 |
+ | c4q ' g3 ' d4 ' g3 | e4e f ' g ds c ' dh |
+4| c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+
+!PART C
+
+2| c6h b5q g | a c6 g5 e | d e f a | gw |
+3| c4q ' g3 ' d4 ' g3 | e4e f ' g ds c ' dq ' g3 |
+ | c4q ' g3 ' d4 ' g3 | e4e f ' g ds c ' dh |
+4| c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |
+ | c4e c ' cs c r c ' c4e c ' cs c r c |

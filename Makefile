@@ -21,16 +21,22 @@ SRCDIR = src
 OUTDIR = out
 BINDIR = $(OUTDIR)/bin
 DATADIR = $(OUTDIR)/data
+GENDIR = $(OUTDIR)/gen
 OBJDIR = $(OUTDIR)/obj
 ROMFILE = $(OUTDIR)/big2small.gb
 SYMFILE = $(OUTDIR)/big2small.sym
-AHI_TO_2BPP = $(BINDIR)/ahi_to_2bpp
+AHI22BPP = $(BINDIR)/ahi22bpp
+SNG2ASM = $(BINDIR)/sng2asm
 
 AHIFILES := $(shell find $(SRCDIR) -name '*.ahi')
 ASMFILES := $(shell find $(SRCDIR) -name '*.asm')
-BPPFILES := $(patsubst $(SRCDIR)/%.ahi,$(DATADIR)/%.2bpp,$(AHIFILES))
 INCFILES := $(shell find $(SRCDIR) -name '*.inc')
-OBJFILES := $(patsubst $(SRCDIR)/%.asm,$(OBJDIR)/%.o,$(ASMFILES))
+SNGFILES := $(shell find $(SRCDIR) -name '*.sng')
+
+BPPFILES := $(patsubst $(SRCDIR)/%.ahi,$(DATADIR)/%.2bpp,$(AHIFILES))
+GENFILES := $(patsubst $(SRCDIR)/%.sng,$(GENDIR)/%.asm,$(SNGFILES))
+OBJFILES := $(patsubst $(SRCDIR)/%.asm,$(OBJDIR)/%.o,$(ASMFILES)) \
+            $(patsubst $(GENDIR)/%.asm,$(GENDIR)/%.o,$(GENFILES))
 
 #=============================================================================#
 
@@ -47,30 +53,52 @@ clean:
 
 #=============================================================================#
 
-$(AHI_TO_2BPP): build/ahi_to_2bpp.c
+define compile-c99
+	@echo "Compiling $<"
 	@mkdir -p $(@D)
-	cc -o $@ $<
+	@cc -Wall -o $@ $<
+endef
 
-$(DATADIR)/%.2bpp: $(SRCDIR)/%.ahi $(AHI_TO_2BPP)
+$(AHI22BPP): build/ahi22bpp.c
+	$(compile-c99)
+
+$(DATADIR)/%.2bpp: $(SRCDIR)/%.ahi $(AHI22BPP)
+	@echo "Converting $<"
 	@mkdir -p $(@D)
-	$(AHI_TO_2BPP) < $< > $@
+	@$(AHI22BPP) < $< > $@
+
+$(SNG2ASM): build/sng2asm.c
+	$(compile-c99)
+
+$(GENDIR)/%.asm: $(SRCDIR)/%.sng $(SNG2ASM)
+	@echo "Converting $<"
+	@mkdir -p $(@D)
+	@$(SNG2ASM) < $< > $@
+
+.SECONDARY: $(GENFILES)
 
 #=============================================================================#
 
 $(ROMFILE): $(OBJFILES)
+	@echo "Linking $@"
 	@mkdir -p $(@D)
-	rgblink --dmg --sym $(SYMFILE) -o $@ $^
-	rgbfix -v -p 0 $@
+	@rgblink --dmg --sym $(SYMFILE) -o $@ $^
+	@echo "Fixing $@"
+	@rgbfix -v -p 0 $@
 
 define compile-asm
+	@echo "Compiling $<"
 	@mkdir -p $(@D)
-	rgbasm -Wall -Werror -o $@ $<
+	@rgbasm -Wall -Werror -o $@ $<
 endef
 
 $(OBJDIR)/tiledata.o: $(SRCDIR)/tiledata.asm $(BPPFILES)
 	$(compile-asm)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.asm $(INCFILES)
+	$(compile-asm)
+
+$(GENDIR)/%.o: $(GENDIR)/%.asm
 	$(compile-asm)
 
 #=============================================================================#

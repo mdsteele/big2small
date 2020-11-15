@@ -1,5 +1,26 @@
+/*=============================================================================
+| Copyright 2020 Matthew D. Steele <mdsteele@alum.mit.edu>                    |
+|                                                                             |
+| This file is part of Big2Small.                                             |
+|                                                                             |
+| Big2Small is free software: you can redistribute it and/or modify it under  |
+| the terms of the GNU General Public License as published by the Free        |
+| Software Foundation, either version 3 of the License, or (at your option)   |
+| any later version.                                                          |
+|                                                                             |
+| Big2Small is distributed in the hope that it will be useful, but WITHOUT    |
+| ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or       |
+| FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for   |
+| more details.                                                               |
+|                                                                             |
+| You should have received a copy of the GNU General Public License along     |
+| with Big2Small.  If not, see <http://www.gnu.org/licenses/>.                |
+=============================================================================*/
+
 #include <stdio.h>
 #include <stdlib.h>
+
+/*===========================================================================*/
 
 int read_newline(void) {
   int ch = fgetc(stdin);
@@ -22,7 +43,6 @@ int main(int argc, char **argv) {
   }
   if (!read_newline()) return EXIT_FAILURE;
   int horz_tiles = width / 8;
-  int vert_tiles = height / 8;
   unsigned char *buffer = malloc(width * height);
   for (int n = 0; n < count; ++n) {
     if (!read_newline()) return EXIT_FAILURE;
@@ -60,3 +80,5 @@ int main(int argc, char **argv) {
   }
   return EXIT_SUCCESS;
 }
+
+/*===========================================================================*/
