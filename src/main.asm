@@ -42,13 +42,17 @@ Main::
     ld a, LCDCF_OFF
     ld [rLCDC], a
     ;; Copy tiles to VRAM.
-    ld hl, Vram_BgTiles + 0 * sizeof_TILE                   ; dest
-    ld de, Data_TerrainTiles_start                          ; src
-    ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
+    ld hl, Vram_BgTiles + 0 * sizeof_TILE                 ; dest
+    ld de, Data_DeviceTiles_start                         ; src
+    ld bc, Data_DeviceTiles_end - Data_DeviceTiles_start  ; count
     call Func_MemCopy
     ld hl, Vram_BgTiles + "!" * sizeof_TILE           ; dest
     ld de, Data_FontTiles_start                       ; src
     ld bc, Data_FontTiles_end - Data_FontTiles_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_SharedTiles + 0 * sizeof_TILE               ; dest
+    ld de, Data_TerrainTiles_start                          ; src
+    ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
     call Func_MemCopy
     ld hl, Vram_ObjTiles                            ; dest
     ld de, Data_ObjTiles_start                      ; src

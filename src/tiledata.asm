@@ -31,9 +31,16 @@ Data_ObjTiles_end::
 
 ;;;=========================================================================;;;
 
+SECTION "DeviceTiles", ROM0
+Data_DeviceTiles_start::
+    INCBIN "out/data/devices.2bpp"
+Data_DeviceTiles_end::
+
+;;;=========================================================================;;;
+
 SECTION "TerrainTiles", ROM0
 Data_TerrainTiles_start::
-    INCBIN "out/data/terrain.2bpp"
+    INCBIN "out/data/forest.2bpp"
 Data_TerrainTiles_end::
 
 ;;;=========================================================================;;;

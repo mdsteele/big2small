@@ -18,24 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/hardware.inc"
-
-;;;=========================================================================;;;
-
-TERRAIN_COLS EQU 10
-TERRAIN_ROWS EQU 9
-
-;;;=========================================================================;;;
-
-;;; PUZZ: Describes a puzzle.  PUZZ structs must be aligned to 16 bytes.
-RSRESET
-;;; StartE: Specifies the start position of the elephant.  The high nibble
-;;;   gives the X position (0-9) and the low nibble gives the Y position (0-8).
-PUZZ_StartE_u8 EQU (TERRAIN_COLS + 0)
-;;; StartG: Specifies the start position of the goat, encoded as above.
-PUZZ_StartG_u8 EQU (TERRAIN_COLS + 1)
-;;; StartM: Specifies the start position of the mouse, encoded as above.
-PUZZ_StartM_u8 EQU (TERRAIN_COLS + 2)
-sizeof_PUZZ    EQU (16 * TERRAIN_ROWS)
+INCLUDE "src/puzzle.inc"
 
 ;;;=========================================================================;;;
 
@@ -82,6 +65,9 @@ Main_PuzzleScreen::
     ld hl, Data_TitleMusic_song
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
+    xor a
+    ld [rSCX], a
+    ld [rSCY], a
     call Func_FadeIn
 _PuzzleScreen_RunLoop:
     call Func_MusicUpdate
@@ -154,8 +140,33 @@ Func_LoadTerrainRow:
 SECTION "TerrainTable", ROM0, ALIGN[8]
 
 Data_TerrainTable_start:
-    DB 0, 0, 0, 0
-    DB 1, 1, 1, 1
-    DB 4, 6, 5, 7
+    ;; Open:
+    DB $20, $20, $20, $20
+    DB $8d, $8d, $8d, $8d
+    DB $20, $20, $20, $20
+    DB $20, $20, $20, $20
+    ;; Goals:
+    DB $00, $02, $01, $03  ; Peanut
+    DB $04, $06, $05, $07  ; Apple
+    DB $08, $0a, $09, $0b  ; Cheese
+    ;; TODO:
+    DS 4 * 41
+    ;; Walls:
+    DB $80, $82, $81, $83  ; nsew
+    DB $84, $86, $85, $87  ; nseW
+    DB $84, $84, $8f, $85  ; nsEw
+    DB $84, $84, $85, $85  ; nsEW
+    DB $88, $8a, $89, $8b  ; nSew
+    DB $3c, $3c, $3c, $3c  ; nSeW
+    DB $3c, $3c, $3c, $3c  ; nSEw
+    DB $3c, $3c, $3c, $3c  ; nSEW
+    DB $90, $92, $91, $93  ; Nsew
+    DB $3c, $3c, $3c, $3c  ; NseW
+    DB $3c, $3c, $3c, $3c  ; NsEw
+    DB $3c, $3c, $3c, $3c  ; NsEW
+    DB $8c, $8e, $89, $8b  ; NSew
+    DB $3c, $3c, $3c, $3c  ; NSeW
+    DB $3c, $3c, $3c, $3c  ; NSEw
+    DB $3c, $3c, $3c, $3c  ; NSEW
 
 ;;;=========================================================================;;;
