@@ -38,7 +38,7 @@ Main::
     ldh [rIE], a
     ei
     ;; Turn off the LCD.
-    call Func_WaitForVblank
+    call Func_WaitForVBlank
     ld a, LCDCF_OFF
     ld [rLCDC], a
     ;; Copy tiles to VRAM.

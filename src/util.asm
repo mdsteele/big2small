@@ -21,7 +21,7 @@ INCLUDE "src/hardware.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "UtilityFunctions", ROM0
+SECTION "MemFunctions", ROM0
 
 ;;; Copies bytes.
 ;;; @param hl Destination start address.
@@ -54,6 +54,8 @@ Func_MemZero::
 
 ;;;=========================================================================;;;
 
+SECTION "FadeFunctions", ROM0
+
 FADE_STEP_FRAMES EQU 7
 
 ;;; Fades the screen in over the course of a number of frames.  Music will
@@ -70,7 +72,7 @@ Func_FadeIn::
     .loop1
     push bc
     call Func_MusicUpdate
-    call Func_WaitForVblank
+    call Func_WaitForVBlank
     pop bc
     dec b
     jr nz, .loop1
@@ -82,7 +84,7 @@ Func_FadeIn::
     .loop2
     push bc
     call Func_MusicUpdate
-    call Func_WaitForVblank
+    call Func_WaitForVBlank
     pop bc
     dec b
     jr nz, .loop2
@@ -94,8 +96,10 @@ Func_FadeIn::
 
 ;;;=========================================================================;;;
 
+SECTION "VBlankFunctions", ROM0
+
 ;;; Blocks until the next VBlank.
-Func_WaitForVblank::
+Func_WaitForVBlank::
     di    ; "Lock"
     xor a
     ldh [Hram_VBlank_bool], a
@@ -109,7 +113,7 @@ Func_WaitForVblank::
     reti  ; "Unlock"
 
 ;;; Blocks until the next VBlank, then performs an OAM DMA.
-Func_WaitForVblankAndPerformDma::
+Func_WaitForVBlankAndPerformDma::
     di    ; "Lock"
     xor a
     ldh [Hram_VBlank_bool], a
@@ -125,10 +129,13 @@ Func_WaitForVblankAndPerformDma::
 
 ;;;=========================================================================;;;
 
-;;; Reads and returns state of D-pad/buttons.
-;;; @return b The 8-bit button state.
-;;; @preserve c, de, hl
-Func_GetButtonState_b::
+SECTION "ButtonFunctions", ROM0
+
+;;; Reads the current state of the D-pad/buttons, and then updates the values
+;;; of Ram_ButtonsHeld_u8 and Ram_ButtonsPressed_u8.
+;;; @preserve de, hl
+Func_UpdateButtonState::
+    ;; Get current button state and store it in b.
     ld a, P1F_GET_DPAD
     ld [rP1], a
     REPT 2  ; It takes a couple cycles to get an accurate reading.
@@ -149,6 +156,25 @@ Func_GetButtonState_b::
     ld b, a
     ld a, P1F_GET_NONE
     ld [rP1], a
+    ;; Update state variables.
+    ld a, [Ram_ButtonsHeld_u8]
+    cpl
+    ld c, a
+    ld a, b
+    ld [Ram_ButtonsHeld_u8], a
+    and c
+    ld [Ram_ButtonsPressed_u8], a
     ret
+
+SECTION "ButtonState", WRAM0
+
+;;; ButtonsHeld: A bitfield indicating which buttons are currently being held.
+Ram_ButtonsHeld_u8::
+    DB
+
+;;; ButtonsPressed: A bitfield indicating which buttons have been newly pressed
+;;;   since the previous call to Func_UpdateButtonState.
+Ram_ButtonsPressed_u8::
+    DB
 
 ;;;=========================================================================;;;

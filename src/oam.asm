@@ -28,6 +28,25 @@ UNION
     DS sizeof_OAM_ATTRS * OAM_COUNT
 NEXTU
 
+Ram_ArrowN_oama::
+    DS sizeof_OAM_ATTRS
+Ram_ArrowS_oama::
+    DS sizeof_OAM_ATTRS
+Ram_ArrowE_oama::
+    DS sizeof_OAM_ATTRS
+Ram_ArrowW_oama::
+    DS sizeof_OAM_ATTRS
+
+Ram_ElephantL_oama::
+    DS sizeof_OAM_ATTRS
+Ram_ElephantR_oama::
+    DS sizeof_OAM_ATTRS
+
+Ram_GoatL_oama::
+    DS sizeof_OAM_ATTRS
+Ram_GoatR_oama::
+    DS sizeof_OAM_ATTRS
+
 Ram_MouseL_oama::
     DS sizeof_OAM_ATTRS
 Ram_MouseR_oama::
