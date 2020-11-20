@@ -58,8 +58,8 @@ SECTION "FadeFunctions", ROM0
 
 FADE_STEP_FRAMES EQU 7
 
-;;; Fades the screen in over the course of a number of frames.  Music will
-;;; continue to play during the fade.
+;;; Turns the LCD on and fades the screen in over the course of a number of
+;;; frames.  Music will continue to play during the fade.
 ;;; @prereq LCD is off.
 Func_FadeIn::
     ld a, %01000000
@@ -92,6 +92,40 @@ Func_FadeIn::
     ldh [rBGP], a
     ldh [rOBP0], a
     ldh [rOBP1], a
+    ret
+
+;;; Fades the screen out over the course of a number of frames, then turns the
+;;; LCD off.  Music will continue to play during the fade.
+;;; @prereq LCD is on.
+Func_FadeOut::
+    call Func_MusicUpdate
+    call Func_WaitForVBlank
+    ld a, %10010000
+    ldh [rBGP], a
+    ldh [rOBP0], a
+    ldh [rOBP1], a
+    ld b, FADE_STEP_FRAMES
+    .loop1
+    push bc
+    call Func_MusicUpdate
+    call Func_WaitForVBlank
+    pop bc
+    dec b
+    jr nz, .loop1
+    ld a, %01000000
+    ldh [rBGP], a
+    ldh [rOBP0], a
+    ldh [rOBP1], a
+    ld b, FADE_STEP_FRAMES
+    .loop2
+    push bc
+    call Func_MusicUpdate
+    call Func_WaitForVBlank
+    pop bc
+    dec b
+    jr nz, .loop2
+    ld a, LCDCF_OFF
+    ldh [rLCDC], a
     ret
 
 ;;;=========================================================================;;;

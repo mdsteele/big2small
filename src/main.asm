@@ -79,8 +79,11 @@ Main::
     ldh [rAUDTERM], a
     ld a, $77
     ldh [rAUDVOL], a
-    ;; Start puzzle mode.
-    jp Main_PuzzleScreen
+    ;; Go to world map.
+    ld a, 0
+    ld [Ram_CurrentPuzzleNumber_u8], a
+    ld c, 0  ; is victory (0=false)
+    jp Main_WorldMapScreen
 
 ;;;=========================================================================;;;
 

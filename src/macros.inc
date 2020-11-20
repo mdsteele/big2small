@@ -34,6 +34,23 @@ if_eq: MACRO
     ENDC
 ENDM
 
+;;; Executes a conditional instruction if `a` is not equal to the first
+;;; argument (constant or register).  This will change `f`, but preserve other
+;;; registers.
+;;;
+;;; Examples:
+;;;     if_ne 9, jr, .label  ; Jump-relative to .label if a != 9.
+;;;     if_ne b, call, Func  ; call Func if a != b.
+;;;     if_ne 0, ret         ; Return if a != 0.
+if_ne: MACRO
+    cp \1
+    IF _NARG > 2
+    \2 nz, \3
+    ELSE
+    \2 nz
+    ENDC
+ENDM
+
 ;;; Executes a conditional instruction if `a` is strictly less than the first
 ;;; argument (constant or register) when treated as unsigned.  This will
 ;;; change `f`, but preserve other registers.

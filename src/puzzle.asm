@@ -40,9 +40,17 @@ STOP_NS_TILEID  EQU 74
 ARROW_EW_TILEID EQU 76
 STOP_EW_TILEID  EQU 78
 
+TERRAIN_PEANUT EQU $04
+TERRAIN_APPLE  EQU $05
+TERRAIN_CHEESE EQU $06
+
 ;;;=========================================================================;;;
 
 SECTION "PuzzleState", WRAM0
+
+;;; A pointer to the PUZZ struct for the current puzzle.
+Ram_CurrentPuzzle_ptr:
+    DW
 
 ;;; The ANIM structs for each of the three animals.
 Ram_Elephant_anim:
@@ -56,8 +64,8 @@ Ram_Mouse_anim:
 Ram_SelectedAnimal_u8:
     DB
 
-;;; MoveDirs: A bitfield indicating in which directions the currently-selected
-;;;   animal can move.  This uses the DIRB_* and DIRF_* constants.
+;;; A bitfield indicating in which directions the currently-selected animal can
+;;;   move.  This uses the DIRB_* and DIRF_* constants.
 Ram_MoveDirs_u8:
     DB
 
@@ -75,8 +83,20 @@ Ram_MovedPixels_u8:
 SECTION "MainPuzzleScreen", ROM0
 
 ;;; @prereq LCD is off.
+;;; @param c Current puzzle number.
 Main_PuzzleScreen::
-    ld hl, Data_Puzzle0_puzz
+    ;; Store pointer to current PUZZ struct in hl...
+    sla c
+    ld b, 0
+    ld hl, Data_PuzzlePtrs_start
+    add hl, bc
+    ld a, [hl+]
+    ld h, [hl]
+    ld l, a
+    ;; ... and also in Ram_CurrentPuzzle_ptr.
+    ld [Ram_CurrentPuzzle_ptr + 0], a
+    ld a, h
+    ld [Ram_CurrentPuzzle_ptr + 1], a
     ;; Load terrain map.
     push hl
     ld d, h
@@ -104,13 +124,13 @@ Main_PuzzleScreen::
     ld [Ram_MovedPixels_u8], a
     ;; Set up animal objects.
     call Func_ClearOam
-    ld a, ANIMAL_ELEPHANT
-    ld [Ram_SelectedAnimal_u8], a
-    call Func_UpdateSelectedAnimalObjs
     ld a, ANIMAL_MOUSE
     ld [Ram_SelectedAnimal_u8], a
     call Func_UpdateSelectedAnimalObjs
     ld a, ANIMAL_GOAT
+    ld [Ram_SelectedAnimal_u8], a
+    call Func_UpdateSelectedAnimalObjs
+    ld a, ANIMAL_ELEPHANT
     ld [Ram_SelectedAnimal_u8], a
     call Func_UpdateSelectedAnimalObjs
     ;; Set up arrow objects.
@@ -263,13 +283,21 @@ Func_IsAnimalAt_z:
 ;;; Updates Ram_MoveDirs_u8 for a given ANIM struct.
 ;;; @param hl A pointer to an ANIM struct.
 Func_UpdateMoveDirs:
+    ;; Store the animal's current position in c.
     ASSERT ANIM_Position_u8 == 0
     ld c, [hl]
-    ld b, DIRF_NORTH | DIRF_SOUTH | DIRF_EAST | DIRF_WEST
-    ld hl, Data_Puzzle0_puzz
+    ;; Copy the pointer to the current PUZZ struct into hl.
+    ld a, [Ram_CurrentPuzzle_ptr + 0]
+    ld l, a
+    ld a, [Ram_CurrentPuzzle_ptr + 1]
+    ld h, a
+    ;; Make hl point to the terrain cell for the animal's current position.
     ld d, 0
     ld e, c
     add hl, de
+    ;; We'll track the new value for Ram_MoveDirs_u8 in b.  To start with,
+	;; initialize it to allow all four dirations.
+    ld b, DIRF_NORTH | DIRF_SOUTH | DIRF_EAST | DIRF_WEST
 _UpdateMoveDirs_West:
     ;; Check if we're on the west edge of the screen.
     ld a, c
@@ -859,7 +887,48 @@ _AnimalMoving_ChangePosition:
     and d
     jr nz, _AnimalMoving_RunLoop
 _AnimalMoving_DoneMoving:
-    ;; TODO: Check if all animals are now at their goals
-    jp _PuzzleScreen_RunLoop
+    ;; Time to check if we've solved the puzzle.  First, copy the pointer to
+	;; the current PUZZ struct into hl.
+    ld a, [Ram_CurrentPuzzle_ptr + 0]
+    ld l, a
+    ld a, [Ram_CurrentPuzzle_ptr + 1]
+    ld h, a
+    ;; If the elephant isn't on the peanut, we haven't solved the puzzle.
+    push hl
+    ld a, [Ram_Elephant_anim + ANIM_Position_u8]
+    ld c, a
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    pop hl
+    if_ne TERRAIN_PEANUT, jp, _PuzzleScreen_RunLoop
+    ;; If the goat isn't on the apple, we haven't solved the puzzle.
+    push hl
+    ld a, [Ram_Goat_anim + ANIM_Position_u8]
+    ld c, a
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    pop hl
+    if_ne TERRAIN_APPLE, jp, _PuzzleScreen_RunLoop
+    ;; If the mouse isn't on the cheese, we haven't solved the puzzle.
+    ld a, [Ram_Mouse_anim + ANIM_Position_u8]
+    ld c, a
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    if_ne TERRAIN_CHEESE, jp, _PuzzleScreen_RunLoop
+    ;; We've solved the puzzle, so go to victory mode.
+    jp Main_Victory
+
+;;;=========================================================================;;;
+
+SECTION "MainVictory", ROM0
+
+Main_Victory:
+    ;; TODO: Play victory music, animate animals.
+    call Func_FadeOut
+    ld c, 1  ; is victory (1=true)
+    jp Main_WorldMapScreen
 
 ;;;=========================================================================;;;
