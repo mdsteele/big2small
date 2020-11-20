@@ -26,6 +26,8 @@ Data_FontTiles_end::
 
 SECTION "ObjTiles", ROM0
 Data_ObjTiles_start::
+    INCBIN "out/data/elephant.2bpp"
+    INCBIN "out/data/goat.2bpp"
     INCBIN "out/data/mouse.2bpp"
     INCBIN "out/data/arrows.2bpp"
 Data_ObjTiles_end::

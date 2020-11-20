@@ -23,24 +23,22 @@ INCLUDE "src/puzzle.inc"
 
 ;;;=========================================================================;;;
 
-;;; TODO: tiles for elephant
 ELEPHANT_SL1_TILEID EQU 0
 ELEPHANT_NL1_TILEID EQU 8
 ELEPHANT_WL1_TILEID EQU 16
 
-;;; TODO: tiles for goat
-GOAT_SL1_TILEID EQU 0
-GOAT_NL1_TILEID EQU 8
-GOAT_WL1_TILEID EQU 16
+GOAT_SL1_TILEID EQU 24
+GOAT_NL1_TILEID EQU 32
+GOAT_WL1_TILEID EQU 40
 
-MOUSE_SL1_TILEID EQU 0
-MOUSE_NL1_TILEID EQU 8
-MOUSE_WL1_TILEID EQU 16
+MOUSE_SL1_TILEID EQU 48
+MOUSE_NL1_TILEID EQU 56
+MOUSE_WL1_TILEID EQU 64
 
-ARROW_NS_TILEID EQU 24
-STOP_NS_TILEID  EQU 26
-ARROW_EW_TILEID EQU 28
-STOP_EW_TILEID  EQU 30
+ARROW_NS_TILEID EQU 72
+STOP_NS_TILEID  EQU 74
+ARROW_EW_TILEID EQU 76
+STOP_EW_TILEID  EQU 78
 
 ;;;=========================================================================;;;
 
@@ -134,7 +132,7 @@ Main_PuzzleScreen::
     ld [rSCX], a
     ld [rSCY], a
     call Func_FadeIn
-    ld a, %11100000
+    ld a, %11010000
     ldh [rOBP1], a
 _PuzzleScreen_RunLoop:
     ld hl, Ram_AnimationClock_u8
@@ -425,7 +423,8 @@ _UpdateSelectedAnimalObjs_ElephantXPosition:
     ld [Ram_ElephantR_oama + OAMA_X], a
 _UpdateSelectedAnimalObjs_ElephantTileAndFlags:
     ld a, c
-    and %00000100
+    and %00001000
+    rrca
     bit DIRB_EAST, b
     jr z, .notEast
     add ELEPHANT_WL1_TILEID
@@ -498,14 +497,15 @@ _UpdateSelectedAnimalObjs_GoatXPosition:
     ld [Ram_GoatR_oama + OAMA_X], a
 _UpdateSelectedAnimalObjs_GoatTileAndFlags:
     ld a, c
-    and %00000100
+    and %00001000
+    rrca
     bit DIRB_EAST, b
     jr z, .notEast
     add GOAT_WL1_TILEID
     ld [Ram_GoatR_oama + OAMA_TILEID], a
     add 2
     ld [Ram_GoatL_oama + OAMA_TILEID], a
-    ld a, OAMF_XFLIP
+    ld a, OAMF_PAL1 | OAMF_XFLIP
     ld [Ram_GoatL_oama + OAMA_FLAGS], a
     ld [Ram_GoatR_oama + OAMA_FLAGS], a
     ret
@@ -527,7 +527,7 @@ _UpdateSelectedAnimalObjs_GoatTileAndFlags:
     ld [Ram_GoatL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_GoatR_oama + OAMA_TILEID], a
-    xor a
+    ld a, OAMF_PAL1
     ld [Ram_GoatL_oama + OAMA_FLAGS], a
     ld [Ram_GoatR_oama + OAMA_FLAGS], a
     ret
@@ -801,8 +801,22 @@ _AnimalMoving_RunLoop:
     inc [hl]
     call Func_MusicUpdate
     call Func_WaitForVBlankAndPerformDma
+    ;; Move animal forward by 1-2 pixels.
+    ld a, [Ram_SelectedAnimal_u8]
+    if_eq ANIMAL_MOUSE, jr, .fast
+    if_eq ANIMAL_ELEPHANT, jr, .slow
     ld a, [Ram_MovedPixels_u8]
-    add 2
+    bit 1, a
+    jr nz, .fast
+    .slow
+    ld b, 1
+    jr .move
+    .fast
+    ld b, 2
+    .move
+    ld a, [Ram_MovedPixels_u8]
+    add b
+    ;; Check if we've reached the next square.
     if_eq 16, jr, _AnimalMoving_ChangePosition
     ld [Ram_MovedPixels_u8], a
     call Func_UpdateSelectedAnimalObjs
