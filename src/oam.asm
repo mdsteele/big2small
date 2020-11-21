@@ -62,10 +62,16 @@ SECTION "OamFunctions", ROM0
 ;;; Disables each object in the shadow OAM.  After calling this, each object
 ;;; will be off-screen, but in an otherwise-unspecified state.
 Func_ClearOam::
-    ;; TODO: Make this more efficient by just zeroing each OAMA_Y field.
-    ld hl, Ram_ShadowOam_start                      ; dest
-    ld bc, Ram_ShadowOam_end - Ram_ShadowOam_start  ; count
-    jp Func_MemZero
+    ld hl, Ram_ShadowOam_start + OAMA_Y
+    ld bc, sizeof_OAM_ATTRS
+    ld d, OAM_COUNT
+    xor a
+    .loop
+    ld [hl], a
+    add hl, bc
+    dec d
+    jr nz, .loop
+    ret
 
 ;;;=========================================================================;;;
 

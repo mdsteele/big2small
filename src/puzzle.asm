@@ -83,8 +83,17 @@ Ram_MovedPixels_u8:
 SECTION "MainPuzzleScreen", ROM0
 
 ;;; @prereq LCD is off.
+Main_ResetPuzzle::
+    ;; Copy the pointer to the current PUZZ struct into hl.
+    ld a, [Ram_CurrentPuzzle_ptr + 0]
+    ld l, a
+    ld a, [Ram_CurrentPuzzle_ptr + 1]
+    ld h, a
+    jr _BeginPuzzle_Init
+
+;;; @prereq LCD is off.
 ;;; @param c Current puzzle number.
-Main_PuzzleScreen::
+Main_BeginPuzzle::
     ;; Store pointer to current PUZZ struct in hl...
     sla c
     ld b, 0
@@ -105,8 +114,9 @@ Main_PuzzleScreen::
     REPT TERRAIN_ROWS
     call Func_LoadTerrainRow
     ENDR
-    ;; Initialize state.
     pop hl
+_BeginPuzzle_Init:
+    ;; Initialize state.
     ld bc, PUZZ_StartE_u8
     add hl, bc
     ld a, [hl+]
@@ -143,18 +153,34 @@ Main_PuzzleScreen::
     ld [Ram_ArrowS_oama + OAMA_FLAGS], a
     call Func_GetSelectedAnimalPtr_hl
     call Func_UpdateMoveDirs
+    ;; Set up window.
+    ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B                       ; dest
+    ld de, Data_PauseMenuString1_start                              ; src
+    ld bc, Data_PauseMenuString1_end - Data_PauseMenuString1_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_WindowMap + 2 + 2 * SCRN_VX_B                       ; dest
+    ld de, Data_PauseMenuString2_start                              ; src
+    ld bc, Data_PauseMenuString2_end - Data_PauseMenuString2_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_WindowMap + 2 + 3 * SCRN_VX_B                       ; dest
+    ld de, Data_PauseMenuString3_start                              ; src
+    ld bc, Data_PauseMenuString3_end - Data_PauseMenuString3_start  ; count
+    call Func_MemCopy
     ;; Initialize music.
     ld c, BANK(Data_TitleMusic_song)
     ld hl, Data_TitleMusic_song
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
+    call Func_PerformDma
     xor a
     ld [rSCX], a
     ld [rSCY], a
     call Func_FadeIn
     ld a, %11010000
     ldh [rOBP1], a
-_PuzzleScreen_RunLoop:
+    ;; fall through to Main_PuzzleCommand
+
+Main_PuzzleCommand::
     ld hl, Ram_AnimationClock_u8
     inc [hl]
     call Func_UpdateArrowObjs
@@ -163,12 +189,12 @@ _PuzzleScreen_RunLoop:
     call Func_UpdateButtonState
     ld a, [Ram_ButtonsPressed_u8]
     ld b, a
-_PuzzleScreen_HandleButtonStart:
+_PuzzleCommand_HandleButtonStart:
     bit PADB_START, b
     jr z, .noPress
-    ;; TODO: pause the game
+    jp Main_BeginPause
     .noPress
-_PuzzleScreen_HandleButtonA:
+_PuzzleCommand_HandleButtonA:
     bit PADB_A, b
     jr z, .noPress
     ld a, [Ram_SelectedAnimal_u8]
@@ -176,9 +202,9 @@ _PuzzleScreen_HandleButtonA:
     if_lt 3, jr, .noOverflow
     xor a
     .noOverflow
-    jr _PuzzleScreen_SelectAnimal
+    jr _PuzzleCommand_SelectAnimal
     .noPress
-_PuzzleScreen_HandleButtonB:
+_PuzzleCommand_HandleButtonB:
     bit PADB_B, b
     jr z, .noPress
     ld a, [Ram_SelectedAnimal_u8]
@@ -186,43 +212,43 @@ _PuzzleScreen_HandleButtonB:
     jr nc, .noUnderflow
     ld a, 2
     .noUnderflow
-    jr _PuzzleScreen_SelectAnimal
+    jr _PuzzleCommand_SelectAnimal
     .noPress
-_PuzzleScreen_HandleButtonUp:
+_PuzzleCommand_HandleButtonUp:
     bit PADB_UP, b
     jr z, .noPress
     ld d, DIRF_NORTH
-    jr _PuzzleScreen_TryMove
+    jr _PuzzleCommand_TryMove
     .noPress
-_PuzzleScreen_HandleButtonDown:
+_PuzzleCommand_HandleButtonDown:
     bit PADB_DOWN, b
     jr z, .noPress
     ld d, DIRF_SOUTH
-    jr _PuzzleScreen_TryMove
+    jr _PuzzleCommand_TryMove
     .noPress
-_PuzzleScreen_HandleButtonLeft:
+_PuzzleCommand_HandleButtonLeft:
     bit PADB_LEFT, b
     jr z, .noPress
     ld d, DIRF_WEST
-    jr _PuzzleScreen_TryMove
+    jr _PuzzleCommand_TryMove
     .noPress
-_PuzzleScreen_HandleButtonRight:
+_PuzzleCommand_HandleButtonRight:
     bit PADB_RIGHT, b
-    jr z, _PuzzleScreen_RunLoop
+    jr z, Main_PuzzleCommand
     ld d, DIRF_EAST
-    jr _PuzzleScreen_TryMove
+    jr _PuzzleCommand_TryMove
 
-_PuzzleScreen_SelectAnimal:
+_PuzzleCommand_SelectAnimal:
     ld [Ram_SelectedAnimal_u8], a
     call Func_GetSelectedAnimalPtr_hl
     call Func_UpdateMoveDirs
-    jr _PuzzleScreen_RunLoop
+    jr Main_PuzzleCommand
 
-_PuzzleScreen_TryMove:
+_PuzzleCommand_TryMove:
     ;; Check if we can move in the DIRF_* direction that's stored in d.
     ld a, [Ram_MoveDirs_u8]
     and d
-    jr z, _PuzzleScreen_CannotMove
+    jr z, _PuzzleCommand_CannotMove
     ;; We can move, so store d in ANIM_Facing_u8 and switch to AnimalMoving
     ;; mode.
     call Func_GetSelectedAnimalPtr_hl  ; preserves d
@@ -232,7 +258,7 @@ _PuzzleScreen_TryMove:
     ld [hl], a
     jp Main_AnimalMoving
 
-_PuzzleScreen_CannotMove:
+_PuzzleCommand_CannotMove:
     ld a, %00101101
     ldh [rAUD1SWEEP], a
     ld a, %10010000
@@ -243,7 +269,7 @@ _PuzzleScreen_CannotMove:
     ldh [rAUD1LOW], a
     ld a, %10000111
     ldh [rAUD1HIGH], a
-    jp _PuzzleScreen_RunLoop
+    jp Main_PuzzleCommand
 
 ;;;=========================================================================;;;
 
@@ -793,7 +819,7 @@ Data_TerrainTable_start:
     DB $00, $02, $01, $03  ; Peanut
     DB $04, $06, $05, $07  ; Apple
     DB $08, $0a, $09, $0b  ; Cheese
-    ;; TODO:
+    ;; TODO: other terrain types
     DS 4 * 41
     ;; Walls:
     DB $80, $82, $81, $83  ; nsew
@@ -901,7 +927,7 @@ _AnimalMoving_DoneMoving:
     add hl, bc
     ld a, [hl]
     pop hl
-    if_ne TERRAIN_PEANUT, jp, _PuzzleScreen_RunLoop
+    if_ne TERRAIN_PEANUT, jp, Main_PuzzleCommand
     ;; If the goat isn't on the apple, we haven't solved the puzzle.
     push hl
     ld a, [Ram_Goat_anim + ANIM_Position_u8]
@@ -910,14 +936,14 @@ _AnimalMoving_DoneMoving:
     add hl, bc
     ld a, [hl]
     pop hl
-    if_ne TERRAIN_APPLE, jp, _PuzzleScreen_RunLoop
+    if_ne TERRAIN_APPLE, jp, Main_PuzzleCommand
     ;; If the mouse isn't on the cheese, we haven't solved the puzzle.
     ld a, [Ram_Mouse_anim + ANIM_Position_u8]
     ld c, a
     ld b, 0
     add hl, bc
     ld a, [hl]
-    if_ne TERRAIN_CHEESE, jp, _PuzzleScreen_RunLoop
+    if_ne TERRAIN_CHEESE, jp, Main_PuzzleCommand
     ;; We've solved the puzzle, so go to victory mode.
     jp Main_Victory
 

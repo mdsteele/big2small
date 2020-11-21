@@ -38,20 +38,6 @@ Func_MemCopy::
     dec bc
     jr .loop
 
-;;; Zeroes bytes.
-;;; @param hl Destination start address.
-;;; @param bc Num bytes to zero.
-;;; @preserve de
-Func_MemZero::
-    .loop
-    ld a, b
-    or c
-    ret z
-    xor a
-    ld [hl+], a
-    dec bc
-    jr .loop
-
 ;;;=========================================================================;;;
 
 SECTION "FadeFunctions", ROM0
@@ -66,7 +52,7 @@ Func_FadeIn::
     ldh [rBGP], a
     ldh [rOBP0], a
     ldh [rOBP1], a
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WIN9C00
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16
     ldh [rLCDC], a
     ld b, FADE_STEP_FRAMES
     .loop1

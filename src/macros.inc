@@ -86,3 +86,12 @@ if_ge: MACRO
 ENDM
 
 ;=============================================================================;
+
+;;; Negates the `a` register.  Sets/clears the `z` flag if the result is
+;;; zero/nonzero.
+neg: MACRO
+    cpl
+    inc a
+ENDM
+
+;=============================================================================;

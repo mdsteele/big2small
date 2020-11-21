@@ -40,6 +40,6 @@ Main_WorldMapScreen::
     inc [hl]
     .notSolved
     ld c, [hl]  ; current puzzle number
-    jp Main_PuzzleScreen
+    jp Main_BeginPuzzle
 
 ;;;=========================================================================;;;

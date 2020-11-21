@@ -58,20 +58,26 @@ Main::
     ld de, Data_ObjTiles_start                      ; src
     ld bc, Data_ObjTiles_end - Data_ObjTiles_start  ; count
     call Func_MemCopy
+    ;; Initialize window map.
+    ld hl, Vram_WindowMap
+    ld e, $2b  ; edge tile ID
+    ld d, $24  ; middle tile ID
+    call Func_WindowHorzBar  ; updates hl
+    ld e, $25  ; edge tile ID
+    ld d, $20  ; middle tile ID
+    ld b, 3
+    .windowLoop
+    call Func_WindowHorzBar  ; preserves b and de, updates hl
+    dec b
+    jr nz, .windowLoop
+    ld e, $2b  ; edge tile ID
+    ld d, $24  ; middle tile ID
+    call Func_WindowHorzBar
     ;; Initialize palettes.
     ld a, %11100100
     ldh [rBGP], a
     ldh [rOBP0], a
     ldh [rOBP1], a
-    ;; Copy strings to background map.
-    ld hl, Vram_BgMap + 6 + 13 * SCRN_VX_B        ; dest
-    ld de, Data_String1_start                     ; src
-    ld bc, Data_String1_end - Data_String1_start  ; count
-    call Func_MemCopy
-    ld hl, Vram_BgMap + 6 + 15 * SCRN_VX_B        ; dest
-    ld de, Data_String2_start                     ; src
-    ld bc, Data_String2_end - Data_String2_start  ; count
-    call Func_MemCopy
     ;; Turn on audio.
     ld a, AUDENA_ON
     ldh [rAUDENA], a
@@ -87,13 +93,29 @@ Main::
 
 ;;;=========================================================================;;;
 
-SECTION "Strings", ROM0
-
-Data_String1_start:
-    DB "NEW GAME"
-Data_String1_end:
-Data_String2_start:
-    DB "PASSWORD"
-Data_String2_end:
+;;; @param d Middle tile ID.
+;;; @param e Edge tile ID.
+;;; @param hl Pointer to the start of a VRAM map row.
+;;; @return hl Pointer to the start of the next VRAM map row.
+;;; @preserve b, de
+Func_WindowHorzBar:
+    ld a, e
+    ld [hl+], a
+    ld a, d
+    ld c, SCRN_X_B - 2
+    .loop
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ld a, e
+    ld [hl], a
+    ld a, l
+    and ~(SCRN_VX_B - 1)
+    add SCRN_VX_B
+    ld l, a
+    ld a, h
+    adc 0
+    ld h, a
+    ret
 
 ;;;=========================================================================;;;

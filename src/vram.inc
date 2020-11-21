@@ -17,6 +17,12 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+;;; The width and height of a VRAM tile, in pixels.
+TILE_WIDTH  EQU 8
+TILE_HEIGHT EQU 8
+
+;;;=========================================================================;;;
+
 ;;; TILE: Data for a single VRAM tile.
 RSRESET
 sizeof_TILE EQU 16
