@@ -42,6 +42,14 @@ Data_TerrainTable:
     DB $04, $06, $05, $07
     ASSERT @ - Data_TerrainTable == 4 * G_CHS
     DB $08, $0a, $09, $0b
+    ASSERT @ - Data_TerrainTable == 4 * A_NOR
+    DB $0c, $0e, $0c, $0e
+    ASSERT @ - Data_TerrainTable == 4 * A_SOU
+    DB $0d, $0f, $0d, $0f
+    ASSERT @ - Data_TerrainTable == 4 * A_EST
+    DB $12, $12, $13, $13
+    ASSERT @ - Data_TerrainTable == 4 * A_WST
+    DB $10, $10, $11, $11
     ASSERT @ - Data_TerrainTable == 4 * M_RNA
     DB $ac, $ae, $ad, $af
     ASSERT @ - Data_TerrainTable == 4 * M_RNS

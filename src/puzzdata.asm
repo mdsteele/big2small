@@ -86,9 +86,9 @@ ASSERT @ - Data_Puzzle2_puzz == sizeof_PUZZ
 Data_Puzzle3_puzz:
     DB W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
+    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, A_NOR, O_EMP, O_EMP, W_BLD, W_BLD
     DB $20, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
+    DB O_EMP, O_EMP, O_EMP, A_WST, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
     DB $31, DIRF_SOUTH, 0, 0, 0, 0
     DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, O_EMP, W_BLD, W_BLD
     DS 6
@@ -96,9 +96,9 @@ Data_Puzzle3_puzz:
     DS 6
     DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, W_RNS
     DS 6
-    DB O_EMP, W_RNS, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, W_BLD, W_RNS
+    DB A_EST, W_RNS, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, W_BLD, W_RNS
     DS 6
-    DB O_EMP, W_RSO, O_EMP, W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS, W_RSO
+    DB O_EMP, W_RSO, O_EMP, W_BLD, O_EMP, O_EMP, A_SOU, O_EMP, G_CHS, W_RSO
     DS 6
     DB W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO
 ASSERT @ - Data_Puzzle3_puzz == sizeof_PUZZ

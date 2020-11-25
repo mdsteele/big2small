@@ -748,7 +748,6 @@ _AnimalMoving_ChangePosition:
     ASSERT ANIM_Facing_u8 == 1
     inc hl
     ld a, [hl-]
-    push af
     ;; Move the animal forward by one square, updating its ANIM_Position_u8.
     if_eq DIRF_WEST, jr, .facingWest
     if_eq DIRF_EAST, jr, .facingEast
@@ -768,14 +767,41 @@ _AnimalMoving_ChangePosition:
     ASSERT ANIM_Position_u8 == 0
     ld a, [hl]
     add d
-    ld [hl], a
-    call Func_UpdateSelectedAnimalObjs
+    ld [hl+], a
+    ASSERT ANIM_Facing_u8 == 1
+_AnimalMoving_TerrainActions:
+    ;; Store the terrain type the animal is standing on in a.
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld d, HIGH(Ram_PuzzleState_puzz)
+    ld e, a
+    ld a, [de]
+    ;; Check for terrain actions.
+    if_ne A_NOR, jr, .notNorthArrow
+    ld [hl], DIRF_NORTH
+    jr _AnimalMoving_Update
+    .notNorthArrow
+    if_ne A_SOU, jr, .notSouthArrow
+    ld [hl], DIRF_SOUTH
+    jr _AnimalMoving_Update
+    .notSouthArrow
+    if_ne A_EST, jr, .notEastArrow
+    ld [hl], DIRF_EAST
+    jr _AnimalMoving_Update
+    .notEastArrow
+    if_ne A_WST, jr, .notWestArrow
+    ld [hl], DIRF_WEST
+    jr _AnimalMoving_Update
+    .notWestArrow
+_AnimalMoving_Update:
+    call Func_UpdateSelectedAnimalObjs  ; preserves hl
     ;; Check if we can keep going.
+    push hl
     call Func_UpdateMoveDirs
-    pop de
+    pop hl
+    ld d, [hl]
     ld a, [Ram_MoveDirs_u8]
     and d
-    jr nz, _AnimalMoving_RunLoop
+    jp nz, _AnimalMoving_RunLoop
 _AnimalMoving_DoneMoving:
     ;; Time to check if we've solved the puzzle.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0

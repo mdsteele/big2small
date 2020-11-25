@@ -82,6 +82,12 @@ G_PNT RB 1  ; Peanut
 G_APL RB 1  ; Apple
 G_CHS RB 1  ; Cheese
 
+;;; Arrow terrain:
+A_NOR RB 1  ; Arrow north
+A_SOU RB 1  ; Arrow south
+A_EST RB 1  ; Arrow east
+A_WST RB 1  ; Arrow west
+
 ;;; Mousehole terrain:
 M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.
 M_RNA RB 1  ; Ramp narrow
