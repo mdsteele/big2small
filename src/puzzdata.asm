@@ -21,70 +21,87 @@ INCLUDE "src/puzzle.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "PuzzleData", ROM0, ALIGN[4]
+SECTION "PuzzleData", ROM0
 
 Data_Puzzle0_puzz:
-    DB $3c, $38, $38, $01, $38, $38, $00, $38, $3c, $3c
-    DB $17, $71, $58, 0, 0, 0
-    DB $3c, $04, $00, $00, $01, $00, $00, $00, $3c, $3c
+    DB W_TST, W_TTR, W_TTR, O_GRS, W_TTR, W_TTR, O_EMP, W_TTR, W_TST, W_TST
+    DB $17, DIRF_WEST, 0, 0, 0, 0
+    DB W_TST, G_PNT, O_EMP, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, W_TST, W_TST
+    DB $71, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_TST, W_TTP, W_FLT, W_FMD, W_FRT, O_EMP, W_FLT, W_FRT, W_TTR, W_TST
+    DB $58, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_TST, W_TTR, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS, W_TST
     DS 6
-    DB $3c, $34, $32, $33, $31, $00, $32, $31, $38, $3c
+    DB W_TST, W_FLT, W_FRT, O_EMP, W_FLT, W_FMD, W_FMD, W_FMD, W_FRT, W_TST
     DS 6
-    DB $3c, $38, $30, $00, $00, $00, $00, $00, $06, $3c
+    DB W_TST, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, G_APL, W_TTP, O_EMP, W_TST
     DS 6
-    DB $3c, $32, $31, $00, $32, $33, $33, $33, $31, $3c
+    DB W_TST, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, W_RCK, W_TTR, O_GRS, W_TST
     DS 6
-    DB $3c, $01, $01, $00, $00, $00, $05, $34, $00, $3c
+    DB W_TST, O_EMP, W_TTP, O_GRS, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
     DS 6
-    DB $3c, $01, $00, $00, $01, $00, $30, $38, $01, $3c
-    DS 6
-    DB $3c, $00, $34, $01, $00, $00, $00, $01, $01, $3c
-    DS 6
-    DB $3c, $34, $3c, $34, $34, $00, $00, $34, $34, $3c
-    DS 6
+    DB W_TST, W_TTP, W_TST, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TST
 ASSERT @ - Data_Puzzle0_puzz == sizeof_PUZZ
 
 Data_Puzzle1_puzz:
-    DB $3c, $3c, $3c, $3c, $01, $38, $3c, $38, $3c, $3c
-    DB $63, $62, $61, 0, 0, 0
-    DB $3c, $3c, $38, $38, $00, $00, $38, $00, $3c, $3c
+    DB W_TST, W_TST, W_TST, W_TST, O_GRS, W_TTR, W_TST, W_TTR, W_TST, W_TST
+    DB $63, DIRF_EAST, 0, 0, 0, 0
+    DB W_TST, W_TST, W_TTR, W_TTR, O_EMP, O_EMP, W_TTR, O_EMP, W_TST, W_TST
+    DB $62, DIRF_EAST, 0, 0, 0, 0
+    DB W_TST, W_TST, W_FLT, W_FMD, W_FMD, W_FMD, W_FMD, W_FRT, W_TTR, W_TST
+    DB $61, DIRF_EAST, 0, 0, 0, 0
+    DB W_TST, W_TTR, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, W_TTR
     DS 6
-    DB $3c, $3c, $32, $33, $33, $33, $33, $31, $38, $3c
+    DB W_TST, W_TTP, W_TST, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, W_TTP, W_TTP
     DS 6
-    DB $3c, $38, $34, $00, $00, $00, $00, $30, $00, $38
+    DB W_TST, W_TTR, W_TTR, W_RCK, O_EMP, O_GRS, O_EMP, W_RCK, W_TTR, W_TST
     DS 6
-    DB $3c, $34, $3c, $00, $01, $01, $00, $00, $34, $34
+    DB W_TST, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, G_PNT, G_APL, G_CHS, W_TST
     DS 6
-    DB $3c, $38, $38, $30, $00, $01, $00, $30, $38, $3c
+    DB W_TTR, O_EMP, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TTP, W_TST
     DS 6
-    DB $3c, $01, $00, $00, $01, $00, $04, $05, $06, $3c
-    DS 6
-    DB $38, $00, $34, $34, $00, $00, $34, $34, $34, $3c
-    DS 6
-    DB $34, $00, $38, $3c, $34, $34, $3c, $3c, $3c, $3c
-    DS 6
+    DB W_TTP, O_EMP, W_TTR, W_TST, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
 ASSERT @ - Data_Puzzle1_puzz == sizeof_PUZZ
 
 Data_Puzzle2_puzz:
-    DB $3c, $38, $38, $38, $38, $38, $38, $38, $38, $3c
-    DB $11, $20, $31, 0, 0, 0
-    DB $38, $01, $00, $01, $00, $00, $00, $00, $01, $3c
+    DB W_TST, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TST
+    DB $11, DIRF_EAST, 0, 0, 0, 0
+    DB W_TTR, O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, W_TST
+    DB $20, DIRF_EAST, 0, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, W_TST
+    DB W_FRT, DIRF_EAST, 0, 0, 0, 0
+    DB W_TTP, O_GRS, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, W_RCK, W_TST
     DS 6
-    DB $00, $00, $00, $00, $01, $00, $01, $00, $00, $3c
+    DB W_TTR, W_TTP, W_FLT, W_FMD, W_FRT, W_TTR, W_RCK, O_EMP, O_GRS, W_TST
     DS 6
-    DB $34, $01, $01, $00, $00, $34, $00, $00, $30, $3c
+    DB W_TTP, W_TTR, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
     DS 6
-    DB $38, $34, $32, $33, $31, $38, $30, $00, $01, $3c
+    DB W_TST, O_GRS, G_APL, O_EMP, O_EMP, W_FLT, W_FMD, W_FMD, W_FRT, W_TST
     DS 6
-    DB $34, $38, $00, $00, $04, $00, $00, $01, $01, $3c
+    DB W_TST, O_GRS, O_GRS, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS, W_TST
     DS 6
-    DB $3c, $01, $05, $00, $00, $32, $33, $33, $31, $3c
-    DS 6
-    DB $3c, $01, $01, $34, $00, $00, $00, $00, $06, $3c
-    DS 6
-    DB $3c, $34, $01, $3c, $34, $34, $34, $34, $34, $3c
-    DS 6
+    DB W_TST, W_TTP, O_GRS, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - Data_Puzzle2_puzz == sizeof_PUZZ
+
+Data_Puzzle3_puzz:
+    DB W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO
+    DB $11, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
+    DB $20, DIRF_SOUTH, 0, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
+    DB $31, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, O_EMP, W_BLD, W_BLD
+    DS 6
+    DB W_CSO, W_CRV, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO, W_CRV
+    DS 6
+    DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, W_RNS
+    DS 6
+    DB O_EMP, W_RNS, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, W_BLD, W_RNS
+    DS 6
+    DB O_EMP, W_RSO, O_EMP, W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS, W_RSO
+    DS 6
+    DB W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO
+ASSERT @ - Data_Puzzle3_puzz == sizeof_PUZZ
 
 ;;;=========================================================================;;;
 
@@ -94,5 +111,6 @@ Data_PuzzlePtrs_start::
     DW Data_Puzzle0_puzz
     DW Data_Puzzle1_puzz
     DW Data_Puzzle2_puzz
+    DW Data_Puzzle3_puzz
 
 ;;;=========================================================================;;;

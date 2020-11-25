@@ -40,25 +40,22 @@ STOP_NS_TILEID  EQU 74
 ARROW_EW_TILEID EQU 76
 STOP_EW_TILEID  EQU 78
 
-TERRAIN_PEANUT EQU $04
-TERRAIN_APPLE  EQU $05
-TERRAIN_CHEESE EQU $06
+;;;=========================================================================;;;
+
+SECTION "PuzzleState", WRAM0, ALIGN[8]
+
+;;; A 256-byte-aligned in-RAM copy of the current puzzle's ROM data, possibly
+;;; mutated from its original state.
+Ram_PuzzleState_puzz:
+    DS sizeof_PUZZ
 
 ;;;=========================================================================;;;
 
-SECTION "PuzzleState", WRAM0
+SECTION "PuzzleUiState", WRAM0
 
-;;; A pointer to the PUZZ struct for the current puzzle.
-Ram_CurrentPuzzle_ptr:
+;;; A pointer to the original PUZZ struct ROM for the current puzzle.
+Ram_PuzzleRom_ptr:
     DW
-
-;;; The ANIM structs for each of the three animals.
-Ram_Elephant_anim:
-    DS sizeof_ANIM
-Ram_Goat_anim:
-    DS sizeof_ANIM
-Ram_Mouse_anim:
-    DS sizeof_ANIM
 
 ;;; This should be set to one of the ANIMAL_* constants.
 Ram_SelectedAnimal_u8:
@@ -84,51 +81,37 @@ SECTION "MainPuzzleScreen", ROM0
 
 ;;; @prereq LCD is off.
 Main_ResetPuzzle::
-    ;; Copy the pointer to the current PUZZ struct into hl.
-    ld a, [Ram_CurrentPuzzle_ptr + 0]
-    ld l, a
-    ld a, [Ram_CurrentPuzzle_ptr + 1]
-    ld h, a
+    ld a, [Ram_PuzzleRom_ptr + 0]
+    ld e, a
+    ld a, [Ram_PuzzleRom_ptr + 1]
+    ld d, a
     jr _BeginPuzzle_Init
 
 ;;; @prereq LCD is off.
 ;;; @param c Current puzzle number.
 Main_BeginPuzzle::
-    ;; Store pointer to current PUZZ struct in hl...
+    ;; Store pointer to current PUZZ struct in de...
     sla c
     ld b, 0
     ld hl, Data_PuzzlePtrs_start
     add hl, bc
     ld a, [hl+]
-    ld h, [hl]
-    ld l, a
-    ;; ... and also in Ram_CurrentPuzzle_ptr.
-    ld [Ram_CurrentPuzzle_ptr + 0], a
-    ld a, h
-    ld [Ram_CurrentPuzzle_ptr + 1], a
-    ;; Load terrain map.
-    push hl
-    ld d, h
-    ld e, l
-    ld hl, Vram_BgMap
-    REPT TERRAIN_ROWS
-    call Func_LoadTerrainRow
-    ENDR
-    pop hl
+    ld d, [hl]
+    ld e, a
+    ;; ... and also in Ram_PuzzleRom_ptr.
+    ld [Ram_PuzzleRom_ptr + 0], a
+    ld a, d
+    ld [Ram_PuzzleRom_ptr + 1], a
 _BeginPuzzle_Init:
+    ;; Copy current puzzle into RAM.
+    ld hl, Ram_PuzzleState_puzz  ; dest
+    ld bc, sizeof_PUZZ           ; count
+    call Func_MemCopy
+    ;; Load terrain map.
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld d, HIGH(Ram_PuzzleState_puzz)
+    call Func_LoadTerrainIntoVram
     ;; Initialize state.
-    ld bc, PUZZ_StartE_u8
-    add hl, bc
-    ld a, [hl+]
-    ld [Ram_Elephant_anim + ANIM_Position_u8], a
-    ld a, [hl+]
-    ld [Ram_Goat_anim + ANIM_Position_u8], a
-    ld a, [hl]
-    ld [Ram_Mouse_anim + ANIM_Position_u8], a
-    ld a, DIRF_SOUTH
-    ld [Ram_Elephant_anim + ANIM_Facing_u8], a
-    ld [Ram_Goat_anim + ANIM_Facing_u8], a
-    ld [Ram_Mouse_anim + ANIM_Facing_u8], a
     xor a
     ld [Ram_AnimationClock_u8], a
     ld [Ram_MovedPixels_u8], a
@@ -151,7 +134,6 @@ _BeginPuzzle_Init:
     ld [Ram_ArrowW_oama + OAMA_FLAGS], a
     ld a, OAMF_PAL1 | OAMF_YFLIP
     ld [Ram_ArrowS_oama + OAMA_FLAGS], a
-    call Func_GetSelectedAnimalPtr_hl
     call Func_UpdateMoveDirs
     ;; Set up window.
     ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B                       ; dest
@@ -240,7 +222,6 @@ _PuzzleCommand_HandleButtonRight:
 
 _PuzzleCommand_SelectAnimal:
     ld [Ram_SelectedAnimal_u8], a
-    call Func_GetSelectedAnimalPtr_hl
     call Func_UpdateMoveDirs
     jr Main_PuzzleCommand
 
@@ -281,153 +262,131 @@ Func_GetSelectedAnimalPtr_hl:
     if_eq ANIMAL_MOUSE, jr, .mouseSelected
     if_eq ANIMAL_GOAT, jr, .goatSelected
     .elephantSelected
-    ld hl, Ram_Elephant_anim
+    ld hl, Ram_PuzzleState_puzz + PUZZ_Elephant_anim
     ret
     .goatSelected
-    ld hl, Ram_Goat_anim
+    ld hl, Ram_PuzzleState_puzz + PUZZ_Goat_anim
     ret
     .mouseSelected
-    ld hl, Ram_Mouse_anim
-    ret
-
-;;; @param c The position to check
-;;; @return z True if there's an animal at that position.
-;;; @preserve bc, de, hl
-Func_IsAnimalAt_z:
-    ld a, [Ram_Elephant_anim + ANIM_Position_u8]
-    cp c
-    ret z
-    ld a, [Ram_Goat_anim + ANIM_Position_u8]
-    cp c
-    ret z
-    ld a, [Ram_Mouse_anim + ANIM_Position_u8]
-    cp c
+    ld hl, Ram_PuzzleState_puzz + PUZZ_Mouse_anim
     ret
 
 ;;;=========================================================================;;;
 
-;;; Updates Ram_MoveDirs_u8 for a given ANIM struct.
-;;; @param hl A pointer to an ANIM struct.
+;;; Updates Ram_MoveDirs_u8 for the currently selected animal.
 Func_UpdateMoveDirs:
-    ;; Store the animal's current position in c.
+    ;; Store the animal's current position in l.
+    call Func_GetSelectedAnimalPtr_hl
     ASSERT ANIM_Position_u8 == 0
-    ld c, [hl]
-    ;; Copy the pointer to the current PUZZ struct into hl.
-    ld a, [Ram_CurrentPuzzle_ptr + 0]
-    ld l, a
-    ld a, [Ram_CurrentPuzzle_ptr + 1]
-    ld h, a
+    ld l, [hl]
     ;; Make hl point to the terrain cell for the animal's current position.
-    ld d, 0
-    ld e, c
-    add hl, de
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld h, HIGH(Ram_PuzzleState_puzz)
     ;; We'll track the new value for Ram_MoveDirs_u8 in b.  To start with,
 	;; initialize it to allow all four dirations.
     ld b, DIRF_NORTH | DIRF_SOUTH | DIRF_EAST | DIRF_WEST
 _UpdateMoveDirs_West:
     ;; Check if we're on the west edge of the screen.
-    ld a, c
+    ld a, l
     and $0f
     jr nz, .noEdge
     res DIRB_WEST, b
     jr .done
     .noEdge
-    ;; If not, then check if there's a wall to the west.
-    dec hl
-    ld a, [hl+]
-    if_lt $30, jr, .noWall
+    ;; If not, then check if we're blocked to the west.
+    dec l
+    call Func_IsPositionBlocked_fz  ; preserves b and hl
+    jr nz, .unblocked
     res DIRB_WEST, b
-    jr .done
-    .noWall
-    ;; If not, then check if there's another animal to the west.
-    dec c
-    call Func_IsAnimalAt_z  ; preserves bc and hl
-    jr nz, .noAnim
-    res DIRB_WEST, b
-    .noAnim
-    inc c
+    .unblocked
+    inc l
     .done
 _UpdateMoveDirs_East:
     ;; Check if we're on the east edge of the screen.
-    ld a, c
+    ld a, l
     and $0f
     if_lt (TERRAIN_COLS - 1), jr, .noEdge
     res DIRB_EAST, b
     jr .done
     .noEdge
-    ;; If not, then check if there's a wall to the east.
-    inc hl
-    ld a, [hl-]
-    if_lt $30, jr, .noWall
+    ;; If not, then check if we're blocked to the east.
+    inc l
+    call Func_IsPositionBlocked_fz  ; preserves b and hl
+    jr nz, .unblocked
     res DIRB_EAST, b
-    jr .done
-    .noWall
-    ;; If not, then check if there's another animal to the east.
-    inc c
-    call Func_IsAnimalAt_z  ; preserves bc and hl
-    jr nz, .noAnim
-    res DIRB_EAST, b
-    .noAnim
-    dec c
+    .unblocked
+    dec l
     .done
 _UpdateMoveDirs_North:
     ;; Check if we're on the north edge of the screen.
-    ld a, c
+    ld a, l
     and $f0
     jr nz, .noEdge
     res DIRB_NORTH, b
     jr .done
     .noEdge
-    ;; If not, then check if there's a wall to the north.
-    ld de, -16
-    add hl, de
-    ld a, [hl]
-    ld de, 16
-    add hl, de
-    if_lt $30, jr, .noWall
-    res DIRB_NORTH, b
-    jr .done
-    .noWall
-    ;; If not, then check if there's another animal to the north.
-    ld a, c
+    ;; If not, then check if we're blocked to the north.
+    ld a, l
     sub 16
-    ld c, a
-    call Func_IsAnimalAt_z  ; preserves bc and hl
-    jr nz, .noAnim
+    ld l, a
+    call Func_IsPositionBlocked_fz  ; preserves b and hl
+    jr nz, .unblocked
     res DIRB_NORTH, b
-    .noAnim
-    ld a, c
+    .unblocked
+    ld a, l
     add 16
-    ld c, a
+    ld l, a
     .done
 _UpdateMoveDirs_South:
     ;; Check if we're on the south edge of the screen.
-    ld a, c
+    ld a, l
     and $f0
     if_lt (16 * (TERRAIN_ROWS - 1)), jr, .noEdge
     res DIRB_SOUTH, b
     jr .done
     .noEdge
-    ;; If not, then check if there's a wall to the south.
-    ld de, 16
-    add hl, de
-    ld a, [hl]
-    if_lt $30, jr, .noWall
-    res DIRB_SOUTH, b
-    jr .done
-    .noWall
-    ;; If not, then check if there's another animal to the south.
-    ld a, c
+    ;; If not, then check if we're blocked to the south.
+    ld a, l
     add 16
-    ld c, a
-    call Func_IsAnimalAt_z  ; preserves bc
-    jr nz, .noAnim
+    ld l, a
+    call Func_IsPositionBlocked_fz  ; preserves b
+    jr nz, .unblocked
     res DIRB_SOUTH, b
-    .noAnim
+    .unblocked
     .done
 _UpdateMoveDirs_Finish:
     ld a, b
     ld [Ram_MoveDirs_u8], a
+    ret
+
+
+;;; Determines whether the specified position is blocked for the selected
+;;; animal.
+;;; @param hl A pointer to the terrain cell in Ram_PuzzleState_puzz to check.
+;;; @return fz True if the position is blocked by a wall or animal.
+;;; @preserve b, hl
+Func_IsPositionBlocked_fz:
+    ;; Check for a wall:
+    ld a, [hl]
+    if_ge W_MIN, jr, .blocked
+    ;; Check for a mousehole:
+    if_lt M_MIN, jr, .noMousehole
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_MOUSE, jr, .blocked
+    .noMousehole
+    ;; Otherwise, check for an animal:
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
+    cp l
+    ret z
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Position_u8]
+    cp l
+    ret z
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
+    cp l
+    ret
+    ;; We jump here if the position is definitely blocked.
+    .blocked
+    xor a  ; set z flag
     ret
 
 ;;;=========================================================================;;;
@@ -441,10 +400,10 @@ Func_UpdateSelectedAnimalObjs:
 _UpdateSelectedAnimalObjs_Elephant:
     ld a, [Ram_MovedPixels_u8]
     ld c, a
-    ld a, [Ram_Elephant_anim + ANIM_Facing_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Facing_u8]
     ld b, a
 _UpdateSelectedAnimalObjs_ElephantYPosition:
-    ld a, [Ram_Elephant_anim + ANIM_Position_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
     and $f0
     add 16
     bit DIRB_NORTH, b
@@ -459,7 +418,7 @@ _UpdateSelectedAnimalObjs_ElephantYPosition:
     ld [Ram_ElephantL_oama + OAMA_Y], a
     ld [Ram_ElephantR_oama + OAMA_Y], a
 _UpdateSelectedAnimalObjs_ElephantXPosition:
-    ld a, [Ram_Elephant_anim + ANIM_Position_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
     and $0f
     swap a
     add 8
@@ -515,10 +474,10 @@ _UpdateSelectedAnimalObjs_ElephantTileAndFlags:
 _UpdateSelectedAnimalObjs_Goat:
     ld a, [Ram_MovedPixels_u8]
     ld c, a
-    ld a, [Ram_Goat_anim + ANIM_Facing_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Facing_u8]
     ld b, a
 _UpdateSelectedAnimalObjs_GoatYPosition:
-    ld a, [Ram_Goat_anim + ANIM_Position_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Position_u8]
     and $f0
     add 16
     bit DIRB_NORTH, b
@@ -533,7 +492,7 @@ _UpdateSelectedAnimalObjs_GoatYPosition:
     ld [Ram_GoatL_oama + OAMA_Y], a
     ld [Ram_GoatR_oama + OAMA_Y], a
 _UpdateSelectedAnimalObjs_GoatXPosition:
-    ld a, [Ram_Goat_anim + ANIM_Position_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Position_u8]
     and $0f
     swap a
     add 8
@@ -589,10 +548,10 @@ _UpdateSelectedAnimalObjs_GoatTileAndFlags:
 _UpdateSelectedAnimalObjs_Mouse:
     ld a, [Ram_MovedPixels_u8]
     ld c, a
-    ld a, [Ram_Mouse_anim + ANIM_Facing_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Facing_u8]
     ld b, a
 _UpdateSelectedAnimalObjs_MouseYPosition:
-    ld a, [Ram_Mouse_anim + ANIM_Position_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
     and $f0
     add 16
     bit DIRB_NORTH, b
@@ -607,7 +566,7 @@ _UpdateSelectedAnimalObjs_MouseYPosition:
     ld [Ram_MouseL_oama + OAMA_Y], a
     ld [Ram_MouseR_oama + OAMA_Y], a
 _UpdateSelectedAnimalObjs_MouseXPosition:
-    ld a, [Ram_Mouse_anim + ANIM_Position_u8]
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
     and $0f
     swap a
     add 8
@@ -746,101 +705,6 @@ _UpdateArrowObjs_West:
 
 ;;;=========================================================================;;;
 
-;;; @param de Pointer to start of terrain row.
-;;; @param hl Pointer to start of VRAM tile map row.
-;;; @return de Pointer to start of next terrain row.
-;;; @return hl Pointer to start of next VRAM tile map row.
-Func_LoadTerrainRow:
-    ;; Fill in the top row of VRAM tiles.
-    .topLoop
-    ld a, [de]
-    inc de
-    rlca
-    rlca
-    ASSERT LOW(Data_TerrainTable_start) == 0
-    ld b, HIGH(Data_TerrainTable_start)
-    ld c, a
-    ld a, [bc]
-    ld [hl+], a
-    inc c
-    ld a, [bc]
-    ld [hl+], a
-    ld a, l
-    and %00011111
-    cp 2 * TERRAIN_COLS
-    jr nz, .topLoop
-    ;; Set up for the bottom row.
-    ld bc, SCRN_VX_B - (2 * TERRAIN_COLS)
-    add hl, bc
-    ld a, e
-    and %11110000
-    ld e, a
-    ;; Fill in the bottom row of VRAM tiles.
-    .botLoop
-    ld a, [de]
-    inc de
-    rlca
-    rlca
-    add 2
-    ASSERT LOW(Data_TerrainTable_start) == 0
-    ld b, HIGH(Data_TerrainTable_start)
-    ld c, a
-    ld a, [bc]
-    ld [hl+], a
-    inc c
-    ld a, [bc]
-    ld [hl+], a
-    ld a, l
-    and %00011111
-    cp 2 * TERRAIN_COLS
-    jr nz, .botLoop
-    ;; Set up return values
-    ld bc, SCRN_VX_B - (2 * TERRAIN_COLS)
-    add hl, bc
-    ld a, e
-    add (16 - TERRAIN_COLS)
-    ld e, a
-    ld a, d
-    adc 0
-    ld d, a
-    ret
-
-;;;=========================================================================;;;
-
-SECTION "TerrainTable", ROM0, ALIGN[8]
-
-Data_TerrainTable_start:
-    ;; Open:
-    DB $20, $20, $20, $20
-    DB $8d, $8d, $8d, $8d
-    DB $20, $20, $20, $20
-    DB $20, $20, $20, $20
-    ;; Goals:
-    DB $00, $02, $01, $03  ; Peanut
-    DB $04, $06, $05, $07  ; Apple
-    DB $08, $0a, $09, $0b  ; Cheese
-    ;; TODO: other terrain types
-    DS 4 * 41
-    ;; Walls:
-    DB $80, $82, $81, $83  ; nsew
-    DB $84, $86, $85, $87  ; nseW
-    DB $84, $84, $8f, $85  ; nsEw
-    DB $84, $84, $85, $85  ; nsEW
-    DB $88, $8a, $89, $8b  ; nSew
-    DB $3c, $3c, $3c, $3c  ; nSeW
-    DB $3c, $3c, $3c, $3c  ; nSEw
-    DB $3c, $3c, $3c, $3c  ; nSEW
-    DB $90, $92, $91, $93  ; Nsew
-    DB $3c, $3c, $3c, $3c  ; NseW
-    DB $3c, $3c, $3c, $3c  ; NsEw
-    DB $3c, $3c, $3c, $3c  ; NsEW
-    DB $8c, $8e, $89, $8b  ; NSew
-    DB $3c, $3c, $3c, $3c  ; NSeW
-    DB $3c, $3c, $3c, $3c  ; NSEw
-    DB $3c, $3c, $3c, $3c  ; NSEW
-
-;;;=========================================================================;;;
-
 SECTION "MainAnimalMoving", ROM0
 
 Main_AnimalMoving:
@@ -905,7 +769,7 @@ _AnimalMoving_ChangePosition:
     ld a, [hl]
     add d
     ld [hl], a
-    call Func_UpdateSelectedAnimalObjs  ; preserves hl
+    call Func_UpdateSelectedAnimalObjs
     ;; Check if we can keep going.
     call Func_UpdateMoveDirs
     pop de
@@ -913,37 +777,24 @@ _AnimalMoving_ChangePosition:
     and d
     jr nz, _AnimalMoving_RunLoop
 _AnimalMoving_DoneMoving:
-    ;; Time to check if we've solved the puzzle.  First, copy the pointer to
-	;; the current PUZZ struct into hl.
-    ld a, [Ram_CurrentPuzzle_ptr + 0]
-    ld l, a
-    ld a, [Ram_CurrentPuzzle_ptr + 1]
-    ld h, a
+    ;; Time to check if we've solved the puzzle.
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld h, HIGH(Ram_PuzzleState_puzz)
     ;; If the elephant isn't on the peanut, we haven't solved the puzzle.
-    push hl
-    ld a, [Ram_Elephant_anim + ANIM_Position_u8]
-    ld c, a
-    ld b, 0
-    add hl, bc
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
+    ld l, a
     ld a, [hl]
-    pop hl
-    if_ne TERRAIN_PEANUT, jp, Main_PuzzleCommand
+    if_ne G_PNT, jp, Main_PuzzleCommand
     ;; If the goat isn't on the apple, we haven't solved the puzzle.
-    push hl
-    ld a, [Ram_Goat_anim + ANIM_Position_u8]
-    ld c, a
-    ld b, 0
-    add hl, bc
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Position_u8]
+    ld l, a
     ld a, [hl]
-    pop hl
-    if_ne TERRAIN_APPLE, jp, Main_PuzzleCommand
+    if_ne G_APL, jp, Main_PuzzleCommand
     ;; If the mouse isn't on the cheese, we haven't solved the puzzle.
-    ld a, [Ram_Mouse_anim + ANIM_Position_u8]
-    ld c, a
-    ld b, 0
-    add hl, bc
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
+    ld l, a
     ld a, [hl]
-    if_ne TERRAIN_CHEESE, jp, Main_PuzzleCommand
+    if_ne G_CHS, jp, Main_PuzzleCommand
     ;; We've solved the puzzle, so go to victory mode.
     jp Main_Victory
 

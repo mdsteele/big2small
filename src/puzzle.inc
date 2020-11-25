@@ -52,15 +52,54 @@ sizeof_ANIM         RB 0
 
 ;;;=========================================================================;;;
 
-;;; PUZZ: Describes a puzzle.  PUZZ structs must be aligned to 16 bytes.
+;;; PUZZ: Describes a puzzle.  Given a position byte N (with the high nibble
+;;;   giving the 0-8 Y position and the low nibble gives the 0-9 X position),
+;;;   the Nth byte of the PUZZ struct gives the terrain type at that position.
+;;;   Additional metadata for the puzzle is tucked between terrain rows, as
+;;;   described below.
 RSRESET
-;;; StartE: Specifies the start position of the elephant.  The high nibble
-;;;   gives the Y position (0-8) and the low nibble gives the X position (0-9).
-PUZZ_StartE_u8 EQU (TERRAIN_COLS + 0)
-;;; StartG: Specifies the start position of the goat, encoded as above.
-PUZZ_StartG_u8 EQU (TERRAIN_COLS + 1)
-;;; StartM: Specifies the start position of the mouse, encoded as above.
-PUZZ_StartM_u8 EQU (TERRAIN_COLS + 2)
-sizeof_PUZZ    EQU (16 * TERRAIN_ROWS)
+;;; Elephant: The starting position and face direction for the elephant.
+PUZZ_Elephant_anim     EQU (TERRAIN_COLS + 16 * 0)
+;;; Goat: The starting position and face direction for the goat.
+PUZZ_Goat_anim         EQU (TERRAIN_COLS + 16 * 1)
+;;; Mouse: The starting position and face direction for the mouse.
+PUZZ_Mouse_anim        EQU (TERRAIN_COLS + 16 * 2)
+sizeof_PUZZ            EQU (TERRAIN_COLS + 16 * (TERRAIN_ROWS - 1))
+
+;;;=========================================================================;;;
+
+RSRESET
+
+;;; Open terrain:
+O_EMP RB 1  ; Empty
+O_GRS RB 1  ; Grass
+O_RMD RB 1  ; Ramp medium
+O_RWL RB 1  ; Ramp wide left
+O_RWR RB 1  ; Ramp wide right
+
+;;; Goal terrain:
+G_PNT RB 1  ; Peanut
+G_APL RB 1  ; Apple
+G_CHS RB 1  ; Cheese
+
+;;; Mousehole terrain:
+M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.
+M_RNA RB 1  ; Ramp narrow
+M_RNS RB 1  ; Rock wall north/south
+
+;;; Wall terrain:
+W_MIN RB 0  ; Terrain types from W_MIN on up are walls.
+W_RCK RB 1  ; Rock
+W_FRT RB 1  ; Fence right
+W_FLT RB 1  ; Fence left
+W_FMD RB 1  ; Fence middle
+W_TTP RB 1  ; Tree top
+W_TTR RB 1  ; Tree trunk
+W_TST RB 1  ; Trees stacked
+W_BLD RB 1  ; Boulder
+W_CSO RB 1  ; Cliff face south
+W_RNS RB 1  ; Rock wall north/south
+W_CRV RB 1  ; Cliff face/rock wall vertical
+W_RSO RB 1  ; Rock wall south
 
 ;;;=========================================================================;;;

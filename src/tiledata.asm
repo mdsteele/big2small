@@ -44,6 +44,7 @@ Data_DeviceTiles_end::
 SECTION "TerrainTiles", ROM0
 Data_TerrainTiles_start::
     INCBIN "out/data/forest.2bpp"
+    INCBIN "out/data/mountain.2bpp"
 Data_TerrainTiles_end::
 
 ;;;=========================================================================;;;

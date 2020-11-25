@@ -22,9 +22,9 @@
 ;;; registers.
 ;;;
 ;;; Examples:
-;;;     if_eq 9, jr, .label  ; Jump-relative to .label if a == 9.
-;;;     if_eq b, call, Func  ; call Func if a == b.
-;;;     if_eq 0, ret         ; Return if a == 0.
+;;;     if_eq 9, jr, .label  ; jump-relative to .label if a == 9
+;;;     if_eq b, call, Func  ; call Func if a == b
+;;;     if_eq 0, ret         ; return if a == 0
 if_eq: MACRO
     cp \1
     IF _NARG > 2
@@ -39,9 +39,9 @@ ENDM
 ;;; registers.
 ;;;
 ;;; Examples:
-;;;     if_ne 9, jr, .label  ; Jump-relative to .label if a != 9.
-;;;     if_ne b, call, Func  ; call Func if a != b.
-;;;     if_ne 0, ret         ; Return if a != 0.
+;;;     if_ne 9, jr, .label  ; jump-relative to .label if a != 9
+;;;     if_ne b, call, Func  ; call Func if a != b
+;;;     if_ne 0, ret         ; return if a != 0
 if_ne: MACRO
     cp \1
     IF _NARG > 2
@@ -56,9 +56,9 @@ ENDM
 ;;; change `f`, but preserve other registers.
 ;;;
 ;;; Examples:
-;;;     if_lt 9, jr, .label  ; Jump-relative to .label if a < 9 (unsigned).
-;;;     if_lt b, call, Func  ; call Func if a < b (unsigned).
-;;;     if_lt 7, ret         ; Return if a < 7 (unsigned).
+;;;     if_lt 9, jr, .label  ; jump-relative to .label if a < 9 (unsigned)
+;;;     if_lt b, call, Func  ; call Func if a < b (unsigned)
+;;;     if_lt 7, ret         ; return if a < 7 (unsigned)
 if_lt: MACRO
     cp \1
     IF _NARG > 2
@@ -73,9 +73,9 @@ ENDM
 ;;; change `f`, but preserve other registers.
 ;;;
 ;;; Examples:
-;;;     if_ge 9, jr, .label  ; Jump-relative to .label if a >= 9 (unsigned).
-;;;     if_ge b, call, Func  ; call Func if a >= b (unsigned).
-;;;     if_ge 1, ret         ; Return if a >= 1 (unsigned).
+;;;     if_ge 9, jr, .label  ; jump-relative to .label if a >= 9 (unsigned)
+;;;     if_ge b, call, Func  ; call Func if a >= b (unsigned)
+;;;     if_ge 1, ret         ; return if a >= 1 (unsigned)
 if_ge: MACRO
     cp \1
     IF _NARG > 2
