@@ -110,7 +110,7 @@ _BeginPuzzle_Init:
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
-    call Func_LoadTerrainIntoVram
+    call Func_LoadPuzzleTerrainIntoVram
     ;; Initialize state.
     xor a
     ld [Ram_AnimationClock_u8], a
@@ -374,6 +374,11 @@ Func_IsPositionBlocked_fz:
     ld a, [Ram_SelectedAnimal_u8]
     if_ne ANIMAL_MOUSE, jr, .blocked
     .noMousehole
+    ;; Check for a bush:
+    if_ne S_BSH, jr, .noBush
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_GOAT, jr, .blocked
+    .noBush
     ;; Otherwise, check for an animal:
     ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
     cp l
@@ -770,6 +775,8 @@ _AnimalMoving_ChangePosition:
     ld [hl+], a
     ASSERT ANIM_Facing_u8 == 1
 _AnimalMoving_TerrainActions:
+    ;; At this point, hl points to the selected animal's ANIM_Facing_u8.
+    push hl
     ;; Store the terrain type the animal is standing on in a.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
@@ -792,10 +799,15 @@ _AnimalMoving_TerrainActions:
     ld [hl], DIRF_WEST
     jr _AnimalMoving_Update
     .notWestArrow
+    if_ne S_BSH, jr, .notBush
+    ld a, O_BST
+    ld [de], a
+    call Func_LoadTerrainCellIntoVram
+    jr _AnimalMoving_Update
+    .notBush
 _AnimalMoving_Update:
-    call Func_UpdateSelectedAnimalObjs  ; preserves hl
+    call Func_UpdateSelectedAnimalObjs
     ;; Check if we can keep going.
-    push hl
     call Func_UpdateMoveDirs
     pop hl
     ld d, [hl]

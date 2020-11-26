@@ -36,12 +36,16 @@ Data_TerrainTable:
     DB $9c, $a0, $9d, $a1
     ASSERT @ - Data_TerrainTable == 4 * O_RWR
     DB $a0, $9e, $a1, $9f
+    ASSERT @ - Data_TerrainTable == 4 * O_BST
+    DB $18, $1a, $19, $1b
     ASSERT @ - Data_TerrainTable == 4 * G_PNT
     DB $00, $02, $01, $03
     ASSERT @ - Data_TerrainTable == 4 * G_APL
     DB $04, $06, $05, $07
     ASSERT @ - Data_TerrainTable == 4 * G_CHS
     DB $08, $0a, $09, $0b
+    ASSERT @ - Data_TerrainTable == 4 * S_BSH
+    DB $14, $16, $15, $17
     ASSERT @ - Data_TerrainTable == 4 * A_NOR
     DB $0c, $0e, $0c, $0e
     ASSERT @ - Data_TerrainTable == 4 * A_SOU
@@ -84,8 +88,51 @@ ASSERT @ - Data_TerrainTable <= 512
 
 SECTION "TerrainFunctions", ROM0
 
+;;; @param de A pointer to a terrain cell in a 256-byte-aligned PUZZ struct.
+Func_LoadTerrainCellIntoVram::
+    ;; Make hl point to the VRAM tile for the top-left quarter of the square.
+    ld a, e
+    and $f0
+    rla
+    ld c, a
+    ld a, 0
+    adc 0
+    ld b, a
+    ld a, e
+    and $0f
+    or c
+    ld c, a
+    ld hl, Vram_BgMap
+    add hl, bc
+    add hl, bc
+    ;; Make bc point to the start of the terrain table entry.
+    ld a, [de]
+    rlca
+    sla a
+    ld c, a
+    ASSERT LOW(Data_TerrainTable) == 0
+    ld a, HIGH(Data_TerrainTable)
+    adc 0
+    ld b, a
+    ;; Set the VRAM tiles for the top half of the square.
+    ld a, [bc]
+    ld [hl+], a
+    inc c
+    ld a, [bc]
+    ld [hl+], a
+    inc c
+    ;; Set the VRAM tiles for the bottom half of the square.
+    ld de, SCRN_VX_B - 2
+    add hl, de
+    ld a, [bc]
+    ld [hl+], a
+    inc c
+    ld a, [bc]
+    ld [hl], a
+    ret
+
 ;;; @param d High byte of pointer to 256-byte-aligned PUZZ struct.
-Func_LoadTerrainIntoVram::
+Func_LoadPuzzleTerrainIntoVram::
     ld e, 0
     ld hl, Vram_BgMap
     REPT TERRAIN_ROWS

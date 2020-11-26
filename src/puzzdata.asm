@@ -69,7 +69,7 @@ Data_Puzzle2_puzz:
     DB W_TTR, O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, W_TST
     DB $20, DIRF_EAST, 0, 0, 0, 0
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, W_TST
-    DB W_FRT, DIRF_EAST, 0, 0, 0, 0
+    DB $31, DIRF_EAST, 0, 0, 0, 0
     DB W_TTP, O_GRS, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, W_RCK, W_TST
     DS 6
     DB W_TTR, W_TTP, W_FLT, W_FMD, W_FRT, W_TTR, W_RCK, O_EMP, O_GRS, W_TST
@@ -86,9 +86,9 @@ ASSERT @ - Data_Puzzle2_puzz == sizeof_PUZZ
 Data_Puzzle3_puzz:
     DB W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, A_NOR, O_EMP, O_EMP, W_BLD, W_BLD
+    DB W_BLD, O_EMP, S_BSH, O_EMP, O_EMP, A_NOR, O_EMP, O_EMP, W_BLD, W_BLD
     DB $20, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, A_WST, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
+    DB O_EMP, S_BSH, O_EMP, A_WST, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
     DB $31, DIRF_SOUTH, 0, 0, 0, 0
     DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, O_EMP, W_BLD, W_BLD
     DS 6

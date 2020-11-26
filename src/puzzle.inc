@@ -76,11 +76,15 @@ O_GRS RB 1  ; Grass
 O_RMD RB 1  ; Ramp medium
 O_RWL RB 1  ; Ramp wide left
 O_RWR RB 1  ; Ramp wide right
+O_BST RB 1  ; Bush stump
 
 ;;; Goal terrain:
 G_PNT RB 1  ; Peanut
 G_APL RB 1  ; Apple
 G_CHS RB 1  ; Cheese
+
+;; Special terrain:
+S_BSH RB 1  ; Bush
 
 ;;; Arrow terrain:
 A_NOR RB 1  ; Arrow north
