@@ -56,13 +56,32 @@ Ram_PauseWindowVelocity_i8:
 SECTION "MainPause", ROM0
 
 Main_BeginPause::
-    ;; Hide objects and show the window.
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_WINON | LCDCF_WIN9C00
+    ;; Hide arrow objects.
+    xor a
+    ld [Ram_ArrowN_oama + OAMA_Y], a
+    ld [Ram_ArrowS_oama + OAMA_Y], a
+    ld [Ram_ArrowE_oama + OAMA_Y], a
+    ld [Ram_ArrowW_oama + OAMA_Y], a
+    ;; Show the window.
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
+          LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
     ld a, 7
     ldh [rWX], a
     ld a, SCRN_Y - PAUSE_WINDOW_SPEED
     ldh [rWY], a
+    ldh [rLYC], a
+    ;; Enable LY=LYC interrupt.  We have to disable interrupts before, and
+    ;; clear rIF after, because writing to rSTAT can trigger a spurious STAT
+    ;; interrupt.
+    di
+    ld a, STATF_LYC
+    ldh [rSTAT], a
+    ld a, IEF_VBLANK | IEF_LCDC
+    ldh [rIE], a
+    xor a
+    ld [rIF], a
+    ei
     ;; Initialize state.
     xor a
     ld [Ram_PauseMenuItem_u8], a
@@ -72,12 +91,16 @@ Main_BeginPause::
 
 Main_PausingGame:
     call Func_MusicUpdate
-    call Func_WaitForVBlank
+    call Func_WaitForVBlankAndPerformDma
 _PausingGame_MoveWindow:
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
+          LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
     ld hl, Ram_PauseWindowVelocity_i8
     ldh a, [rWY]
     add [hl]
     ldh [rWY], a
+    ldh [rLYC], a
     if_eq (SCRN_Y - PAUSE_WINDOW_HEIGHT), jp, Main_PauseMenu
     if_eq SCRN_Y, jr, _PausingGame_Unpause
 _PausingGame_HandleButtonStart:
@@ -94,6 +117,9 @@ _PausingGame_Unpause:
     ;; Show objects and hide the window.
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16
     ldh [rLCDC], a
+    ;; Disable LY=LYC interrupt.
+    ld a, IEF_VBLANK
+    ldh [rIE], a
     jp Main_PuzzleCommand
 
 ;;;=========================================================================;;;
@@ -101,6 +127,9 @@ _PausingGame_Unpause:
 Main_PauseMenu:
     call Func_MusicUpdate
     call Func_WaitForVBlank
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
+          LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
     call Func_UpdateButtonState
     ld a, [Ram_ButtonsPressed_u8]
     ld b, a
@@ -133,14 +162,11 @@ _PauseMenu_HandleButtonStart:
     jr z, .noPress
     ld a, [Ram_PauseMenuItem_u8]
     if_eq PAUSE_MENU_ITEM_QUIT, jr, .quit
-    if_eq PAUSE_MENU_ITEM_RESET, jr, .reset
+    if_eq PAUSE_MENU_ITEM_RESET, jr, _PauseMenu_ResetPuzzle
     .unpause
     ld a, PAUSE_WINDOW_SPEED
     ld [Ram_PauseWindowVelocity_i8], a
     jp Main_PausingGame
-    .reset
-    call Func_FadeOut
-    jp Main_ResetPuzzle
     .quit
     ;; TODO: Implement quitting puzzle.
     .noPress
@@ -150,6 +176,13 @@ _PauseMenu_UpdateCursor:
     ld d, ">"  ; cursor tile ID
     call Func_PauseMenuSetCursorTile
     jr Main_PauseMenu
+
+_PauseMenu_ResetPuzzle:
+    call Func_FadeOut
+    ;; Disable LY=LYC interrupt.
+    ld a, IEF_VBLANK
+    ldh [rIE], a
+    jp Main_ResetPuzzle
 
 ;;;=========================================================================;;;
 

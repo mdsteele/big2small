@@ -29,6 +29,10 @@ SECTION "InterruptVBlank", ROM0[$0040]
     reti
 
 SECTION "InterruptStat", ROM0[$0048]
+    push af
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
+    pop af
     reti
 
 SECTION "InterruptTimer", ROM0[$0050]
