@@ -26,10 +26,15 @@ INCLUDE "src/puzzle.inc"
 SECTION "TerrainTable", ROM0, ALIGN[8]
 
 Data_TerrainTable:
+    ;; Open terrain:
     ASSERT @ - Data_TerrainTable == 4 * O_EMP
     DB $20, $20, $20, $20
     ASSERT @ - Data_TerrainTable == 4 * O_GRS
     DB $8d, $8d, $8d, $8d
+    ASSERT @ - Data_TerrainTable == 4 * O_BNS
+    DB $f4, $f6, $f5, $f7
+    ASSERT @ - Data_TerrainTable == 4 * O_BEW
+    DB $f0, $f2, $f1, $f3
     ASSERT @ - Data_TerrainTable == 4 * O_RMD
     DB $9c, $9e, $9d, $9f
     ASSERT @ - Data_TerrainTable == 4 * O_RWL
@@ -38,14 +43,17 @@ Data_TerrainTable:
     DB $a0, $9e, $a1, $9f
     ASSERT @ - Data_TerrainTable == 4 * O_BST
     DB $18, $1a, $19, $1b
+    ;; Goal terrain:
     ASSERT @ - Data_TerrainTable == 4 * G_PNT
     DB $00, $02, $01, $03
     ASSERT @ - Data_TerrainTable == 4 * G_APL
     DB $04, $06, $05, $07
     ASSERT @ - Data_TerrainTable == 4 * G_CHS
     DB $08, $0a, $09, $0b
+    ;; Special terrain:
     ASSERT @ - Data_TerrainTable == 4 * S_BSH
     DB $14, $16, $15, $17
+    ;; Arrow terrain:
     ASSERT @ - Data_TerrainTable == 4 * A_NOR
     DB $0c, $0e, $0c, $0e
     ASSERT @ - Data_TerrainTable == 4 * A_SOU
@@ -54,10 +62,25 @@ Data_TerrainTable:
     DB $12, $12, $13, $13
     ASSERT @ - Data_TerrainTable == 4 * A_WST
     DB $10, $10, $11, $11
+    ;; River terrain:
+    ASSERT @ - Data_TerrainTable == 4 * R_RNS
+    DB $e4, $e6, $e5, $e7
+    ASSERT @ - Data_TerrainTable == 4 * R_REW
+    DB $e0, $e2, $e1, $e3
+    ASSERT @ - Data_TerrainTable == 4 * R_RNE
+    DB $e4, $ee, $e9, $e3
+    ASSERT @ - Data_TerrainTable == 4 * R_RNW
+    DB $ec, $e6, $e1, $eb
+    ASSERT @ - Data_TerrainTable == 4 * R_RSE
+    DB $e8, $e2, $e5, $ef
+    ASSERT @ - Data_TerrainTable == 4 * R_RSW
+    DB $e0, $ea, $ed, $e7
+    ;; Mousehole terrain:
     ASSERT @ - Data_TerrainTable == 4 * M_RNA
     DB $ac, $ae, $ad, $af
     ASSERT @ - Data_TerrainTable == 4 * M_RNS
     DB $a8, $aa, $a9, $ab
+    ;; Wall terrain:
     ASSERT @ - Data_TerrainTable == 4 * W_RCK
     DB $80, $82, $81, $83
     ASSERT @ - Data_TerrainTable == 4 * W_FRT

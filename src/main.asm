@@ -50,9 +50,13 @@ Main::
     ld de, Data_FontTiles_start                       ; src
     ld bc, Data_FontTiles_end - Data_FontTiles_start  ; count
     call Func_MemCopy
-    ld hl, Vram_SharedTiles + 0 * sizeof_TILE               ; dest
+    ld hl, Vram_SharedTiles + $00 * sizeof_TILE             ; dest
     ld de, Data_TerrainTiles_start                          ; src
     ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_SharedTiles + $60 * sizeof_TILE         ; dest
+    ld de, Data_RiverTiles_start                        ; src
+    ld bc, Data_RiverTiles_end - Data_RiverTiles_start  ; count
     call Func_MemCopy
     ld hl, Vram_ObjTiles                            ; dest
     ld de, Data_ObjTiles_start                      ; src

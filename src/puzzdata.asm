@@ -104,24 +104,44 @@ Data_Puzzle3_puzz:
 ASSERT @ - Data_Puzzle3_puzz == sizeof_PUZZ
 
 Data_Puzzle4_puzz:
-    DB W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO
-    DB $11, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BLD, O_EMP, S_BSH, O_EMP, O_EMP, A_NOR, O_EMP, O_EMP, W_BLD, W_BLD
+    DB W_TST, W_TTR, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, W_TST, W_TST
+    DB $07, DIRF_WEST, 0, 0, 0, 0
+    DB W_TTR, O_EMP, O_EMP, O_EMP, O_EMP, S_BSH, G_PNT, W_BLD, W_TST, W_TST
+    DB $50, DIRF_EAST, 0, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_BLD, G_APL, W_TTR, W_TST
     DB $20, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, S_BSH, O_EMP, A_WST, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
-    DB $31, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, O_EMP, W_BLD, W_BLD
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, A_WST, W_TTR
     DS 6
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RSE, R_REW, R_REW, R_REW
+    DS 6
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, W_TTP
+    DS 6
+    DB R_RSE, R_REW, R_REW, O_BEW, R_REW, R_REW, R_RNW, O_EMP, S_BSH, W_TTR
+    DS 6
+    DB R_RNW, W_TTP, O_EMP, S_BSH, O_EMP, O_EMP, W_FLT, W_FRT, O_EMP, O_EMP
+    DS 6
+    DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, M_RNS, O_EMP, O_EMP
+ASSERT @ - Data_Puzzle4_puzz == sizeof_PUZZ
+
+Data_Puzzle5_puzz:
+    DB W_BLD, O_EMP, S_BSH, O_EMP, O_EMP, A_NOR, O_EMP, O_EMP, W_BLD, W_BLD
+    DB $01, DIRF_SOUTH, 0, 0, 0, 0
+    DB O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
+    DB $10, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, O_EMP, W_BLD, W_BLD
+    DB $21, DIRF_SOUTH, 0, 0, 0, 0
     DB W_CSO, W_CRV, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO, W_CRV
     DS 6
-    DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, W_RNS
+    DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, W_RSO
     DS 6
-    DB A_EST, W_RNS, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, W_BLD, W_RNS
+    DB A_EST, W_RSO, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, R_RSE, R_REW
     DS 6
-    DB O_EMP, W_RSO, O_EMP, W_BLD, O_EMP, O_EMP, A_SOU, O_EMP, G_CHS, W_RSO
+    DB R_REW, R_RSW, O_EMP, W_BLD, O_EMP, O_EMP, A_SOU, G_CHS, R_RNS, O_EMP
     DS 6
-    DB W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO, W_CSO
-ASSERT @ - Data_Puzzle4_puzz == sizeof_PUZZ
+    DB O_EMP, R_RNE, R_REW, R_REW, R_REW, R_REW, R_RSW, O_EMP, R_RNS, O_EMP
+    DS 6
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP
+ASSERT @ - Data_Puzzle5_puzz == sizeof_PUZZ
 
 ;;;=========================================================================;;;
 
@@ -133,5 +153,6 @@ Data_PuzzlePtrs_start::
     DW Data_Puzzle2_puzz
     DW Data_Puzzle3_puzz
     DW Data_Puzzle4_puzz
+    DW Data_Puzzle5_puzz
 
 ;;;=========================================================================;;;

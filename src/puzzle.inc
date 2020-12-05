@@ -73,6 +73,8 @@ RSRESET
 ;;; Open terrain:
 O_EMP RB 1  ; Empty
 O_GRS RB 1  ; Grass
+O_BNS RB 1  ; Bridge over river north/south
+O_BEW RB 1  ; Bridge over river east/west
 O_RMD RB 1  ; Ramp medium
 O_RWL RB 1  ; Ramp wide left
 O_RWR RB 1  ; Ramp wide right
@@ -91,6 +93,15 @@ A_NOR RB 1  ; Arrow north
 A_SOU RB 1  ; Arrow south
 A_EST RB 1  ; Arrow east
 A_WST RB 1  ; Arrow west
+
+;;; River terrain:
+R_MIN RB 0  ; Terrain types from R_MIN to M_MIN are rivers.
+R_RNS RB 1  ; River north/south
+R_REW RB 1  ; River east/west
+R_RNE RB 1  ; River north/east
+R_RNW RB 1  ; River north/west
+R_RSE RB 1  ; River south/east
+R_RSW RB 1  ; River south/west
 
 ;;; Mousehole terrain:
 M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.

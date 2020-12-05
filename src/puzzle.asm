@@ -285,99 +285,110 @@ Func_UpdateMoveDirs:
     ;; We'll track the new value for Ram_MoveDirs_u8 in b.  To start with,
 	;; initialize it to allow all four dirations.
     ld b, DIRF_NORTH | DIRF_SOUTH | DIRF_EAST | DIRF_WEST
+    ld c, l
 _UpdateMoveDirs_West:
-    ;; Check if we're on the west edge of the screen.
-    ld a, l
-    and $0f
-    jr nz, .noEdge
-    res DIRB_WEST, b
-    jr .done
-    .noEdge
-    ;; If not, then check if we're blocked to the west.
-    dec l
-    call Func_IsPositionBlocked_fz  ; preserves b and hl
+    ld d, DIRF_WEST
+    call Func_IsBlocked_fz  ; preserves bc and h
     jr nz, .unblocked
     res DIRB_WEST, b
     .unblocked
-    inc l
-    .done
+    ld l, c
 _UpdateMoveDirs_East:
-    ;; Check if we're on the east edge of the screen.
-    ld a, l
-    and $0f
-    if_lt (TERRAIN_COLS - 1), jr, .noEdge
-    res DIRB_EAST, b
-    jr .done
-    .noEdge
-    ;; If not, then check if we're blocked to the east.
-    inc l
-    call Func_IsPositionBlocked_fz  ; preserves b and hl
+    ld d, DIRF_EAST
+    call Func_IsBlocked_fz  ; preserves bc and h
     jr nz, .unblocked
     res DIRB_EAST, b
     .unblocked
-    dec l
-    .done
+    ld l, c
 _UpdateMoveDirs_North:
-    ;; Check if we're on the north edge of the screen.
-    ld a, l
-    and $f0
-    jr nz, .noEdge
-    res DIRB_NORTH, b
-    jr .done
-    .noEdge
-    ;; If not, then check if we're blocked to the north.
-    ld a, l
-    sub 16
-    ld l, a
-    call Func_IsPositionBlocked_fz  ; preserves b and hl
+    ld d, DIRF_NORTH
+    call Func_IsBlocked_fz  ; preserves bc and h
     jr nz, .unblocked
     res DIRB_NORTH, b
     .unblocked
-    ld a, l
-    add 16
-    ld l, a
-    .done
+    ld l, c
 _UpdateMoveDirs_South:
-    ;; Check if we're on the south edge of the screen.
-    ld a, l
-    and $f0
-    if_lt (16 * (TERRAIN_ROWS - 1)), jr, .noEdge
-    res DIRB_SOUTH, b
-    jr .done
-    .noEdge
-    ;; If not, then check if we're blocked to the south.
-    ld a, l
-    add 16
-    ld l, a
-    call Func_IsPositionBlocked_fz  ; preserves b
+    ld d, DIRF_SOUTH
+    call Func_IsBlocked_fz  ; preserves b
     jr nz, .unblocked
     res DIRB_SOUTH, b
     .unblocked
-    .done
 _UpdateMoveDirs_Finish:
     ld a, b
     ld [Ram_MoveDirs_u8], a
     ret
 
+;;;=========================================================================;;;
 
-;;; Determines whether the specified position is blocked for the selected
-;;; animal.
-;;; @param hl A pointer to the terrain cell in Ram_PuzzleState_puzz to check.
+;;; @param hl A pointer to starting terrain cell in Ram_PuzzleState_puzz.
+;;; @param d The direction to check (one of the DIRF_* values).
 ;;; @return fz True if the position is blocked by a wall or animal.
-;;; @preserve b, hl
-Func_IsPositionBlocked_fz:
+;;; @preserve bc, h
+Func_IsBlocked_fz:
+    ;; Use e to store whether we have jumped a river (initially false).
+    ld e, 0
+_IsBlocked_Check:
+    bit DIRB_WEST, d
+    jr nz, _IsBlocked_CheckWest
+    bit DIRB_EAST, d
+    jr nz, _IsBlocked_CheckEast
+    bit DIRB_SOUTH, d
+    jr nz, _IsBlocked_CheckSouth
+_IsBlocked_CheckNorth:
+    ;; Check if we're on the north edge of the screen.
+    ld a, l
+    and $f0
+    jr z, _IsBlocked_Yes
+    ;; Otherwise, prepare to subtract 16 from l.
+    ld a, $f0
+    jr _IsBlocked_Advance
+_IsBlocked_CheckSouth:
+    ;; Check if we're on the south edge of the screen.
+    ld a, l
+    and $f0
+    if_ge (16 * (TERRAIN_ROWS - 1)), jr, _IsBlocked_Yes
+    ;; Otherwise, prepare to add 16 to l.
+    ld a, $10
+    jr _IsBlocked_Advance
+_IsBlocked_CheckEast:
+    ;; Check if we're on the east edge of the screen.
+    ld a, l
+    and $0f
+    if_ge (TERRAIN_COLS - 1), jr, _IsBlocked_Yes
+    ;; Otherwise, prepare to add 1 to l.
+    ld a, $01
+    jr _IsBlocked_Advance
+_IsBlocked_CheckWest:
+    ;; Check if we're on the west edge of the screen.
+    ld a, l
+    and $0f
+    jr z, _IsBlocked_Yes
+    ;; Otherwise, prepare to subtract 1 from l.
+    ld a, $ff
+_IsBlocked_Advance:
+    add l
+    ld l, a
     ;; Check for a wall:
     ld a, [hl]
-    if_ge W_MIN, jr, .blocked
+    if_ge W_MIN, jr, _IsBlocked_Yes
     ;; Check for a mousehole:
     if_lt M_MIN, jr, .noMousehole
     ld a, [Ram_SelectedAnimal_u8]
-    if_ne ANIMAL_MOUSE, jr, .blocked
+    if_ne ANIMAL_MOUSE, jr, _IsBlocked_Yes
     .noMousehole
+    ;; Check for a river:
+    if_lt R_MIN, jr, .noRiver
+    bit 0, e
+    jr nz, _IsBlocked_Yes
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_GOAT, jr, _IsBlocked_Yes
+    ld e, 1
+    jr _IsBlocked_Check
+    .noRiver
     ;; Check for a bush:
     if_ne S_BSH, jr, .noBush
     ld a, [Ram_SelectedAnimal_u8]
-    if_ne ANIMAL_GOAT, jr, .blocked
+    if_ne ANIMAL_GOAT, jr, _IsBlocked_Yes
     .noBush
     ;; Otherwise, check for an animal:
     ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
@@ -389,8 +400,7 @@ Func_IsPositionBlocked_fz:
     ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
     cp l
     ret
-    ;; We jump here if the position is definitely blocked.
-    .blocked
+_IsBlocked_Yes:
     xor a  ; set z flag
     ret
 

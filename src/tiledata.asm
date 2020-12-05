@@ -48,3 +48,10 @@ Data_TerrainTiles_start::
 Data_TerrainTiles_end::
 
 ;;;=========================================================================;;;
+
+SECTION "RiverTiles", ROM0
+Data_RiverTiles_start::
+    INCBIN "out/data/river.2bpp"
+Data_RiverTiles_end::
+
+;;;=========================================================================;;;
