@@ -159,23 +159,29 @@ _PauseMenu_HandleButtonDown:
     .noPress
 _PauseMenu_HandleButtonStart:
     bit PADB_START, b
-    jr z, .noPress
+    jr z, Main_PauseMenu
     ld a, [Ram_PauseMenuItem_u8]
-    if_eq PAUSE_MENU_ITEM_QUIT, jr, .quit
+    if_eq PAUSE_MENU_ITEM_QUIT, jr, _PauseMenu_QuitPuzzle
     if_eq PAUSE_MENU_ITEM_RESET, jr, _PauseMenu_ResetPuzzle
-    .unpause
+_PauseMenu_Unpause:
     ld a, PAUSE_WINDOW_SPEED
     ld [Ram_PauseWindowVelocity_i8], a
     jp Main_PausingGame
-    .quit
-    ;; TODO: Implement quitting puzzle.
-    .noPress
-    jr Main_PauseMenu
+
 _PauseMenu_UpdateCursor:
     ld [Ram_PauseMenuItem_u8], a
     ld d, ">"  ; cursor tile ID
     call Func_PauseMenuSetCursorTile
     jr Main_PauseMenu
+
+_PauseMenu_QuitPuzzle:
+    call Func_FadeOut
+    ;; Disable LY=LYC interrupt.
+    ld a, IEF_VBLANK
+    ldh [rIE], a
+    ;; Return to map screen.
+    ld c, 0  ; is victory (0=false)
+    jp Main_WorldMapScreen
 
 _PauseMenu_ResetPuzzle:
     call Func_FadeOut
