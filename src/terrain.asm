@@ -53,14 +53,17 @@ Data_TerrainTable:
     ;; Special terrain:
     ASSERT @ - Data_TerrainTable == 4 * S_BSH
     DB $14, $16, $15, $17
-    ;; Arrow terrain:
-    ASSERT @ - Data_TerrainTable == 4 * A_NOR
+    ASSERT @ - Data_TerrainTable == 4 * S_PPW
+    DB $f8, $fa, $f9, $fb
+    ASSERT @ - Data_TerrainTable == 4 * S_PPE
+    DB $fc, $fe, $fd, $ff
+    ASSERT @ - Data_TerrainTable == 4 * S_ARN
     DB $0c, $0e, $0c, $0e
-    ASSERT @ - Data_TerrainTable == 4 * A_SOU
+    ASSERT @ - Data_TerrainTable == 4 * S_ARS
     DB $0d, $0f, $0d, $0f
-    ASSERT @ - Data_TerrainTable == 4 * A_EST
+    ASSERT @ - Data_TerrainTable == 4 * S_ARE
     DB $12, $12, $13, $13
-    ASSERT @ - Data_TerrainTable == 4 * A_WST
+    ASSERT @ - Data_TerrainTable == 4 * S_ARW
     DB $10, $10, $11, $11
     ;; River terrain:
     ASSERT @ - Data_TerrainTable == 4 * R_RNS

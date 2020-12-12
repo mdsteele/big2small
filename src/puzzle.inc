@@ -87,12 +87,12 @@ G_CHS RB 1  ; Cheese
 
 ;; Special terrain:
 S_BSH RB 1  ; Bush
-
-;;; Arrow terrain:
-A_NOR RB 1  ; Arrow north
-A_SOU RB 1  ; Arrow south
-A_EST RB 1  ; Arrow east
-A_WST RB 1  ; Arrow west
+S_PPW RB 1  ; Pipe west
+S_PPE RB 1  ; Pipe east
+S_ARN RB 1  ; Arrow north
+S_ARS RB 1  ; Arrow south
+S_ARE RB 1  ; Arrow east
+S_ARW RB 1  ; Arrow west
 
 ;;; River terrain:
 R_MIN RB 0  ; Terrain types from R_MIN to M_MIN are rivers.

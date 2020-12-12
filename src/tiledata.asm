@@ -29,7 +29,7 @@ Data_ObjTiles_start::
     INCBIN "out/data/elephant.2bpp"
     INCBIN "out/data/goat.2bpp"
     INCBIN "out/data/mouse.2bpp"
-    INCBIN "out/data/arrows.2bpp"
+    INCBIN "out/data/cursor.2bpp"
 Data_ObjTiles_end::
 
 ;;;=========================================================================;;;
@@ -52,6 +52,7 @@ Data_TerrainTiles_end::
 SECTION "RiverTiles", ROM0
 Data_RiverTiles_start::
     INCBIN "out/data/river.2bpp"
+    INCBIN "out/data/pipe.2bpp"
 Data_RiverTiles_end::
 
 ;;;=========================================================================;;;

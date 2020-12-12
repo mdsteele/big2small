@@ -323,7 +323,7 @@ _UpdateMoveDirs_Finish:
 ;;; @param hl A pointer to starting terrain cell in Ram_PuzzleState_puzz.
 ;;; @param d The direction to check (one of the DIRF_* values).
 ;;; @return fz True if the position is blocked by a wall or animal.
-;;; @preserve bc, h
+;;; @preserve bc, d, h
 Func_IsBlocked_fz:
     ;; Use e to store whether we have jumped a river (initially false).
     ld e, 0
@@ -338,7 +338,7 @@ _IsBlocked_CheckNorth:
     ;; Check if we're on the north edge of the screen.
     ld a, l
     and $f0
-    jr z, _IsBlocked_Yes
+    jp z, _IsBlocked_Yes
     ;; Otherwise, prepare to subtract 16 from l.
     ld a, $f0
     jr _IsBlocked_Advance
@@ -385,11 +385,32 @@ _IsBlocked_Advance:
     ld e, 1
     jr _IsBlocked_Check
     .noRiver
+    ;; Check for a west pipe:
+    if_ne S_PPW, jr, .noPipeWest
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_ELEPHANT, jr, _IsBlocked_Yes
+    ld a, d
+    if_ne DIRF_EAST, jr, _IsBlocked_Yes
+    inc l
+    inc l
+    jr _IsBlocked_ByAnimal
+    .noPipeWest
+    ;; Check for an east pipe:
+    if_ne S_PPE, jr, .noPipeEast
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_ELEPHANT, jr, _IsBlocked_Yes
+    ld a, d
+    if_ne DIRF_WEST, jr, _IsBlocked_Yes
+    dec l
+    dec l
+    jr _IsBlocked_ByAnimal
+    .noPipeEast
     ;; Check for a bush:
     if_ne S_BSH, jr, .noBush
     ld a, [Ram_SelectedAnimal_u8]
     if_ne ANIMAL_GOAT, jr, _IsBlocked_Yes
     .noBush
+_IsBlocked_ByAnimal:
     ;; Otherwise, check for an animal:
     ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
     cp l
@@ -793,27 +814,52 @@ _AnimalMoving_TerrainActions:
     ld e, a
     ld a, [de]
     ;; Check for terrain actions.
-    if_ne A_NOR, jr, .notNorthArrow
+    if_ne S_ARN, jr, .notNorthArrow
     ld [hl], DIRF_NORTH
     jr _AnimalMoving_Update
     .notNorthArrow
-    if_ne A_SOU, jr, .notSouthArrow
+    if_ne S_ARS, jr, .notSouthArrow
     ld [hl], DIRF_SOUTH
     jr _AnimalMoving_Update
     .notSouthArrow
-    if_ne A_EST, jr, .notEastArrow
+    if_ne S_ARE, jr, .notEastArrow
     ld [hl], DIRF_EAST
     jr _AnimalMoving_Update
     .notEastArrow
-    if_ne A_WST, jr, .notWestArrow
+    if_ne S_ARW, jr, .notWestArrow
     ld [hl], DIRF_WEST
     jr _AnimalMoving_Update
     .notWestArrow
+    if_ne S_PPW, jr, .notWestPipe
+    ld a, O_EMP
+    ld [de], a
+    push de
+    call Func_LoadTerrainCellIntoVram
+    pop de
+    inc e
+    inc e
+    ld a, S_PPE
+    ld [de], a
+    call Func_LoadTerrainCellIntoVram
+    jr _AnimalMoving_Update
+    .notWestPipe
+    if_ne S_PPE, jr, .notEastPipe
+    ld a, O_EMP
+    ld [de], a
+    push de
+    call Func_LoadTerrainCellIntoVram
+    pop de
+    dec e
+    dec e
+    ld a, S_PPW
+    ld [de], a
+    call Func_LoadTerrainCellIntoVram
+    jr _AnimalMoving_Update
+    .notEastPipe
     if_ne S_BSH, jr, .notBush
     ld a, O_BST
     ld [de], a
     call Func_LoadTerrainCellIntoVram
-    jr _AnimalMoving_Update
     .notBush
 _AnimalMoving_Update:
     call Func_UpdateSelectedAnimalObjs
