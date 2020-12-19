@@ -71,9 +71,20 @@ Ram_MoveDirs_u8:
 Ram_AnimationClock_u8:
     DB
 
-;;; How far forward from its current position the selected animal has moved.
-Ram_MovedPixels_u8:
+Ram_WalkingCountdown_u8:
     DB
+
+;;; Whether the selected animal is currently leaping.
+Ram_IsLeaping_bool:
+    DB
+
+;;;=========================================================================;;;
+
+SECTION "GoatLeapTable", ROM0, ALIGN[5]
+Data_GoatHopTable:
+    DB 0, 2, 3, 4, 4, 4, 5, 2, 0
+Data_GoatLeapTable:
+    DB 0, 2, 4, 5, 6, 7, 8, 8, 8, 8, 8, 7, 6, 5, 4, 2, 0
 
 ;;;=========================================================================;;;
 
@@ -114,7 +125,8 @@ _BeginPuzzle_Init:
     ;; Initialize state.
     xor a
     ld [Ram_AnimationClock_u8], a
-    ld [Ram_MovedPixels_u8], a
+    ld [Ram_WalkingCountdown_u8], a
+    ld [Ram_IsLeaping_bool], a
     ;; Set up animal objects.
     call Func_ClearOam
     ld a, ANIMAL_MOUSE
@@ -234,9 +246,8 @@ _PuzzleCommand_TryMove:
     ;; mode.
     call Func_GetSelectedAnimalPtr_hl  ; preserves d
     ASSERT ANIM_Facing_u8 == 1
-    inc hl
-    ld a, d
-    ld [hl], a
+    inc l
+    ld [hl], d
     jp Main_AnimalMoving
 
 _PuzzleCommand_CannotMove:
@@ -428,14 +439,15 @@ _IsBlocked_Yes:
 ;;;=========================================================================;;;
 
 ;;; Updates the OAMA struct for the currently selected animal.
-;;; @preserve hl
 Func_UpdateSelectedAnimalObjs:
     ld a, [Ram_SelectedAnimal_u8]
     if_eq ANIMAL_MOUSE, jp, _UpdateSelectedAnimalObjs_Mouse
     if_eq ANIMAL_GOAT, jp, _UpdateSelectedAnimalObjs_Goat
 _UpdateSelectedAnimalObjs_Elephant:
-    ld a, [Ram_MovedPixels_u8]
+    ;; Store the walking offset in c.
+    ld a, [Ram_WalkingCountdown_u8]
     ld c, a
+    ;; Store the facing direction in b.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Facing_u8]
     ld b, a
 _UpdateSelectedAnimalObjs_ElephantYPosition:
@@ -444,12 +456,12 @@ _UpdateSelectedAnimalObjs_ElephantYPosition:
     add 16
     bit DIRB_NORTH, b
     jr z, .notNorth
-    sub c
+    add c
     jr .notSouth
     .notNorth
     bit DIRB_SOUTH, b
     jr z, .notSouth
-    add c
+    sub c
     .notSouth
     ld [Ram_ElephantL_oama + OAMA_Y], a
     ld [Ram_ElephantR_oama + OAMA_Y], a
@@ -460,12 +472,12 @@ _UpdateSelectedAnimalObjs_ElephantXPosition:
     add 8
     bit DIRB_WEST, b
     jr z, .notWest
-    sub c
+    add c
     jr .notEast
     .notWest
     bit DIRB_EAST, b
     jr z, .notEast
-    add c
+    sub c
     .notEast
     ld [Ram_ElephantL_oama + OAMA_X], a
     add 8
@@ -508,8 +520,36 @@ _UpdateSelectedAnimalObjs_ElephantTileAndFlags:
     ret
 
 _UpdateSelectedAnimalObjs_Goat:
-    ld a, [Ram_MovedPixels_u8]
+    ld a, [Ram_IsLeaping_bool]
+    ld e, a
+    ;; Calculate and store the walking offset in c.
+    ld a, [Ram_WalkingCountdown_u8]
+    bit 0, e
+    jr z, .hopping
+    .leaping
+    if_ge 21, jr, .beforeLeap
+    if_lt 5, jr, .afterJump
+    .midLeap
+    sub 4
+    jr .doneJumping
+    .beforeLeap
+    ld a, 16
+    jr .doneJumping
+    .hopping
+    if_ge 11, jr, .beforeHop
+    if_lt 3, jr, .afterJump
+    .midHop
+    sub 2
+    jr .doneJumping
+    .beforeHop
+    ld a, 8
+    jr .doneJumping
+    .afterJump
+    xor a
+    .doneJumping
+    rlca
     ld c, a
+    ;; Store the facing direction in b.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Facing_u8]
     ld b, a
 _UpdateSelectedAnimalObjs_GoatYPosition:
@@ -518,13 +558,37 @@ _UpdateSelectedAnimalObjs_GoatYPosition:
     add 16
     bit DIRB_NORTH, b
     jr z, .notNorth
-    sub c
+    add c
     jr .notSouth
     .notNorth
     bit DIRB_SOUTH, b
     jr z, .notSouth
-    add c
+    sub c
     .notSouth
+    ;; If the goat is leaping, use the leap table.
+    bit 0, e
+    jr z, .notLeaping
+    ld d, a
+    ld a, c
+    rrca
+    add LOW(Data_GoatLeapTable)
+    ld l, a
+    ld h, HIGH(Data_GoatLeapTable)
+    ld a, d
+    sub [hl]
+    jr .doneLeaping
+    ;; Otherwise, use the hop table.
+    .notLeaping
+    ld d, a
+    ld a, c
+    rrca
+    add LOW(Data_GoatHopTable)
+    ld l, a
+    ld h, HIGH(Data_GoatHopTable)
+    ld a, d
+    sub [hl]
+    ;; Set the goat objects' Y-positions.
+    .doneLeaping
     ld [Ram_GoatL_oama + OAMA_Y], a
     ld [Ram_GoatR_oama + OAMA_Y], a
 _UpdateSelectedAnimalObjs_GoatXPosition:
@@ -534,20 +598,19 @@ _UpdateSelectedAnimalObjs_GoatXPosition:
     add 8
     bit DIRB_WEST, b
     jr z, .notWest
-    sub c
+    add c
     jr .notEast
     .notWest
     bit DIRB_EAST, b
     jr z, .notEast
-    add c
+    sub c
     .notEast
     ld [Ram_GoatL_oama + OAMA_X], a
     add 8
     ld [Ram_GoatR_oama + OAMA_X], a
 _UpdateSelectedAnimalObjs_GoatTileAndFlags:
     ld a, c
-    and %00001000
-    rrca
+    and %00000100
     bit DIRB_EAST, b
     jr z, .notEast
     add GOAT_WL1_TILEID
@@ -582,8 +645,11 @@ _UpdateSelectedAnimalObjs_GoatTileAndFlags:
     ret
 
 _UpdateSelectedAnimalObjs_Mouse:
-    ld a, [Ram_MovedPixels_u8]
+    ;; Calculate and store the walking offset in c.
+    ld a, [Ram_WalkingCountdown_u8]
+    rlca
     ld c, a
+    ;; Store the facing direction in b.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Facing_u8]
     ld b, a
 _UpdateSelectedAnimalObjs_MouseYPosition:
@@ -592,12 +658,12 @@ _UpdateSelectedAnimalObjs_MouseYPosition:
     add 16
     bit DIRB_NORTH, b
     jr z, .notNorth
-    sub c
+    add c
     jr .notSouth
     .notNorth
     bit DIRB_SOUTH, b
     jr z, .notSouth
-    add c
+    sub c
     .notSouth
     ld [Ram_MouseL_oama + OAMA_Y], a
     ld [Ram_MouseR_oama + OAMA_Y], a
@@ -608,12 +674,12 @@ _UpdateSelectedAnimalObjs_MouseXPosition:
     add 8
     bit DIRB_WEST, b
     jr z, .notWest
-    sub c
+    add c
     jr .notEast
     .notWest
     bit DIRB_EAST, b
     jr z, .notEast
-    add c
+    sub c
     .notEast
     ld [Ram_MouseL_oama + OAMA_X], a
     add 8
@@ -749,40 +815,11 @@ Main_AnimalMoving:
     ld [Ram_ArrowS_oama + OAMA_Y], a
     ld [Ram_ArrowE_oama + OAMA_Y], a
     ld [Ram_ArrowW_oama + OAMA_Y], a
-    ld [Ram_MovedPixels_u8], a
-_AnimalMoving_RunLoop:
-    ld hl, Ram_AnimationClock_u8
-    inc [hl]
-    call Func_MusicUpdate
-    call Func_WaitForVBlankAndPerformDma
-    ;; Move animal forward by 1-2 pixels.
-    ld a, [Ram_SelectedAnimal_u8]
-    if_eq ANIMAL_MOUSE, jr, .fast
-    if_eq ANIMAL_ELEPHANT, jr, .slow
-    ld a, [Ram_MovedPixels_u8]
-    bit 1, a
-    jr nz, .fast
-    .slow
-    ld b, 1
-    jr .move
-    .fast
-    ld b, 2
-    .move
-    ld a, [Ram_MovedPixels_u8]
-    add b
-    ;; Check if we've reached the next square.
-    if_eq 16, jr, _AnimalMoving_ChangePosition
-    ld [Ram_MovedPixels_u8], a
-    call Func_UpdateSelectedAnimalObjs
-    jr _AnimalMoving_RunLoop
-
-_AnimalMoving_ChangePosition:
-    xor a
-    ld [Ram_MovedPixels_u8], a
+_AnimalMoving_ContinueMoving:
     ;; Store selected animal's ANIM_Facing_u8 in a, and ANIM ptr in hl.
     call Func_GetSelectedAnimalPtr_hl
     ASSERT ANIM_Facing_u8 == 1
-    inc hl
+    inc l
     ld a, [hl-]
     ;; Move the animal forward by one square, updating its ANIM_Position_u8.
     if_eq DIRF_WEST, jr, .facingWest
@@ -803,16 +840,65 @@ _AnimalMoving_ChangePosition:
     ASSERT ANIM_Position_u8 == 0
     ld a, [hl]
     add d
-    ld [hl+], a
-    ASSERT ANIM_Facing_u8 == 1
-_AnimalMoving_TerrainActions:
-    ;; At this point, hl points to the selected animal's ANIM_Facing_u8.
-    push hl
-    ;; Store the terrain type the animal is standing on in a.
+    ld [hl], a
+    ;; Prepare for animal-specific animation:
+    ld a, [Ram_SelectedAnimal_u8]
+    if_eq ANIMAL_MOUSE, jr, _AnimalMoving_ContinueMovingMouse
+    if_eq ANIMAL_GOAT, jr, _AnimalMoving_ContinueMovingGoat
+_AnimalMoving_ContinueMovingElephant:
+    ld a, 16
+    ld [Ram_WalkingCountdown_u8], a
+    jr _AnimalMoving_RunLoop
+_AnimalMoving_ContinueMovingGoat:
+    ;; Store the upcoming position's terrain type in a.
+    ld c, [hl]
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld b, HIGH(Ram_PuzzleState_puzz)
+    ld a, [bc]
+    ;; If it's a river, then we should animate the goat leaping over it.
+    if_lt R_MIN, jr, .notLeaping
+    ld a, [hl]
+    add d
+    ld [hl], a
+    ld a, 1
+    ld [Ram_IsLeaping_bool], a
+    ld a, 24
+    ld [Ram_WalkingCountdown_u8], a
+    jr _AnimalMoving_RunLoop
+    ;; Otherwise, the goat hops at a slower pace.
+    .notLeaping
+    xor a
+    ld [Ram_IsLeaping_bool], a
+    ld a, 12
+    ld [Ram_WalkingCountdown_u8], a
+    jr _AnimalMoving_RunLoop
+_AnimalMoving_ContinueMovingMouse:
+    ld a, 8
+    ld [Ram_WalkingCountdown_u8], a
+_AnimalMoving_RunLoop:
+    ld hl, Ram_AnimationClock_u8
+    inc [hl]
+    call Func_MusicUpdate
+    call Func_WaitForVBlankAndPerformDma
+    ;; Move animal forward.
+    ld hl, Ram_WalkingCountdown_u8
+    dec [hl]
+    ;; Check if we've reached the next square.
+    jr z, _AnimalMoving_NextPositionReached
+    call Func_UpdateSelectedAnimalObjs
+    jr _AnimalMoving_RunLoop
+
+_AnimalMoving_NextPositionReached:
+    ;; Store the terrain type the animal is standing on in a, and make hl point
+    ;; to the selected animal's ANIM_Facing_u8.
+    call Func_GetSelectedAnimalPtr_hl
+    ASSERT ANIM_Position_u8 == 0
+    ld e, [hl]
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
-    ld e, a
     ld a, [de]
+    ASSERT ANIM_Facing_u8 == 1
+    inc l
     ;; Check for terrain actions.
     if_ne S_ARN, jr, .notNorthArrow
     ld [hl], DIRF_NORTH
@@ -865,11 +951,12 @@ _AnimalMoving_Update:
     call Func_UpdateSelectedAnimalObjs
     ;; Check if we can keep going.
     call Func_UpdateMoveDirs
-    pop hl
-    ld d, [hl]
+    call Func_GetSelectedAnimalPtr_hl
+    ASSERT ANIM_Facing_u8 == 1
+    inc l
     ld a, [Ram_MoveDirs_u8]
-    and d
-    jp nz, _AnimalMoving_RunLoop
+    and [hl]
+    jp nz, _AnimalMoving_ContinueMoving
 _AnimalMoving_DoneMoving:
     ;; Time to check if we've solved the puzzle.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
