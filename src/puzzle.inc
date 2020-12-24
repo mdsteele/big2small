@@ -122,5 +122,17 @@ W_CSO RB 1  ; Cliff face south
 W_RNS RB 1  ; Rock wall north/south
 W_CRV RB 1  ; Cliff face/rock wall vertical
 W_RSO RB 1  ; Rock wall south
+W_BN1 RB 1  ; Brick wall north single
+W_BN3 RB 1  ; Brick wall north multi
+W_BNE RB 1  ; Brick wall north/east
+W_BNW RB 1  ; Brick wall north/west
+W_BS1 RB 1  ; Brick wall south single
+W_BS3 RB 1  ; Brick wall south multi
+W_BSE RB 1  ; Brick wall south/east
+W_BSW RB 1  ; Brick wall south/west
+W_BEW RB 1  ; Brick wall east/west
+W_BE3 RB 1  ; Brick wall east multi
+W_BW3 RB 1  ; Brick wall west multi
+W_BC4 RB 1  ; Brick wall center
 
 ;;;=========================================================================;;;

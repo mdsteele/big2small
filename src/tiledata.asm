@@ -49,6 +49,13 @@ Data_TerrainTiles_end::
 
 ;;;=========================================================================;;;
 
+SECTION "CityTiles", ROM0
+Data_CityTiles_start::
+    INCBIN "out/data/city.2bpp"
+Data_CityTiles_end::
+
+;;;=========================================================================;;;
+
 SECTION "RiverTiles", ROM0
 Data_RiverTiles_start::
     INCBIN "out/data/river.2bpp"

@@ -108,6 +108,30 @@ Data_TerrainTable:
     DB $a8, $aa, $a5, $a7
     ASSERT @ - Data_TerrainTable == 4 * W_RSO
     DB $a4, $a6, $a8, $aa
+    ASSERT @ - Data_TerrainTable == 4 * W_BN1
+    DB $c6, $ca, $c7, $cb
+    ASSERT @ - Data_TerrainTable == 4 * W_BN3
+    DB $c8, $c8, $c9, $c9
+    ASSERT @ - Data_TerrainTable == 4 * W_BNE
+    DB $c8, $ca, $c9, $cb
+    ASSERT @ - Data_TerrainTable == 4 * W_BNW
+    DB $c6, $c8, $c7, $c9
+    ASSERT @ - Data_TerrainTable == 4 * W_BS1
+    DB $c0, $c4, $c1, $c5
+    ASSERT @ - Data_TerrainTable == 4 * W_BS3
+    DB $c2, $c2, $c3, $c3
+    ASSERT @ - Data_TerrainTable == 4 * W_BSE
+    DB $c2, $c4, $c3, $c5
+    ASSERT @ - Data_TerrainTable == 4 * W_BSW
+    DB $c0, $c2, $c1, $c3
+    ASSERT @ - Data_TerrainTable == 4 * W_BEW
+    DB $c7, $cb, $c7, $cb
+    ASSERT @ - Data_TerrainTable == 4 * W_BE3
+    DB $c9, $cb, $c9, $cb
+    ASSERT @ - Data_TerrainTable == 4 * W_BW3
+    DB $c7, $c9, $c7, $c9
+    ASSERT @ - Data_TerrainTable == 4 * W_BC4
+    DB $c9, $c9, $c9, $c9
 ASSERT @ - Data_TerrainTable <= 512
 
 ;;;=========================================================================;;;

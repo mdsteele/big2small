@@ -54,6 +54,10 @@ Main::
     ld de, Data_TerrainTiles_start                          ; src
     ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
     call Func_MemCopy
+    ld hl, Vram_SharedTiles + $40 * sizeof_TILE       ; dest
+    ld de, Data_CityTiles_start                       ; src
+    ld bc, Data_CityTiles_end - Data_CityTiles_start  ; count
+    call Func_MemCopy
     ld hl, Vram_SharedTiles + $60 * sizeof_TILE         ; dest
     ld de, Data_RiverTiles_start                        ; src
     ld bc, Data_RiverTiles_end - Data_RiverTiles_start  ; count
