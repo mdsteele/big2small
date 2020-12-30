@@ -52,6 +52,15 @@ Ram_MouseL_oama::
 Ram_MouseR_oama::
     DS sizeof_OAM_ATTRS
 
+Ram_PipeWL_oama::
+    DS sizeof_OAM_ATTRS
+Ram_PipeWR_oama::
+    DS sizeof_OAM_ATTRS
+Ram_PipeEL_oama::
+    DS sizeof_OAM_ATTRS
+Ram_PipeER_oama::
+    DS sizeof_OAM_ATTRS
+
 ENDU
 Ram_ShadowOam_end:
 

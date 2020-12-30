@@ -257,19 +257,19 @@ _MusicUpdate_ExecOpcodePlay:
 _MusicUpdate_KeepPlaying:
     ;; Channel 1:
     ld a, [Ram_MusicActiveChannels_u8]
-    bit 0, a
+    bit ACTB_CH1, a
     call nz, Func_MusicKeepPlayingCh1
     ;; Channel 2:
     ld a, [Ram_MusicActiveChannels_u8]
-    bit 1, a
+    bit ACTB_CH2, a
     call nz, Func_MusicKeepPlayingCh2
     ;; Channel 3:
     ld a, [Ram_MusicActiveChannels_u8]
-    bit 2, a
+    bit ACTB_CH3, a
     call nz, Func_MusicKeepPlayingCh3
     ;; Channel 4:
     ld a, [Ram_MusicActiveChannels_u8]
-    bit 3, a
+    bit ACTB_CH4, a
     jp nz, Func_MusicKeepPlayingCh4
     ;; If all channels are now finished, move on to the next opcode.
     ld a, [Ram_MusicActiveChannels_u8]

@@ -23,22 +23,37 @@ INCLUDE "src/puzzle.inc"
 
 ;;;=========================================================================;;;
 
-ELEPHANT_SL1_TILEID EQU 0
-ELEPHANT_NL1_TILEID EQU 8
-ELEPHANT_WL1_TILEID EQU 16
+ELEPHANT_SL1_TILEID EQU $00
+ELEPHANT_NL1_TILEID EQU $08
+ELEPHANT_WL1_TILEID EQU $10
 
-GOAT_SL1_TILEID EQU 24
-GOAT_NL1_TILEID EQU 32
-GOAT_WL1_TILEID EQU 40
+GOAT_SL1_TILEID EQU $18
+GOAT_NL1_TILEID EQU $20
+GOAT_WL1_TILEID EQU $28
 
-MOUSE_SL1_TILEID EQU 48
-MOUSE_NL1_TILEID EQU 56
-MOUSE_WL1_TILEID EQU 64
+MOUSE_SL1_TILEID EQU $30
+MOUSE_NL1_TILEID EQU $38
+MOUSE_WL1_TILEID EQU $40
 
-ARROW_NS_TILEID EQU 72
-STOP_NS_TILEID  EQU 74
-ARROW_EW_TILEID EQU 76
-STOP_EW_TILEID  EQU 78
+ARROW_NS_TILEID EQU $48
+STOP_NS_TILEID  EQU $4a
+ARROW_EW_TILEID EQU $4c
+STOP_EW_TILEID  EQU $4e
+
+PIPE_WL_TILEID EQU $f8
+PIPE_EL_TILEID EQU $fc
+
+;;;=========================================================================;;;
+
+;;; Bit indices for Ram_WalkingAction_u8:
+ACTB_LEAP  EQU 0  ; leap over river
+ACTB_PUSHW EQU 1  ; push pipe westward
+ACTB_PUSHE EQU 2  ; push pipe eastward
+
+;;; Flags for Ram_WalkingAction_u8:
+ACTF_LEAP  EQU (1 << ACTB_LEAP)
+ACTF_PUSHW EQU (1 << ACTB_PUSHW)
+ACTF_PUSHE EQU (1 << ACTB_PUSHE)
 
 ;;;=========================================================================;;;
 
@@ -62,7 +77,7 @@ Ram_SelectedAnimal_u8:
     DB
 
 ;;; A bitfield indicating in which directions the currently-selected animal can
-;;;   move.  This uses the DIRB_* and DIRF_* constants.
+;;; move.  This uses the DIRB_* and DIRF_* constants.
 Ram_MoveDirs_u8:
     DB
 
@@ -71,11 +86,13 @@ Ram_MoveDirs_u8:
 Ram_AnimationClock_u8:
     DB
 
+;;; The number of frames left until the currently-moving animal reaches the
+;;; next position.
 Ram_WalkingCountdown_u8:
     DB
 
-;;; Whether the selected animal is currently leaping.
-Ram_IsLeaping_bool:
+;;; Which action the currently-moving animal is performing, or zero for none.
+Ram_WalkingAction_u8:
     DB
 
 ;;;=========================================================================;;;
@@ -126,7 +143,7 @@ _BeginPuzzle_Init:
     xor a
     ld [Ram_AnimationClock_u8], a
     ld [Ram_WalkingCountdown_u8], a
-    ld [Ram_IsLeaping_bool], a
+    ld [Ram_WalkingAction_u8], a
     ;; Set up animal objects.
     call Func_ClearOam
     ld a, ANIMAL_MOUSE
@@ -147,6 +164,20 @@ _BeginPuzzle_Init:
     ld a, OAMF_PAL1 | OAMF_YFLIP
     ld [Ram_ArrowS_oama + OAMA_FLAGS], a
     call Func_UpdateMoveDirs
+    ;; Set up pipe objects.
+    ld a, PIPE_WL_TILEID
+    ld [Ram_PipeWL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_PipeWR_oama + OAMA_TILEID], a
+    ld a, PIPE_EL_TILEID
+    ld [Ram_PipeEL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_PipeER_oama + OAMA_TILEID], a
+    ld a, OAMF_PRI
+    ld [Ram_PipeWL_oama + OAMA_FLAGS], a
+    ld [Ram_PipeWR_oama + OAMA_FLAGS], a
+    ld [Ram_PipeEL_oama + OAMA_FLAGS], a
+    ld [Ram_PipeER_oama + OAMA_FLAGS], a
     ;; Set up window.
     ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B                       ; dest
     ld de, Data_PauseMenuString1_start                              ; src
@@ -520,11 +551,11 @@ _UpdateSelectedAnimalObjs_ElephantTileAndFlags:
     ret
 
 _UpdateSelectedAnimalObjs_Goat:
-    ld a, [Ram_IsLeaping_bool]
+    ld a, [Ram_WalkingAction_u8]
     ld e, a
     ;; Calculate and store the walking offset in c.
     ld a, [Ram_WalkingCountdown_u8]
-    bit 0, e
+    bit ACTB_LEAP, e
     jr z, .hopping
     .leaping
     if_ge 21, jr, .beforeLeap
@@ -848,6 +879,56 @@ _AnimalMoving_ContinueMoving:
 _AnimalMoving_ContinueMovingElephant:
     ld a, 16
     ld [Ram_WalkingCountdown_u8], a
+    ;; Store the upcoming position's terrain type in a.
+    ld e, [hl]
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld d, HIGH(Ram_PuzzleState_puzz)
+    ld a, [de]
+    ;; If it's a pipe, then we should animate the elephant pushing it.
+    if_ne S_PPW, jr, .notPushingEastward
+    ld a, ACTF_PUSHE
+    ld [Ram_WalkingAction_u8], a
+    ld b, 8
+    jr .pushingPipe
+    .notPushingEastward
+    if_ne S_PPE, jr, .notPushingPipe
+    ld a, ACTF_PUSHW
+    ld [Ram_WalkingAction_u8], a
+    ld b, -8
+    .pushingPipe
+    ;; Set the X-positions of the pipe objects.
+    ld a, e
+    and $0f
+    swap a
+    add b
+    ld [Ram_PipeWL_oama + OAMA_X], a
+    add 8
+    ld [Ram_PipeWR_oama + OAMA_X], a
+    add 8
+    ld [Ram_PipeEL_oama + OAMA_X], a
+    add 8
+    ld [Ram_PipeER_oama + OAMA_X], a
+    ;; Set the Y-positions of the pipe objects.
+    ld a, e
+    and $f0
+    add 16
+    ld [Ram_PipeWL_oama + OAMA_Y], a
+    ld [Ram_PipeWR_oama + OAMA_Y], a
+    ld [Ram_PipeEL_oama + OAMA_Y], a
+    ld [Ram_PipeER_oama + OAMA_Y], a
+    ;; Change the pushed terrain cell to empty.
+    ld a, O_EMP
+    ld [de], a
+    call Func_LoadTerrainCellIntoVram
+    jr _AnimalMoving_RunLoop
+    ;; If we're not pushing a pipe, set Ram_WalkingAction_u8 to zero.
+    .notPushingPipe
+    xor a
+    ld [Ram_WalkingAction_u8], a
+    jr _AnimalMoving_RunLoop
+_AnimalMoving_ContinueMovingMouse:
+    ld a, 8
+    ld [Ram_WalkingCountdown_u8], a
     jr _AnimalMoving_RunLoop
 _AnimalMoving_ContinueMovingGoat:
     ;; Store the upcoming position's terrain type in a.
@@ -860,26 +941,41 @@ _AnimalMoving_ContinueMovingGoat:
     ld a, [hl]
     add d
     ld [hl], a
-    ld a, 1
-    ld [Ram_IsLeaping_bool], a
+    ld a, ACTF_LEAP
+    ld [Ram_WalkingAction_u8], a
     ld a, 24
     ld [Ram_WalkingCountdown_u8], a
     jr _AnimalMoving_RunLoop
     ;; Otherwise, the goat hops at a slower pace.
     .notLeaping
     xor a
-    ld [Ram_IsLeaping_bool], a
+    ld [Ram_WalkingAction_u8], a
     ld a, 12
-    ld [Ram_WalkingCountdown_u8], a
-    jr _AnimalMoving_RunLoop
-_AnimalMoving_ContinueMovingMouse:
-    ld a, 8
     ld [Ram_WalkingCountdown_u8], a
 _AnimalMoving_RunLoop:
     ld hl, Ram_AnimationClock_u8
     inc [hl]
     call Func_MusicUpdate
     call Func_WaitForVBlankAndPerformDma
+    ;; If the animal is pushing a pipe, animate the pipe moving.
+    ld a, [Ram_WalkingAction_u8]
+    if_ne ACTF_PUSHW, jr, .notPushingWestward
+    ld a, [Ram_PipeWL_oama + OAMA_X]
+    sub 1
+    jr .pushingPipe
+    .notPushingWestward
+    if_ne ACTF_PUSHE, jr, .notPushingEastward
+    ld a, [Ram_PipeWL_oama + OAMA_X]
+    add 1
+    .pushingPipe
+    ld [Ram_PipeWL_oama + OAMA_X], a
+    add 8
+    ld [Ram_PipeWR_oama + OAMA_X], a
+    add 8
+    ld [Ram_PipeEL_oama + OAMA_X], a
+    add 8
+    ld [Ram_PipeER_oama + OAMA_X], a
+    .notPushingEastward
     ;; Move animal forward.
     ld hl, Ram_WalkingCountdown_u8
     dec [hl]
@@ -889,16 +985,45 @@ _AnimalMoving_RunLoop:
     jr _AnimalMoving_RunLoop
 
 _AnimalMoving_NextPositionReached:
-    ;; Store the terrain type the animal is standing on in a, and make hl point
-    ;; to the selected animal's ANIM_Facing_u8.
+    ;; Make de point to the current terrain cell (with e thus being the
+    ;; selected animal's position).
     call Func_GetSelectedAnimalPtr_hl
     ASSERT ANIM_Position_u8 == 0
     ld e, [hl]
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
-    ld a, [de]
+    ;; Make hl point to the selected animal's ANIM_Facing_u8.
     ASSERT ANIM_Facing_u8 == 1
     inc l
+_AnimalMoving_AnimalAction:
+    ld a, [Ram_WalkingAction_u8]
+    ;; Check if the animal just finished pushing a pipe eastward.
+    if_ne ACTF_PUSHE, jr, .notPushingEastward
+    inc e
+    inc e
+    ld a, S_PPE
+    ld [de], a
+    call Func_LoadTerrainCellIntoVram
+    jr .donePushing
+    .notPushingEastward
+    ;; Check if the animal just finished pushing a pipe westward.
+    if_ne ACTF_PUSHW, jr, .notPushingWestward
+    dec e
+    dec e
+    ld a, S_PPW
+    ld [de], a
+    call Func_LoadTerrainCellIntoVram
+    .donePushing
+    xor a
+    ld [Ram_PipeWL_oama + OAMA_Y], a
+    ld [Ram_PipeWR_oama + OAMA_Y], a
+    ld [Ram_PipeEL_oama + OAMA_Y], a
+    ld [Ram_PipeER_oama + OAMA_Y], a
+    jr _AnimalMoving_Update
+    .notPushingWestward
+_AnimalMoving_TerrainAction:
+    ;; Store the terrain type the animal is standing on in a.
+    ld a, [de]
     ;; Check for terrain actions.
     if_ne S_ARN, jr, .notNorthArrow
     ld [hl], DIRF_NORTH
@@ -916,32 +1041,6 @@ _AnimalMoving_NextPositionReached:
     ld [hl], DIRF_WEST
     jr _AnimalMoving_Update
     .notWestArrow
-    if_ne S_PPW, jr, .notWestPipe
-    ld a, O_EMP
-    ld [de], a
-    push de
-    call Func_LoadTerrainCellIntoVram
-    pop de
-    inc e
-    inc e
-    ld a, S_PPE
-    ld [de], a
-    call Func_LoadTerrainCellIntoVram
-    jr _AnimalMoving_Update
-    .notWestPipe
-    if_ne S_PPE, jr, .notEastPipe
-    ld a, O_EMP
-    ld [de], a
-    push de
-    call Func_LoadTerrainCellIntoVram
-    pop de
-    dec e
-    dec e
-    ld a, S_PPW
-    ld [de], a
-    call Func_LoadTerrainCellIntoVram
-    jr _AnimalMoving_Update
-    .notEastPipe
     if_ne S_BSH, jr, .notBush
     ld a, O_BST
     ld [de], a
