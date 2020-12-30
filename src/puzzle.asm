@@ -209,7 +209,7 @@ Main_PuzzleCommand::
     ld hl, Ram_AnimationClock_u8
     inc [hl]
     call Func_UpdateArrowObjs
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_UpdateButtonState
     ld a, [Ram_ButtonsPressed_u8]
@@ -282,16 +282,9 @@ _PuzzleCommand_TryMove:
     jp Main_AnimalMoving
 
 _PuzzleCommand_CannotMove:
-    ld a, %00101101
-    ldh [rAUD1SWEEP], a
-    ld a, %10010000
-    ldh [rAUD1LEN], a
-    ld a, %11000010
-    ldh [rAUD1ENV], a
-    ld a, %11000000
-    ldh [rAUD1LOW], a
-    ld a, %10000111
-    ldh [rAUD1HIGH], a
+    ld c, BANK(Data_CannotMove_sfx1)
+    ld hl, Data_CannotMove_sfx1
+    call Func_PlaySfx1
     jp Main_PuzzleCommand
 
 ;;;=========================================================================;;;
@@ -920,6 +913,10 @@ _AnimalMoving_ContinueMovingElephant:
     ld a, O_EMP
     ld [de], a
     call Func_LoadTerrainCellIntoVram
+    ;; Play a sound effect.
+    ld c, BANK(Data_PushPipe_sfx4)
+    ld hl, Data_PushPipe_sfx4
+    call Func_PlaySfx4
     jr _AnimalMoving_RunLoop
     ;; If we're not pushing a pipe, set Ram_WalkingAction_u8 to zero.
     .notPushingPipe
@@ -955,7 +952,7 @@ _AnimalMoving_ContinueMovingGoat:
 _AnimalMoving_RunLoop:
     ld hl, Ram_AnimationClock_u8
     inc [hl]
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     ;; If the animal is pushing a pipe, animate the pipe moving.
     ld a, [Ram_WalkingAction_u8]

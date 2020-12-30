@@ -39,7 +39,7 @@ SONG_SectTable_ptr RW 1
 ;;; Opcodes: The start of an array of one or more music opcode bytes.  The
 ;;;   opcode decoding scheme is as follows:
 ;;;     - STOP [%00000000].  Ends the song.  No more opcodes will be executed
-;;;       (nor sound produced) on future calls to Func_MusicUpdate until
+;;;       (nor sound produced) on future calls to Func_UpdateAudio until
 ;;;       Func_MusicStart is called to begin a new song.
 ;;;     - JUMP [%00xxxxxx].  Jumps forward/backward by %xxxxxx opcodes from
 ;;;       this one (signed).  For example, a JUMP value of 2 would skip the

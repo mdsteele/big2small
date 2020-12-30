@@ -17,8 +17,8 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/audio.inc"
 INCLUDE "src/hardware.inc"
-INCLUDE "src/music.inc"
 
 ;;;=========================================================================;;;
 
@@ -30,8 +30,18 @@ ACTB_CH4 EQU 3
 
 ;;;=========================================================================;;;
 
-;;; CHAN: Stores the state of one of the four sound channels.
+;;; CHAN: Stores the state of one of the four audio channels.
 RSRESET
+;;; SfxFrames: If zero, then no sound effect is currently active on this
+;;;   channel.  If nonzero, then this is the number of frames until we play the
+;;;   next SFX block.  Only used for channels 1 and 4.
+CHAN_SfxFrames_u8    RB 1
+;;; SfxBank: The ROM bank number that the SFX block pointed to by NextSfx is
+;;;   stored in.  Only used for channels 1 and 4.
+CHAN_SfxBank_u8      RB 1
+;;; NextSfx: A pointer to the next SFX block to play, once SfxFrames reaches
+;;;   zero.  Only used for channels 1 and 4.
+CHAN_NextSfx_ptr     RW 1
 ;;; NextNote: A pointer to the *next* note to be played on this channel (not
 ;;;   the note currently playing).
 CHAN_NextNote_ptr    RW 1
@@ -49,12 +59,12 @@ sizeof_CHAN          RB 0
 
 ;;;=========================================================================;;;
 
-SECTION "MusicState", WRAM0
+SECTION "AudioState", WRAM0
 
 ;;; MusicFlag: A boolean flag that can affect the playback of a song via any
 ;;;   BFEQ opcodes in the song.  This is reset to zero when Func_MusicStart is
 ;;;   called, and may be changed by SETF opcodes in the song, but can also be
-;;;   manually changed before or in between calls to Func_MusicUpdate.
+;;;   manually changed before or in between calls to Func_UpdateAudio.
 Ram_MusicFlag_bool::
     DB
 
@@ -76,30 +86,43 @@ Ram_MusicOpcode_ptr:
     DW
 
 ;;; MusicActiveChannels: A bitfield of which of the four channels are currently
-;;;   active (1) or halted (0).  The ACTB_CH? constants specify the bit for
-;;;   each channel.
+;;;   active (1) or halted (0) for music.  The ACTB_CH? constants specify the
+;;;   bit for each channel.
 Ram_MusicActiveChannels_u8:
     DB
 
-;;; MusicCh?: The CHAN structs that store the state of each of the four
+;;; AudioCh?: The CHAN structs that store the state of each of the four audio
 ;;;   channels.
-Ram_MusicCh1_chan:
+Ram_AudioCh1_chan:
     DS sizeof_CHAN
-Ram_MusicCh2_chan:
+Ram_AudioCh2_chan:
     DS sizeof_CHAN
-Ram_MusicCh3_chan:
+Ram_AudioCh3_chan:
     DS sizeof_CHAN
-Ram_MusicCh4_chan:
+Ram_AudioCh4_chan:
     DS sizeof_CHAN
 
 ;;;=========================================================================;;;
 
-SECTION "MusicFunctions", ROM0
+SECTION "AudioFunctions", ROM0
 
 Data_Null_song:
     DW $0000  ; Instrument table (null ptr)
     DW $0000  ; Section table (null ptr)
     DB $00    ; Opcodes (STOP)
+
+;;; Call this on startup to initialize the audio system.
+Func_InitAudio::
+    ld a, AUDENA_ON
+    ldh [rAUDENA], a
+    ld a, $ff
+    ldh [rAUDTERM], a
+    ld a, $77
+    ldh [rAUDVOL], a
+    xor a
+    ld [Ram_AudioCh1_chan + CHAN_SfxFrames_u8], a
+    ld [Ram_AudioCh4_chan + CHAN_SfxFrames_u8], a
+    ;; fall through to Func_MusicStop
 
 ;;; Call this to stop playing the current song.
 Func_MusicStop::
@@ -137,49 +160,52 @@ Func_MusicStart::
 
 ;;;=========================================================================;;;
 
-;;; Call this once per frame to continue playing the current song.
-Func_MusicUpdate::
+;;; Call this once per frame to continue playing the current song (if any) and
+;;; any active sound effects.
+Func_UpdateAudio::
+    call Func_UpdateSfx1
+    call Func_UpdateSfx4
     ;; Switch ROM bank.
     ld a, [Ram_MusicBank_u8]
     ld [rROMB0], a
     ;; If we're in the middle of playing a section, keep doing that.
     ld a, [Ram_MusicActiveChannels_u8]
     or a
-    jp nz, _MusicUpdate_KeepPlaying
-_MusicUpdate_LoadAndExecOpcode:
+    jp nz, _UpdateAudio_KeepPlaying
+_UpdateAudio_LoadAndExecOpcode:
     ld hl, Ram_MusicOpcode_ptr
     ld a, [hl+]
     ld h, [hl]
     ld l, a
-_MusicUpdate_ExecOpcode:
+_UpdateAudio_ExecOpcode:
     ld a, [hl]
     bit 6, a
     jr z, .nonFlagOpcode
     and %00111111
-    jr z, _MusicUpdate_ExecOpcodeSetf
-    jr _MusicUpdate_ExecOpcodeBfeq
+    jr z, _UpdateAudio_ExecOpcodeSetf
+    jr _UpdateAudio_ExecOpcodeBfeq
     .nonFlagOpcode
     bit 7, a
-    jr nz, _MusicUpdate_ExecOpcodePlay
+    jr nz, _UpdateAudio_ExecOpcodePlay
     and %00111111
-    jr nz, _MusicUpdate_ExecOpcodeJump
-_MusicUpdate_ExecOpcodeHalt:
+    jr nz, _UpdateAudio_ExecOpcodeJump
+_UpdateAudio_ExecOpcodeHalt:
     ld a, l
     ld [Ram_MusicOpcode_ptr + 0], a
     ld a, h
     ld [Ram_MusicOpcode_ptr + 1], a
     ret
-_MusicUpdate_ExecOpcodeBfeq:
+_UpdateAudio_ExecOpcodeBfeq:
     ld a, [Ram_MusicFlag_bool]
     ld b, a
     ld a, [hl]
     and %10000000
     rlca
     xor b
-    jr z, _MusicUpdate_ExecOpcodeJump
+    jr z, _UpdateAudio_ExecOpcodeJump
     inc hl
-    jr _MusicUpdate_ExecOpcode
-_MusicUpdate_ExecOpcodeJump:
+    jr _UpdateAudio_ExecOpcode
+_UpdateAudio_ExecOpcodeJump:
     ld a, [hl]
     bit 5, a
     jr nz, .negJump
@@ -193,15 +219,15 @@ _MusicUpdate_ExecOpcodeJump:
     .endJump
     ld c, a
     add hl, bc
-    jr _MusicUpdate_ExecOpcode
-_MusicUpdate_ExecOpcodeSetf:
+    jr _UpdateAudio_ExecOpcode
+_UpdateAudio_ExecOpcodeSetf:
     ld a, [hl]
     and %10000000
     rlca
     ld [Ram_MusicFlag_bool], a
     inc hl
-    jr _MusicUpdate_ExecOpcode
-_MusicUpdate_ExecOpcodePlay:
+    jr _UpdateAudio_ExecOpcode
+_UpdateAudio_ExecOpcodePlay:
     ;; Store section ptr offset in bc.
     ASSERT sizeof_SECT == 8
     ld a, [hl]
@@ -219,21 +245,21 @@ _MusicUpdate_ExecOpcodePlay:
     ;; Load section.
     add hl, bc
     ld a, [hl+]
-    ld [Ram_MusicCh1_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh1_chan + CHAN_NextNote_ptr + 0], a
     ld a, [hl+]
-    ld [Ram_MusicCh1_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh1_chan + CHAN_NextNote_ptr + 1], a
     ld a, [hl+]
-    ld [Ram_MusicCh2_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh2_chan + CHAN_NextNote_ptr + 0], a
     ld a, [hl+]
-    ld [Ram_MusicCh2_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh2_chan + CHAN_NextNote_ptr + 1], a
     ld a, [hl+]
-    ld [Ram_MusicCh3_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh3_chan + CHAN_NextNote_ptr + 0], a
     ld a, [hl+]
-    ld [Ram_MusicCh3_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh3_chan + CHAN_NextNote_ptr + 1], a
     ld a, [hl+]
-    ld [Ram_MusicCh4_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh4_chan + CHAN_NextNote_ptr + 0], a
     ld a, [hl+]
-    ld [Ram_MusicCh4_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh4_chan + CHAN_NextNote_ptr + 1], a
     ;; Mark all four channels as active.
     ld a, %1111
     ld [Ram_MusicActiveChannels_u8], a
@@ -247,14 +273,14 @@ _MusicUpdate_ExecOpcodePlay:
     inc hl
     ld a, [Ram_MusicActiveChannels_u8]
     or a
-    jp z, _MusicUpdate_ExecOpcode
+    jp z, _UpdateAudio_ExecOpcode
     ;; Otherwise, store pointer to next opcode and return.
     ld a, l
     ld [Ram_MusicOpcode_ptr + 0], a
     ld a, h
     ld [Ram_MusicOpcode_ptr + 1], a
     ret
-_MusicUpdate_KeepPlaying:
+_UpdateAudio_KeepPlaying:
     ;; Channel 1:
     ld a, [Ram_MusicActiveChannels_u8]
     bit ACTB_CH1, a
@@ -274,14 +300,136 @@ _MusicUpdate_KeepPlaying:
     ;; If all channels are now finished, move on to the next opcode.
     ld a, [Ram_MusicActiveChannels_u8]
     or a
-    jp z, _MusicUpdate_LoadAndExecOpcode
+    jp z, _UpdateAudio_LoadAndExecOpcode
+    ret
+
+;;;=========================================================================;;;
+
+;;; Call this to start playing a sound effect on channel 1.
+;;; @param c ROM bank number for the sfx1 struct.
+;;; @param hl Pointer to sfx1 struct.
+Func_PlaySfx1::
+    ;; Stop any currently-active sound effect.
+    xor a
+    ld [Ram_AudioCh1_chan + CHAN_SfxFrames_u8], a
+    ;; Store the ROM bank of the sfx1 struct.
+    ld a, c
+    ld [Ram_AudioCh1_chan + CHAN_SfxBank_u8], a
+    ;; Switch ROM banks and begin playing the sound effect.
+    jr _UpdateSfx1_SwitchBank
+
+;;; Called by Func_UpdateAudio to continue playing the channel 1 sound effect
+;;; (if any).
+Func_UpdateSfx1:
+    ;; If there's no active sound effect, we're done.
+    ld a, [Ram_AudioCh1_chan + CHAN_SfxFrames_u8]
+    or a
+    ret z
+    ;; Decrement the number of remaining frames.  If it's still nonzero, we're
+	;; done.
+    dec a
+    ld [Ram_AudioCh1_chan + CHAN_SfxFrames_u8], a
+    ret nz
+    ;; Load pointer to next SFX block into hl.
+    ld hl, Ram_AudioCh1_chan + CHAN_NextSfx_ptr
+    ld a, [hl+]
+    ld h, [hl]
+    ld l, a
+    ;; Switch ROM bank.
+    ld a, [Ram_AudioCh1_chan + CHAN_SfxBank_u8]
+_UpdateSfx1_SwitchBank:
+    ld [rROMB0], a
+    ;; Read SFX frames.  If zero, stop the sound.
+    ld a, [hl+]
+    ld [Ram_AudioCh1_chan + CHAN_SfxFrames_u8], a
+    or a
+    jr nz, _UpdateSfx1_PlaySound
+    ldh [rAUD1ENV], a
+    ret
+_UpdateSfx1_PlaySound:
+    ;; Play the SFX block.
+    ld a, [hl+]
+    ldh [rAUD1SWEEP], a
+    ld a, [hl+]
+    ldh [rAUD1LEN], a
+    ld a, [hl+]
+    ldh [rAUD1ENV], a
+    ld a, [hl+]
+    ldh [rAUD1LOW], a
+    ld a, [hl+]
+    ldh [rAUD1HIGH], a
+    ;; Store pointer to next SFX block.
+    ld a, l
+    ld [Ram_AudioCh1_chan + CHAN_NextSfx_ptr + 0], a
+    ld a, h
+    ld [Ram_AudioCh1_chan + CHAN_NextSfx_ptr + 1], a
+    ret
+
+;;;=========================================================================;;;
+
+;;; Call this to start playing a sound effect on channel 4.
+;;; @param c ROM bank number for the sfx4 struct.
+;;; @param hl Pointer to sfx4 struct.
+Func_PlaySfx4::
+    ;; Stop any currently-active sound effect.
+    xor a
+    ld [Ram_AudioCh4_chan + CHAN_SfxFrames_u8], a
+    ;; Store the ROM bank of the sfx4 struct.
+    ld a, c
+    ld [Ram_AudioCh4_chan + CHAN_SfxBank_u8], a
+    ;; Switch ROM banks and begin playing the sound effect.
+    jr _UpdateSfx4_SwitchBank
+
+;;; Called by Func_UpdateAudio to continue playing the channel 4 sound effect
+;;; (if any).
+Func_UpdateSfx4:
+    ;; If there's no active sound effect, we're done.
+    ld a, [Ram_AudioCh4_chan + CHAN_SfxFrames_u8]
+    or a
+    ret z
+    ;; Decrement the number of remaining frames.  If it's still nonzero, we're
+	;; done.
+    dec a
+    ld [Ram_AudioCh4_chan + CHAN_SfxFrames_u8], a
+    ret nz
+    ;; Load pointer to next SFX block into hl.
+    ld hl, Ram_AudioCh4_chan + CHAN_NextSfx_ptr
+    ld a, [hl+]
+    ld h, [hl]
+    ld l, a
+    ;; Switch ROM bank.
+    ld a, [Ram_AudioCh4_chan + CHAN_SfxBank_u8]
+_UpdateSfx4_SwitchBank:
+    ld [rROMB0], a
+    ;; Read SFX frames.  If zero, stop the sound.
+    ld a, [hl+]
+    ld [Ram_AudioCh4_chan + CHAN_SfxFrames_u8], a
+    or a
+    jr nz, _UpdateSfx4_PlaySound
+    ldh [rAUD4ENV], a
+    ret
+_UpdateSfx4_PlaySound:
+    ;; Play the SFX block.
+    ld a, [hl+]
+    ldh [rAUD4LEN], a
+    ld a, [hl+]
+    ldh [rAUD4ENV], a
+    ld a, [hl+]
+    ldh [rAUD4POLY], a
+    ld a, [hl+]
+    ldh [rAUD4GO], a
+    ;; Store pointer to next SFX block.
+    ld a, l
+    ld [Ram_AudioCh4_chan + CHAN_NextSfx_ptr + 0], a
+    ld a, h
+    ld [Ram_AudioCh4_chan + CHAN_NextSfx_ptr + 1], a
     ret
 
 ;;;=========================================================================;;;
 
 Func_MusicKeepPlayingCh1:
     ;; Decrement note frames, and return if the note isn't done yet.
-    ld hl, Ram_MusicCh1_chan + CHAN_NoteFrames_u8
+    ld hl, Ram_AudioCh1_chan + CHAN_NoteFrames_u8
     dec [hl]
     ret nz
     ;; Start next note.
@@ -289,7 +437,7 @@ Func_MusicKeepPlayingCh1:
 
 Func_MusicStartNoteCh1:
     ;; Copy the pointer to the start of the next note into hl.
-    ld hl, Ram_MusicCh1_chan + CHAN_NextNote_ptr
+    ld hl, Ram_AudioCh1_chan + CHAN_NextNote_ptr
     ld a, [hl+]
     ld h, [hl]
     ld l, a
@@ -299,13 +447,16 @@ _MusicStartNoteCh1_Decode:
     jr z, _MusicStartNoteCh1_NoteRestOrHalt
     bit 6, a
     jr z, _MusicStartNoteCh1_NoteInst
-    ;; Play note:
+    ;; Play note (if the channel is not busy with a sound effect):
     ld b, a
-    ld a, [Ram_MusicCh1_chan + CHAN_Instrument_inst + INST_Effect_u8]
+    ld a, [Ram_AudioCh1_chan + CHAN_SfxFrames_u8]
+    or a
+    jr nz, .skipPlaying
+    ld a, [Ram_AudioCh1_chan + CHAN_Instrument_inst + INST_Effect_u8]
     ldh [rAUD1SWEEP], a
-    ld a, [Ram_MusicCh1_chan + CHAN_Instrument_inst + INST_Envelope_u8]
+    ld a, [Ram_AudioCh1_chan + CHAN_Instrument_inst + INST_Envelope_u8]
     ldh [rAUD1ENV], a
-    ld a, [Ram_MusicCh1_chan + CHAN_Instrument_inst + INST_Shape + 0]
+    ld a, [Ram_AudioCh1_chan + CHAN_Instrument_inst + INST_Shape + 0]
     ldh [rAUD1LEN], a
     ld a, [hl+]
     ldh [rAUD1LOW], a
@@ -313,17 +464,18 @@ _MusicStartNoteCh1_Decode:
     and %00000111
     or  %10000000
     ldh [rAUD1HIGH], a
+    .skipPlaying
     ;; Determine duration:
     bit 5, b
     jr z, _MusicStartNoteCh1_NoteTone
 _MusicStartNoteCh1_NoteSame:
-    ld a, [Ram_MusicCh1_chan + CHAN_LastDuration_u8]
-    ld [Ram_MusicCh1_chan + CHAN_NoteFrames_u8], a
+    ld a, [Ram_AudioCh1_chan + CHAN_LastDuration_u8]
+    ld [Ram_AudioCh1_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh1_Finish
 _MusicStartNoteCh1_NoteTone:
     ld a, [hl+]
-    ld [Ram_MusicCh1_chan + CHAN_LastDuration_u8], a
-    ld [Ram_MusicCh1_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh1_chan + CHAN_LastDuration_u8], a
+    ld [Ram_AudioCh1_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh1_Finish
 _MusicStartNoteCh1_NoteInst:
     ;; Store instrument ptr offset in bc.
@@ -342,20 +494,24 @@ _MusicStartNoteCh1_NoteInst:
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]
-    ld [Ram_MusicCh1_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
+    ld [Ram_AudioCh1_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
     ld a, [hl+]
-    ld [Ram_MusicCh1_chan + CHAN_Instrument_inst + INST_Effect_u8], a
+    ld [Ram_AudioCh1_chan + CHAN_Instrument_inst + INST_Effect_u8], a
     ld a, [hl]
-    ld [Ram_MusicCh1_chan + CHAN_Instrument_inst + INST_Shape + 0], a
+    ld [Ram_AudioCh1_chan + CHAN_Instrument_inst + INST_Shape + 0], a
     ;; Begin the next note immediately.
     pop hl
     jr _MusicStartNoteCh1_Decode
 _MusicStartNoteCh1_NoteRestOrHalt:
     ;; Store the rest duration in d.
     ld d, a
-    ;; For both REST and HALT, we disable the channel.
-    xor a
+    ;; For both REST and HALT, we disable the channel (if the channel is not
+    ;; busy with a sound effect).
+    ld a, [Ram_AudioCh1_chan + CHAN_SfxFrames_u8]
+    or a
+    jr nz, .skipDisable
     ldh [rAUD1ENV], a
+    .skipDisable
     ;; If the rest duration is zero, this is a HALT.
     or d
     jr nz, .rest
@@ -365,21 +521,21 @@ _MusicStartNoteCh1_NoteRestOrHalt:
     ret
     ;; For a REST, we record the duration.
     .rest
-    ld [Ram_MusicCh1_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh1_chan + CHAN_NoteFrames_u8], a
     ;; fall through
 _MusicStartNoteCh1_Finish:
     ;; Store hl as pointer to start of next note.
     ld a, l
-    ld [Ram_MusicCh1_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh1_chan + CHAN_NextNote_ptr + 0], a
     ld a, h
-    ld [Ram_MusicCh1_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh1_chan + CHAN_NextNote_ptr + 1], a
     ret
 
 ;;;=========================================================================;;;
 
 Func_MusicKeepPlayingCh2:
     ;; Decrement note frames, and return if the note isn't done yet.
-    ld hl, Ram_MusicCh2_chan + CHAN_NoteFrames_u8
+    ld hl, Ram_AudioCh2_chan + CHAN_NoteFrames_u8
     dec [hl]
     ret nz
     ;; Start next note.
@@ -387,7 +543,7 @@ Func_MusicKeepPlayingCh2:
 
 Func_MusicStartNoteCh2:
     ;; Copy the pointer to the start of the next note into hl.
-    ld hl, Ram_MusicCh2_chan + CHAN_NextNote_ptr
+    ld hl, Ram_AudioCh2_chan + CHAN_NextNote_ptr
     ld a, [hl+]
     ld h, [hl]
     ld l, a
@@ -399,9 +555,9 @@ _MusicStartNoteCh2_Decode:
     jr z, _MusicStartNoteCh2_NoteInst
     ;; Play note:
     ld b, a
-    ld a, [Ram_MusicCh2_chan + CHAN_Instrument_inst + INST_Envelope_u8]
+    ld a, [Ram_AudioCh2_chan + CHAN_Instrument_inst + INST_Envelope_u8]
     ldh [rAUD2ENV], a
-    ld a, [Ram_MusicCh2_chan + CHAN_Instrument_inst + INST_Shape + 0]
+    ld a, [Ram_AudioCh2_chan + CHAN_Instrument_inst + INST_Shape + 0]
     ldh [rAUD2LEN], a
     ld a, [hl+]
     ldh [rAUD2LOW], a
@@ -413,13 +569,13 @@ _MusicStartNoteCh2_Decode:
     bit 5, b
     jr z, _MusicStartNoteCh2_NoteTone
 _MusicStartNoteCh2_NoteSame:
-    ld a, [Ram_MusicCh2_chan + CHAN_LastDuration_u8]
-    ld [Ram_MusicCh2_chan + CHAN_NoteFrames_u8], a
+    ld a, [Ram_AudioCh2_chan + CHAN_LastDuration_u8]
+    ld [Ram_AudioCh2_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh2_Finish
 _MusicStartNoteCh2_NoteTone:
     ld a, [hl+]
-    ld [Ram_MusicCh2_chan + CHAN_LastDuration_u8], a
-    ld [Ram_MusicCh2_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh2_chan + CHAN_LastDuration_u8], a
+    ld [Ram_AudioCh2_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh2_Finish
 _MusicStartNoteCh2_NoteInst:
     ;; Store instrument ptr offset in bc.
@@ -438,10 +594,10 @@ _MusicStartNoteCh2_NoteInst:
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]
-    ld [Ram_MusicCh2_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
+    ld [Ram_AudioCh2_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
     inc hl  ; Skip INST_Effect_u8 (unused for ch2)
     ld a, [hl]
-    ld [Ram_MusicCh2_chan + CHAN_Instrument_inst + INST_Shape + 0], a
+    ld [Ram_AudioCh2_chan + CHAN_Instrument_inst + INST_Shape + 0], a
     ;; Begin the next note immediately.
     pop hl
     jr _MusicStartNoteCh2_Decode
@@ -460,21 +616,21 @@ _MusicStartNoteCh2_NoteRestOrHalt:
     ret
     ;; For a REST, we record the duration.
     .rest
-    ld [Ram_MusicCh2_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh2_chan + CHAN_NoteFrames_u8], a
     ;; fall through
 _MusicStartNoteCh2_Finish:
     ;; Store hl as pointer to start of next note.
     ld a, l
-    ld [Ram_MusicCh2_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh2_chan + CHAN_NextNote_ptr + 0], a
     ld a, h
-    ld [Ram_MusicCh2_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh2_chan + CHAN_NextNote_ptr + 1], a
     ret
 
 ;;;=========================================================================;;;
 
 Func_MusicKeepPlayingCh3:
     ;; Decrement note frames, and return if the note isn't done yet.
-    ld hl, Ram_MusicCh3_chan + CHAN_NoteFrames_u8
+    ld hl, Ram_AudioCh3_chan + CHAN_NoteFrames_u8
     dec [hl]
     ret nz
     ;; Start next note.
@@ -482,7 +638,7 @@ Func_MusicKeepPlayingCh3:
 
 Func_MusicStartNoteCh3:
     ;; Copy the pointer to the start of the next note into hl.
-    ld hl, Ram_MusicCh3_chan + CHAN_NextNote_ptr
+    ld hl, Ram_AudioCh3_chan + CHAN_NextNote_ptr
     ld a, [hl+]
     ld h, [hl]
     ld l, a
@@ -499,7 +655,7 @@ _MusicStartNoteCh3_Decode:
     ldh [rAUD3LEN], a
     ld a, %10000000
     ldh [rAUD3ENA], a
-    ld a, [Ram_MusicCh3_chan + CHAN_Instrument_inst + INST_Envelope_u8]
+    ld a, [Ram_AudioCh3_chan + CHAN_Instrument_inst + INST_Envelope_u8]
     ldh [rAUD3LEVEL], a
     ld a, [hl+]
     ldh [rAUD3LOW], a
@@ -511,13 +667,13 @@ _MusicStartNoteCh3_Decode:
     bit 5, b
     jr z, _MusicStartNoteCh3_NoteTone
 _MusicStartNoteCh3_NoteSame:
-    ld a, [Ram_MusicCh3_chan + CHAN_LastDuration_u8]
-    ld [Ram_MusicCh3_chan + CHAN_NoteFrames_u8], a
+    ld a, [Ram_AudioCh3_chan + CHAN_LastDuration_u8]
+    ld [Ram_AudioCh3_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh3_Finish
 _MusicStartNoteCh3_NoteTone:
     ld a, [hl+]
-    ld [Ram_MusicCh3_chan + CHAN_LastDuration_u8], a
-    ld [Ram_MusicCh3_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh3_chan + CHAN_LastDuration_u8], a
+    ld [Ram_AudioCh3_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh3_Finish
 _MusicStartNoteCh3_NoteInst:
     ;; Store instrument ptr offset in bc.
@@ -536,7 +692,7 @@ _MusicStartNoteCh3_NoteInst:
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]
-    ld [Ram_MusicCh3_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
+    ld [Ram_AudioCh3_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
     inc hl  ; Skip INST_Effect_u8 (unused for ch3)
     ;; Store the pointer to the WAVE struct in hl.
     ld a, [hl+]
@@ -572,21 +728,21 @@ _MusicStartNoteCh3_NoteRestOrHalt:
     ret
     ;; For a REST, we record the duration.
     .rest
-    ld [Ram_MusicCh3_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh3_chan + CHAN_NoteFrames_u8], a
     ;; fall through
 _MusicStartNoteCh3_Finish:
     ;; Store hl as pointer to start of next note.
     ld a, l
-    ld [Ram_MusicCh3_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh3_chan + CHAN_NextNote_ptr + 0], a
     ld a, h
-    ld [Ram_MusicCh3_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh3_chan + CHAN_NextNote_ptr + 1], a
     ret
 
 ;;;=========================================================================;;;
 
 Func_MusicKeepPlayingCh4:
     ;; Decrement note frames, and return if the note isn't done yet.
-    ld hl, Ram_MusicCh4_chan + CHAN_NoteFrames_u8
+    ld hl, Ram_AudioCh4_chan + CHAN_NoteFrames_u8
     dec [hl]
     ret nz
     ;; Start next note.
@@ -594,7 +750,7 @@ Func_MusicKeepPlayingCh4:
 
 Func_MusicStartNoteCh4:
     ;; Copy the pointer to the start of the next note into hl.
-    ld hl, Ram_MusicCh4_chan + CHAN_NextNote_ptr
+    ld hl, Ram_AudioCh4_chan + CHAN_NextNote_ptr
     ld a, [hl+]
     ld h, [hl]
     ld l, a
@@ -604,25 +760,29 @@ _MusicStartNoteCh4_Decode:
     jr z, _MusicStartNoteCh4_NoteRestOrHalt
     bit 6, a
     jr z, _MusicStartNoteCh4_NoteInst
-    ;; Play note:
+    ;; Play note (if the channel is not busy with a sound effect):
     ld b, a
-    ld a, [Ram_MusicCh4_chan + CHAN_Instrument_inst + INST_Envelope_u8]
+    ld a, [Ram_AudioCh4_chan + CHAN_SfxFrames_u8]
+    or a
+    jr nz, .skipPlaying
+    ld a, [Ram_AudioCh4_chan + CHAN_Instrument_inst + INST_Envelope_u8]
     ldh [rAUD4ENV], a
-    ld a, [Ram_MusicCh4_chan + CHAN_Instrument_inst + INST_Effect_u8]
+    ld a, [Ram_AudioCh4_chan + CHAN_Instrument_inst + INST_Effect_u8]
     ldh [rAUD4POLY], a
     ld a, %10000000
     ldh [rAUD4GO], a
+    .skipPlaying
     ;; Determine duration:
     bit 5, b
     jr z, _MusicStartNoteCh4_NoteTone
 _MusicStartNoteCh4_NoteSame:
-    ld a, [Ram_MusicCh4_chan + CHAN_LastDuration_u8]
-    ld [Ram_MusicCh4_chan + CHAN_NoteFrames_u8], a
+    ld a, [Ram_AudioCh4_chan + CHAN_LastDuration_u8]
+    ld [Ram_AudioCh4_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh4_Finish
 _MusicStartNoteCh4_NoteTone:
     ld a, [hl+]
-    ld [Ram_MusicCh4_chan + CHAN_LastDuration_u8], a
-    ld [Ram_MusicCh4_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh4_chan + CHAN_LastDuration_u8], a
+    ld [Ram_AudioCh4_chan + CHAN_NoteFrames_u8], a
     jr _MusicStartNoteCh4_Finish
 _MusicStartNoteCh4_NoteInst:
     ;; Store instrument ptr offset in bc.
@@ -641,18 +801,22 @@ _MusicStartNoteCh4_NoteInst:
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]
-    ld [Ram_MusicCh4_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
+    ld [Ram_AudioCh4_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
     ld a, [hl]
-    ld [Ram_MusicCh4_chan + CHAN_Instrument_inst + INST_Effect_u8], a
+    ld [Ram_AudioCh4_chan + CHAN_Instrument_inst + INST_Effect_u8], a
     ;; Begin the next note immediately.
     pop hl
     jr _MusicStartNoteCh4_Decode
 _MusicStartNoteCh4_NoteRestOrHalt:
     ;; Store the rest duration in d.
     ld d, a
-    ;; For both REST and HALT, we disable the channel.
-    xor a
+    ;; For both REST and HALT, we disable the channel (if the channel is not
+    ;; busy with a sound effect).
+    ld a, [Ram_AudioCh4_chan + CHAN_SfxFrames_u8]
+    or a
+    jr nz, .skipDisable
     ldh [rAUD4ENV], a
+    .skipDisable
     ;; If the rest duration is zero, this is a HALT.
     or d
     jr nz, .rest
@@ -662,14 +826,14 @@ _MusicStartNoteCh4_NoteRestOrHalt:
     ret
     ;; For a REST, we record the duration.
     .rest
-    ld [Ram_MusicCh4_chan + CHAN_NoteFrames_u8], a
+    ld [Ram_AudioCh4_chan + CHAN_NoteFrames_u8], a
     ;; fall through
 _MusicStartNoteCh4_Finish:
     ;; Store hl as pointer to start of next note.
     ld a, l
-    ld [Ram_MusicCh4_chan + CHAN_NextNote_ptr + 0], a
+    ld [Ram_AudioCh4_chan + CHAN_NextNote_ptr + 0], a
     ld a, h
-    ld [Ram_MusicCh4_chan + CHAN_NextNote_ptr + 1], a
+    ld [Ram_AudioCh4_chan + CHAN_NextNote_ptr + 1], a
     ret
 
 ;;;=========================================================================;;;

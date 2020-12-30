@@ -90,7 +90,7 @@ Main_BeginPause::
     ;; fall through to Main_PausingGame
 
 Main_PausingGame:
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
 _PausingGame_MoveWindow:
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
@@ -125,7 +125,7 @@ _PausingGame_Unpause:
 ;;;=========================================================================;;;
 
 Main_PauseMenu:
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00

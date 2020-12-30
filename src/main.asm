@@ -87,12 +87,7 @@ Main::
     ldh [rOBP0], a
     ldh [rOBP1], a
     ;; Turn on audio.
-    ld a, AUDENA_ON
-    ldh [rAUDENA], a
-    ld a, $ff
-    ldh [rAUDTERM], a
-    ld a, $77
-    ldh [rAUDVOL], a
+    call Func_InitAudio
     ;; Go to world map.
     ld a, 0
     ld [Ram_CurrentPuzzleNumber_u8], a

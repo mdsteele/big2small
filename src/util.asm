@@ -57,7 +57,7 @@ Func_FadeIn::
     ld b, FADE_STEP_FRAMES
     .loop1
     push bc
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     pop bc
     dec b
@@ -69,7 +69,7 @@ Func_FadeIn::
     ld b, FADE_STEP_FRAMES
     .loop2
     push bc
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     pop bc
     dec b
@@ -84,7 +84,7 @@ Func_FadeIn::
 ;;; LCD off.  Music will continue to play during the fade.
 ;;; @prereq LCD is on.
 Func_FadeOut::
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     ld a, %10010000
     ldh [rBGP], a
@@ -93,7 +93,7 @@ Func_FadeOut::
     ld b, FADE_STEP_FRAMES
     .loop1
     push bc
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     pop bc
     dec b
@@ -105,7 +105,7 @@ Func_FadeOut::
     ld b, FADE_STEP_FRAMES
     .loop2
     push bc
-    call Func_MusicUpdate
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     pop bc
     dec b
