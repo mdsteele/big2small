@@ -87,6 +87,7 @@ G_CHS RB 1  ; Cheese
 
 ;; Special terrain:
 S_BSH RB 1  ; Bush
+S_MTP RB 1  ; Mousetrap
 S_PPW RB 1  ; Pipe west
 S_PPE RB 1  ; Pipe east
 S_ARN RB 1  ; Arrow north

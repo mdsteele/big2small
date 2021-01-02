@@ -172,7 +172,28 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 Data_Puzzle7_puzz:
     .begin
-    DB W_BLD, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, W_BLD, W_BLD
+    DB W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BW3
+    DB $18, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BE3, O_EMP, O_EMP, W_BS1, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, W_BW3
+    DB $11, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BE3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, W_BW3
+    DB $71, DIRF_EAST, 0, 0, 0, 0
+    DB W_BE3, O_EMP, G_APL, W_BN1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BW3
+    DS 6
+    DB W_BE3, O_EMP, O_EMP, W_BS1, G_PNT, O_EMP, O_EMP, O_EMP, S_MTP, W_BW3
+    DS 6
+    DB W_BE3, O_EMP, O_EMP, S_MTP, O_EMP, W_BNW, W_BNE, O_EMP, O_EMP, W_BW3
+    DS 6
+    DB W_BE3, W_BSE, O_EMP, O_EMP, O_EMP, W_BSW, W_BSE, S_MTP, O_EMP, W_BW3
+    DS 6
+    DB W_BE3, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, G_CHS, W_BW3
+    DS 6
+    DB W_BC4, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BC4
+ASSERT @ - .begin == sizeof_PUZZ
+
+Data_Puzzle8_puzz:
+    .begin
+    DB W_BLD, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
     DB $01, DIRF_SOUTH, 0, 0, 0, 0
     DB O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
     DB $10, DIRF_SOUTH, 0, 0, 0, 0
@@ -204,5 +225,6 @@ Data_PuzzlePtrs_start::
     DW Data_Puzzle5_puzz
     DW Data_Puzzle6_puzz
     DW Data_Puzzle7_puzz
+    DW Data_Puzzle8_puzz
 
 ;;;=========================================================================;;;

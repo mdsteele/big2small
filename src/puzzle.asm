@@ -40,8 +40,15 @@ STOP_NS_TILEID  EQU $4a
 ARROW_EW_TILEID EQU $4c
 STOP_EW_TILEID  EQU $4e
 
+SMOKE_L1_TILEID EQU $50
+SMOKE_L2_TILEID EQU $54
+SMOKE_L3_TILEID EQU $58
+
 PIPE_WL_TILEID EQU $f8
 PIPE_EL_TILEID EQU $fc
+
+;;; The number of frames per step of the smoke animation:
+SMOKE_FRAMES EQU 6
 
 ;;;=========================================================================;;;
 
@@ -93,6 +100,10 @@ Ram_WalkingCountdown_u8:
 
 ;;; Which action the currently-moving animal is performing, or zero for none.
 Ram_WalkingAction_u8:
+    DB
+
+;;; Frame counter for the smoke animation.
+Ram_SmokeCounter_u8:
     DB
 
 ;;;=========================================================================;;;
@@ -222,22 +233,32 @@ _PuzzleCommand_HandleButtonStart:
 _PuzzleCommand_HandleButtonA:
     bit PADB_A, b
     jr z, .noPress
+    .increment
     ld a, [Ram_SelectedAnimal_u8]
     inc a
     if_lt 3, jr, .noOverflow
     xor a
     .noOverflow
-    jr _PuzzleCommand_SelectAnimal
+    ld [Ram_SelectedAnimal_u8], a
+    call Func_IsSelectedAnimalAlive_fc
+    jr nc, .increment
+    call Func_UpdateMoveDirs
+    jr Main_PuzzleCommand
     .noPress
 _PuzzleCommand_HandleButtonB:
     bit PADB_B, b
     jr z, .noPress
+    .decrement
     ld a, [Ram_SelectedAnimal_u8]
     sub 1
     jr nc, .noUnderflow
     ld a, 2
     .noUnderflow
-    jr _PuzzleCommand_SelectAnimal
+    ld [Ram_SelectedAnimal_u8], a
+    call Func_IsSelectedAnimalAlive_fc
+    jr nc, .decrement
+    call Func_UpdateMoveDirs
+    jr Main_PuzzleCommand
     .noPress
 _PuzzleCommand_HandleButtonUp:
     bit PADB_UP, b
@@ -262,11 +283,6 @@ _PuzzleCommand_HandleButtonRight:
     jr z, Main_PuzzleCommand
     ld d, DIRF_EAST
     jr _PuzzleCommand_TryMove
-
-_PuzzleCommand_SelectAnimal:
-    ld [Ram_SelectedAnimal_u8], a
-    call Func_UpdateMoveDirs
-    jr Main_PuzzleCommand
 
 _PuzzleCommand_TryMove:
     ;; Check if we can move in the DIRF_* direction that's stored in d.
@@ -304,6 +320,15 @@ Func_GetSelectedAnimalPtr_hl:
     ret
     .mouseSelected
     ld hl, Ram_PuzzleState_puzz + PUZZ_Mouse_anim
+    ret
+
+;;; @return fc True if the selected animal is alive.
+Func_IsSelectedAnimalAlive_fc:
+    call Func_GetSelectedAnimalPtr_hl
+    ASSERT ANIM_Position_u8 == 0
+    ld a, [hl]
+    and $0f
+    cp TERRAIN_COLS
     ret
 
 ;;;=========================================================================;;;
@@ -924,6 +949,8 @@ _AnimalMoving_ContinueMovingElephant:
     ld [Ram_WalkingAction_u8], a
     jr _AnimalMoving_RunLoop
 _AnimalMoving_ContinueMovingMouse:
+    xor a
+    ld [Ram_WalkingAction_u8], a
     ld a, 8
     ld [Ram_WalkingCountdown_u8], a
     jr _AnimalMoving_RunLoop
@@ -1021,7 +1048,7 @@ _AnimalMoving_AnimalAction:
 _AnimalMoving_TerrainAction:
     ;; Store the terrain type the animal is standing on in a.
     ld a, [de]
-    ;; Check for terrain actions.
+    ;; If the animal steps on an arrow, change the value of its ANIM_Facing_u8.
     if_ne S_ARN, jr, .notNorthArrow
     ld [hl], DIRF_NORTH
     jr _AnimalMoving_Update
@@ -1038,6 +1065,13 @@ _AnimalMoving_TerrainAction:
     ld [hl], DIRF_WEST
     jr _AnimalMoving_Update
     .notWestArrow
+    ;; If the mouse steps on a mousetrap, then it dies.
+    if_ne S_MTP, jr, .notMousetrap
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_MOUSE, jr, _AnimalMoving_Update
+    jr _AnimalMoving_Mousetrap
+    .notMousetrap
+    ;; If the animal steps on a bush, remove the bush.
     if_ne S_BSH, jr, .notBush
     ld a, O_BST
     ld [de], a
@@ -1074,6 +1108,59 @@ _AnimalMoving_DoneMoving:
     if_ne G_CHS, jp, Main_PuzzleCommand
     ;; We've solved the puzzle, so go to victory mode.
     jp Main_Victory
+
+_AnimalMoving_Mousetrap:
+    ;; Set current terrain to empty:
+    ld a, O_EMP
+    ld [de], a
+    call Func_LoadTerrainCellIntoVram
+    ;; Select goat:
+    ld a, ANIMAL_GOAT
+    ld [Ram_SelectedAnimal_u8], a
+    ;; Mark mouse as dead:
+    ld a, (ANIMAL_MOUSE << 4) | $0f
+    ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8], a
+    ;; Play a sound effect.
+    ld c, BANK(Data_Mousetrap_sfx4)
+    ld hl, Data_Mousetrap_sfx4
+    call Func_PlaySfx4
+    ;; Replace mouse objects with smoke:
+    ld a, SMOKE_L1_TILEID
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    xor a
+    ld [Ram_MouseL_oama + OAMA_FLAGS], a
+    ld [Ram_MouseR_oama + OAMA_FLAGS], a
+    ld [Ram_SmokeCounter_u8], a
+_AnimalMoving_SmokeLoop:
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
+    ld a, [Ram_SmokeCounter_u8]
+    inc a
+    ld [Ram_SmokeCounter_u8], a
+    if_eq 1 * SMOKE_FRAMES, jr, .smoke2
+    if_eq 2 * SMOKE_FRAMES, jr, .smoke3
+    if_eq 3 * SMOKE_FRAMES, jr, .smokeDone
+    if_eq 4 * SMOKE_FRAMES, jp, Main_PuzzleCommand
+    jr _AnimalMoving_SmokeLoop
+    .smoke2
+    ld a, SMOKE_L2_TILEID
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    jr _AnimalMoving_SmokeLoop
+    .smoke3
+    ld a, SMOKE_L3_TILEID
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    jr _AnimalMoving_SmokeLoop
+    .smokeDone
+    xor a
+    ld [Ram_MouseL_oama + OAMA_Y], a
+    ld [Ram_MouseR_oama + OAMA_Y], a
+    jr _AnimalMoving_SmokeLoop
 
 ;;;=========================================================================;;;
 

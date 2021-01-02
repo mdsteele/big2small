@@ -30,6 +30,7 @@ Data_ObjTiles_start::
     INCBIN "out/data/goat.2bpp"
     INCBIN "out/data/mouse.2bpp"
     INCBIN "out/data/cursor.2bpp"
+    INCBIN "out/data/smoke.2bpp"
 Data_ObjTiles_end::
 
 ;;;=========================================================================;;;

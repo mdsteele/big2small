@@ -53,6 +53,8 @@ Data_TerrainTable:
     ;; Special terrain:
     ASSERT @ - Data_TerrainTable == 4 * S_BSH
     DB $14, $16, $15, $17
+    ASSERT @ - Data_TerrainTable == 4 * S_MTP
+    DB $1c, $1e, $1d, $1f
     ASSERT @ - Data_TerrainTable == 4 * S_PPW
     DB $f8, $fa, $f9, $fb
     ASSERT @ - Data_TerrainTable == 4 * S_PPE
