@@ -67,6 +67,12 @@ Data_TerrainTable:
     DB $12, $12, $13, $13
     ASSERT @ - Data_TerrainTable == 4 * S_ARW
     DB $10, $10, $11, $11
+    ASSERT @ - Data_TerrainTable == 4 * S_TEF
+    DB $d0, $d2, $d1, $d3
+    ASSERT @ - Data_TerrainTable == 4 * S_TGE
+    DB $d4, $d6, $d5, $d7
+    ASSERT @ - Data_TerrainTable == 4 * S_TMF
+    DB $d8, $da, $d9, $db
     ;; River terrain:
     ASSERT @ - Data_TerrainTable == 4 * R_RNS
     DB $e4, $e6, $e5, $e7

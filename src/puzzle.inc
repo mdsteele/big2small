@@ -94,6 +94,9 @@ S_ARN RB 1  ; Arrow north
 S_ARS RB 1  ; Arrow south
 S_ARE RB 1  ; Arrow east
 S_ARW RB 1  ; Arrow west
+S_TEF RB 1  ; Teleporter for elephant (index F)
+S_TGE RB 1  ; Teleporter for goat (index E)
+S_TMF RB 1  ; Teleporter for mouse (index F)
 
 ;;; River terrain:
 R_MIN RB 0  ; Terrain types from R_MIN to M_MIN are rivers.

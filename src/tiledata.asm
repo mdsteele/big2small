@@ -17,6 +17,10 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/vram.inc"
+
+;;;=========================================================================;;;
+
 SECTION "FontTiles", ROM0
 Data_FontTiles_start::
     INCBIN "out/data/font.2bpp"
@@ -53,6 +57,8 @@ Data_TerrainTiles_end::
 SECTION "CityTiles", ROM0
 Data_CityTiles_start::
     INCBIN "out/data/city.2bpp"
+    DS sizeof_TILE * 4
+    INCBIN "out/data/space.2bpp"
 Data_CityTiles_end::
 
 ;;;=========================================================================;;;

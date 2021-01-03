@@ -1065,6 +1065,25 @@ _AnimalMoving_TerrainAction:
     ld [hl], DIRF_WEST
     jr _AnimalMoving_Update
     .notWestArrow
+    ;; If the animal steps on a matching teleporter, teleport it.
+    if_ne S_TEF, jr, .notElephantTeleporterF
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_ELEPHANT, jr, _AnimalMoving_Update
+    ld c, $0f
+    jr _AnimalMoving_Teleport
+    .notElephantTeleporterF
+    if_ne S_TGE, jr, .notGoatTeleporterE
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_GOAT, jr, _AnimalMoving_Update
+    ld c, $0e
+    jr _AnimalMoving_Teleport
+    .notGoatTeleporterE
+    if_ne S_TMF, jr, .notMouseTeleporterF
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_MOUSE, jr, _AnimalMoving_Update
+    ld c, $0f
+    jr _AnimalMoving_Teleport
+    .notMouseTeleporterF
     ;; If the mouse steps on a mousetrap, then it dies.
     if_ne S_MTP, jr, .notMousetrap
     ld a, [Ram_SelectedAnimal_u8]
@@ -1109,6 +1128,29 @@ _AnimalMoving_DoneMoving:
     ;; We've solved the puzzle, so go to victory mode.
     jp Main_Victory
 
+_AnimalMoving_Teleport:
+    ;; Set b to the destination position.
+    ld a, e
+    and $f0
+    or c
+    ld e, a
+    ld a, [de]
+    ld b, a
+    ;; Make hl point to the selected animal's position.
+    call Func_GetSelectedAnimalPtr_hl  ; preserves b
+    ASSERT ANIM_Position_u8 == 0
+    ;; If there's another animal at the teleporter destination, don't teleport.
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
+    if_eq b, jr, _AnimalMoving_Update
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Position_u8]
+    if_eq b, jr, _AnimalMoving_Update
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
+    if_eq b, jr, _AnimalMoving_Update
+    ;; Set the selected animal's position to the teleporter destination and
+    ;; continue walking.
+    ld [hl], b
+    jr _AnimalMoving_Update
+
 _AnimalMoving_Mousetrap:
     ;; Set current terrain to empty:
     ld a, O_EMP
@@ -1118,7 +1160,9 @@ _AnimalMoving_Mousetrap:
     ld a, ANIMAL_GOAT
     ld [Ram_SelectedAnimal_u8], a
     ;; Mark mouse as dead:
-    ld a, (ANIMAL_MOUSE << 4) | $0f
+    xor a
+    ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Facing_u8], a
+    ld a, PUZZ_Mouse_anim + ANIM_Facing_u8
     ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8], a
     ;; Play a sound effect.
     ld c, BANK(Data_Mousetrap_sfx4)

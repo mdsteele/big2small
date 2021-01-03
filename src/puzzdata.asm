@@ -195,20 +195,20 @@ Data_Puzzle8_puzz:
     .begin
     DB W_BLD, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
     DB $01, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_BLD
-    DB $10, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, O_EMP, W_BLD, W_BLD
-    DB $21, DIRF_SOUTH, 0, 0, 0, 0
+    DB O_EMP, S_BSH, O_EMP, O_EMP, S_TEF, S_TGE, O_EMP, O_EMP, W_BLD, W_BLD
+    DB $10, DIRF_SOUTH, 0, 0, $46, $27
+    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, S_TEF, W_BLD, W_BLD
+    DB $21, DIRF_SOUTH, 0, 0, 0, $14
     DB W_CSO, W_CRV, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO, W_CRV
     DS 6
-    DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, W_RSO
-    DS 6
+    DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, S_TGE, O_EMP, S_TMF, W_RSO
+    DB 0, 0, 0, 0, $15, $77
     DB S_ARE, W_RSO, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, R_RSE, R_REW
     DS 6
     DB R_REW, R_RSW, O_EMP, W_BLD, O_EMP, O_EMP, S_ARS, G_CHS, R_RNS, O_EMP
     DS 6
-    DB O_EMP, R_RNE, R_REW, R_REW, R_REW, R_REW, R_RSW, O_EMP, R_RNS, O_EMP
-    DS 6
+    DB O_EMP, R_RNE, R_REW, R_REW, R_REW, R_REW, R_RSW, S_TMF, R_RNS, O_EMP
+    DB 0, 0, 0, 0, 0, $48
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
