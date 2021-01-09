@@ -17,63 +17,30 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/hardware.inc"
+INCLUDE "src/puzzle.inc"
 INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "FontTiles", ROM0
-Data_FontTiles_start::
-    INCBIN "out/data/font.2bpp"
-Data_FontTiles_end::
+SECTION "WorldMapData", ROM0
 
-;;;=========================================================================;;;
+Data_WorldTileMap_start::
+    INCBIN "out/data/worldmap.map"
+Data_WorldTileMap_end::
+ASSERT @ - Data_WorldTileMap_start == SCRN_VX_B * SCRN_VY_B
 
-SECTION "MapTiles", ROM0
-Data_MapTiles_start::
-    INCBIN "out/data/worldmap.2bpp"
-Data_MapTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "ObjTiles", ROM0
-Data_ObjTiles_start::
-    INCBIN "out/data/elephant.2bpp"
-    INCBIN "out/data/goat.2bpp"
-    INCBIN "out/data/mouse.2bpp"
-    INCBIN "out/data/cursor.2bpp"
-    INCBIN "out/data/smoke.2bpp"
-Data_ObjTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "DeviceTiles", ROM0
-Data_DeviceTiles_start::
-    INCBIN "out/data/devices.2bpp"
-Data_DeviceTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "TerrainTiles", ROM0
-Data_TerrainTiles_start::
-    INCBIN "out/data/forest.2bpp"
-    INCBIN "out/data/mountain.2bpp"
-Data_TerrainTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "CityTiles", ROM0
-Data_CityTiles_start::
-    INCBIN "out/data/city.2bpp"
-    DS sizeof_TILE * 4
-    INCBIN "out/data/space.2bpp"
-Data_CityTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "RiverTiles", ROM0
-Data_RiverTiles_start::
-    INCBIN "out/data/river.2bpp"
-    INCBIN "out/data/pipe.2bpp"
-Data_RiverTiles_end::
+;; BG map row/col positions for each puzzle node.
+Data_PuzzleMapPositions_u8_pair_arr::
+    DB 28, 6
+    DB 25, 6
+    DB 25, 8
+    DB 25, 11
+    DB 23, 8
+    DB 23, 3
+    DB 25, 3
+    DB 20, 3
+    DB 20, 7
+ASSERT @ - Data_PuzzleMapPositions_u8_pair_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;

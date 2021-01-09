@@ -40,7 +40,7 @@ Main::
     ;; Turn off the LCD.
     call Func_WaitForVBlank
     ld a, LCDCF_OFF
-    ld [rLCDC], a
+    ldh [rLCDC], a
     ;; Copy tiles to VRAM.
     ld hl, Vram_BgTiles + 0 * sizeof_TILE                 ; dest
     ld de, Data_DeviceTiles_start                         ; src
@@ -49,14 +49,6 @@ Main::
     ld hl, Vram_BgTiles + " " * sizeof_TILE           ; dest
     ld de, Data_FontTiles_start                       ; src
     ld bc, Data_FontTiles_end - Data_FontTiles_start  ; count
-    call Func_MemCopy
-    ld hl, Vram_SharedTiles + $00 * sizeof_TILE             ; dest
-    ld de, Data_TerrainTiles_start                          ; src
-    ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
-    call Func_MemCopy
-    ld hl, Vram_SharedTiles + $40 * sizeof_TILE       ; dest
-    ld de, Data_CityTiles_start                       ; src
-    ld bc, Data_CityTiles_end - Data_CityTiles_start  ; count
     call Func_MemCopy
     ld hl, Vram_SharedTiles + $60 * sizeof_TILE         ; dest
     ld de, Data_RiverTiles_start                        ; src
@@ -88,6 +80,8 @@ Main::
     ldh [rOBP1], a
     ;; Turn on audio.
     call Func_InitAudio
+    ;; Start a new game.
+    call Func_InitNewGameProgress
     ;; Go to world map.
     ld a, 0
     ld [Ram_CurrentPuzzleNumber_u8], a

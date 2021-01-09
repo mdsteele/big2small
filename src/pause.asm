@@ -80,7 +80,7 @@ Main_BeginPause::
     ld a, IEF_VBLANK | IEF_LCDC
     ldh [rIE], a
     xor a
-    ld [rIF], a
+    ldh [rIF], a
     ei
     ;; Initialize state.
     xor a

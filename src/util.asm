@@ -28,15 +28,26 @@ SECTION "MemFunctions", ROM0
 ;;; @param de Source start address.
 ;;; @param bc Num bytes to copy.
 Func_MemCopy::
+    inc b
+    bit 0, c
+    jr nz, .odd
+    inc c
+    jr .even
     .loop
-    ld a, b
-    or c
-    ret z
     ld a, [de]
     ld [hl+], a
     inc de
-    dec bc
-    jr .loop
+    dec c
+    .odd
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    .even
+    dec c
+    jr nz, .loop
+    dec b
+    jr nz, .loop
+    ret
 
 ;;;=========================================================================;;;
 
@@ -157,25 +168,25 @@ SECTION "ButtonFunctions", ROM0
 Func_UpdateButtonState::
     ;; Get current button state and store it in b.
     ld a, P1F_GET_DPAD
-    ld [rP1], a
+    ldh [rP1], a
     REPT 2  ; It takes a couple cycles to get an accurate reading.
-    ld a, [rP1]
+    ldh a, [rP1]
     ENDR
     cpl
     and $0f
     swap a
     ld b, a
     ld a, P1F_GET_BTN
-    ld [rP1], a
+    ldh [rP1], a
     REPT 6  ; It takes several cycles to get an accurate reading.
-    ld a, [rP1]
+    ldh a, [rP1]
     ENDR
     cpl
     and $0f
     or b
     ld b, a
     ld a, P1F_GET_NONE
-    ld [rP1], a
+    ldh [rP1], a
     ;; Update state variables.
     ld a, [Ram_ButtonsHeld_u8]
     cpl

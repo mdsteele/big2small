@@ -216,7 +216,7 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 SECTION "PuzzlePtrs", ROM0
 
-Data_PuzzlePtrs_start::
+Data_Puzzles_puzz_ptr_arr::
     DW Data_Puzzle0_puzz
     DW Data_Puzzle1_puzz
     DW Data_Puzzle2_puzz
@@ -226,5 +226,6 @@ Data_PuzzlePtrs_start::
     DW Data_Puzzle6_puzz
     DW Data_Puzzle7_puzz
     DW Data_Puzzle8_puzz
+ASSERT @ - Data_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;

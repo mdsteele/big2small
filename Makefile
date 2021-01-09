@@ -26,15 +26,18 @@ OBJDIR = $(OUTDIR)/obj
 ROMFILE = $(OUTDIR)/big2small.gb
 SYMFILE = $(OUTDIR)/big2small.sym
 AHI22BPP = $(BINDIR)/ahi22bpp
+BG2MAP = $(BINDIR)/bg2map
 SNG2ASM = $(BINDIR)/sng2asm
 
 AHIFILES := $(shell find $(SRCDIR) -name '*.ahi')
 ASMFILES := $(shell find $(SRCDIR) -name '*.asm')
+BGFILES := $(shell find $(SRCDIR) -name '*.bg')
 INCFILES := $(shell find $(SRCDIR) -name '*.inc')
 SNGFILES := $(shell find $(SRCDIR) -name '*.sng')
 
 BPPFILES := $(patsubst $(SRCDIR)/%.ahi,$(DATADIR)/%.2bpp,$(AHIFILES))
 GENFILES := $(patsubst $(SRCDIR)/%.sng,$(GENDIR)/%.asm,$(SNGFILES))
+MAPFILES := $(patsubst $(SRCDIR)/%.bg,$(DATADIR)/%.map,$(BGFILES))
 OBJFILES := $(patsubst $(SRCDIR)/%.asm,$(OBJDIR)/%.o,$(ASMFILES)) \
             $(patsubst $(GENDIR)/%.asm,$(GENDIR)/%.o,$(GENFILES))
 
@@ -67,6 +70,14 @@ $(DATADIR)/%.2bpp: $(SRCDIR)/%.ahi $(AHI22BPP)
 	@mkdir -p $(@D)
 	@$(AHI22BPP) < $< > $@
 
+$(BG2MAP): build/bg2map.c
+	$(compile-c99)
+
+$(DATADIR)/%.map: $(SRCDIR)/%.bg $(BG2MAP)
+	@echo "Converting $<"
+	@mkdir -p $(@D)
+	@$(BG2MAP) < $< > $@
+
 $(SNG2ASM): build/sng2asm.c
 	$(compile-c99)
 
@@ -92,7 +103,10 @@ define compile-asm
 	@rgbasm -Wall -Werror -o $@ $<
 endef
 
-$(OBJDIR)/tiledata.o: $(SRCDIR)/tiledata.asm $(BPPFILES)
+$(OBJDIR)/mapdata.o: $(SRCDIR)/mapdata.asm $(INCFILES) $(MAPFILES)
+	$(compile-asm)
+
+$(OBJDIR)/tiledata.o: $(SRCDIR)/tiledata.asm $(INCFILES) $(BPPFILES)
 	$(compile-asm)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.asm $(INCFILES)

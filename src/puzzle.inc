@@ -17,6 +17,9 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+;;; The number of puzzles in the game:
+NUM_PUZZLES EQU 9
+
 ;;; The dimensions of a puzzle's terrain grid:
 TERRAIN_COLS EQU 10
 TERRAIN_ROWS EQU 9

@@ -20,6 +20,7 @@
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/puzzle.inc"
+INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -76,7 +77,7 @@ Ram_PuzzleState_puzz:
 SECTION "PuzzleUiState", WRAM0
 
 ;;; A pointer to the original PUZZ struct ROM for the current puzzle.
-Ram_PuzzleRom_ptr:
+Ram_PuzzleRom_puzz_ptr:
     DW
 
 ;;; This should be set to one of the ANIMAL_* constants.
@@ -120,9 +121,9 @@ SECTION "MainPuzzleScreen", ROM0
 
 ;;; @prereq LCD is off.
 Main_ResetPuzzle::
-    ld a, [Ram_PuzzleRom_ptr + 0]
+    ld a, [Ram_PuzzleRom_puzz_ptr + 0]
     ld e, a
-    ld a, [Ram_PuzzleRom_ptr + 1]
+    ld a, [Ram_PuzzleRom_puzz_ptr + 1]
     ld d, a
     jr _BeginPuzzle_Init
 
@@ -132,19 +133,28 @@ Main_BeginPuzzle::
     ;; Store pointer to current PUZZ struct in de...
     sla c
     ld b, 0
-    ld hl, Data_PuzzlePtrs_start
+    ld hl, Data_Puzzles_puzz_ptr_arr
     add hl, bc
     ld a, [hl+]
     ld d, [hl]
     ld e, a
-    ;; ... and also in Ram_PuzzleRom_ptr.
-    ld [Ram_PuzzleRom_ptr + 0], a
+    ;; ... and also in Ram_PuzzleRom_puzz_ptr.
+    ld [Ram_PuzzleRom_puzz_ptr + 0], a
     ld a, d
-    ld [Ram_PuzzleRom_ptr + 1], a
+    ld [Ram_PuzzleRom_puzz_ptr + 1], a
 _BeginPuzzle_Init:
     ;; Copy current puzzle into RAM.
     ld hl, Ram_PuzzleState_puzz  ; dest
     ld bc, sizeof_PUZZ           ; count
+    call Func_MemCopy
+    ;; Copy tiles to VRAM.
+    ld hl, Vram_SharedTiles + $00 * sizeof_TILE             ; dest
+    ld de, Data_TerrainTiles_start                          ; src
+    ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
+    call Func_MemCopy
+    ld hl, Vram_SharedTiles + $40 * sizeof_TILE       ; dest
+    ld de, Data_CityTiles_start                       ; src
+    ld bc, Data_CityTiles_end - Data_CityTiles_start  ; count
     call Func_MemCopy
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
@@ -209,8 +219,8 @@ _BeginPuzzle_Init:
     ;; Turn on the LCD and fade in.
     call Func_PerformDma
     xor a
-    ld [rSCX], a
-    ld [rSCY], a
+    ldh [rSCX], a
+    ldh [rSCY], a
     call Func_FadeIn
     ld a, %11010000
     ldh [rOBP1], a
