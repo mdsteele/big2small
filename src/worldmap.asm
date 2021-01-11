@@ -133,11 +133,15 @@ _WorldMapScreen_DrawUnlockedNodes:
     ld a, e
     if_lt NUM_PUZZLES, jr, .puzzLoop
 _WorldMapScreen_SetUpObjects:
-    ;; Set up camera.
-    call Func_ScrollMapToCurrentPuzzle
     ;; Set up objects.
     call Func_ClearOam
     ;; TODO: Set up objects for walking around the map.
+    ;; Initialize music.
+    ld c, BANK(Data_RestYe_song)
+    ld hl, Data_RestYe_song
+    call Func_MusicStart
+    ;; Turn on the LCD and fade in.
+    call Func_ScrollMapToCurrentPuzzle
     call Func_PerformDma
     call Func_FadeIn
 _WorldMapScreen_RunLoop:

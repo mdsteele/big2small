@@ -213,8 +213,12 @@ _BeginPuzzle_Init:
     ld bc, Data_PauseMenuString3_end - Data_PauseMenuString3_start  ; count
     call Func_MemCopy
     ;; Initialize music.
-    ld c, BANK(Data_TitleMusic_song)
-    ld hl, Data_TitleMusic_song
+    ld hl, Ram_PuzzleState_puzz + PUZZ_Music_song_bptr
+    ld a, [hl+]
+    ld c, a     ; bank
+    ld a, [hl+]
+    ld h, [hl]  ; ptr
+    ld l, a     ; ptr
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
     call Func_PerformDma

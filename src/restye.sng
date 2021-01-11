@@ -1,0 +1,47 @@
+!SONG "RestYe" "S|ABCDE"
+=tempo q24
+=key 1#
+
+!PART S
+
+1 { E(10, -5) }
+2 { E(10, -4) D(1/4) }
+3 { W(86420024689a989a989a989abcdefeca) }
+4 { E(15, -7) }
+
+2' e4q3 de3 |
+
+!PART A
+
+2| e4e b4q bq. aq | gq3 ge3 fe eq d b3e | e4q fq ge aq be+  | +h. re e4   |
+3| e3h   d#       | eq.  ce+q gq        | ch     eq ce b2e+ | +h e3q d#3q |
+4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+ | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+
+!PART B
+
+2| e4q b bq. ae | ge fq e d b3e | e4q f ge aq be+ | +h. b4q   |
+3| e3h   d#     | eq.  ce+q gq  | ch    eq c      | b2h. e3q  |
+4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+ | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+
+!PART C
+
+2| c5q a4 b c5 | de eq b4 a ae | gq e f g | ah  gq a |
+3| a3h  gq e   | c3h  gq b2    | e3h  d   | d3h eq f |
+4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+ | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+
+!PART D
+
+2| b4h c5q b4 | b a  g f | eh ge f eq | ah  gq a |
+3| g3h g      | g3q a bh | e3h   rh   | d3h eq f |  % TODO
+4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+ | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+
+!PART E
+
+2| b4q c5 d e | b4 a g f | e4w   | rh. e4q |
+3| g3h bq rq  | rw       | e3w   | rw      |  % TODO
+4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
+ | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |

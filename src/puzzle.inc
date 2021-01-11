@@ -67,6 +67,8 @@ PUZZ_Elephant_anim     EQU (TERRAIN_COLS + 16 * 0)
 PUZZ_Goat_anim         EQU (TERRAIN_COLS + 16 * 1)
 ;;; Mouse: The starting position and face direction for the mouse.
 PUZZ_Mouse_anim        EQU (TERRAIN_COLS + 16 * 2)
+;;; Music: A banked pointer to the song struct to play during this puzzle.
+PUZZ_Music_song_bptr   EQU (TERRAIN_COLS + 16 * 3)
 sizeof_PUZZ            EQU (TERRAIN_COLS + 16 * (TERRAIN_ROWS - 1))
 
 ;;;=========================================================================;;;

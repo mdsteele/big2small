@@ -270,7 +270,6 @@ static void adjust_base_duration(int numerator, int denominator) {
                  parser.base_duration, numerator, denominator);
   }
   new_base_duration /= denominator;
-  parser.extra_duration += parser.base_duration;
   parser.base_duration = new_base_duration;
 }
 
@@ -790,7 +789,10 @@ static void parse_input(void) {
         break;
       case ADJUST_DURATION:
         switch (ch) {
-          case '.': adjust_base_duration(1, 2); break;
+          case '.':
+            parser.extra_duration += parser.base_duration;
+            adjust_base_duration(1, 2);
+            break;
           case '3': adjust_base_duration(2, 3); break;
           case '5': adjust_base_duration(4, 5); break;
           case '+':
