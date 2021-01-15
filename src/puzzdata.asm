@@ -28,9 +28,27 @@ ENDM
 
 ;;;=========================================================================;;;
 
-SECTION "PuzzleData", ROM0
+SECTION "PuzzlePtrs", ROMX
 
-Data_Puzzle0_puzz:
+;;; An array that maps from puzzle numbers to pointers to PUZZ structs stored
+;;; in BANK("PuzzleData").
+DataX_Puzzles_puzz_ptr_arr::
+    DW DataX_Puzzle0_puzz
+    DW DataX_Puzzle1_puzz
+    DW DataX_Puzzle2_puzz
+    DW DataX_Puzzle3_puzz
+    DW DataX_Puzzle4_puzz
+    DW DataX_Puzzle5_puzz
+    DW DataX_Puzzle6_puzz
+    DW DataX_Puzzle7_puzz
+    DW DataX_Puzzle8_puzz
+ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
+
+;;;=========================================================================;;;
+
+SECTION "PuzzleData", ROMX
+
+DataX_Puzzle0_puzz:
     .begin
     DB W_TST, W_TTR, W_TTR, O_GRS, W_TTR, W_TTR, O_EMP, W_TTR, W_TST, W_TST
     DB $17, DIRF_WEST, 0, 0, 0, 0
@@ -51,7 +69,7 @@ Data_Puzzle0_puzz:
     DB W_TST, W_TTP, W_TST, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle1_puzz:
+DataX_Puzzle1_puzz:
     .begin
     DB W_TST, W_TST, W_TST, W_TST, O_GRS, W_TTR, W_TST, W_TTR, W_TST, W_TST
     DB $63, DIRF_EAST, 0, 0, 0, 0
@@ -72,7 +90,7 @@ Data_Puzzle1_puzz:
     DB W_TTP, O_EMP, W_TTR, W_TST, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle2_puzz:
+DataX_Puzzle2_puzz:
     .begin
     DB W_TST, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TST
     DB $11, DIRF_EAST, 0, 0, 0, 0
@@ -93,7 +111,7 @@ Data_Puzzle2_puzz:
     DB W_TST, W_TTP, O_GRS, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle3_puzz:
+DataX_Puzzle3_puzz:
     .begin
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_RSO, S_ARS, O_EMP, O_EMP, S_ARW, W_RSO
     DB $89, DIRF_SOUTH, 0, 0, 0, 0
@@ -114,7 +132,7 @@ Data_Puzzle3_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, S_ARN, O_EMP, S_ARE, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle4_puzz:
+DataX_Puzzle4_puzz:
     .begin
     DB W_TST, W_TTR, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, W_TST, W_TST
     DB $07, DIRF_WEST, 0, 0, 0, 0
@@ -135,7 +153,7 @@ Data_Puzzle4_puzz:
     DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, M_RNS, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle5_puzz:
+DataX_Puzzle5_puzz:
     .begin
     DB O_EMP, O_EMP, W_BW3, W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BW3
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
@@ -156,7 +174,7 @@ Data_Puzzle5_puzz:
     DB O_EMP, O_EMP, W_BW3, W_BN3, W_BN3, W_BN3, W_BC4, W_BN3, W_BN3, W_BN3
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle6_puzz:
+DataX_Puzzle6_puzz:
     .begin
     DB W_BC4, W_BE3, O_EMP, W_BEW, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, O_EMP
     DB $20, DIRF_EAST, 0, 0, 0, 0
@@ -177,7 +195,7 @@ Data_Puzzle6_puzz:
     DB W_BNE, O_EMP, S_ARN, O_EMP, S_ARN, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle7_puzz:
+DataX_Puzzle7_puzz:
     .begin
     DB W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BW3
     DB $18, DIRF_SOUTH, 0, 0, 0, 0
@@ -198,7 +216,7 @@ Data_Puzzle7_puzz:
     DB W_BC4, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BC4
 ASSERT @ - .begin == sizeof_PUZZ
 
-Data_Puzzle8_puzz:
+DataX_Puzzle8_puzz:
     .begin
     DB W_BLD, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
     DB $01, DIRF_SOUTH, 0, 0, 0, 0
@@ -218,21 +236,5 @@ Data_Puzzle8_puzz:
     DB 0, 0, 0, 0, 0, $48
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
-
-;;;=========================================================================;;;
-
-SECTION "PuzzlePtrs", ROM0
-
-Data_Puzzles_puzz_ptr_arr::
-    DW Data_Puzzle0_puzz
-    DW Data_Puzzle1_puzz
-    DW Data_Puzzle2_puzz
-    DW Data_Puzzle3_puzz
-    DW Data_Puzzle4_puzz
-    DW Data_Puzzle5_puzz
-    DW Data_Puzzle6_puzz
-    DW Data_Puzzle7_puzz
-    DW Data_Puzzle8_puzz
-ASSERT @ - Data_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;

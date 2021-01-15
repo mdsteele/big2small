@@ -133,8 +133,10 @@ Main_BeginPuzzle::
     ;; Store pointer to current PUZZ struct in de...
     sla c
     ld b, 0
-    ld hl, Data_Puzzles_puzz_ptr_arr
+    ld hl, DataX_Puzzles_puzz_ptr_arr
     add hl, bc
+    ld a, BANK(DataX_Puzzles_puzz_ptr_arr)
+    ld [rROMB0], a
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -143,6 +145,9 @@ Main_BeginPuzzle::
     ld a, d
     ld [Ram_PuzzleRom_puzz_ptr + 1], a
 _BeginPuzzle_Init:
+    ;; At this point, de points to a PUZZ struct in banked ROM.
+    ld a, BANK("PuzzleData")
+    ld [rROMB0], a
     ;; Copy current puzzle into RAM.
     ld hl, Ram_PuzzleState_puzz  ; dest
     ld bc, sizeof_PUZZ           ; count
