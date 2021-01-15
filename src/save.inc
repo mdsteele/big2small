@@ -17,30 +17,52 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-INCLUDE "src/hardware.inc"
-INCLUDE "src/save.inc"
-INCLUDE "src/vram.inc"
+;;; The number of puzzles in the game:
+NUM_PUZZLES     EQU 9
+NUM_PUZZLES_BCD EQU (((NUM_PUZZLES / 10) << 4) | (NUM_PUZZLES % 10))
+
+;;; The number of save files:
+NUM_SAVE_FILES EQU 3
+
+;;; Magic number that indicates that a save file is not empty.
+MAGIC_FILE_EXISTS EQU $b2
+
+;;; Bit indices for FILE_PuzzleStatus_u8_arr:
+STATB_UNLOCKED EQU 0
+STATB_SOLVED   EQU 1
+
+;;; Flags indices for FILE_PuzzleStatus_u8_arr:
+STATF_UNLOCKED EQU (1 << STATB_UNLOCKED)
+STATF_SOLVED   EQU (1 << STATB_SOLVED)
 
 ;;;=========================================================================;;;
 
-SECTION "WorldMapData", ROM0
+;;; FILE: Describes a progress file, either for a save file (in SRAM), or for
+;;;   the current game (in WRAM).
+RSRESET
+;;; PuzzleStatus: Status flags for each puzzle.  Each entry in this array uses
+;;;   the STATB_* constants.
+FILE_PuzzleStatus_u8_arr    RB NUM_PUZZLES
+;;; CurrentPuzzleNumber: The index number of the puzzle that's currently
+;;;   selected on the world map.
+FILE_CurrentPuzzleNumber_u8 RB 1
+;;; NumSolvedPuzzles: The number of solved puzzles, encoded in BCD.
+ASSERT NUM_PUZZLES <= 99
+FILE_NumSolvedPuzzles_bcd8  RB 1
+;;; Magic: If equal to MAGIC_FILE_EXISTS, then this save file exists.  If equal
+;;;   to any other value, this save file is considered empty.
+FILE_Magic_u8               RB 1
+sizeof_FILE                 RB 0
 
-Data_WorldTileMap_start::
-    INCBIN "out/data/worldmap.map"
-Data_WorldTileMap_end::
-ASSERT @ - Data_WorldTileMap_start == SCRN_VX_B * SCRN_VY_B
+;;;=========================================================================;;;
 
-;; BG map row/col positions for each puzzle node.
-Data_PuzzleMapPositions_u8_pair_arr::
-    DB 28, 6
-    DB 25, 6
-    DB 25, 8
-    DB 25, 11
-    DB 23, 8
-    DB 23, 3
-    DB 25, 3
-    DB 20, 3
-    DB 20, 7
-ASSERT @ - Data_PuzzleMapPositions_u8_pair_arr == 2 * NUM_PUZZLES
+;;; SAVE: Summarizes a save file.
+RSRESET
+;;; NumSolvedPuzzles: The number of solved puzzles, encoded in BCD.
+ASSERT NUM_PUZZLES <= 99
+SAVE_NumSolvedPuzzles_bcd8  RB 1
+;;; Exists: 1 if this save file exists, or 0 if it's empty.
+SAVE_Exists_bool RB 1
+sizeof_SAVE RB 0
 
 ;;;=========================================================================;;;

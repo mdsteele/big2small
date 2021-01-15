@@ -19,53 +19,15 @@
 
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
-INCLUDE "src/puzzle.inc"
+INCLUDE "src/save.inc"
 
 ;;;=========================================================================;;;
 
 PUZZLE_NODE_TILEID EQU $82
 
-;;; Bit indices for Ram_PuzzleStatus_u8_arr:
-STATB_UNLOCKED EQU 0
-STATB_SOLVED   EQU 1
-
-;;; Flags indices for Ram_PuzzleStatus_u8_arr:
-STATF_UNLOCKED EQU (1 << STATB_UNLOCKED)
-STATF_SOLVED   EQU (1 << STATB_SOLVED)
-
-;;;=========================================================================;;;
-
-SECTION "PuzzleStatusArray", WRAM0, ALIGN[8]
-
-;;; Status flags for each puzzle.  Each entry in this array uses the STATB_*
-;;; constants.
-Ram_PuzzleStatus_u8_arr::
-    DS NUM_PUZZLES
-
-;;;=========================================================================;;;
-
-SECTION "WorldMapState", WRAM0
-
-;;; The index number of the puzzle that's currently selected on the world map.
-Ram_CurrentPuzzleNumber_u8::
-    DB
-
 ;;;=========================================================================;;;
 
 SECTION "WorldMapFunctions", ROM0
-
-;;; Sets up progress RAM for a new game.
-Func_InitNewGameProgress::
-    ld a, STATF_UNLOCKED
-    ld [Ram_PuzzleStatus_u8_arr + 0], a
-    ld c, NUM_PUZZLES - 1
-    ld hl, Ram_PuzzleStatus_u8_arr + 1
-    xor a
-    .loop
-    ld [hl+], a
-    dec c
-    jr nz, .loop
-    ret
 
 ;;; @prereq LCD is off.
 ;;; @param c 1 if current puzzle was just solved, 0 otherwise.
@@ -74,15 +36,23 @@ Main_WorldMapScreen::
     ;; puzzle as unlocked.
     bit 0, c
     jr z, .notSolved
-    ld hl, Ram_CurrentPuzzleNumber_u8
+    ld hl, Ram_Progress_file + FILE_CurrentPuzzleNumber_u8
     ld e, [hl]
     ld d, 0
     inc [hl]
-    ld hl, Ram_PuzzleStatus_u8_arr
+    ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
     add hl, de
+    bit STATB_SOLVED, [hl]
+    jr nz, .alreadySolved
     set STATB_SOLVED, [hl]
+    ld a, [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8]
+    add 1
+    daa
+    ld [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8], a
+    .alreadySolved
     inc hl
     set STATB_UNLOCKED, [hl]
+    call Func_SaveFile
     .notSolved
     ;; Copy the tile data to VRAM.
     ld hl, Vram_SharedTiles                         ; dest
@@ -96,8 +66,8 @@ Main_WorldMapScreen::
     call Func_MemCopy
     ;; TODO: Draw map paths between unlocked puzzles.
 _WorldMapScreen_DrawUnlockedNodes:
-    ASSERT LOW(Ram_PuzzleStatus_u8_arr) == 0
-    ld de, Ram_PuzzleStatus_u8_arr
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld de, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
     .puzzLoop
     ;; Check if puzzle number e is unlocked.
     ld a, [de]
@@ -153,7 +123,7 @@ _WorldMapScreen_RunLoop:
     jr z, _WorldMapScreen_RunLoop
 _WorldMapScreen_StartNextPuzzle:
     call Func_FadeOut
-    ld a, [Ram_CurrentPuzzleNumber_u8]
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     ld c, a  ; current puzzle number
     jp Main_BeginPuzzle
 
@@ -163,7 +133,7 @@ _WorldMapScreen_StartNextPuzzle:
 ;;; while clamping the camera position.
 Func_ScrollMapToCurrentPuzzle:
     ;; Make hl point to the current puzzle's position entry.
-    ld a, [Ram_CurrentPuzzleNumber_u8]
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     ASSERT NUM_PUZZLES * 2 < $100
     rlca
     add LOW(Data_PuzzleMapPositions_u8_pair_arr)

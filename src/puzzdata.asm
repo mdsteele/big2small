@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/puzzle.inc"
+INCLUDE "src/save.inc"
 
 ;;;=========================================================================;;;
 
@@ -143,7 +144,7 @@ Data_Puzzle5_puzz:
     DB O_EMP, S_PPW, W_BEW, O_EMP, W_BLD, O_EMP, W_BEW, O_EMP, W_BLD, O_EMP
     DB $17, DIRF_SOUTH, 0, 0, 0, 0
     DB W_BNE, O_EMP, W_BEW, W_BLD, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP, O_EMP
-    D_MUSIC Data_TitleMusic_song, 0, 0, 0
+    D_MUSIC Data_RestYe_song, 0, 0, 0
     DB W_BE3, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     DS 6
     DB W_BE3, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, G_APL, O_EMP, W_BN1, O_EMP
@@ -164,7 +165,7 @@ Data_Puzzle6_puzz:
     DB O_EMP, O_EMP, S_PPW, W_BEW, O_EMP, O_EMP, W_BNW, W_BNE, O_EMP, O_EMP
     DB $24, DIRF_SOUTH, 0, 0, 0, 0
     DB W_BLD, W_BLD, O_EMP, W_BS1, W_BLD, W_BLD, W_BSW, W_BEW, O_EMP, O_EMP
-    D_MUSIC Data_TitleMusic_song, 0, 0, 0
+    D_MUSIC Data_RestYe_song, 0, 0, 0
     DB O_EMP, O_EMP, S_ARE, O_EMP, O_EMP, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
     DS 6
     DB O_EMP, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
@@ -185,7 +186,7 @@ Data_Puzzle7_puzz:
     DB W_BE3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, W_BW3
     DB $71, DIRF_EAST, 0, 0, 0, 0
     DB W_BE3, O_EMP, G_APL, W_BN1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BW3
-    D_MUSIC Data_TitleMusic_song, 0, 0, 0
+    D_MUSIC Data_RestYe_song, 0, 0, 0
     DB W_BE3, O_EMP, O_EMP, W_BS1, G_PNT, O_EMP, O_EMP, O_EMP, S_MTP, W_BW3
     DS 6
     DB W_BE3, O_EMP, O_EMP, S_MTP, O_EMP, W_BNW, W_BNE, O_EMP, O_EMP, W_BW3

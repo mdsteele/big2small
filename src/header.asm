@@ -31,8 +31,10 @@ SECTION "HeaderLogo", ROM0[$0104]
     DS 48  ; This gets filled in by rgbfix.
 
 SECTION "HeaderTitle", ROM0[$0134]
+Data_HeaderTitle:
     ;; 11-byte-max game title, padded with zeros.
     DB "BIG2SMALL", 0, 0
+    ASSERT @ - Data_HeaderTitle == 11
 
 SECTION "HeaderMetadata", ROM0[$013f]
     ;; $013F-$0142: Manufacturer code
@@ -44,11 +46,11 @@ SECTION "HeaderMetadata", ROM0[$013f]
     ;; $0146: Super Game Boy indicator
     DB CART_INDICATOR_GB
     ;; $0147: Cartridge type
-    DB CART_ROM
+    DB CART_ROM_MBC5_RAM_BAT
     ;; $0148: ROM size
     DB CART_ROM_32KB
     ;; $0149: RAM size
-    DB CART_SRAM_NONE
+    DB CART_SRAM_8KB
     ;; $014A: Destination code
     DB CART_DEST_NON_JAPANESE
     ;; $014B: Old licensee code

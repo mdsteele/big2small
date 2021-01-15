@@ -27,6 +27,7 @@ SECTION "MemFunctions", ROM0
 ;;; @param hl Destination start address.
 ;;; @param de Source start address.
 ;;; @param bc Num bytes to copy.
+;;; @return hl Destination end address.
 Func_MemCopy::
     inc b
     bit 0, c

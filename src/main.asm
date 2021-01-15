@@ -78,15 +78,12 @@ Main::
     ldh [rBGP], a
     ldh [rOBP0], a
     ldh [rOBP1], a
+    ;; Read summary data from SRAM.
+    call Func_InitSaveSummaries
     ;; Turn on audio.
     call Func_InitAudio
-    ;; Start a new game.
-    call Func_InitNewGameProgress
-    ;; Go to world map.
-    ld a, 0
-    ld [Ram_CurrentPuzzleNumber_u8], a
-    ld c, 0  ; is victory (0=false)
-    jp Main_WorldMapScreen
+    ;; Go to title screen.
+    jp Main_TitleScreen
 
 ;;;=========================================================================;;;
 
