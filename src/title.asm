@@ -81,8 +81,8 @@ FILE_NUMBER = FILE_NUMBER + 1
     ;; Set up objects.
     call Func_ClearOam
     ;; Initialize music.
-    ld c, BANK(Data_TitleMusic_song)
-    ld hl, Data_TitleMusic_song
+    ld c, BANK(DataX_TitleMusic_song)
+    ld hl, DataX_TitleMusic_song
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
     call Func_PerformDma

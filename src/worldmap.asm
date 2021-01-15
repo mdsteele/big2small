@@ -107,8 +107,8 @@ _WorldMapScreen_SetUpObjects:
     call Func_ClearOam
     ;; TODO: Set up objects for walking around the map.
     ;; Initialize music.
-    ld c, BANK(Data_RestYe_song)
-    ld hl, Data_RestYe_song
+    ld c, BANK(DataX_RestYe_song)
+    ld hl, DataX_RestYe_song
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
     call Func_ScrollMapToCurrentPuzzle
