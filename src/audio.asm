@@ -19,6 +19,7 @@
 
 INCLUDE "src/audio.inc"
 INCLUDE "src/hardware.inc"
+INCLUDE "src/macros.inc"
 
 ;;;=========================================================================;;;
 
@@ -136,7 +137,7 @@ Func_MusicStop::
 Func_MusicStart::
     ld a, c
     ld [Ram_MusicBank_u8], a
-    ld [rROMB0], a
+    romb
     ;; Store pointer to instrument table.
     ld a, [hl+]
     ld [Ram_MusicInstTable_ptr + 0], a
@@ -166,8 +167,7 @@ Func_UpdateAudio::
     call Func_UpdateSfx1
     call Func_UpdateSfx4
     ;; Switch ROM bank.
-    ld a, [Ram_MusicBank_u8]
-    ld [rROMB0], a
+    romb [Ram_MusicBank_u8]
     ;; If we're in the middle of playing a section, keep doing that.
     ld a, [Ram_MusicActiveChannels_u8]
     or a
@@ -338,7 +338,7 @@ Func_UpdateSfx1:
     ;; Switch ROM bank.
     ld a, [Ram_AudioCh1_chan + CHAN_SfxBank_u8]
 _UpdateSfx1_SwitchBank:
-    ld [rROMB0], a
+    romb
     ;; Read SFX frames.  If zero, stop the sound.
     ld a, [hl+]
     ld [Ram_AudioCh1_chan + CHAN_SfxFrames_u8], a
@@ -400,7 +400,7 @@ Func_UpdateSfx4:
     ;; Switch ROM bank.
     ld a, [Ram_AudioCh4_chan + CHAN_SfxBank_u8]
 _UpdateSfx4_SwitchBank:
-    ld [rROMB0], a
+    romb
     ;; Read SFX frames.  If zero, stop the sound.
     ld a, [hl+]
     ld [Ram_AudioCh4_chan + CHAN_SfxFrames_u8], a

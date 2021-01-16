@@ -135,8 +135,7 @@ Main_BeginPuzzle::
     ld b, 0
     ld hl, DataX_Puzzles_puzz_ptr_arr
     add hl, bc
-    ld a, BANK(DataX_Puzzles_puzz_ptr_arr)
-    ld [rROMB0], a
+    romb BANK(DataX_Puzzles_puzz_ptr_arr)
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -146,20 +145,21 @@ Main_BeginPuzzle::
     ld [Ram_PuzzleRom_puzz_ptr + 1], a
 _BeginPuzzle_Init:
     ;; At this point, de points to a PUZZ struct in banked ROM.
-    ld a, BANK("PuzzleData")
-    ld [rROMB0], a
+    romb BANK("PuzzleData")
     ;; Copy current puzzle into RAM.
     ld hl, Ram_PuzzleState_puzz  ; dest
     ld bc, sizeof_PUZZ           ; count
     call Func_MemCopy
     ;; Copy tiles to VRAM.
-    ld hl, Vram_SharedTiles + $00 * sizeof_TILE             ; dest
-    ld de, Data_TerrainTiles_start                          ; src
-    ld bc, Data_TerrainTiles_end - Data_TerrainTiles_start  ; count
+    romb BANK(DataX_TerrainTiles_start)
+    ld hl, Vram_SharedTiles + $00 * sizeof_TILE               ; dest
+    ld de, DataX_TerrainTiles_start                           ; src
+    ld bc, DataX_TerrainTiles_end - DataX_TerrainTiles_start  ; count
     call Func_MemCopy
-    ld hl, Vram_SharedTiles + $40 * sizeof_TILE       ; dest
-    ld de, Data_CityTiles_start                       ; src
-    ld bc, Data_CityTiles_end - Data_CityTiles_start  ; count
+    romb BANK(DataX_CityTiles_start)
+    ld hl, Vram_SharedTiles + $40 * sizeof_TILE         ; dest
+    ld de, DataX_CityTiles_start                        ; src
+    ld bc, DataX_CityTiles_end - DataX_CityTiles_start  ; count
     call Func_MemCopy
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
@@ -317,8 +317,8 @@ _PuzzleCommand_TryMove:
     jp Main_AnimalMoving
 
 _PuzzleCommand_CannotMove:
-    ld c, BANK(Data_CannotMove_sfx1)
-    ld hl, Data_CannotMove_sfx1
+    ld c, BANK(DataX_CannotMove_sfx1)
+    ld hl, DataX_CannotMove_sfx1
     call Func_PlaySfx1
     jp Main_PuzzleCommand
 
@@ -958,8 +958,8 @@ _AnimalMoving_ContinueMovingElephant:
     ld [de], a
     call Func_LoadTerrainCellIntoVram
     ;; Play a sound effect.
-    ld c, BANK(Data_PushPipe_sfx4)
-    ld hl, Data_PushPipe_sfx4
+    ld c, BANK(DataX_PushPipe_sfx4)
+    ld hl, DataX_PushPipe_sfx4
     call Func_PlaySfx4
     jr _AnimalMoving_RunLoop
     ;; If we're not pushing a pipe, set Ram_WalkingAction_u8 to zero.
@@ -1184,8 +1184,8 @@ _AnimalMoving_Mousetrap:
     ld a, PUZZ_Mouse_anim + ANIM_Facing_u8
     ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8], a
     ;; Play a sound effect.
-    ld c, BANK(Data_Mousetrap_sfx4)
-    ld hl, Data_Mousetrap_sfx4
+    ld c, BANK(DataX_Mousetrap_sfx4)
+    ld hl, DataX_Mousetrap_sfx4
     call Func_PlaySfx4
     ;; Replace mouse objects with smoke:
     ld a, SMOKE_L1_TILEID

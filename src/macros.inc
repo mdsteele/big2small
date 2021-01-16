@@ -26,8 +26,13 @@
 ;;;     if_eq b, call, Func  ; call Func if a == b
 ;;;     if_eq 0, ret         ; return if a == 0
 if_eq: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to if_eq macro"
+    ENDC
     cp \1
-    IF _NARG > 2
+    IF _NARG > 3
+    FAIL "Too many arguments to if_eq macro"
+    ELIF _NARG > 2
     \2 z, \3
     ELSE
     \2 z
@@ -43,8 +48,13 @@ ENDM
 ;;;     if_ne b, call, Func  ; call Func if a != b
 ;;;     if_ne 0, ret         ; return if a != 0
 if_ne: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to if_ne macro"
+    ENDC
     cp \1
-    IF _NARG > 2
+    IF _NARG > 3
+    FAIL "Too many arguments to if_ne macro"
+    ELIF _NARG > 2
     \2 nz, \3
     ELSE
     \2 nz
@@ -60,8 +70,13 @@ ENDM
 ;;;     if_lt b, call, Func  ; call Func if a < b (unsigned)
 ;;;     if_lt 7, ret         ; return if a < 7 (unsigned)
 if_lt: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to if_lt macro"
+    ENDC
     cp \1
-    IF _NARG > 2
+    IF _NARG > 3
+    FAIL "Too many arguments to if_lt macro"
+    ELIF _NARG > 2
     \2 c, \3
     ELSE
     \2 c
@@ -77,21 +92,48 @@ ENDM
 ;;;     if_ge b, call, Func  ; call Func if a >= b (unsigned)
 ;;;     if_ge 1, ret         ; return if a >= 1 (unsigned)
 if_ge: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to if_ge macro"
+    ENDC
     cp \1
-    IF _NARG > 2
+    IF _NARG > 3
+    FAIL "Too many arguments to if_ge macro"
+    ELIF _NARG > 2
     \2 nc, \3
     ELSE
     \2 nc
     ENDC
 ENDM
 
-;=============================================================================;
+;;;=========================================================================;;;
 
 ;;; Negates the `a` register.  Sets/clears the `z` flag if the result is
 ;;; zero/nonzero.
 neg: MACRO
+    IF _NARG > 0
+    FAIL "Too many arguments to neg macro"
+    ENDC
     cpl
     inc a
 ENDM
 
-;=============================================================================;
+;;;=========================================================================;;;
+
+;;; Sets the current ROM bank.  Without any argument, sets the bank to the
+;;; value of the a register.  With an argument, sets both the bank and the a
+;;; register to the value of that argument.
+;;;
+;;; Examples:
+;;;     romb [Ram_Bank_u8]   ; sets both a and ROM bank to value of Ram_Bank_u8
+;;;     romb BANK(DataX_Foo) ; sets both a and ROM bank to given bank number
+;;;     romb                 ; sets ROM bank to value of a
+romb: MACRO
+    IF _NARG > 1
+    FAIL "Too many arguments to romb macro"
+    ELIF _NARG > 0
+    ld a, \1
+    ENDC
+    ld [$2000], a
+ENDM
+
+;;;=========================================================================;;;

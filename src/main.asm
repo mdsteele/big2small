@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/hardware.inc"
+INCLUDE "src/macros.inc"
 INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
@@ -32,7 +33,8 @@ Ram_BottomOfStack:
 SECTION "Main", ROM0[$0150]
 Main::
     ld sp, Ram_BottomOfStack
-    call Func_InitDmaCode
+    romb BANK(FuncX_InitDmaCode)
+    call FuncX_InitDmaCode
     ;; Enable VBlank interrupt.
     ld a, IEF_VBLANK
     ldh [rIE], a
@@ -42,21 +44,25 @@ Main::
     ld a, LCDCF_OFF
     ldh [rLCDC], a
     ;; Copy tiles to VRAM.
-    ld hl, Vram_BgTiles + 0 * sizeof_TILE                 ; dest
-    ld de, Data_DeviceTiles_start                         ; src
-    ld bc, Data_DeviceTiles_end - Data_DeviceTiles_start  ; count
+    romb BANK(DataX_DeviceTiles_start)
+    ld hl, Vram_BgTiles + 0 * sizeof_TILE                   ; dest
+    ld de, DataX_DeviceTiles_start                          ; src
+    ld bc, DataX_DeviceTiles_end - DataX_DeviceTiles_start  ; count
     call Func_MemCopy
-    ld hl, Vram_BgTiles + " " * sizeof_TILE           ; dest
-    ld de, Data_FontTiles_start                       ; src
-    ld bc, Data_FontTiles_end - Data_FontTiles_start  ; count
+    romb BANK(DataX_FontTiles_start)
+    ld hl, Vram_BgTiles + " " * sizeof_TILE             ; dest
+    ld de, DataX_FontTiles_start                        ; src
+    ld bc, DataX_FontTiles_end - DataX_FontTiles_start  ; count
     call Func_MemCopy
-    ld hl, Vram_SharedTiles + $60 * sizeof_TILE         ; dest
-    ld de, Data_RiverTiles_start                        ; src
-    ld bc, Data_RiverTiles_end - Data_RiverTiles_start  ; count
+    romb BANK(DataX_RiverTiles_start)
+    ld hl, Vram_SharedTiles + $60 * sizeof_TILE           ; dest
+    ld de, DataX_RiverTiles_start                         ; src
+    ld bc, DataX_RiverTiles_end - DataX_RiverTiles_start  ; count
     call Func_MemCopy
-    ld hl, Vram_ObjTiles                            ; dest
-    ld de, Data_ObjTiles_start                      ; src
-    ld bc, Data_ObjTiles_end - Data_ObjTiles_start  ; count
+    romb BANK(DataX_ObjTiles_start)
+    ld hl, Vram_ObjTiles                              ; dest
+    ld de, DataX_ObjTiles_start                       ; src
+    ld bc, DataX_ObjTiles_end - DataX_ObjTiles_start  ; count
     call Func_MemCopy
     ;; Initialize window map.
     ld hl, Vram_WindowMap

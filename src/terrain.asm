@@ -23,124 +23,124 @@ INCLUDE "src/puzzle.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "TerrainTable", ROM0, ALIGN[8]
+SECTION "TerrainTable", ROMX, ALIGN[8]
 
-Data_TerrainTable:
+DataX_TerrainTable:
     ;; Open terrain:
-    ASSERT @ - Data_TerrainTable == 4 * O_EMP
+    ASSERT @ - DataX_TerrainTable == 4 * O_EMP
     DB $20, $20, $20, $20
-    ASSERT @ - Data_TerrainTable == 4 * O_GRS
+    ASSERT @ - DataX_TerrainTable == 4 * O_GRS
     DB $8d, $8d, $8d, $8d
-    ASSERT @ - Data_TerrainTable == 4 * O_BNS
+    ASSERT @ - DataX_TerrainTable == 4 * O_BNS
     DB $f4, $f6, $f5, $f7
-    ASSERT @ - Data_TerrainTable == 4 * O_BEW
+    ASSERT @ - DataX_TerrainTable == 4 * O_BEW
     DB $f0, $f2, $f1, $f3
-    ASSERT @ - Data_TerrainTable == 4 * O_RMD
+    ASSERT @ - DataX_TerrainTable == 4 * O_RMD
     DB $9c, $9e, $9d, $9f
-    ASSERT @ - Data_TerrainTable == 4 * O_RWL
+    ASSERT @ - DataX_TerrainTable == 4 * O_RWL
     DB $9c, $a0, $9d, $a1
-    ASSERT @ - Data_TerrainTable == 4 * O_RWR
+    ASSERT @ - DataX_TerrainTable == 4 * O_RWR
     DB $a0, $9e, $a1, $9f
-    ASSERT @ - Data_TerrainTable == 4 * O_BST
+    ASSERT @ - DataX_TerrainTable == 4 * O_BST
     DB $18, $1a, $19, $1b
     ;; Goal terrain:
-    ASSERT @ - Data_TerrainTable == 4 * G_PNT
+    ASSERT @ - DataX_TerrainTable == 4 * G_PNT
     DB $00, $02, $01, $03
-    ASSERT @ - Data_TerrainTable == 4 * G_APL
+    ASSERT @ - DataX_TerrainTable == 4 * G_APL
     DB $04, $06, $05, $07
-    ASSERT @ - Data_TerrainTable == 4 * G_CHS
+    ASSERT @ - DataX_TerrainTable == 4 * G_CHS
     DB $08, $0a, $09, $0b
     ;; Special terrain:
-    ASSERT @ - Data_TerrainTable == 4 * S_BSH
+    ASSERT @ - DataX_TerrainTable == 4 * S_BSH
     DB $14, $16, $15, $17
-    ASSERT @ - Data_TerrainTable == 4 * S_MTP
+    ASSERT @ - DataX_TerrainTable == 4 * S_MTP
     DB $1c, $1e, $1d, $1f
-    ASSERT @ - Data_TerrainTable == 4 * S_PPW
+    ASSERT @ - DataX_TerrainTable == 4 * S_PPW
     DB $f8, $fa, $f9, $fb
-    ASSERT @ - Data_TerrainTable == 4 * S_PPE
+    ASSERT @ - DataX_TerrainTable == 4 * S_PPE
     DB $fc, $fe, $fd, $ff
-    ASSERT @ - Data_TerrainTable == 4 * S_ARN
+    ASSERT @ - DataX_TerrainTable == 4 * S_ARN
     DB $0c, $0e, $0c, $0e
-    ASSERT @ - Data_TerrainTable == 4 * S_ARS
+    ASSERT @ - DataX_TerrainTable == 4 * S_ARS
     DB $0d, $0f, $0d, $0f
-    ASSERT @ - Data_TerrainTable == 4 * S_ARE
+    ASSERT @ - DataX_TerrainTable == 4 * S_ARE
     DB $12, $12, $13, $13
-    ASSERT @ - Data_TerrainTable == 4 * S_ARW
+    ASSERT @ - DataX_TerrainTable == 4 * S_ARW
     DB $10, $10, $11, $11
-    ASSERT @ - Data_TerrainTable == 4 * S_TEF
+    ASSERT @ - DataX_TerrainTable == 4 * S_TEF
     DB $d0, $d2, $d1, $d3
-    ASSERT @ - Data_TerrainTable == 4 * S_TGE
+    ASSERT @ - DataX_TerrainTable == 4 * S_TGE
     DB $d4, $d6, $d5, $d7
-    ASSERT @ - Data_TerrainTable == 4 * S_TMF
+    ASSERT @ - DataX_TerrainTable == 4 * S_TMF
     DB $d8, $da, $d9, $db
     ;; River terrain:
-    ASSERT @ - Data_TerrainTable == 4 * R_RNS
+    ASSERT @ - DataX_TerrainTable == 4 * R_RNS
     DB $e4, $e6, $e5, $e7
-    ASSERT @ - Data_TerrainTable == 4 * R_REW
+    ASSERT @ - DataX_TerrainTable == 4 * R_REW
     DB $e0, $e2, $e1, $e3
-    ASSERT @ - Data_TerrainTable == 4 * R_RNE
+    ASSERT @ - DataX_TerrainTable == 4 * R_RNE
     DB $e4, $ee, $e9, $e3
-    ASSERT @ - Data_TerrainTable == 4 * R_RNW
+    ASSERT @ - DataX_TerrainTable == 4 * R_RNW
     DB $ec, $e6, $e1, $eb
-    ASSERT @ - Data_TerrainTable == 4 * R_RSE
+    ASSERT @ - DataX_TerrainTable == 4 * R_RSE
     DB $e8, $e2, $e5, $ef
-    ASSERT @ - Data_TerrainTable == 4 * R_RSW
+    ASSERT @ - DataX_TerrainTable == 4 * R_RSW
     DB $e0, $ea, $ed, $e7
     ;; Mousehole terrain:
-    ASSERT @ - Data_TerrainTable == 4 * M_RNA
+    ASSERT @ - DataX_TerrainTable == 4 * M_RNA
     DB $ac, $ae, $ad, $af
-    ASSERT @ - Data_TerrainTable == 4 * M_RNS
+    ASSERT @ - DataX_TerrainTable == 4 * M_RNS
     DB $a8, $aa, $a9, $ab
     ;; Wall terrain:
-    ASSERT @ - Data_TerrainTable == 4 * W_RCK
+    ASSERT @ - DataX_TerrainTable == 4 * W_RCK
     DB $80, $82, $81, $83
-    ASSERT @ - Data_TerrainTable == 4 * W_FRT
+    ASSERT @ - DataX_TerrainTable == 4 * W_FRT
     DB $84, $86, $85, $87
-    ASSERT @ - Data_TerrainTable == 4 * W_FLT
+    ASSERT @ - DataX_TerrainTable == 4 * W_FLT
     DB $84, $84, $8f, $85
-    ASSERT @ - Data_TerrainTable == 4 * W_FMD
+    ASSERT @ - DataX_TerrainTable == 4 * W_FMD
     DB $84, $84, $85, $85
-    ASSERT @ - Data_TerrainTable == 4 * W_TTP
+    ASSERT @ - DataX_TerrainTable == 4 * W_TTP
     DB $88, $8a, $89, $8b
-    ASSERT @ - Data_TerrainTable == 4 * W_TTR
+    ASSERT @ - DataX_TerrainTable == 4 * W_TTR
     DB $90, $92, $91, $93
-    ASSERT @ - Data_TerrainTable == 4 * W_TST
+    ASSERT @ - DataX_TerrainTable == 4 * W_TST
     DB $8c, $8e, $89, $8b
-    ASSERT @ - Data_TerrainTable == 4 * W_BLD
+    ASSERT @ - DataX_TerrainTable == 4 * W_BLD
     DB $94, $96, $95, $97
-    ASSERT @ - Data_TerrainTable == 4 * W_CSO
+    ASSERT @ - DataX_TerrainTable == 4 * W_CSO
     DB $98, $9a, $99, $9b
-    ASSERT @ - Data_TerrainTable == 4 * W_RNS
+    ASSERT @ - DataX_TerrainTable == 4 * W_RNS
     DB $a4, $a6, $a5, $a7
-    ASSERT @ - Data_TerrainTable == 4 * W_CRV
+    ASSERT @ - DataX_TerrainTable == 4 * W_CRV
     DB $a8, $aa, $a5, $a7
-    ASSERT @ - Data_TerrainTable == 4 * W_RSO
+    ASSERT @ - DataX_TerrainTable == 4 * W_RSO
     DB $a4, $a6, $a8, $aa
-    ASSERT @ - Data_TerrainTable == 4 * W_BN1
+    ASSERT @ - DataX_TerrainTable == 4 * W_BN1
     DB $c6, $ca, $c7, $cb
-    ASSERT @ - Data_TerrainTable == 4 * W_BN3
+    ASSERT @ - DataX_TerrainTable == 4 * W_BN3
     DB $c8, $c8, $c9, $c9
-    ASSERT @ - Data_TerrainTable == 4 * W_BNE
+    ASSERT @ - DataX_TerrainTable == 4 * W_BNE
     DB $c8, $ca, $c9, $cb
-    ASSERT @ - Data_TerrainTable == 4 * W_BNW
+    ASSERT @ - DataX_TerrainTable == 4 * W_BNW
     DB $c6, $c8, $c7, $c9
-    ASSERT @ - Data_TerrainTable == 4 * W_BS1
+    ASSERT @ - DataX_TerrainTable == 4 * W_BS1
     DB $c0, $c4, $c1, $c5
-    ASSERT @ - Data_TerrainTable == 4 * W_BS3
+    ASSERT @ - DataX_TerrainTable == 4 * W_BS3
     DB $c2, $c2, $c3, $c3
-    ASSERT @ - Data_TerrainTable == 4 * W_BSE
+    ASSERT @ - DataX_TerrainTable == 4 * W_BSE
     DB $c2, $c4, $c3, $c5
-    ASSERT @ - Data_TerrainTable == 4 * W_BSW
+    ASSERT @ - DataX_TerrainTable == 4 * W_BSW
     DB $c0, $c2, $c1, $c3
-    ASSERT @ - Data_TerrainTable == 4 * W_BEW
+    ASSERT @ - DataX_TerrainTable == 4 * W_BEW
     DB $c7, $cb, $c7, $cb
-    ASSERT @ - Data_TerrainTable == 4 * W_BE3
+    ASSERT @ - DataX_TerrainTable == 4 * W_BE3
     DB $c9, $cb, $c9, $cb
-    ASSERT @ - Data_TerrainTable == 4 * W_BW3
+    ASSERT @ - DataX_TerrainTable == 4 * W_BW3
     DB $c7, $c9, $c7, $c9
-    ASSERT @ - Data_TerrainTable == 4 * W_BC4
+    ASSERT @ - DataX_TerrainTable == 4 * W_BC4
     DB $c9, $c9, $c9, $c9
-ASSERT @ - Data_TerrainTable <= 512
+ASSERT @ - DataX_TerrainTable <= 512
 
 ;;;=========================================================================;;;
 
@@ -148,6 +148,7 @@ SECTION "TerrainFunctions", ROM0
 
 ;;; @param de A pointer to a terrain cell in a 256-byte-aligned PUZZ struct.
 Func_LoadTerrainCellIntoVram::
+    romb BANK(DataX_TerrainTable)
     ;; Make hl point to the VRAM tile for the top-left quarter of the square.
     ld a, e
     and $f0
@@ -168,8 +169,8 @@ Func_LoadTerrainCellIntoVram::
     rlca
     sla a
     ld c, a
-    ASSERT LOW(Data_TerrainTable) == 0
-    ld a, HIGH(Data_TerrainTable)
+    ASSERT LOW(DataX_TerrainTable) == 0
+    ld a, HIGH(DataX_TerrainTable)
     adc 0
     ld b, a
     ;; Set the VRAM tiles for the top half of the square.
@@ -191,6 +192,7 @@ Func_LoadTerrainCellIntoVram::
 
 ;;; @param d High byte of pointer to 256-byte-aligned PUZZ struct.
 Func_LoadPuzzleTerrainIntoVram::
+    romb BANK(DataX_TerrainTable)
     ld e, 0
     ld hl, Vram_BgMap
     REPT TERRAIN_ROWS
@@ -198,6 +200,7 @@ Func_LoadPuzzleTerrainIntoVram::
     ENDR
     ret
 
+;;; @prereq ROM bank is set to BANK(DataX_TerrainTable).
 ;;; @param de Pointer to start of Ram_PuzzleState_puzz row.
 ;;; @param hl Pointer to start of Vram_BgMap row.
 ;;; @return de Pointer to start of next Ram_PuzzleState_puzz row.
@@ -210,8 +213,8 @@ Func_LoadTerrainRow:
     rlca
     sla a
     ld c, a
-    ASSERT LOW(Data_TerrainTable) == 0
-    ld a, HIGH(Data_TerrainTable)
+    ASSERT LOW(DataX_TerrainTable) == 0
+    ld a, HIGH(DataX_TerrainTable)
     adc 0
     ld b, a
     ld a, [bc]
@@ -235,8 +238,8 @@ Func_LoadTerrainRow:
     rlca
     sla a
     ld c, a
-    ASSERT LOW(Data_TerrainTable) == 0
-    ld a, HIGH(Data_TerrainTable)
+    ASSERT LOW(DataX_TerrainTable) == 0
+    ld a, HIGH(DataX_TerrainTable)
     adc 0
     ld b, a
     inc c

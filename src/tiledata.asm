@@ -21,59 +21,59 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "FontTiles", ROM0
-Data_FontTiles_start::
+SECTION "DeviceTiles", ROMX
+DataX_DeviceTiles_start::
+    INCBIN "out/data/devices.2bpp"
+DataX_DeviceTiles_end::
+
+;;;=========================================================================;;;
+
+SECTION "FontTiles", ROMX
+DataX_FontTiles_start::
     INCBIN "out/data/font.2bpp"
-Data_FontTiles_end::
+DataX_FontTiles_end::
 
 ;;;=========================================================================;;;
 
-SECTION "MapTiles", ROM0
-Data_MapTiles_start::
+SECTION "MapTiles", ROMX
+DataX_MapTiles_start::
     INCBIN "out/data/worldmap.2bpp"
-Data_MapTiles_end::
+DataX_MapTiles_end::
 
 ;;;=========================================================================;;;
 
-SECTION "ObjTiles", ROM0
-Data_ObjTiles_start::
+SECTION "ObjTiles", ROMX
+DataX_ObjTiles_start::
     INCBIN "out/data/elephant.2bpp"
     INCBIN "out/data/goat.2bpp"
     INCBIN "out/data/mouse.2bpp"
     INCBIN "out/data/cursor.2bpp"
     INCBIN "out/data/smoke.2bpp"
-Data_ObjTiles_end::
+DataX_ObjTiles_end::
 
 ;;;=========================================================================;;;
 
-SECTION "DeviceTiles", ROM0
-Data_DeviceTiles_start::
-    INCBIN "out/data/devices.2bpp"
-Data_DeviceTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "TerrainTiles", ROM0
-Data_TerrainTiles_start::
+SECTION "TerrainTiles", ROMX
+DataX_TerrainTiles_start::
     INCBIN "out/data/forest.2bpp"
     INCBIN "out/data/mountain.2bpp"
-Data_TerrainTiles_end::
+DataX_TerrainTiles_end::
 
 ;;;=========================================================================;;;
 
-SECTION "CityTiles", ROM0
-Data_CityTiles_start::
+SECTION "CityTiles", ROMX
+DataX_CityTiles_start::
     INCBIN "out/data/city.2bpp"
     DS sizeof_TILE * 4
     INCBIN "out/data/space.2bpp"
-Data_CityTiles_end::
+DataX_CityTiles_end::
 
 ;;;=========================================================================;;;
 
-SECTION "RiverTiles", ROM0
-Data_RiverTiles_start::
+SECTION "RiverTiles", ROMX
+DataX_RiverTiles_start::
     INCBIN "out/data/river.2bpp"
     INCBIN "out/data/pipe.2bpp"
-Data_RiverTiles_end::
+DataX_RiverTiles_end::
 
 ;;;=========================================================================;;;

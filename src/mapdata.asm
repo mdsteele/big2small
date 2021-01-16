@@ -23,12 +23,16 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "WorldMapData", ROM0
+SECTION "WorldTileMap", ROMX
 
-Data_WorldTileMap_start::
+DataX_WorldTileMap_start::
     INCBIN "out/data/worldmap.map"
-Data_WorldTileMap_end::
-ASSERT @ - Data_WorldTileMap_start == SCRN_VX_B * SCRN_VY_B
+DataX_WorldTileMap_end::
+ASSERT @ - DataX_WorldTileMap_start == SCRN_VX_B * SCRN_VY_B
+
+;;;=========================================================================;;;
+
+SECTION "WorldMapData", ROM0
 
 ;; BG map row/col positions for each puzzle node.
 Data_PuzzleMapPositions_u8_pair_arr::

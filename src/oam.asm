@@ -84,17 +84,17 @@ Func_ClearOam::
 
 ;;;=========================================================================;;;
 
-SECTION "DmaCode", ROM0
+SECTION "DmaCode", ROMX
 
 ;;; Initializes the code for Func_PerformDma within HRAM.  This must be called
 ;;; before calling Func_PerformDma for the first time.
-Func_InitDmaCode::
-    ld hl, Func_PerformDma                        ; dest
-    ld de, Data_DmaCode_start                     ; src
-    ld bc, Data_DmaCode_end - Data_DmaCode_start  ; count
+FuncX_InitDmaCode::
+    ld hl, Func_PerformDma                          ; dest
+    ld de, DataX_DmaCode_start                      ; src
+    ld bc, DataX_DmaCode_end - DataX_DmaCode_start  ; count
     jp Func_MemCopy
 
-Data_DmaCode_start:
+DataX_DmaCode_start:
     ASSERT LOW(Ram_ShadowOam_start) == 0
     ld a, HIGH(Ram_ShadowOam_start)
     ldh [rDMA], a  ; Start DMA transfer.
@@ -105,7 +105,7 @@ Data_DmaCode_start:
     dec a
     jr nz, .loop
     ret
-Data_DmaCode_end:
+DataX_DmaCode_end:
 
 ;;;=========================================================================;;;
 
@@ -114,6 +114,6 @@ SECTION "PerformDma", HRAM
 ;;; Copies the shadow OAM to the real OAM.  Func_InitDmaCode must be called
 ;;; before calling this for the first time.
 Func_PerformDma::
-    DS Data_DmaCode_end - Data_DmaCode_start
+    DS DataX_DmaCode_end - DataX_DmaCode_start
 
 ;;;=========================================================================;;;
