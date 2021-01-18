@@ -1,0 +1,106 @@
+!SONG "LightsOn" "S C|F MM CF MMTT DF MMTTU E"
+=tempo q32
+=key 3b  % C minor
+
+!DRUM B { E(12, -7) P( 9, 1, 0) }  % bass
+!DRUM C { E(13, -7) P( 5, 0, 0) }  % clap
+!DRUM H { E(15, -7) P( 0, 0, 0) }  % hi-hat
+
+!PART S
+
+1 { E(14, -2) D(1/8) }
+2 { E(8, -5) D(3/4) }
+3 { W(89abcdeffedcba987654321001234567) }
+
+!PART C
+
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+!PART D
+
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+3| c5q |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+!PART E
+
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+3| c5w |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+!PART F
+
+1| rw |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| rw |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| rh. ' c3s b2 d3 b2 |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBs xCs xHe ' xCe xHe |
+
+!PART M
+
+1| c3h. ' cs b2 c3 e |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| d3e. b2e. bh be |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| a2e. e3e. dq b2q be |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| a2e. e3e. dq b2e e3 b2e |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+4| xBe xHe ' xCe xHe ' xBs xCs xHe ' xCe xHe |
+
+!PART T
+
+1| c3h. ' cs b2 c3 e |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+3| c5e re ' e5s d c b4 ' c5e ds e ' fe re |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| d3e. b2e. bh be |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+3| c5s d e d ' c5s b4 c5 e ' d5e. b4e. be |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| a2e. e3e. dq b2q be |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+3| a4s ae e5s ee ds de ds b4q bs bs |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| a2e. e3e. dq b2e e3 b2e |
+2| c4s g g c ' a a c g ' g c f g ' e f e b3 |
+3| a4s ae e5s ee ds de ds b4e e5 b4e |
+4| xBe xHe ' xCe xHe ' xBs xCs xHe ' xCe xHe |
+
+!PART U
+
+1| c3q d e d |
+2| e3q f g f |
+3| c5s ce ds ' de es es+ ' +s ds de ' ds d d d |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| c3q a b g |
+2| e3q c4 d b3 |
+3| c5s c c c ' ae bs bs+ ' +s gs ge ' ge gs gs |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| f3e f ' g g ' e e ' f f |
+2| a3q b g a |
+3| f5s g a g ' f e d e ' d e f g ' a b g a |
+4| xBe xHe ' xCe xHe ' xBe xHe ' xCe xHe |
+
+1| g3e e ' f d ' e c ' d bN2 |
+2| g4q f e d |
+3| g5s g ge ' fe fs fs ' es e e e ' de d |
+4| xBq ' xBq ' xBq ' xBs xBs xBs xBs |

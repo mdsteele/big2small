@@ -225,7 +225,7 @@ DataX_Puzzle8_puzz:
     DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, S_TEF, W_BLD, W_BLD
     DB $21, DIRF_SOUTH, 0, 0, 0, $14
     DB W_CSO, W_CRV, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO, W_CRV
-    D_MUSIC DataX_TitleMusic_song, 0, 0, 0
+    D_MUSIC DataX_LightsOn_song, 0, 0, 0
     DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, S_TGE, O_EMP, S_TMF, W_RSO
     DB 0, 0, 0, 0, $15, $77
     DB S_ARE, W_RSO, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, R_RSE, R_REW

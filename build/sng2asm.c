@@ -30,6 +30,7 @@
 #define HALF_STEPS_PER_OCTAVE 12
 #define MAX_BYTES_PER_NOTE 3
 #define MAX_INSTRUMENTS 64
+#define MAX_DRUMS 26
 #define MAX_INTEGER_DIGITS 6
 #define MAX_NOTES_PER_CHANNEL 1000
 #define MAX_PARTS_PER_SONG 26
@@ -94,6 +95,8 @@ typedef struct {
 struct {
   int current_char; // the most recent character read
   int line;
+  int num_drums;
+  int drum_instruments[MAX_DRUMS];
   int num_waves;
   sng_wave_t waves[MAX_WAVES];
   int num_instruments;
@@ -114,7 +117,8 @@ struct {
     LINE_COMMENT
   } state;
   int frames_per_whole_note;
-  int current_part;
+  int current_drum; // index of current drum, or -1 if not in a drum
+  int current_part; // index of current part, or -1 if not in a part
   int current_channel;
   int current_key; // -k = k flats, +k = k sharps
   int named_pitch; // -1 = rest, 0 = C, 1 = C#, ..., 11 = B
@@ -124,6 +128,7 @@ struct {
   int base_duration; // measured in frames
   int extra_duration; // measured in frames
   sng_instrument_t current_instrument;
+  int last_instrument_number;
 } parser;
 
 /*===========================================================================*/
@@ -145,7 +150,11 @@ static void begin_line(void) {
 }
 
 static void init_parser(void) {
+  for (int d = 0; d < MAX_DRUMS; ++d) {
+    parser.drum_instruments[d] = -1;
+  }
   parser.frames_per_whole_note = 96;
+  parser.current_drum = -1;
   parser.current_part = -1;
   parser.current_channel = -1;
   parser.line = 1;
@@ -201,7 +210,7 @@ static void finish_current_song(void) {
                     song->title);
       }
       loop_point = pc;
-    } else {
+    } else if (ch != ' ') {
       PARSE_ERROR("unexpected '%c' in song \"%s\" spec\n", ch, song->title);
     }
   }
@@ -254,6 +263,49 @@ static void finish_current_song(void) {
 
 /*===========================================================================*/
 
+static sng_note_t *next_note(void) {
+  assert(parser.num_songs > 0);
+  sng_song_t *song = &parser.songs[parser.num_songs - 1];
+  assert(parser.current_part >= 0);
+  sng_part_t *part = &song->parts[parser.current_part];
+  assert(parser.current_channel >= 0);
+  sng_channel_t *channel = &part->channels[parser.current_channel];
+  if (channel->notes == NULL) {
+    channel->notes = calloc(MAX_NOTES_PER_CHANNEL, sizeof(sng_note_t));
+  }
+  if (channel->num_notes >= MAX_NOTES_PER_CHANNEL) {
+    PARSE_ERROR("too many notes\n");
+  }
+  parser.state = NEW_NOTE;
+  return &channel->notes[channel->num_notes++];
+}
+
+static void start_drum() {
+  if (parser.current_channel < 0) {
+    PARSE_ERROR("can't play drums before setting the channel\n");
+  }
+  const int chan = parser.current_channel + 1;
+  if (chan != 4) {
+    PARSE_ERROR("can't play drums on channel %d\n", chan);
+  }
+  const char letter = next_char();
+  if (letter < 'A' || letter > 'Z') {
+    PARSE_ERROR("invalid drum name: '%c'\n", letter);
+  }
+  const int drum_index = letter - 'A';
+  const int inst_number = parser.drum_instruments[drum_index];
+  if (inst_number < 0) {
+    PARSE_ERROR("drum '%c' has not been declared\n", letter);
+  }
+  if (parser.last_instrument_number != inst_number) {
+    sng_note_t *note = next_note();
+    note->kind = NOTE_INST;
+    note->value = inst_number;
+    parser.last_instrument_number = inst_number;
+  }
+  parser.state = BEGIN_DURATION;
+}
+
 static void start_tone(int named_pitch, int flat_key, int sharp_key) {
   if (parser.current_channel < 0) {
     PARSE_ERROR("can't start tone before setting the channel\n");
@@ -283,23 +335,6 @@ static void adjust_base_duration(int numerator, int denominator) {
   }
   new_base_duration /= denominator;
   parser.base_duration = new_base_duration;
-}
-
-static sng_note_t *next_note(void) {
-  assert(parser.num_songs > 0);
-  sng_song_t *song = &parser.songs[parser.num_songs - 1];
-  assert(parser.current_part >= 0);
-  sng_part_t *part = &song->parts[parser.current_part];
-  assert(parser.current_channel >= 0);
-  sng_channel_t *channel = &part->channels[parser.current_channel];
-  if (channel->notes == NULL) {
-    channel->notes = calloc(MAX_NOTES_PER_CHANNEL, sizeof(sng_note_t));
-  }
-  if (channel->num_notes >= MAX_NOTES_PER_CHANNEL) {
-    PARSE_ERROR("too many notes\n");
-  }
-  parser.state = NEW_NOTE;
-  return &channel->notes[channel->num_notes++];
 }
 
 static void finish_tone(void) {
@@ -465,7 +500,17 @@ static void parse_instrument_poly() {
   if (parser.current_instrument.effect != -1) {
     PARSE_ERROR("can't set poly twice in one instrument\n");
   }
-  PARSE_ERROR("TODO: parse_instrument_poly not implemented\n");
+  read_symbol('(');
+  int freq = read_unsigned_int();
+  read_symbol(',');
+  int step = read_unsigned_int();
+  read_symbol(',');
+  int div = read_unsigned_int();
+  read_symbol(')');
+  if (freq > 15) PARSE_ERROR("invalid poly freq: %d\n", freq);
+  if (step > 1) PARSE_ERROR("invalid poly step: %d\n", step);
+  if (div > 7) PARSE_ERROR("invalid poly div: %d\n", div);
+  parser.current_instrument.effect = (freq << 4) | (step << 3) | div;
 }
 
 static void parse_instrument_sweep() {
@@ -513,7 +558,7 @@ static void parse_instrument_wave() {
 }
 
 static void finish_instrument(void) {
-  const int chan = parser.current_channel + 1;
+  const int chan = parser.current_drum >= 0 ? 4 : parser.current_channel + 1;
   sng_instrument_t *curr = &parser.current_instrument;
   if (curr->envelope == -1) {
     if (chan == 3) curr->envelope = 0x20;
@@ -550,14 +595,22 @@ static void finish_instrument(void) {
     inst_number = parser.num_instruments++;
     parser.instruments[inst_number] = parser.current_instrument;
   }
-  sng_note_t *note = next_note();
-  note->kind = NOTE_INST;
-  note->value = inst_number;
+  if (parser.current_drum >= 0) {
+    parser.drum_instruments[parser.current_drum] = inst_number;
+    parser.current_drum = -1;
+    parser.state = AFTER_DECL_OR_DIR;
+  } else if (parser.last_instrument_number != inst_number) {
+    sng_note_t *note = next_note();
+    note->kind = NOTE_INST;
+    note->value = inst_number;
+    parser.last_instrument_number = inst_number;
+  }
 }
 
 /*===========================================================================*/
 
 static void parse_key_directive(void) {
+  while (peek_char() == ' ') next_char();
   int num_accidentals = read_unsigned_int();
   if (num_accidentals > 7) PARSE_ERROR("invalid key signature number\n");
   switch (next_char()) {
@@ -569,6 +622,7 @@ static void parse_key_directive(void) {
 }
 
 static void parse_tempo_directive(void) {
+  while (peek_char() == ' ') next_char();
   int multiplier = 1;
   switch (next_char()) {
     case 'w': multiplier = 1; break;
@@ -629,12 +683,32 @@ static const char *read_quoted_string(void) {
   return strdup(buffer);
 }
 
+static void parse_drum_declaration(void) {
+  if (parser.current_part >= 0) {
+    PARSE_ERROR("can't declare a drum inside of a part\n");
+  }
+  while (next_char() == ' ') {}
+  const char letter = parser.current_char;
+  if (letter < 'A' || letter > 'Z') {
+    PARSE_ERROR("invalid drum name: '%c'\n", letter);
+  }
+  const int drum_index = letter - 'A';
+  if (parser.drum_instruments[drum_index] >= 0) {
+    PARSE_ERROR("reused drum name: '%c'\n", letter);
+  }
+  read_symbol('{');
+  parser.current_drum = drum_index;
+  parser.current_channel = 3;
+  start_instrument();
+}
+
 static void parse_part_declaration(void) {
   if (parser.num_songs <= 0) {
     PARSE_ERROR("can't declare a part outside of a song\n");
   }
   sng_song_t *song = &parser.songs[parser.num_songs - 1];
-  const char letter = next_char();
+  while (next_char() == ' ') {}
+  const char letter = parser.current_char;
   if (letter < 'A' || letter > 'Z') {
     PARSE_ERROR("invalid part name: '%c'\n", letter);
   }
@@ -664,6 +738,13 @@ static void parse_song_declaration(void) {
 
 static void parse_declaration(void) {
   switch (next_char()) {
+    case 'D':
+      if (next_char() != 'R') goto invalid;
+      if (next_char() != 'U') goto invalid;
+      if (next_char() != 'M') goto invalid;
+      if (next_char() != ' ') goto invalid;
+      parse_drum_declaration();
+      return;
     case 'P':
       if (next_char() != 'A') goto invalid;
       if (next_char() != 'R') goto invalid;
@@ -703,6 +784,7 @@ static void parse_input(void) {
               PARSE_ERROR("can't set channel outside of a part\n");
             }
             parser.current_channel = ch - '1';
+            parser.last_instrument_number = -1;
             parser.state = NEW_NOTE;
             break;
           case '\n': begin_line(); break;
@@ -721,6 +803,7 @@ static void parse_input(void) {
           case 'f': start_tone( 5, -7, 1); break;
           case 'g': start_tone( 7, -5, 3); break;
           case 'r': start_tone(-1, -9, 9); break;
+          case 'x': start_drum(); break;
           case '{': start_instrument(); break;
           case ' ': case '|': case '\'': break;
           case '\n': begin_line(); break;

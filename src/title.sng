@@ -1,6 +1,6 @@
 !SONG "TitleMusic" "SN|ABC"
 =tempo q28
-=key 0N
+=key 0N  % C major
 
 !PART S
 
