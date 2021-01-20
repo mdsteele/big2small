@@ -321,20 +321,21 @@ SECTION "TitleMenuStrings", ROM0
 
 Data_StartEraseStr_start::
 Data_EraseItemStr_start::
-    DB "ERASE "
+    DB "Erase "
 Data_EraseItemStr_end::
-Data_FileItemStr_start::
-    DB "FILE"
+    DB "file"
 Data_StartEraseStr_end::
-    DB " "
+
+Data_FileItemStr_start::
+    DB "File "
 Data_FileItemStr_end::
 
 Data_StopEraseStr_start::
-    DB "END       "
+    DB "Done      "
 Data_StopEraseStr_end::
 
 Data_FileEmptyStr_start::
-    DB "EMPTY"
+    DB "Empty"
 Data_FileEmptyStr_end::
 
 ;;;=========================================================================;;;

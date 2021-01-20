@@ -110,12 +110,9 @@ Func_WindowHorzBar:
     ld a, e
     ld [hl], a
     ld a, l
-    and ~(SCRN_VX_B - 1)
-    add SCRN_VX_B
+    or SCRN_VX_B - 1
     ld l, a
-    ld a, h
-    adc 0
-    ld h, a
+    inc hl
     ret
 
 ;;;=========================================================================;;;

@@ -215,13 +215,13 @@ Func_PauseMenuSetCursorTile:
 SECTION "PauseMenuStrings", ROM0
 
 Data_PauseMenuString1_start::
-    DB ">CONTINUE"
+    DB ">Continue"
 Data_PauseMenuString1_end::
 Data_PauseMenuString2_start::
-    DB " RESET PUZZLE"
+    DB " Reset puzzle"
 Data_PauseMenuString2_end::
 Data_PauseMenuString3_start::
-    DB " BACK TO MAP"
+    DB " Back to map"
 Data_PauseMenuString3_end::
 
 ;;;=========================================================================;;;
