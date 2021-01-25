@@ -72,10 +72,8 @@ FILE_NUMBER = 0
 FILE_NUMBER = FILE_NUMBER + 1
     ENDR
     ld hl, (Vram_BgMap + SCRN_VX_B * (TITLE_MENU_ROW + TITLE_MENU_ITEM_ERASE) \
-            + TITLE_MENU_COL)                                 ; dest
-    ld de, Data_StartEraseStr_start                           ; src
-    ld bc, Data_StartEraseStr_end - Data_StartEraseStr_start  ; count
-    call Func_MemCopy
+            + TITLE_MENU_COL)  ; dest
+    COPY_FROM_ROM0 Data_StartEraseStr_start, Data_StartEraseStr_end
     ld c, ">"  ; cursor tile ID
     call Func_TitleMenuSetCursorTile
     ;; Set up objects.
@@ -156,10 +154,8 @@ _TitleScreen_EraseFile:
     ld c, a
     ld b, 0
     ld hl, Vram_BgMap + SCRN_VX_B * TITLE_MENU_ROW + TITLE_MENU_COL + 9
-    add hl, bc                                              ; dest
-    ld de, Data_FileEmptyStr_start                          ; src
-    ld bc, Data_FileEmptyStr_end - Data_FileEmptyStr_start  ; count
-    call Func_MemCopy
+    add hl, bc  ; dest
+    COPY_FROM_ROM0 Data_FileEmptyStr_start, Data_FileEmptyStr_end
     ;; Actually erase the file.
     ld a, [Ram_TitleMenuItem_u8]
     ld b, a  ; save file number
@@ -176,10 +172,8 @@ FILE_NUMBER = FILE_NUMBER + 1
     ENDR
     ;; Change the "ERASE FILE" item to "END".
     ld hl, (Vram_BgMap + SCRN_VX_B * (TITLE_MENU_ROW + TITLE_MENU_ITEM_ERASE) \
-            + TITLE_MENU_COL)                                ; dest
-    ld de, Data_StopEraseStr_start                           ; src
-    ld bc, Data_StopEraseStr_end - Data_StopEraseStr_start   ; count
-    call Func_MemCopy
+            + TITLE_MENU_COL)  ; dest
+    COPY_FROM_ROM0 Data_StopEraseStr_start, Data_StopEraseStr_end
     ;; Enable erase mode.
     ld a, 1
     ld [Ram_TitleMenuIsErasing_bool], a
@@ -195,10 +189,8 @@ FILE_NUMBER = FILE_NUMBER + 1
     ENDR
     ;; Change the "END" item back to "ERASE FILE".
     ld hl, (Vram_BgMap + SCRN_VX_B * (TITLE_MENU_ROW + TITLE_MENU_ITEM_ERASE) \
-            + TITLE_MENU_COL)                                 ; dest
-    ld de, Data_StartEraseStr_start                           ; src
-    ld bc, Data_StartEraseStr_end - Data_StartEraseStr_start  ; count
-    call Func_MemCopy
+            + TITLE_MENU_COL)  ; dest
+    COPY_FROM_ROM0 Data_StartEraseStr_start, Data_StartEraseStr_end
     ;; Disable erase mode.
     xor a
     ld [Ram_TitleMenuIsErasing_bool], a
@@ -236,10 +228,8 @@ Func_TitleMenuSetCursorTile:
 ;;; @param b The save file number.
 Func_TitleMenuSetItemToFile:
     push bc
-    call Func_GetTitleMenuItemPtr_hl                      ; dest
-    ld de, Data_FileItemStr_start                         ; src
-    ld bc, Data_FileItemStr_end - Data_FileItemStr_start  ; count
-    call Func_MemCopy
+    call Func_GetTitleMenuItemPtr_hl  ; dest
+    COPY_FROM_ROM0 Data_FileItemStr_start, Data_FileItemStr_end
     pop bc
     ;; Draw the save file's letter.
     ld a, "A"
@@ -252,10 +242,8 @@ Func_TitleMenuSetItemToFile:
 ;;; @param b The save file number.
 Func_TitleMenuSetItemToErase:
     push bc
-    call Func_GetTitleMenuItemPtr_hl                        ; dest
-    ld de, Data_EraseItemStr_start                          ; src
-    ld bc, Data_EraseItemStr_end - Data_EraseItemStr_start  ; count
-    call Func_MemCopy
+    call Func_GetTitleMenuItemPtr_hl  ; dest
+    COPY_FROM_ROM0 Data_EraseItemStr_start, Data_EraseItemStr_end
     pop bc
     ;; Draw the save file's letter.
     ld a, "A"
@@ -265,12 +253,10 @@ Func_TitleMenuSetItemToErase:
 
 ;;; @param b The save file number.
 Func_TitleMenuDrawFileItem:
-    call Func_GetTitleMenuItemPtr_hl  ; preserves b
     ;; Draw the base save file menu item string.
     push bc
-    ld de, Data_FileItemStr_start                         ; src
-    ld bc, Data_FileItemStr_end - Data_FileItemStr_start  ; count
-    call Func_MemCopy
+    call Func_GetTitleMenuItemPtr_hl  ; dest
+    COPY_FROM_ROM0 Data_FileItemStr_start, Data_FileItemStr_end
     pop bc
     ;; Draw the save file's letter.
     ld a, "A"
@@ -288,14 +274,14 @@ Func_TitleMenuDrawFileItem:
     ASSERT SAVE_Exists_bool == 1
     ld c, [hl]
     pop hl
-    ;; If the file is empty, draw the word "EMPTY".
+    ;; If the file is empty, draw the word "Empty".
     bit 0, c
     jr nz, .notEmpty
-    ld de, -3
-    add hl, de                                              ; dest
-    ld de, Data_FileEmptyStr_start                          ; src
-    ld bc, Data_FileEmptyStr_end - Data_FileEmptyStr_start  ; count
-    jp Func_MemCopy
+    dec hl
+    dec hl
+    dec hl
+    COPY_FROM_ROM0 Data_FileEmptyStr_start, Data_FileEmptyStr_end
+    ret
     ;; Otherwise, draw the number of completed puzzles (with a star, if it's
     ;; all the puzzles).
     .notEmpty

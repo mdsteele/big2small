@@ -33,8 +33,7 @@ Ram_BottomOfStack:
 SECTION "Main", ROM0[$0150]
 Main::
     ld sp, Ram_BottomOfStack
-    romb BANK(FuncX_InitDmaCode)
-    call FuncX_InitDmaCode
+    xcall FuncX_InitDmaCode
     ;; Enable VBlank interrupt.
     ld a, IEF_VBLANK
     ldh [rIE], a
@@ -44,26 +43,14 @@ Main::
     ld a, LCDCF_OFF
     ldh [rLCDC], a
     ;; Copy tiles to VRAM.
-    romb BANK(DataX_DeviceTiles_start)
-    ld hl, Vram_BgTiles + 0 * sizeof_TILE                   ; dest
-    ld de, DataX_DeviceTiles_start                          ; src
-    ld bc, DataX_DeviceTiles_end - DataX_DeviceTiles_start  ; count
-    call Func_MemCopy
-    romb BANK(DataX_FontTiles_start)
-    ld hl, Vram_BgTiles + " " * sizeof_TILE             ; dest
-    ld de, DataX_FontTiles_start                        ; src
-    ld bc, DataX_FontTiles_end - DataX_FontTiles_start  ; count
-    call Func_MemCopy
-    romb BANK(DataX_RiverTiles_start)
-    ld hl, Vram_SharedTiles + $60 * sizeof_TILE           ; dest
-    ld de, DataX_RiverTiles_start                         ; src
-    ld bc, DataX_RiverTiles_end - DataX_RiverTiles_start  ; count
-    call Func_MemCopy
-    romb BANK(DataX_ObjTiles_start)
-    ld hl, Vram_ObjTiles                              ; dest
-    ld de, DataX_ObjTiles_start                       ; src
-    ld bc, DataX_ObjTiles_end - DataX_ObjTiles_start  ; count
-    call Func_MemCopy
+    ld hl, Vram_BgTiles + 0 * sizeof_TILE  ; dest
+    COPY_FROM_ROMX DataX_DeviceTiles_start, DataX_DeviceTiles_end
+    ld hl, Vram_BgTiles + " " * sizeof_TILE  ; dest
+    COPY_FROM_ROMX DataX_FontTiles_start, DataX_FontTiles_end
+    ld hl, Vram_SharedTiles + $60 * sizeof_TILE  ; dest
+    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    ld hl, Vram_ObjTiles  ; dest
+    COPY_FROM_ROMX DataX_ObjTiles_start, DataX_ObjTiles_end
     ;; Initialize window map.
     ld hl, Vram_WindowMap
     ld e, $2b  ; edge tile ID

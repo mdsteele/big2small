@@ -71,8 +71,7 @@ Func_LoadFile::
     jr z, _LoadFile_NewGame
     ;; Otherwise, load the save file in Ram_Progress_file.
     call Func_GetSaveFilePtr_hl
-    ld d, h
-    ld e, l
+    ldw de, hl
     ld hl, Ram_Progress_file
     jr Func_SramFileTransfer
 

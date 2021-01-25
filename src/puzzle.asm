@@ -151,16 +151,10 @@ _BeginPuzzle_Init:
     ld bc, sizeof_PUZZ           ; count
     call Func_MemCopy
     ;; Copy tiles to VRAM.
-    romb BANK(DataX_TerrainTiles_start)
-    ld hl, Vram_SharedTiles + $00 * sizeof_TILE               ; dest
-    ld de, DataX_TerrainTiles_start                           ; src
-    ld bc, DataX_TerrainTiles_end - DataX_TerrainTiles_start  ; count
-    call Func_MemCopy
-    romb BANK(DataX_CityTiles_start)
-    ld hl, Vram_SharedTiles + $40 * sizeof_TILE         ; dest
-    ld de, DataX_CityTiles_start                        ; src
-    ld bc, DataX_CityTiles_end - DataX_CityTiles_start  ; count
-    call Func_MemCopy
+    ld hl, Vram_SharedTiles + $00 * sizeof_TILE  ; dest
+    COPY_FROM_ROMX DataX_TerrainTiles_start, DataX_TerrainTiles_end
+    ld hl, Vram_SharedTiles + $40 * sizeof_TILE  ; dest
+    COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
@@ -205,18 +199,12 @@ _BeginPuzzle_Init:
     ld [Ram_PipeEL_oama + OAMA_FLAGS], a
     ld [Ram_PipeER_oama + OAMA_FLAGS], a
     ;; Set up window.
-    ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B                       ; dest
-    ld de, Data_PauseMenuString1_start                              ; src
-    ld bc, Data_PauseMenuString1_end - Data_PauseMenuString1_start  ; count
-    call Func_MemCopy
-    ld hl, Vram_WindowMap + 2 + 2 * SCRN_VX_B                       ; dest
-    ld de, Data_PauseMenuString2_start                              ; src
-    ld bc, Data_PauseMenuString2_end - Data_PauseMenuString2_start  ; count
-    call Func_MemCopy
-    ld hl, Vram_WindowMap + 2 + 3 * SCRN_VX_B                       ; dest
-    ld de, Data_PauseMenuString3_start                              ; src
-    ld bc, Data_PauseMenuString3_end - Data_PauseMenuString3_start  ; count
-    call Func_MemCopy
+    ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B  ; dest
+    COPY_FROM_ROM0 Data_PauseMenuString1_start, Data_PauseMenuString1_end
+    ld hl, Vram_WindowMap + 2 + 2 * SCRN_VX_B  ; dest
+    COPY_FROM_ROM0 Data_PauseMenuString2_start, Data_PauseMenuString2_end
+    ld hl, Vram_WindowMap + 2 + 3 * SCRN_VX_B  ; dest
+    COPY_FROM_ROM0 Data_PauseMenuString3_start, Data_PauseMenuString3_end
     ;; Initialize music.
     ld hl, Ram_PuzzleState_puzz + PUZZ_Music_song_bptr
     ld a, [hl+]

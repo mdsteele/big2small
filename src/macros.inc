@@ -107,6 +107,18 @@ ENDM
 
 ;;;=========================================================================;;;
 
+ldw: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to ldw macro"
+    ELIF _NARG > 2
+    FAIL "Too many arguments to ldw macro"
+    ENDC
+    ld LOW(\1), LOW(\2)
+    ld HIGH(\1), HIGH(\2)
+ENDM
+
+;;;=========================================================================;;;
+
 ;;; Negates the `a` register.  Sets/clears the `z` flag if the result is
 ;;; zero/nonzero.
 neg: MACRO
@@ -134,6 +146,48 @@ romb: MACRO
     ld a, \1
     ENDC
     ld [$2000], a
+ENDM
+
+;;; Calls a function stored in ROMX after first switching to its ROM bank.
+;;; This also stores the ROM bank number in the a register.
+;;;
+;;; Examples:
+;;;     xcall FuncX_Foo
+xcall: MACRO
+    IF _NARG < 1
+    FAIL "Too few arguments to callx macro"
+    ELIF _NARG > 1
+    FAIL "Too many arguments to callx macro"
+    ENDC
+    romb BANK(\1)
+    call \1
+ENDM
+
+;;;=========================================================================;;;
+
+COPY_FROM_ROMX: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to COPY_FROM_ROMX macro"
+    ELIF _NARG > 2
+    FAIL "Too many arguments to COPY_FROM_ROMX macro"
+    ENDC
+    romb BANK(\1)
+    ld de, (\1)
+    ld bc, (\2) - (\1)
+    call Func_MemCopy
+ENDM
+
+COPY_FROM_ROM0: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to COPY_FROM_ROM0 macro"
+    ELIF _NARG > 2
+    FAIL "Too many arguments to COPY_FROM_ROM0 macro"
+    ENDC
+    ASSERT BANK(\1) == 0
+    ASSERT BANK(\2) == 0
+    ld de, (\1)
+    ld bc, (\2) - (\1)
+    call Func_MemCopy
 ENDM
 
 ;;;=========================================================================;;;

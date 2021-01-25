@@ -55,17 +55,11 @@ Main_WorldMapScreen::
     call Func_SaveFile
     .notSolved
     ;; Copy the tile data to VRAM.
-    romb BANK(DataX_MapTiles_start)
-    ld hl, Vram_SharedTiles                           ; dest
-    ld de, DataX_MapTiles_start                       ; src
-    ld bc, DataX_MapTiles_end - DataX_MapTiles_start  ; count
-    call Func_MemCopy
+    ld hl, Vram_SharedTiles  ; dest
+    COPY_FROM_ROMX DataX_MapTiles_start, DataX_MapTiles_end
     ;; Copy the BG tile map to VRAM.
-    romb BANK(DataX_WorldTileMap_start)
-    ld hl, Vram_BgMap                                         ; dest
-    ld de, DataX_WorldTileMap_start                           ; src
-    ld bc, DataX_WorldTileMap_end - DataX_WorldTileMap_start  ; count
-    call Func_MemCopy
+    ld hl, Vram_BgMap  ; dest
+    COPY_FROM_ROMX DataX_WorldTileMap_start, DataX_WorldTileMap_end
     ;; TODO: Draw map paths between unlocked puzzles.
 _WorldMapScreen_DrawUnlockedNodes:
     ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
