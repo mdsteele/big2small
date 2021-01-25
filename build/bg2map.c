@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
       int value1 = from_base64(ch);
       int value2 = from_base64(fgetc(stdin));
       if (value1 < 0 || value2 < 0) {
-        fputc(' ', stdout);
+        fputc(0x00, stdout);
       } else if (value1 == 0) {
         fputc(0x80 + value2, stdout);
       } else if (value1 == 1) {

@@ -28,7 +28,7 @@ SECTION "TerrainTable", ROMX, ALIGN[8]
 DataX_TerrainTable:
     ;; Open terrain:
     ASSERT @ - DataX_TerrainTable == 4 * O_EMP
-    DB $20, $20, $20, $20
+    DB $00, $00, $00, $00
     ASSERT @ - DataX_TerrainTable == 4 * O_GRS
     DB $8d, $8d, $8d, $8d
     ASSERT @ - DataX_TerrainTable == 4 * O_BNS
@@ -42,31 +42,31 @@ DataX_TerrainTable:
     ASSERT @ - DataX_TerrainTable == 4 * O_RWR
     DB $a0, $9e, $a1, $9f
     ASSERT @ - DataX_TerrainTable == 4 * O_BST
-    DB $18, $1a, $19, $1b
+    DB $68, $6a, $69, $6b
     ;; Goal terrain:
     ASSERT @ - DataX_TerrainTable == 4 * G_PNT
-    DB $00, $02, $01, $03
+    DB $50, $52, $51, $53
     ASSERT @ - DataX_TerrainTable == 4 * G_APL
-    DB $04, $06, $05, $07
+    DB $54, $56, $55, $57
     ASSERT @ - DataX_TerrainTable == 4 * G_CHS
-    DB $08, $0a, $09, $0b
+    DB $58, $5a, $59, $5b
     ;; Special terrain:
     ASSERT @ - DataX_TerrainTable == 4 * S_BSH
-    DB $14, $16, $15, $17
+    DB $64, $66, $65, $67
     ASSERT @ - DataX_TerrainTable == 4 * S_MTP
-    DB $1c, $1e, $1d, $1f
+    DB $6c, $6e, $6d, $6f
     ASSERT @ - DataX_TerrainTable == 4 * S_PPW
     DB $f8, $fa, $f9, $fb
     ASSERT @ - DataX_TerrainTable == 4 * S_PPE
     DB $fc, $fe, $fd, $ff
     ASSERT @ - DataX_TerrainTable == 4 * S_ARN
-    DB $0c, $0e, $0c, $0e
+    DB $5c, $5e, $5c, $5e
     ASSERT @ - DataX_TerrainTable == 4 * S_ARS
-    DB $0d, $0f, $0d, $0f
+    DB $5d, $5f, $5d, $5f
     ASSERT @ - DataX_TerrainTable == 4 * S_ARE
-    DB $12, $12, $13, $13
+    DB $62, $62, $63, $63
     ASSERT @ - DataX_TerrainTable == 4 * S_ARW
-    DB $10, $10, $11, $11
+    DB $60, $60, $61, $61
     ASSERT @ - DataX_TerrainTable == 4 * S_TEF
     DB $d0, $d2, $d1, $d3
     ASSERT @ - DataX_TerrainTable == 4 * S_TGE

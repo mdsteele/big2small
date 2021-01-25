@@ -17,6 +17,7 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/vram.inc"
@@ -43,28 +44,28 @@ Main::
     ld a, LCDCF_OFF
     ldh [rLCDC], a
     ;; Copy tiles to VRAM.
-    ld hl, Vram_BgTiles + 0 * sizeof_TILE  ; dest
-    COPY_FROM_ROMX DataX_DeviceTiles_start, DataX_DeviceTiles_end
-    ld hl, Vram_BgTiles + " " * sizeof_TILE  ; dest
+    ld hl, Vram_BgTiles + $00 * sizeof_TILE  ; dest
     COPY_FROM_ROMX DataX_FontTiles_start, DataX_FontTiles_end
+    ld hl, Vram_BgTiles + $50 * sizeof_TILE  ; dest
+    COPY_FROM_ROMX DataX_DeviceTiles_start, DataX_DeviceTiles_end
     ld hl, Vram_SharedTiles + $60 * sizeof_TILE  ; dest
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     ld hl, Vram_ObjTiles  ; dest
     COPY_FROM_ROMX DataX_ObjTiles_start, DataX_ObjTiles_end
     ;; Initialize window map.
     ld hl, Vram_WindowMap
-    ld e, $2b  ; edge tile ID
-    ld d, $24  ; middle tile ID
+    ld e, "+"  ; edge tile ID
+    ld d, "="  ; middle tile ID
     call Func_WindowHorzBar  ; updates hl
-    ld e, $25  ; edge tile ID
-    ld d, $20  ; middle tile ID
+    ld e, "|"  ; edge tile ID
+    ld d, " "  ; middle tile ID
     ld b, 3
     .windowLoop
     call Func_WindowHorzBar  ; preserves b and de, updates hl
     dec b
     jr nz, .windowLoop
-    ld e, $2b  ; edge tile ID
-    ld d, $24  ; middle tile ID
+    ld e, "+"  ; edge tile ID
+    ld d, "="  ; middle tile ID
     call Func_WindowHorzBar
     ;; Initialize palettes.
     ld a, %11100100
