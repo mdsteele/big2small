@@ -44,10 +44,8 @@ Main::
     ld a, LCDCF_OFF
     ldh [rLCDC], a
     ;; Copy tiles to VRAM.
-    ld hl, Vram_BgTiles + $00 * sizeof_TILE  ; dest
-    COPY_FROM_ROMX DataX_FontTiles_start, DataX_FontTiles_end
-    ld hl, Vram_BgTiles + $50 * sizeof_TILE  ; dest
-    COPY_FROM_ROMX DataX_DeviceTiles_start, DataX_DeviceTiles_end
+    ld hl, Vram_BgTiles  ; dest
+    COPY_FROM_ROMX DataX_BgTiles_start, DataX_BgTiles_end
     ld hl, Vram_SharedTiles + $60 * sizeof_TILE  ; dest
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     ld hl, Vram_ObjTiles  ; dest

@@ -20,7 +20,6 @@
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/puzzle.inc"
-INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -151,10 +150,8 @@ _BeginPuzzle_Init:
     ld bc, sizeof_PUZZ           ; count
     call Func_MemCopy
     ;; Copy tiles to VRAM.
-    ld hl, Vram_SharedTiles + $00 * sizeof_TILE  ; dest
+    ld hl, Vram_SharedTiles  ; dest
     COPY_FROM_ROMX DataX_TerrainTiles_start, DataX_TerrainTiles_end
-    ld hl, Vram_SharedTiles + $40 * sizeof_TILE  ; dest
-    COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
@@ -221,6 +218,9 @@ _BeginPuzzle_Init:
     call Func_FadeIn
     ld a, %11010000
     ldh [rOBP1], a
+    ;; Run intro dialog.
+    ld hl, Ram_PuzzleState_puzz + PUZZ_Intro_dlog_bptr
+    call Func_RunDialog
     ;; fall through to Main_PuzzleCommand
 
 Main_PuzzleCommand::
@@ -1219,6 +1219,10 @@ SECTION "MainVictory", ROM0
 
 Main_Victory:
     ;; TODO: Play victory music, animate animals.
+    ;; Run outro dialog.
+    ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr
+    call Func_RunDialog
+    ;; Fade out and return to world map.
     call Func_FadeOut
     ld c, 1  ; is victory (1=true)
     jp Main_WorldMapScreen

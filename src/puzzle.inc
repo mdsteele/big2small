@@ -66,6 +66,10 @@ PUZZ_Goat_anim         EQU (TERRAIN_COLS + 16 * 1)
 PUZZ_Mouse_anim        EQU (TERRAIN_COLS + 16 * 2)
 ;;; Music: A banked pointer to the SONG struct to play during this puzzle.
 PUZZ_Music_song_bptr   EQU (TERRAIN_COLS + 16 * 3)
+;;; Intro: A banked pointer to the DLOG struct for the intro dialog.
+PUZZ_Intro_dlog_bptr   EQU (TERRAIN_COLS + 16 * 4)
+;;; Outro: A banked pointer to the DLOG struct for the outro dialog.
+PUZZ_Outro_dlog_bptr   EQU (TERRAIN_COLS + 16 * 5)
 sizeof_PUZZ            EQU (TERRAIN_COLS + 16 * (TERRAIN_ROWS - 1))
 
 ;;;=========================================================================;;;

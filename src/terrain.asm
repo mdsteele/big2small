@@ -42,31 +42,31 @@ DataX_TerrainTable:
     ASSERT @ - DataX_TerrainTable == 4 * O_RWR
     DB $a0, $9e, $a1, $9f
     ASSERT @ - DataX_TerrainTable == 4 * O_BST
-    DB $68, $6a, $69, $6b
+    DB $78, $7a, $79, $7b
     ;; Goal terrain:
     ASSERT @ - DataX_TerrainTable == 4 * G_PNT
-    DB $50, $52, $51, $53
+    DB $b0, $b2, $b1, $b3
     ASSERT @ - DataX_TerrainTable == 4 * G_APL
-    DB $54, $56, $55, $57
+    DB $b4, $b6, $b5, $b7
     ASSERT @ - DataX_TerrainTable == 4 * G_CHS
-    DB $58, $5a, $59, $5b
+    DB $b8, $ba, $b9, $bb
     ;; Special terrain:
     ASSERT @ - DataX_TerrainTable == 4 * S_BSH
-    DB $64, $66, $65, $67
+    DB $74, $76, $75, $77
     ASSERT @ - DataX_TerrainTable == 4 * S_MTP
-    DB $6c, $6e, $6d, $6f
+    DB $7c, $7e, $7d, $7f
     ASSERT @ - DataX_TerrainTable == 4 * S_PPW
     DB $f8, $fa, $f9, $fb
     ASSERT @ - DataX_TerrainTable == 4 * S_PPE
     DB $fc, $fe, $fd, $ff
     ASSERT @ - DataX_TerrainTable == 4 * S_ARN
-    DB $5c, $5e, $5c, $5e
+    DB $6c, $6e, $6c, $6e
     ASSERT @ - DataX_TerrainTable == 4 * S_ARS
-    DB $5d, $5f, $5d, $5f
+    DB $6d, $6f, $6d, $6f
     ASSERT @ - DataX_TerrainTable == 4 * S_ARE
-    DB $62, $62, $63, $63
+    DB $72, $72, $73, $73
     ASSERT @ - DataX_TerrainTable == 4 * S_ARW
-    DB $60, $60, $61, $61
+    DB $70, $70, $71, $71
     ASSERT @ - DataX_TerrainTable == 4 * S_TEF
     DB $d0, $d2, $d1, $d3
     ASSERT @ - DataX_TerrainTable == 4 * S_TGE

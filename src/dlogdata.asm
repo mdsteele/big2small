@@ -17,63 +17,47 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-INCLUDE "src/vram.inc"
+INCLUDE "src/charmap.inc"
+INCLUDE "src/dialog.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "BgTiles", ROMX
-DataX_BgTiles_start::
-    INCBIN "out/data/font.2bpp"
-    INCBIN "out/data/portrait.2bpp"
-    INCBIN "out/data/porvar.2bpp"
-    INCBIN "out/data/devices.2bpp"
-DataX_BgTiles_end::
+CHARMAP "\n", DIALOG_TEXT_NEWLINE
+CHARMAP "\r", DIALOG_TEXT_EOF
 
 ;;;=========================================================================;;;
 
-SECTION "MapTiles", ROMX
-DataX_MapTiles_start::
-    INCBIN "out/data/worldmap.2bpp"
-DataX_MapTiles_end::
+SECTION "DialogData", ROMX
 
-;;;=========================================================================;;;
+DataX_Null_dlog::
+    DB DIALOG_END
 
-SECTION "ObjTiles", ROMX
-DataX_ObjTiles_start::
-    INCBIN "out/data/elephant.2bpp"
-    INCBIN "out/data/goat.2bpp"
-    INCBIN "out/data/mouse.2bpp"
-    INCBIN "out/data/cursor.2bpp"
-    INCBIN "out/data/smoke.2bpp"
-DataX_ObjTiles_end::
+DataX_Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Boy, am I ever\n"
+    DB "hungry. I wish\n"
+    DB "I had a peanut!\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "I could use an\n"
+    DB "apple, myself.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Sounds great!\r"
+    DB DIALOG_MOUSE
+    DB "Don't forget\n"
+    DB "me! I want some\n"
+    DB "cheese!\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Sounds like a\n"
+    DB "party, then!\r"
+    DB DIALOG_END
 
-;;;=========================================================================;;;
-
-SECTION "TerrainTiles", ROMX
-DataX_TerrainTiles_start::
-    INCBIN "out/data/forest.2bpp"
-    INCBIN "out/data/mountain.2bpp"
-    INCBIN "out/data/goal.2bpp"
-    DS sizeof_TILE * 4
-    INCBIN "out/data/city.2bpp"
-    DS sizeof_TILE * 4
-    INCBIN "out/data/space.2bpp"
-DataX_TerrainTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "RiverTiles", ROMX
-DataX_RiverTiles_start::
-    INCBIN "out/data/river.2bpp"
-    INCBIN "out/data/pipe.2bpp"
-DataX_RiverTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "PortraitTiles", ROMX
-DataX_PortraitTiles_tile_arr::
-    INCBIN "out/data/portrait.2bpp"
-    INCBIN "out/data/porvar.2bpp"
-DataX_PortraitTiles_end::
+DataX_Outro_dlog::
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "This peanut is\n"
+    DB "delicious!\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Let's go find\n"
+    DB "more food!\r"
+    DB DIALOG_END
 
 ;;;=========================================================================;;;
