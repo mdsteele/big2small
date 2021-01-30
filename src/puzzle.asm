@@ -195,13 +195,6 @@ _BeginPuzzle_Init:
     ld [Ram_PipeWR_oama + OAMA_FLAGS], a
     ld [Ram_PipeEL_oama + OAMA_FLAGS], a
     ld [Ram_PipeER_oama + OAMA_FLAGS], a
-    ;; Set up window.
-    ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B  ; dest
-    COPY_FROM_ROM0 Data_PauseMenuString1_start, Data_PauseMenuString1_end
-    ld hl, Vram_WindowMap + 2 + 2 * SCRN_VX_B  ; dest
-    COPY_FROM_ROM0 Data_PauseMenuString2_start, Data_PauseMenuString2_end
-    ld hl, Vram_WindowMap + 2 + 3 * SCRN_VX_B  ; dest
-    COPY_FROM_ROM0 Data_PauseMenuString3_start, Data_PauseMenuString3_end
     ;; Initialize music.
     ld hl, Ram_PuzzleState_puzz + PUZZ_Music_song_bptr
     ld a, [hl+]

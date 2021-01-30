@@ -149,7 +149,8 @@ romb: MACRO
 ENDM
 
 ;;; Calls a function stored in ROMX after first switching to its ROM bank.
-;;; This also stores the ROM bank number in the a register.
+;;; This also stores the ROM bank number in the a register (before calling the
+;;; function).
 ;;;
 ;;; Examples:
 ;;;     xcall FuncX_Foo
@@ -165,18 +166,36 @@ ENDM
 
 ;;;=========================================================================;;;
 
+;;; Copies data from the current ROM bank.
+COPY_FROM_CURR: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to COPY_FROM_CURR macro"
+    ELIF _NARG > 2
+    FAIL "Too many arguments to COPY_FROM_CURR macro"
+    ENDC
+    ld de, (\1)
+    ld bc, (\2) - (\1)
+    call Func_MemCopy
+ENDM
+
+;;; Copies data from ROMX, after first changing the current ROM bank.
 COPY_FROM_ROMX: MACRO
     IF _NARG < 2
     FAIL "Too few arguments to COPY_FROM_ROMX macro"
     ELIF _NARG > 2
     FAIL "Too many arguments to COPY_FROM_ROMX macro"
     ENDC
+    ASSERT BANK(\1) != 0
+    ASSERT BANK(\2) != 0
+    ASSERT BANK(\1) == BANK(\2)
     romb BANK(\1)
-    ld de, (\1)
-    ld bc, (\2) - (\1)
-    call Func_MemCopy
+    COPY_FROM_CURR \1, \2
 ENDM
 
+;;; Copies data from ROM0 (without changing the current ROM bank).
+;;;
+;;; Examples:
+;;;     COPY_FROM_ROM0 Data_Foo_start, Data_Foo_end  ; must be in bank zero
 COPY_FROM_ROM0: MACRO
     IF _NARG < 2
     FAIL "Too few arguments to COPY_FROM_ROM0 macro"
@@ -185,9 +204,20 @@ COPY_FROM_ROM0: MACRO
     ENDC
     ASSERT BANK(\1) == 0
     ASSERT BANK(\2) == 0
-    ld de, (\1)
-    ld bc, (\2) - (\1)
-    call Func_MemCopy
+    COPY_FROM_CURR \1, \2
+ENDM
+
+;;; Copies data from the same ROM bank as the calling function (without
+;;; changing the current ROM bank).
+COPY_FROM_SAME: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to COPY_FROM_ROMX macro"
+    ELIF _NARG > 2
+    FAIL "Too many arguments to COPY_FROM_ROMX macro"
+    ENDC
+    ASSERT BANK(\1) == BANK(@)
+    ASSERT BANK(\2) == BANK(@)
+    COPY_FROM_CURR \1, \2
 ENDM
 
 ;;;=========================================================================;;;

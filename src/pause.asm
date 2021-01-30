@@ -57,6 +57,8 @@ Ram_PauseWindowVelocity_i8:
 SECTION "MainPause", ROM0
 
 Main_BeginPause::
+    ;; Initialize window contents.
+    xcall FuncX_DrawPauseMenu
     ;; Hide arrow objects.
     xor a
     ld [Ram_ArrowN_oama + OAMA_Y], a
@@ -213,16 +215,49 @@ Func_PauseMenuSetCursorTile:
 
 ;;;=========================================================================;;;
 
-SECTION "PauseMenuStrings", ROM0
+SECTION "DrawPauseMenu", ROMX
 
-Data_PauseMenuString1_start::
+DRAW_MENU_UNROLL EQU 3
+PAUSE_MENU_LINE_TILES EQU (SCRN_X_B - 2)
+
+;;; FIXME document this
+FuncX_DrawPauseMenu:
+    ld a, " "
+    ld de, SCRN_VX_B - PAUSE_MENU_LINE_TILES
+    ld hl, Vram_WindowMap + SCRN_VX_B * 1 + 1
+    ld b, PAUSE_MENU_NUM_ITEMS
+    .outerLoop
+    ASSERT PAUSE_MENU_LINE_TILES % DRAW_MENU_UNROLL == 0
+    ld c, PAUSE_MENU_LINE_TILES / DRAW_MENU_UNROLL
+    .innerLoop
+    REPT DRAW_MENU_UNROLL
+    ld [hl+], a
+    ENDR
+    dec c
+    jr nz, .innerLoop
+    dec b
+    jr z, .strings
+    add hl, de
+    jr .outerLoop
+    .strings
+    ld hl, Vram_WindowMap + SCRN_VX_B * 1 + 2  ; dest
+    COPY_FROM_SAME DataX_ContinueStr_start, DataX_ContinueStr_end
+    ld hl, Vram_WindowMap + SCRN_VX_B * 2 + 3  ; dest
+    COPY_FROM_SAME DataX_ResetStr_start, DataX_ResetStr_end
+    ld hl, Vram_WindowMap + SCRN_VX_B * 3 + 3  ; dest
+    COPY_FROM_SAME DataX_BackToMapStr_start, DataX_BackToMapStr_end
+    ret
+
+DataX_ContinueStr_start:
     DB ">Continue"
-Data_PauseMenuString1_end::
-Data_PauseMenuString2_start::
-    DB " Reset puzzle"
-Data_PauseMenuString2_end::
-Data_PauseMenuString3_start::
-    DB " Back to map"
-Data_PauseMenuString3_end::
+DataX_ContinueStr_end:
+
+DataX_ResetStr_start:
+    DB "Reset puzzle"
+DataX_ResetStr_end:
+
+DataX_BackToMapStr_start:
+    DB "Back to map"
+DataX_BackToMapStr_end:
 
 ;;;=========================================================================;;;

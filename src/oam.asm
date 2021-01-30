@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/hardware.inc"
+INCLUDE "src/macros.inc"
 
 ;;;=========================================================================;;;
 
@@ -89,10 +90,9 @@ SECTION "DmaCode", ROMX
 ;;; Initializes the code for Func_PerformDma within HRAM.  This must be called
 ;;; before calling Func_PerformDma for the first time.
 FuncX_InitDmaCode::
-    ld hl, Func_PerformDma                          ; dest
-    ld de, DataX_DmaCode_start                      ; src
-    ld bc, DataX_DmaCode_end - DataX_DmaCode_start  ; count
-    jp Func_MemCopy
+    ld hl, Func_PerformDma  ; dest
+    COPY_FROM_SAME DataX_DmaCode_start, DataX_DmaCode_end
+    ret
 
 DataX_DmaCode_start:
     ASSERT LOW(Ram_ShadowOam_start) == 0
