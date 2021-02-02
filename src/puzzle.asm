@@ -1198,6 +1198,7 @@ _AnimalMoving_Mousetrap:
     ;; Select goat:
     ld a, ANIMAL_GOAT
     ld [Ram_SelectedAnimal_u8], a
+    call Func_UpdateMoveDirs
     ;; Mark mouse as dead:
     xor a
     ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Facing_u8], a
