@@ -220,7 +220,7 @@ SECTION "DrawPauseMenu", ROMX
 DRAW_MENU_UNROLL EQU 3
 PAUSE_MENU_LINE_TILES EQU (SCRN_X_B - 2)
 
-;;; FIXME document this
+;;; Updates the VRAM window map with the text of the pause menu.
 FuncX_DrawPauseMenu:
     ld a, " "
     ld de, SCRN_VX_B - PAUSE_MENU_LINE_TILES

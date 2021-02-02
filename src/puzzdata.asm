@@ -42,6 +42,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Puzzle6_puzz
     DW DataX_Puzzle7_puzz
     DW DataX_Puzzle8_puzz
+    DW DataX_Puzzle9_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;
@@ -217,6 +218,27 @@ DataX_Puzzle7_puzz:
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Puzzle8_puzz:
+    .begin
+    DB W_BC4, W_BE3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BW3, W_BC4
+    DB $65, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BS3, W_BS3, M_BNS, W_BS3, W_BN1, W_BS3, W_BS3, M_BNS, W_BS3, W_BS3
+    DB $25, DIRF_SOUTH, 0, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    DB $50, DIRF_SOUTH, 0, 0, 0, 0
+    DB G_CHS, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, W_BN1, O_EMP
+    D_BPTR DataX_RestYe_song, 0, 0, 0
+    DB O_EMP, O_EMP, G_APL, O_EMP, W_BS1, O_EMP, G_PNT, O_EMP, W_BS1, O_EMP
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB O_EMP, W_BN1, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB W_BN3, W_BE3, O_EMP, O_EMP, W_BN1, O_EMP, O_EMP, O_EMP, W_BNW, W_BN3
+    DS 6
+    DB W_BS3, W_BS3, M_BNS, W_BS3, W_BS3, W_BS3, W_BS3, M_BNS, W_BS3, W_BS3
+    DS 6
+    DB O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Puzzle9_puzz:
     .begin
     DB W_BLD, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
     DB $01, DIRF_SOUTH, 0, 0, 0, 0

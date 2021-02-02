@@ -26,6 +26,7 @@ DataX_BgTiles_start::
     INCBIN "out/data/font.2bpp"
     INCBIN "out/data/portrait.2bpp"
     INCBIN "out/data/porvar.2bpp"
+    DS sizeof_TILE * 4
     INCBIN "out/data/devices.2bpp"
 DataX_BgTiles_end::
 
@@ -54,9 +55,7 @@ DataX_TerrainTiles_start::
     INCBIN "out/data/forest.2bpp"
     INCBIN "out/data/mountain.2bpp"
     INCBIN "out/data/goal.2bpp"
-    DS sizeof_TILE * 4
     INCBIN "out/data/city.2bpp"
-    DS sizeof_TILE * 4
     INCBIN "out/data/space.2bpp"
 DataX_TerrainTiles_end::
 
@@ -67,13 +66,5 @@ DataX_RiverTiles_start::
     INCBIN "out/data/river.2bpp"
     INCBIN "out/data/pipe.2bpp"
 DataX_RiverTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "PortraitTiles", ROMX
-DataX_PortraitTiles_tile_arr::
-    INCBIN "out/data/portrait.2bpp"
-    INCBIN "out/data/porvar.2bpp"
-DataX_PortraitTiles_end::
 
 ;;;=========================================================================;;;

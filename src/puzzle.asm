@@ -56,11 +56,13 @@ SMOKE_FRAMES EQU 6
 ACTB_LEAP  EQU 0  ; leap over river
 ACTB_PUSHW EQU 1  ; push pipe westward
 ACTB_PUSHE EQU 2  ; push pipe eastward
+ACTB_UNDER EQU 3  ; go under a mouse hole
 
 ;;; Flags for Ram_WalkingAction_u8:
 ACTF_LEAP  EQU (1 << ACTB_LEAP)
 ACTF_PUSHW EQU (1 << ACTB_PUSHW)
 ACTF_PUSHE EQU (1 << ACTB_PUSHE)
+ACTF_UNDER EQU (1 << ACTB_UNDER)
 
 ;;;=========================================================================;;;
 
@@ -734,6 +736,8 @@ _UpdateSelectedAnimalObjs_MouseXPosition:
     add 8
     ld [Ram_MouseR_oama + OAMA_X], a
 _UpdateSelectedAnimalObjs_MouseTileAndFlags:
+    ld a, [Ram_WalkingAction_u8]
+    ld e, a
     ld a, c
     and %00000100
     bit DIRB_EAST, b
@@ -743,9 +747,7 @@ _UpdateSelectedAnimalObjs_MouseTileAndFlags:
     add 2
     ld [Ram_MouseL_oama + OAMA_TILEID], a
     ld a, OAMF_XFLIP
-    ld [Ram_MouseL_oama + OAMA_FLAGS], a
-    ld [Ram_MouseR_oama + OAMA_FLAGS], a
-    ret
+    jr .setFlags
     .notEast
     bit DIRB_WEST, b
     jr z, .notWest
@@ -764,7 +766,14 @@ _UpdateSelectedAnimalObjs_MouseTileAndFlags:
     ld [Ram_MouseL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_MouseR_oama + OAMA_TILEID], a
+    ;; If the mouse is going under a mouse hole, put its objects behind the
+    ;; background.
     xor a
+    .setFlags
+    bit ACTB_UNDER, e
+    jr z, .over
+    or OAMF_PRI
+    .over
     ld [Ram_MouseL_oama + OAMA_FLAGS], a
     ld [Ram_MouseR_oama + OAMA_FLAGS], a
     ret
@@ -865,12 +874,19 @@ Main_AnimalMoving:
     ld [Ram_ArrowE_oama + OAMA_Y], a
     ld [Ram_ArrowW_oama + OAMA_Y], a
 _AnimalMoving_ContinueMoving:
-    ;; Store selected animal's ANIM_Facing_u8 in a, and ANIM ptr in hl.
+    ;; Store the old position's terrain type in e.
     call Func_GetSelectedAnimalPtr_hl
+    ASSERT ANIM_Position_u8 == 0
+    ld c, [hl]
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld b, HIGH(Ram_PuzzleState_puzz)
+    ld a, [bc]
+    ld e, a
+    ;; Store selected animal's ANIM_Facing_u8 in a, and ANIM ptr in hl.
     ASSERT ANIM_Facing_u8 == 1
     inc l
     ld a, [hl-]
-    ;; Move the animal forward by one square, updating its ANIM_Position_u8.
+    ;; Store the position delta for the animal's current direction in d.
     if_eq DIRF_WEST, jr, .facingWest
     if_eq DIRF_EAST, jr, .facingEast
     if_eq DIRF_SOUTH, jr, .facingSouth
@@ -886,6 +902,7 @@ _AnimalMoving_ContinueMoving:
     .facingWest
     ld d, $ff
     .changePos
+    ;; Move the animal forward by one square, updating its ANIM_Position_u8.
     ASSERT ANIM_Position_u8 == 0
     ld a, [hl]
     add d
@@ -893,7 +910,7 @@ _AnimalMoving_ContinueMoving:
     ;; Prepare for animal-specific animation:
     ld a, [Ram_SelectedAnimal_u8]
     if_eq ANIMAL_MOUSE, jr, _AnimalMoving_ContinueMovingMouse
-    if_eq ANIMAL_GOAT, jr, _AnimalMoving_ContinueMovingGoat
+    if_eq ANIMAL_GOAT, jp, _AnimalMoving_ContinueMovingGoat
 _AnimalMoving_ContinueMovingElephant:
     ld a, 16
     ld [Ram_WalkingCountdown_u8], a
@@ -949,10 +966,32 @@ _AnimalMoving_ContinueMovingElephant:
     ld [Ram_WalkingAction_u8], a
     jr _AnimalMoving_RunLoop
 _AnimalMoving_ContinueMovingMouse:
-    xor a
-    ld [Ram_WalkingAction_u8], a
     ld a, 8
     ld [Ram_WalkingCountdown_u8], a
+    ;; If we're coming out of a mouse hole, then we should animate the mouse
+    ;; going under it.
+    ld a, e
+    if_lt M_UNDER_MIN, jr, .notLeavingMouseHole
+    if_ge M_UNDER_END, jr, .notLeavingMouseHole
+    jr .underMouseHole
+    .notLeavingMouseHole
+    ;; Store the upcoming position's terrain type in a.
+    ld c, [hl]
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld b, HIGH(Ram_PuzzleState_puzz)
+    ld a, [bc]
+    ;; If we're going into a mouse hole, then we should animate the mouse going
+    ;; under it.
+    if_lt M_UNDER_MIN, jr, .notEnteringMouseHole
+    if_ge M_UNDER_END, jr, .notEnteringMouseHole
+    .underMouseHole
+    ld a, ACTF_UNDER
+    jr .setWalkingAction
+    ;; Otherwise, the mouse walks as normal.
+    .notEnteringMouseHole
+    xor a
+    .setWalkingAction
+    ld [Ram_WalkingAction_u8], a
     jr _AnimalMoving_RunLoop
 _AnimalMoving_ContinueMovingGoat:
     ;; Store the upcoming position's terrain type in a.

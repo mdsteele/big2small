@@ -117,6 +117,10 @@ R_RSW RB 1  ; River south/west
 M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.
 M_RNA RB 1  ; Ramp narrow
 M_RNS RB 1  ; Rock wall north/south
+M_UNDER_MIN RB 0
+M_BEW RB 1  ; East/west mousehole through brick wall
+M_BNS RB 1  ; North/south mousehole through brick wall
+M_UNDER_END RB 0
 
 ;;; Wall terrain:
 W_MIN RB 0  ; Terrain types from W_MIN on up are walls.
