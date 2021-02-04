@@ -91,13 +91,15 @@ DataX_TerrainTable:
     DB $ac, $ae, $ad, $af
     ASSERT @ - DataX_TerrainTable == 4 * M_RNS
     DB $a8, $aa, $a9, $ab
+    ASSERT @ - DataX_TerrainTable == 4 * M_FNS
+    DB $80, $82, $81, $83
     ASSERT @ - DataX_TerrainTable == 4 * M_BEW
     DB $cc, $ce, $cd, $cf
     ASSERT @ - DataX_TerrainTable == 4 * M_BNS
     DB $bc, $be, $bd, $bf
     ;; Wall terrain:
     ASSERT @ - DataX_TerrainTable == 4 * W_RCK
-    DB $80, $82, $81, $83
+    DB $94, $96, $95, $97
     ASSERT @ - DataX_TerrainTable == 4 * W_FRT
     DB $84, $86, $85, $87
     ASSERT @ - DataX_TerrainTable == 4 * W_FLT
@@ -110,8 +112,6 @@ DataX_TerrainTable:
     DB $90, $92, $91, $93
     ASSERT @ - DataX_TerrainTable == 4 * W_TST
     DB $8c, $8e, $89, $8b
-    ASSERT @ - DataX_TerrainTable == 4 * W_BLD
-    DB $94, $96, $95, $97
     ASSERT @ - DataX_TerrainTable == 4 * W_CSO
     DB $98, $9a, $99, $9b
     ASSERT @ - DataX_TerrainTable == 4 * W_RNS

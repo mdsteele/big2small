@@ -118,6 +118,7 @@ M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.
 M_RNA RB 1  ; Ramp narrow
 M_RNS RB 1  ; Rock wall north/south
 M_UNDER_MIN RB 0
+M_FNS RB 1  ; North/south mousehole through fence
 M_BEW RB 1  ; East/west mousehole through brick wall
 M_BNS RB 1  ; North/south mousehole through brick wall
 M_UNDER_END RB 0
@@ -131,7 +132,6 @@ W_FMD RB 1  ; Fence middle
 W_TTP RB 1  ; Tree top
 W_TTR RB 1  ; Tree trunk
 W_TST RB 1  ; Trees stacked
-W_BLD RB 1  ; Boulder
 W_CSO RB 1  ; Cliff face south
 W_RNS RB 1  ; Rock wall north/south
 W_CRV RB 1  ; Cliff face/rock wall vertical

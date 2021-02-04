@@ -116,17 +116,17 @@ DataX_Puzzle3_puzz:
     .begin
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_RSO, S_ARS, O_EMP, O_EMP, S_ARW, W_RSO
     DB $89, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BLD, O_EMP, O_EMP, O_EMP, S_ARW, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS
+    DB W_RCK, O_EMP, O_EMP, O_EMP, S_ARW, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS
     DB $12, DIRF_EAST, 0, 0, 0, 0
     DB W_CSO, W_CSO, W_CSO, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO
     DB $07, DIRF_SOUTH, 0, 0, 0, 0
     DB O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP
     D_BPTR DataX_TitleMusic_song, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, O_EMP, W_TTP, W_FLT, W_FRT, W_TTR
+    DB O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, O_EMP, W_TTP, W_FLT, W_FRT, W_TTR
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, W_TTR, O_EMP, O_EMP, S_ARS
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK, W_TTR, O_EMP, O_EMP, S_ARS
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB O_EMP, W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     DS 6
     DB O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     DS 6
@@ -137,21 +137,21 @@ DataX_Puzzle4_puzz:
     .begin
     DB W_TST, W_TTR, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, W_TST, W_TST
     DB $07, DIRF_WEST, 0, 0, 0, 0
-    DB W_TTR, O_EMP, O_EMP, O_EMP, O_EMP, S_BSH, G_PNT, W_BLD, W_TST, W_TST
+    DB W_TTR, O_EMP, O_EMP, O_EMP, O_EMP, S_BSH, G_PNT, W_RCK, W_TST, W_TST
     DB $50, DIRF_EAST, 0, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_BLD, G_APL, W_TTR, W_TST
+    DB O_EMP, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_RCK, G_APL, W_TTR, W_TST
     DB $20, DIRF_SOUTH, 0, 0, 0, 0
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_ARW, W_TTR
     D_BPTR DataX_TitleMusic_song, 0, 0, 0
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RSE, R_REW, R_REW, R_REW
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, W_TTP
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, S_BSH, W_TTP
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB R_RSE, R_REW, R_REW, O_BEW, R_REW, R_REW, R_RNW, O_EMP, S_BSH, W_TTR
+    DB R_RSE, R_REW, R_REW, O_BEW, R_REW, R_REW, R_RNW, W_RCK, O_EMP, W_TTR
     DS 6
-    DB R_RNW, W_TTP, O_EMP, S_BSH, O_EMP, O_EMP, W_FLT, W_FRT, O_EMP, O_EMP
+    DB R_RNW, W_TTP, O_EMP, S_BSH, O_EMP, O_EMP, W_FLT, W_FMD, M_FNS, W_FMD
     DS 6
-    DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, M_RNS, O_EMP, O_EMP
+    DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Puzzle5_puzz:
@@ -160,13 +160,13 @@ DataX_Puzzle5_puzz:
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
     DB O_EMP, O_EMP, W_BEW, W_BSE, G_CHS, O_EMP, W_BEW, O_EMP, O_EMP, W_BSW
     DB $20, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, S_PPW, W_BEW, O_EMP, W_BLD, O_EMP, W_BEW, O_EMP, W_BLD, O_EMP
+    DB O_EMP, S_PPW, W_BEW, O_EMP, W_RCK, O_EMP, W_BEW, O_EMP, W_RCK, O_EMP
     DB $17, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BNE, O_EMP, W_BEW, W_BLD, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP, O_EMP
+    DB W_BNE, O_EMP, W_BEW, W_RCK, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP, O_EMP
     D_BPTR DataX_RestYe_song, 0, 0, 0
     DB W_BE3, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB W_BE3, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, G_APL, O_EMP, W_BN1, O_EMP
+    DB W_BE3, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, G_APL, O_EMP, W_BN1, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_BC4, W_BN3, W_BNE, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP
     DS 6
@@ -183,7 +183,7 @@ DataX_Puzzle6_puzz:
     DB $02, DIRF_SOUTH, 0, 0, 0, 0
     DB O_EMP, O_EMP, S_PPW, W_BEW, O_EMP, O_EMP, W_BNW, W_BNE, O_EMP, O_EMP
     DB $24, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BLD, W_BLD, O_EMP, W_BS1, W_BLD, W_BLD, W_BSW, W_BEW, O_EMP, O_EMP
+    DB W_RCK, W_RCK, O_EMP, W_BS1, W_RCK, W_RCK, W_BSW, W_BEW, O_EMP, O_EMP
     D_BPTR DataX_RestYe_song, 0, 0, 0
     DB O_EMP, O_EMP, S_ARE, O_EMP, O_EMP, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
@@ -240,19 +240,19 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Puzzle9_puzz:
     .begin
-    DB W_BLD, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
+    DB W_RCK, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
     DB $01, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, S_BSH, O_EMP, O_EMP, S_TEF, S_TGE, O_EMP, O_EMP, W_BLD, W_BLD
+    DB O_EMP, S_BSH, O_EMP, O_EMP, S_TEF, S_TGE, O_EMP, O_EMP, W_RCK, W_RCK
     DB $10, DIRF_SOUTH, 0, 0, $46, $27
-    DB W_BLD, O_EMP, O_EMP, O_EMP, O_EMP, W_BLD, O_EMP, S_TEF, W_BLD, W_BLD
+    DB W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, S_TEF, W_RCK, W_RCK
     DB $21, DIRF_SOUTH, 0, 0, 0, $14
     DB W_CSO, W_CRV, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO, W_CRV
     D_BPTR DataX_LightsOn_song, 0, 0, 0
     DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, S_TGE, O_EMP, S_TMF, W_RSO
     D_BPTR DataX_Null_dlog, 0, $15, $77
-    DB S_ARE, W_RSO, G_APL, O_EMP, O_EMP, W_BLD, W_BLD, W_BLD, R_RSE, R_REW
+    DB S_ARE, W_RSO, G_APL, O_EMP, O_EMP, W_RCK, W_RCK, W_RCK, R_RSE, R_REW
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB R_REW, R_RSW, O_EMP, W_BLD, O_EMP, O_EMP, S_ARS, G_CHS, R_RNS, O_EMP
+    DB R_REW, R_RSW, O_EMP, W_RCK, O_EMP, O_EMP, S_ARS, G_CHS, R_RNS, O_EMP
     DS 6
     DB O_EMP, R_RNE, R_REW, R_REW, R_REW, R_REW, R_RSW, S_TMF, R_RNS, O_EMP
     DB 0, 0, 0, 0, 0, $48
