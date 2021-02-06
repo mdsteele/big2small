@@ -68,11 +68,11 @@ DataX_TerrainTable:
     ASSERT @ - DataX_TerrainTable == 4 * S_ARW
     DB $70, $70, $71, $71
     ASSERT @ - DataX_TerrainTable == 4 * S_TEF
-    DB $d0, $d2, $d1, $d3
+    DB $c0, $c2, $c1, $c3
     ASSERT @ - DataX_TerrainTable == 4 * S_TGE
-    DB $d4, $d6, $d5, $d7
+    DB $c4, $c6, $c5, $c7
     ASSERT @ - DataX_TerrainTable == 4 * S_TMF
-    DB $d8, $da, $d9, $db
+    DB $c8, $ca, $c9, $cb
     ;; River terrain:
     ASSERT @ - DataX_TerrainTable == 4 * R_RNS
     DB $e4, $e6, $e5, $e7
@@ -94,9 +94,9 @@ DataX_TerrainTable:
     ASSERT @ - DataX_TerrainTable == 4 * M_FNS
     DB $80, $82, $81, $83
     ASSERT @ - DataX_TerrainTable == 4 * M_BEW
-    DB $cc, $ce, $cd, $cf
+    DB $dc, $de, $dd, $df
     ASSERT @ - DataX_TerrainTable == 4 * M_BNS
-    DB $bc, $be, $bd, $bf
+    DB $cc, $ce, $cd, $cf
     ;; Wall terrain:
     ASSERT @ - DataX_TerrainTable == 4 * W_RCK
     DB $94, $96, $95, $97
@@ -121,29 +121,29 @@ DataX_TerrainTable:
     ASSERT @ - DataX_TerrainTable == 4 * W_RSO
     DB $a4, $a6, $a8, $aa
     ASSERT @ - DataX_TerrainTable == 4 * W_BN1
-    DB $c6, $ca, $c7, $cb
+    DB $d6, $da, $d7, $db
     ASSERT @ - DataX_TerrainTable == 4 * W_BN3
-    DB $c8, $c8, $c9, $c9
+    DB $d8, $d8, $d9, $d9
     ASSERT @ - DataX_TerrainTable == 4 * W_BNE
-    DB $c8, $ca, $c9, $cb
+    DB $d8, $da, $d9, $db
     ASSERT @ - DataX_TerrainTable == 4 * W_BNW
-    DB $c6, $c8, $c7, $c9
+    DB $d6, $d8, $d7, $d9
     ASSERT @ - DataX_TerrainTable == 4 * W_BS1
-    DB $c0, $c4, $c1, $c5
+    DB $d0, $d4, $d1, $d5
     ASSERT @ - DataX_TerrainTable == 4 * W_BS3
-    DB $c2, $c2, $c3, $c3
+    DB $d2, $d2, $d3, $d3
     ASSERT @ - DataX_TerrainTable == 4 * W_BSE
-    DB $c2, $c4, $c3, $c5
+    DB $d2, $d4, $d3, $d5
     ASSERT @ - DataX_TerrainTable == 4 * W_BSW
-    DB $c0, $c2, $c1, $c3
+    DB $d0, $d2, $d1, $d3
     ASSERT @ - DataX_TerrainTable == 4 * W_BEW
-    DB $c7, $cb, $c7, $cb
+    DB $d7, $db, $d7, $db
     ASSERT @ - DataX_TerrainTable == 4 * W_BE3
-    DB $c9, $cb, $c9, $cb
+    DB $d9, $db, $d9, $db
     ASSERT @ - DataX_TerrainTable == 4 * W_BW3
-    DB $c7, $c9, $c7, $c9
+    DB $d7, $d9, $d7, $d9
     ASSERT @ - DataX_TerrainTable == 4 * W_BC4
-    DB $c9, $c9, $c9, $c9
+    DB $d9, $d9, $d9, $d9
 ASSERT @ - DataX_TerrainTable <= 512
 
 ;;;=========================================================================;;;

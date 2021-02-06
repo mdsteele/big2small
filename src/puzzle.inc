@@ -38,6 +38,10 @@ ANIMAL_ELEPHANT EQU 0
 ANIMAL_GOAT     EQU 1
 ANIMAL_MOUSE    EQU 2
 
+;; Enum values for PUZZ_Tileset_u8:
+TILESET_CITY  EQU 0
+TILESET_SPACE EQU 1
+
 ;;;=========================================================================;;;
 
 ;;; ANIM: Describes an animal character.
@@ -70,6 +74,8 @@ PUZZ_Music_song_bptr   EQU (TERRAIN_COLS + 16 * 3)
 PUZZ_Intro_dlog_bptr   EQU (TERRAIN_COLS + 16 * 4)
 ;;; Outro: A banked pointer to the DLOG struct for the outro dialog.
 PUZZ_Outro_dlog_bptr   EQU (TERRAIN_COLS + 16 * 5)
+;;; Tileset: A TILESET_* enum value indicating which tileset this puzzle uses.
+PUZZ_Tileset_u8        EQU (TERRAIN_COLS + 16 * 6)
 sizeof_PUZZ            EQU (TERRAIN_COLS + 16 * (TERRAIN_ROWS - 1))
 
 ;;;=========================================================================;;;

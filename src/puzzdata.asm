@@ -33,23 +33,24 @@ SECTION "PuzzlePtrs", ROMX
 ;;; An array that maps from puzzle numbers to pointers to PUZZ structs stored
 ;;; in BANK("PuzzleData").
 DataX_Puzzles_puzz_ptr_arr::
-    DW DataX_Puzzle0_puzz
-    DW DataX_Puzzle1_puzz
-    DW DataX_Puzzle2_puzz
-    DW DataX_Puzzle3_puzz
-    DW DataX_Puzzle4_puzz
-    DW DataX_Puzzle5_puzz
-    DW DataX_Puzzle6_puzz
-    DW DataX_Puzzle7_puzz
-    DW DataX_Puzzle8_puzz
-    DW DataX_Puzzle9_puzz
+    DW DataX_Puzzle00_puzz
+    DW DataX_Puzzle01_puzz
+    DW DataX_Puzzle02_puzz
+    DW DataX_Puzzle03_puzz
+    DW DataX_Puzzle04_puzz
+    DW DataX_Puzzle05_puzz
+    DW DataX_Puzzle06_puzz
+    DW DataX_Puzzle07_puzz
+    DW DataX_Puzzle08_puzz
+    DW DataX_Puzzle09_puzz
+    DW DataX_Puzzle10_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;
 
 SECTION "PuzzleData", ROMX
 
-DataX_Puzzle0_puzz:
+DataX_Puzzle00_puzz:
     .begin
     DB W_TST, W_TTR, W_TTR, O_GRS, W_TTR, W_TTR, O_EMP, W_TTR, W_TST, W_TST
     DB $17, DIRF_WEST, 0, 0, 0, 0
@@ -64,13 +65,13 @@ DataX_Puzzle0_puzz:
     DB W_TST, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, G_APL, W_TTP, O_EMP, W_TST
     D_BPTR DataX_Outro_dlog, 0, 0, 0
     DB W_TST, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, W_RCK, W_TTR, O_GRS, W_TST
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB W_TST, O_EMP, W_TTP, O_GRS, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
     DS 6
     DB W_TST, W_TTP, W_TST, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle1_puzz:
+DataX_Puzzle01_puzz:
     .begin
     DB W_TST, W_TST, W_TST, W_TST, O_GRS, W_TTR, W_TST, W_TTR, W_TST, W_TST
     DB $63, DIRF_EAST, 0, 0, 0, 0
@@ -85,13 +86,13 @@ DataX_Puzzle1_puzz:
     DB W_TST, W_TTR, W_TTR, W_RCK, O_EMP, O_GRS, O_EMP, W_RCK, W_TTR, W_TST
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_TST, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, G_PNT, G_APL, G_CHS, W_TST
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB W_TTR, O_EMP, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TTP, W_TST
     DS 6
     DB W_TTP, O_EMP, W_TTR, W_TST, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle2_puzz:
+DataX_Puzzle02_puzz:
     .begin
     DB W_TST, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TST
     DB $11, DIRF_EAST, 0, 0, 0, 0
@@ -106,13 +107,13 @@ DataX_Puzzle2_puzz:
     DB W_TTP, W_TTR, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_TST, O_GRS, G_APL, O_EMP, O_EMP, W_FLT, W_FMD, W_FMD, W_FRT, W_TST
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB W_TST, O_GRS, O_GRS, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS, W_TST
     DS 6
     DB W_TST, W_TTP, O_GRS, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle3_puzz:
+DataX_Puzzle03_puzz:
     .begin
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_RSO, S_ARS, O_EMP, O_EMP, S_ARW, W_RSO
     DB $89, DIRF_SOUTH, 0, 0, 0, 0
@@ -127,13 +128,13 @@ DataX_Puzzle3_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK, W_TTR, O_EMP, O_EMP, S_ARS
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     DS 6
     DB O_EMP, O_EMP, O_EMP, O_EMP, S_ARN, O_EMP, S_ARE, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle4_puzz:
+DataX_Puzzle04_puzz:
     .begin
     DB W_TST, W_TTR, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, W_TST, W_TST
     DB $07, DIRF_WEST, 0, 0, 0, 0
@@ -148,13 +149,13 @@ DataX_Puzzle4_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, S_BSH, W_TTP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB R_RSE, R_REW, R_REW, O_BEW, R_REW, R_REW, R_RNW, W_RCK, O_EMP, W_TTR
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB R_RNW, W_TTP, O_EMP, S_BSH, O_EMP, O_EMP, W_FLT, W_FMD, M_FNS, W_FMD
     DS 6
     DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle5_puzz:
+DataX_Puzzle05_puzz:
     .begin
     DB O_EMP, O_EMP, W_BW3, W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BW3
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
@@ -169,13 +170,13 @@ DataX_Puzzle5_puzz:
     DB W_BE3, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, G_APL, O_EMP, W_BN1, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_BC4, W_BN3, W_BNE, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB W_BS3, W_BS3, W_BEW, O_EMP, O_EMP, O_EMP, W_BN1, O_EMP, O_EMP, O_EMP
     DS 6
     DB O_EMP, O_EMP, W_BW3, W_BN3, W_BN3, W_BN3, W_BC4, W_BN3, W_BN3, W_BN3
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle6_puzz:
+DataX_Puzzle06_puzz:
     .begin
     DB W_BC4, W_BE3, O_EMP, W_BEW, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, O_EMP
     DB $20, DIRF_EAST, 0, 0, 0, 0
@@ -190,13 +191,13 @@ DataX_Puzzle6_puzz:
     DB O_EMP, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB G_APL, O_EMP, O_EMP, S_ARS, O_EMP, O_EMP, G_PNT, W_BEW, O_EMP, G_CHS
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_PPW, W_BEW, O_EMP, O_EMP
     DS 6
     DB W_BNE, O_EMP, S_ARN, O_EMP, S_ARN, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle7_puzz:
+DataX_Puzzle07_puzz:
     .begin
     DB W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BW3
     DB $18, DIRF_SOUTH, 0, 0, 0, 0
@@ -211,13 +212,13 @@ DataX_Puzzle7_puzz:
     DB W_BE3, O_EMP, O_EMP, S_MTP, O_EMP, W_BNW, W_BNE, O_EMP, O_EMP, W_BW3
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_BE3, W_BSE, O_EMP, O_EMP, O_EMP, W_BSW, W_BSE, S_MTP, O_EMP, W_BW3
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB W_BE3, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, G_CHS, W_BW3
     DS 6
     DB W_BC4, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BC4
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle8_puzz:
+DataX_Puzzle08_puzz:
     .begin
     DB W_BC4, W_BE3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BW3, W_BC4
     DB $65, DIRF_SOUTH, 0, 0, 0, 0
@@ -232,13 +233,34 @@ DataX_Puzzle8_puzz:
     DB O_EMP, W_BN1, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_BN3, W_BE3, O_EMP, O_EMP, W_BN1, O_EMP, O_EMP, O_EMP, W_BNW, W_BN3
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB W_BS3, W_BS3, M_BNS, W_BS3, W_BS3, W_BS3, W_BS3, M_BNS, W_BS3, W_BS3
     DS 6
     DB O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle9_puzz:
+DataX_Puzzle09_puzz:
+    .begin
+    DB W_BE3, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BW3
+    DB $51, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BE3, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP, W_BW3
+    DB $17, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_BE3, S_TGE, O_EMP, O_EMP, S_TMF, O_EMP, W_BEW, O_EMP, G_APL, W_BW3
+    DB $15, DIRF_WEST, 0, 0, $47, $33
+    DB W_BE3, O_EMP, W_BN1, S_TMF, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP, W_BW3
+    D_BPTR DataX_LightsOn_song, 0, 0, $24
+    DB W_BC4, W_BS3, W_BS3, W_BS3, M_BNS, W_BNW, W_BE3, S_TGE, O_EMP, W_BW3
+    D_BPTR DataX_Null_dlog, 0, $21, 0
+    DB W_BE3, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW, W_BEW, O_EMP, O_EMP, W_BW3
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB W_BE3, G_PNT, O_EMP, S_TEF, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP, W_BW3
+    DB TILESET_SPACE, 0, 0, 0, 0, $78
+    DB W_BSE, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, S_TEF, W_BSW
+    DB 0, 0, 0, 0, 0, $63
+    DB W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Puzzle10_puzz:
     .begin
     DB W_RCK, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
     DB $01, DIRF_SOUTH, 0, 0, 0, 0
@@ -253,7 +275,7 @@ DataX_Puzzle9_puzz:
     DB S_ARE, W_RSO, G_APL, O_EMP, O_EMP, W_RCK, W_RCK, W_RCK, R_RSE, R_REW
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB R_REW, R_RSW, O_EMP, W_RCK, O_EMP, O_EMP, S_ARS, G_CHS, R_RNS, O_EMP
-    DS 6
+    DB TILESET_CITY, 0, 0, 0, 0, 0
     DB O_EMP, R_RNE, R_REW, R_REW, R_REW, R_REW, R_RSW, S_TMF, R_RNS, O_EMP
     DB 0, 0, 0, 0, 0, $48
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP

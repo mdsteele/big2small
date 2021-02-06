@@ -32,6 +32,13 @@ DataX_BgTiles_end::
 
 ;;;=========================================================================;;;
 
+SECTION "CityTiles", ROMX
+DataX_CityTiles_start::
+    INCBIN "out/data/city.2bpp"
+DataX_CityTiles_end::
+
+;;;=========================================================================;;;
+
 SECTION "MapTiles", ROMX
 DataX_MapTiles_start::
     INCBIN "out/data/worldmap.2bpp"
@@ -50,13 +57,20 @@ DataX_ObjTiles_end::
 
 ;;;=========================================================================;;;
 
+SECTION "SpaceTiles", ROMX
+DataX_SpaceTiles_start::
+    INCBIN "out/data/space.2bpp"
+DataX_SpaceTiles_end::
+
+;;;=========================================================================;;;
+
 SECTION "TerrainTiles", ROMX
 DataX_TerrainTiles_start::
     INCBIN "out/data/forest.2bpp"
     INCBIN "out/data/mountain.2bpp"
     INCBIN "out/data/goal.2bpp"
-    INCBIN "out/data/city.2bpp"
-    INCBIN "out/data/space.2bpp"
+    DS sizeof_TILE * 4
+    INCBIN "out/data/teleporter.2bpp"
 DataX_TerrainTiles_end::
 
 ;;;=========================================================================;;;

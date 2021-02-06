@@ -154,6 +154,14 @@ _BeginPuzzle_Init:
     ;; Copy tiles to VRAM.
     ld hl, Vram_SharedTiles  ; dest
     COPY_FROM_ROMX DataX_TerrainTiles_start, DataX_TerrainTiles_end
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
+    if_eq TILESET_SPACE, jr, .spaceTiles
+    .cityTiles
+    COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
+    jr .doneTiles
+    .spaceTiles
+    COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
+    .doneTiles
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
