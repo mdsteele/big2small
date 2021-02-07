@@ -44,11 +44,18 @@ SMOKE_L1_TILEID EQU $50
 SMOKE_L2_TILEID EQU $54
 SMOKE_L3_TILEID EQU $58
 
+TELEPORT_L1_TILEID EQU $5c
+TELEPORT_L2_TILEID EQU $60
+TELEPORT_L3_TILEID EQU $64
+
 PIPE_WL_TILEID EQU $f8
 PIPE_EL_TILEID EQU $fc
 
 ;;; The number of frames per step of the smoke animation:
 SMOKE_FRAMES EQU 6
+
+;;; The number of frames per step of the teleport animation:
+TELEPORT_FRAMES EQU 3
 
 ;;;=========================================================================;;;
 
@@ -788,6 +795,43 @@ _UpdateSelectedAnimalObjs_MouseTileAndFlags:
 
 ;;;=========================================================================;;;
 
+;;; Changes the tile IDs (and clears OAMA flags) for the selected animal,
+;;; without changing the positions of its objects.
+;;; @param d The tile ID for the left side of the animal.
+Func_SetSelectedAnimalTiles:
+    ld a, [Ram_SelectedAnimal_u8]
+    if_eq ANIMAL_MOUSE, jr, _SetSelectedAnimalTiles_Mouse
+    if_eq ANIMAL_GOAT, jr, _SetSelectedAnimalTiles_Goat
+_SetSelectedAnimalTiles_Elephant:
+    ld a, d
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_ElephantR_oama + OAMA_TILEID], a
+    xor a
+    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_ElephantR_oama + OAMA_FLAGS], a
+    ret
+_SetSelectedAnimalTiles_Goat:
+    ld a, d
+    ld [Ram_GoatL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_GoatR_oama + OAMA_TILEID], a
+    xor a
+    ld [Ram_GoatL_oama + OAMA_FLAGS], a
+    ld [Ram_GoatR_oama + OAMA_FLAGS], a
+    ret
+_SetSelectedAnimalTiles_Mouse:
+    ld a, d
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    xor a
+    ld [Ram_MouseL_oama + OAMA_FLAGS], a
+    ld [Ram_MouseR_oama + OAMA_FLAGS], a
+    ret
+
+;;;=========================================================================;;;
+
 ;;; Updates the X, Y, and TILEID fields for all four Ram_Arrow?_oama objects,
 ;;; based on the Position/MoveDirs of the currently selected animal.
 Func_UpdateArrowObjs:
@@ -1135,7 +1179,7 @@ _AnimalMoving_TerrainAction:
     if_ne S_MTP, jr, .notMousetrap
     ld a, [Ram_SelectedAnimal_u8]
     if_ne ANIMAL_MOUSE, jr, _AnimalMoving_Update
-    jr _AnimalMoving_Mousetrap
+    jp _AnimalMoving_Mousetrap
     .notMousetrap
     ;; If the animal steps on a bush, remove the bush.
     if_ne S_BSH, jr, .notBush
@@ -1183,9 +1227,6 @@ _AnimalMoving_Teleport:
     ld e, a
     ld a, [de]
     ld b, a
-    ;; Make hl point to the selected animal's position.
-    call Func_GetSelectedAnimalPtr_hl  ; preserves b
-    ASSERT ANIM_Position_u8 == 0
     ;; If there's another animal at the teleporter destination, don't teleport.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
     if_eq b, jr, _AnimalMoving_Update
@@ -1193,37 +1234,85 @@ _AnimalMoving_Teleport:
     if_eq b, jr, _AnimalMoving_Update
     ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
     if_eq b, jr, _AnimalMoving_Update
-    ;; Set the selected animal's position to the teleporter destination and
-    ;; continue walking.
+    ;; Place the teleport effect at the animal's current position.
+    call Func_GetSelectedAnimalPtr_hl
+    ASSERT ANIM_Position_u8 == 0
+    ld a, [hl]
+    and $f0
+    add 16
+    ld [Ram_TeleportL_oama + OAMA_Y], a
+    ld [Ram_TeleportR_oama + OAMA_Y], a
+    ld a, [hl]
+    and $0f
+    swap a
+    add 8
+    ld [Ram_TeleportL_oama + OAMA_X], a
+    add 8
+    ld [Ram_TeleportR_oama + OAMA_X], a
+    ld a, TELEPORT_L1_TILEID
+    ld [Ram_TeleportL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_TeleportR_oama + OAMA_TILEID], a
+    xor a
+    ld [Ram_TeleportL_oama + OAMA_FLAGS], a
+    ld [Ram_TeleportR_oama + OAMA_FLAGS], a
+    ;; Set the selected animal's position to the teleporter destination.
     ld [hl], b
-    jr _AnimalMoving_Update
+    call Func_UpdateSelectedAnimalObjs
+    ld d, TELEPORT_L3_TILEID
+    call Func_SetSelectedAnimalTiles
+    ;; Play a sound effect.
+    ld c, BANK(DataX_Teleport_sfx4)
+    ld hl, DataX_Teleport_sfx4
+    call Func_PlaySfx4
+    ;; Make the animal vanish.
+    xor a
+    ld [Ram_SmokeCounter_u8], a
+_AnimalMoving_TeleportLoop:
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
+    ld a, [Ram_SmokeCounter_u8]
+    inc a
+    ld [Ram_SmokeCounter_u8], a
+    if_eq 1 * TELEPORT_FRAMES, jr, .teleport2
+    if_eq 2 * TELEPORT_FRAMES, jr, .teleport3
+    if_eq 3 * TELEPORT_FRAMES, jr, _AnimalMoving_TeleportFinish
+    jr _AnimalMoving_TeleportLoop
+    .teleport2
+    ld a, TELEPORT_L2_TILEID
+    ld [Ram_TeleportL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_TeleportR_oama + OAMA_TILEID], a
+    ld d, TELEPORT_L2_TILEID
+    call Func_SetSelectedAnimalTiles
+    jr _AnimalMoving_TeleportLoop
+    .teleport3
+    ld a, TELEPORT_L3_TILEID
+    ld [Ram_TeleportL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_TeleportR_oama + OAMA_TILEID], a
+    ld d, TELEPORT_L1_TILEID
+    call Func_SetSelectedAnimalTiles
+    jr _AnimalMoving_TeleportLoop
+_AnimalMoving_TeleportFinish:
+    xor a
+    ld [Ram_TeleportL_oama + OAMA_Y], a
+    ld [Ram_TeleportR_oama + OAMA_Y], a
+    jp _AnimalMoving_Update
 
 _AnimalMoving_Mousetrap:
-    ;; Set current terrain to empty:
+    ;; Set current terrain to empty.
     ld a, O_EMP
     ld [de], a
     call Func_LoadTerrainCellIntoVram
-    ;; Select goat:
-    ld a, ANIMAL_GOAT
-    ld [Ram_SelectedAnimal_u8], a
-    call Func_UpdateMoveDirs
-    ;; Mark mouse as dead:
-    xor a
-    ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Facing_u8], a
-    ld a, PUZZ_Mouse_anim + ANIM_Facing_u8
-    ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8], a
     ;; Play a sound effect.
     ld c, BANK(DataX_Mousetrap_sfx4)
     ld hl, DataX_Mousetrap_sfx4
     call Func_PlaySfx4
-    ;; Replace mouse objects with smoke:
-    ld a, SMOKE_L1_TILEID
-    ld [Ram_MouseL_oama + OAMA_TILEID], a
-    add 2
-    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    ;; Replace mouse objects with smoke.
+    ld d, SMOKE_L1_TILEID
+    call Func_SetSelectedAnimalTiles
     xor a
-    ld [Ram_MouseL_oama + OAMA_FLAGS], a
-    ld [Ram_MouseR_oama + OAMA_FLAGS], a
     ld [Ram_SmokeCounter_u8], a
 _AnimalMoving_SmokeLoop:
     call Func_UpdateAudio
@@ -1234,25 +1323,32 @@ _AnimalMoving_SmokeLoop:
     if_eq 1 * SMOKE_FRAMES, jr, .smoke2
     if_eq 2 * SMOKE_FRAMES, jr, .smoke3
     if_eq 3 * SMOKE_FRAMES, jr, .smokeDone
-    if_eq 4 * SMOKE_FRAMES, jp, Main_PuzzleCommand
+    if_eq 4 * SMOKE_FRAMES, jr, _AnimalMoving_MouseDead
     jr _AnimalMoving_SmokeLoop
     .smoke2
-    ld a, SMOKE_L2_TILEID
-    ld [Ram_MouseL_oama + OAMA_TILEID], a
-    add 2
-    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    ld d, SMOKE_L2_TILEID
+    call Func_SetSelectedAnimalTiles
     jr _AnimalMoving_SmokeLoop
     .smoke3
-    ld a, SMOKE_L3_TILEID
-    ld [Ram_MouseL_oama + OAMA_TILEID], a
-    add 2
-    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    ld d, SMOKE_L3_TILEID
+    call Func_SetSelectedAnimalTiles
     jr _AnimalMoving_SmokeLoop
     .smokeDone
     xor a
     ld [Ram_MouseL_oama + OAMA_Y], a
     ld [Ram_MouseR_oama + OAMA_Y], a
     jr _AnimalMoving_SmokeLoop
+_AnimalMoving_MouseDead:
+    ;; Select goat.
+    ld a, ANIMAL_GOAT
+    ld [Ram_SelectedAnimal_u8], a
+    call Func_UpdateMoveDirs
+    ;; Mark mouse as dead.
+    xor a
+    ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Facing_u8], a
+    ld a, PUZZ_Mouse_anim + ANIM_Facing_u8
+    ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8], a
+    jp Main_PuzzleCommand
 
 ;;;=========================================================================;;;
 

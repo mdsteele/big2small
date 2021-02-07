@@ -38,6 +38,11 @@ Ram_ArrowE_oama::
 Ram_ArrowW_oama::
     DS sizeof_OAM_ATTRS
 
+Ram_TeleportL_oama::
+    DS sizeof_OAM_ATTRS
+Ram_TeleportR_oama::
+    DS sizeof_OAM_ATTRS
+
 Ram_ElephantL_oama::
     DS sizeof_OAM_ATTRS
 Ram_ElephantR_oama::
