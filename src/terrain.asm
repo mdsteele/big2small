@@ -144,6 +144,20 @@ DataX_TerrainTable:
     DB $d7, $d9, $d7, $d9
     ASSERT @ - DataX_TerrainTable == 4 * W_BC4
     DB $d9, $d9, $d9, $d9
+    ASSERT @ - DataX_TerrainTable == 4 * W_SNN
+    DB $e0, $e2, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * W_SNE
+    DB $e0, $ea, $bc, $e7
+    ASSERT @ - DataX_TerrainTable == 4 * W_SNW
+    DB $e8, $e2, $e5, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * W_ONN
+    DB $ec, $ee, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * W_ONE
+    DB $bc, $ee, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * W_ONW
+    DB $ec, $bc, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * W_OOP
+    DB $bc, $bc, $bc, $bc
 ASSERT @ - DataX_TerrainTable <= 512
 
 ;;;=========================================================================;;;

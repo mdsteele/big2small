@@ -33,24 +33,25 @@ SECTION "PuzzlePtrs", ROMX
 ;;; An array that maps from puzzle numbers to pointers to PUZZ structs stored
 ;;; in BANK("PuzzleData").
 DataX_Puzzles_puzz_ptr_arr::
-    DW DataX_Puzzle00_puzz
-    DW DataX_Puzzle01_puzz
-    DW DataX_Puzzle02_puzz
-    DW DataX_Puzzle03_puzz
-    DW DataX_Puzzle04_puzz
-    DW DataX_Puzzle05_puzz
-    DW DataX_Puzzle06_puzz
-    DW DataX_Puzzle07_puzz
-    DW DataX_Puzzle08_puzz
-    DW DataX_Puzzle09_puzz
-    DW DataX_Puzzle10_puzz
+    DW DataX_Forest1_puzz
+    DW DataX_Forest2_puzz
+    DW DataX_Forest3_puzz
+    DW DataX_Mountain1_puzz
+    DW DataX_River1_puzz
+    DW DataX_River2_puzz
+    DW DataX_CityPipe1_puzz
+    DW DataX_CityPipe2_puzz
+    DW DataX_CityTrap1_puzz
+    DW DataX_CityTrap2_puzz
+    DW DataX_Space1_puzz
+    DW DataX_Scratch_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;
 
 SECTION "PuzzleData", ROMX
 
-DataX_Puzzle00_puzz:
+DataX_Forest1_puzz:
     .begin
     DB W_TST, W_TTR, W_TTR, O_GRS, W_TTR, W_TTR, O_EMP, W_TTR, W_TST, W_TST
     DB $17, DIRF_WEST, 0, 0, 0, 0
@@ -71,7 +72,7 @@ DataX_Puzzle00_puzz:
     DB W_TST, W_TTP, W_TST, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle01_puzz:
+DataX_Forest2_puzz:
     .begin
     DB W_TST, W_TST, W_TST, W_TST, O_GRS, W_TTR, W_TST, W_TTR, W_TST, W_TST
     DB $63, DIRF_EAST, 0, 0, 0, 0
@@ -92,7 +93,7 @@ DataX_Puzzle01_puzz:
     DB W_TTP, O_EMP, W_TTR, W_TST, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle02_puzz:
+DataX_Forest3_puzz:
     .begin
     DB W_TST, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TTR, W_TST
     DB $11, DIRF_EAST, 0, 0, 0, 0
@@ -113,7 +114,7 @@ DataX_Puzzle02_puzz:
     DB W_TST, W_TTP, O_GRS, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle03_puzz:
+DataX_Mountain1_puzz:
     .begin
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_RSO, S_ARS, O_EMP, O_EMP, S_ARW, W_RSO
     DB $89, DIRF_SOUTH, 0, 0, 0, 0
@@ -134,7 +135,28 @@ DataX_Puzzle03_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, S_ARN, O_EMP, S_ARE, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle04_puzz:
+DataX_River1_puzz:
+    .begin
+    DB W_TTP, W_TTR, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
+    DB $11, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_TTR, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
+    DB $04, DIRF_SOUTH, 0, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, O_BNS, O_EMP, O_EMP
+    DB $09, DIRF_SOUTH, 0, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
+    D_BPTR DataX_TitleMusic_song, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB O_GRS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, R_RSE, R_RNW, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB O_GRS, O_GRS, O_EMP, O_EMP, O_BNS, O_EMP, R_RNS, O_EMP, O_EMP, O_GRS
+    DB TILESET_CITY, 0, 0, 0, 0, 0
+    DB W_SNN, W_SNN, W_SNE, G_CHS, R_RNS, G_APL, R_RNS, G_PNT, W_SNW, W_SNN
+    DS 6
+    DB W_OOP, W_OOP, W_ONE, W_SNN, W_ONN, W_SNN, W_ONN, W_SNN, W_ONW, W_OOP
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_River2_puzz:
     .begin
     DB W_TST, W_TTR, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, W_TST, W_TST
     DB $07, DIRF_WEST, 0, 0, 0, 0
@@ -155,7 +177,7 @@ DataX_Puzzle04_puzz:
     DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle05_puzz:
+DataX_CityPipe1_puzz:
     .begin
     DB O_EMP, O_EMP, W_BW3, W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BW3
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
@@ -176,7 +198,7 @@ DataX_Puzzle05_puzz:
     DB O_EMP, O_EMP, W_BW3, W_BN3, W_BN3, W_BN3, W_BC4, W_BN3, W_BN3, W_BN3
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle06_puzz:
+DataX_CityPipe2_puzz:
     .begin
     DB W_BC4, W_BE3, O_EMP, W_BEW, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, O_EMP
     DB $20, DIRF_EAST, 0, 0, 0, 0
@@ -197,7 +219,7 @@ DataX_Puzzle06_puzz:
     DB W_BNE, O_EMP, S_ARN, O_EMP, S_ARN, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle07_puzz:
+DataX_CityTrap1_puzz:
     .begin
     DB W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BW3
     DB $18, DIRF_SOUTH, 0, 0, 0, 0
@@ -218,7 +240,7 @@ DataX_Puzzle07_puzz:
     DB W_BC4, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BC4
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle08_puzz:
+DataX_CityTrap2_puzz:
     .begin
     DB W_BC4, W_BE3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BW3, W_BC4
     DB $65, DIRF_SOUTH, 0, 0, 0, 0
@@ -239,7 +261,7 @@ DataX_Puzzle08_puzz:
     DB O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle09_puzz:
+DataX_Space1_puzz:
     .begin
     DB W_BE3, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BW3
     DB $51, DIRF_SOUTH, 0, 0, 0, 0
@@ -260,7 +282,7 @@ DataX_Puzzle09_puzz:
     DB W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Puzzle10_puzz:
+DataX_Scratch_puzz:
     .begin
     DB W_RCK, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
     DB $01, DIRF_SOUTH, 0, 0, 0, 0

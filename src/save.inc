@@ -18,7 +18,7 @@
 ;;;=========================================================================;;;
 
 ;;; The number of puzzles in the game:
-NUM_PUZZLES     EQU 11
+NUM_PUZZLES     EQU 12
 ASSERT NUM_PUZZLES <= 99
 NUM_PUZZLES_BCD EQU (((NUM_PUZZLES / 10) << 4) | (NUM_PUZZLES % 10))
 

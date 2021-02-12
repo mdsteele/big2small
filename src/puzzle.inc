@@ -154,5 +154,12 @@ W_BEW RB 1  ; Brick wall east/west
 W_BE3 RB 1  ; Brick wall east multi
 W_BW3 RB 1  ; Brick wall west multi
 W_BC4 RB 1  ; Brick wall center
+W_SNN RB 1  ; Shoreline on north
+W_SNE RB 1  ; Shoreline on north/east
+W_SNW RB 1  ; Shoreline on north/west
+W_ONN RB 1  ; Ocean with shore in northern corners
+W_ONE RB 1  ; Ocean with shore in northeast corner
+W_ONW RB 1  ; Ocean with shore in northwest corner
+W_OOP RB 1  ; Open ocean
 
 ;;;=========================================================================;;;

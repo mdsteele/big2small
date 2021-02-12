@@ -47,6 +47,7 @@ Data_PuzzleMapPositions_u8_pair_arr::
     DB 20, 7
     DB 18, 5
     DB 18, 8
+    DB 18, 11
 ASSERT @ - Data_PuzzleMapPositions_u8_pair_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;
