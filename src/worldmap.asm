@@ -37,8 +37,7 @@ Main_WorldMapScreen::
     bit 0, c
     jr z, .notSolved
     ld hl, Ram_Progress_file + FILE_CurrentPuzzleNumber_u8
-    ld e, [hl]
-    ld d, 0
+    ldb de, [hl]
     inc [hl]
     ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
     add hl, de
@@ -70,8 +69,7 @@ _WorldMapScreen_DrawUnlockedNodes:
     bit STATB_UNLOCKED, a
     jr z, .locked
     ;; Make hl point to the position entry for puzzle number e.
-    ld b, 0
-    ld c, e
+    ldb bc, e
     sla c
     ASSERT NUM_PUZZLES * 2 < $100
     ld hl, Data_PuzzleMapPositions_u8_pair_arr

@@ -40,7 +40,8 @@ ANIMAL_MOUSE    EQU 2
 
 ;; Enum values for PUZZ_Tileset_u8:
 TILESET_CITY  EQU 0
-TILESET_SPACE EQU 1
+TILESET_OCEAN EQU 1
+TILESET_SPACE EQU 2
 
 ;;;=========================================================================;;;
 

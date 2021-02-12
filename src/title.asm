@@ -152,8 +152,7 @@ _TitleScreen_EraseFile:
     ld a, [Ram_TitleMenuItem_u8]
     swap a
     rlca
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ld hl, Vram_BgMap + SCRN_VX_B * TITLE_MENU_ROW + TITLE_MENU_COL + 9
     add hl, bc  ; dest
     COPY_FROM_ROM0 Data_FileEmptyStr_start, Data_FileEmptyStr_end
@@ -209,8 +208,7 @@ Func_GetTitleMenuItemPtr_hl:
     ld a, b
     swap a
     rlca
-    ld e, a
-    ld d, 0
+    ldb de, a
     ;; Make hl point to the first BG map tile of the menu item.
     ld hl, Vram_BgMap + SCRN_VX_B * TITLE_MENU_ROW + TITLE_MENU_COL
     add hl, de

@@ -234,8 +234,7 @@ _UpdateAudio_ExecOpcodePlay:
     and %00011111
     swap a
     rrca
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ;; Store ptr to section table in hl.
     push hl
     ld hl, Ram_MusicSectTable_ptr
@@ -483,8 +482,7 @@ _MusicStartNoteCh1_NoteInst:
     and %00111111
     rlca
     rlca
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr
@@ -583,8 +581,7 @@ _MusicStartNoteCh2_NoteInst:
     and %00111111
     rlca
     rlca
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr
@@ -681,8 +678,7 @@ _MusicStartNoteCh3_NoteInst:
     and %00111111
     rlca
     rlca
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr
@@ -790,8 +786,7 @@ _MusicStartNoteCh4_NoteInst:
     and %00111111
     rlca
     rlca
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr

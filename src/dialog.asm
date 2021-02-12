@@ -233,8 +233,7 @@ FuncX_SwitchPortrait::
     swap a
     rrca
     add c
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ;; Make hl point to start of portrait table entry.
     ld hl, DataX_SwitchPortrait_Table
     add hl, bc

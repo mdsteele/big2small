@@ -172,7 +172,7 @@ DataX_River1_puzz:
     DB O_GRS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, R_RSE, R_RNW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_BNS, O_EMP, R_RNS, O_EMP, O_EMP, O_GRS
-    DB TILESET_CITY, 0, 0, 0, 0, 0
+    DB TILESET_OCEAN, 0, 0, 0, 0, 0
     DB W_SNN, W_SNN, W_SNE, G_CHS, R_RNS, G_APL, R_RNS, G_PNT, W_SNW, W_SNN
     DS 6
     DB W_OOP, W_OOP, W_ONE, W_SNN, W_ONN, W_SNN, W_ONN, W_SNN, W_ONW, W_OOP
@@ -285,9 +285,9 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Space1_puzz:
     .begin
-    DB W_BE3, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BW3
+    DB W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP
     DB $51, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_BE3, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP, W_BW3
+    DB W_BNE, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_BN1, O_EMP, O_EMP, W_BNW
     DB $17, DIRF_SOUTH, 0, 0, 0, 0
     DB W_BE3, S_TGE, O_EMP, O_EMP, S_TMF, O_EMP, W_BEW, O_EMP, G_APL, W_BW3
     DB $15, DIRF_WEST, 0, 0, $47, $33
@@ -301,7 +301,7 @@ DataX_Space1_puzz:
     DB TILESET_SPACE, 0, 0, 0, 0, $78
     DB W_BSE, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, S_TEF, W_BSW
     DB 0, 0, 0, 0, 0, $63
-    DB W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3
+    DB W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Scratch_puzz:

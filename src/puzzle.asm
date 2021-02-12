@@ -20,6 +20,7 @@
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/puzzle.inc"
+INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -162,7 +163,9 @@ _BeginPuzzle_Init:
     ld hl, Vram_SharedTiles  ; dest
     COPY_FROM_ROMX DataX_TerrainTiles_start, DataX_TerrainTiles_end
     ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
+    if_eq TILESET_CITY, jr, .cityTiles
     if_eq TILESET_SPACE, jr, .spaceTiles
+    jr .doneTiles
     .cityTiles
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
     jr .doneTiles
@@ -178,6 +181,7 @@ _BeginPuzzle_Init:
     ld [Ram_AnimationClock_u8], a
     ld [Ram_WalkingCountdown_u8], a
     ld [Ram_WalkingAction_u8], a
+    call Func_AnimateTerrain
     ;; Set up animal objects.
     call Func_ClearOam
     ld a, ANIMAL_MOUSE
@@ -239,6 +243,7 @@ Main_PuzzleCommand::
     call Func_UpdateArrowObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimateTerrain
     call Func_UpdateButtonState
     ld a, [Ram_ButtonsPressed_u8]
     ld b, a
@@ -917,6 +922,41 @@ _UpdateArrowObjs_West:
 
 ;;;=========================================================================;;;
 
+Func_AnimateTerrain:
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
+    if_eq TILESET_OCEAN, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_SPACE, jr, _AnimateTerrain_Stars
+    ret
+_AnimateTerrain_Ocean:
+    ld a, [Ram_AnimationClock_u8]
+    and %00001111
+    ret nz
+    ld a, [Ram_AnimationClock_u8]
+    and %00010000
+    ASSERT sizeof_TILE == 16
+    ;rlca
+    ldb de, a
+    romb BANK(DataX_OceanTiles_tile_arr)
+    ld hl, DataX_OceanTiles_tile_arr
+    jr _AnimateTerrain_Copy
+_AnimateTerrain_Stars:
+    ld a, [Ram_AnimationClock_u8]
+    and %00000111
+    ASSERT sizeof_TILE == 16
+    swap a
+    ldb de, a
+    romb BANK(DataX_StarsTiles_tile_arr)
+    ld hl, DataX_StarsTiles_tile_arr
+_AnimateTerrain_Copy:
+    add hl, de
+    ldw de, hl
+    ld bc, sizeof_TILE
+    ld hl, Vram_SharedTiles + sizeof_TILE * $3c
+    call Func_MemCopy
+    ret
+
+;;;=========================================================================;;;
+
 SECTION "MainAnimalMoving", ROM0
 
 Main_AnimalMoving:
@@ -1072,6 +1112,7 @@ _AnimalMoving_RunLoop:
     inc [hl]
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimateTerrain
     ;; If the animal is pushing a pipe, animate the pipe moving.
     ld a, [Ram_WalkingAction_u8]
     if_ne ACTF_PUSHW, jr, .notPushingWestward

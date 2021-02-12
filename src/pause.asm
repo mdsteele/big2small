@@ -204,8 +204,7 @@ Func_PauseMenuSetCursorTile:
     ld a, [Ram_PauseMenuItem_u8]
     swap a
     rlca
-    ld c, a
-    ld b, 0
+    ldb bc, a
     ;; Make hl point to the menu cursor tile in the window map.
     ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B
     add hl, bc

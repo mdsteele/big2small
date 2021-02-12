@@ -107,6 +107,27 @@ ENDM
 
 ;;;=========================================================================;;;
 
+;;; Loads an 8-bit register into a 16-bit register (using two ld instructions).
+;;;
+;;; Examples:
+;;;     ldb bc, a     ; sets c to a, and sets b to 0
+;;;     ldb de, d     ; sets e to d, then sets d to 0
+;;;     ldb hl, [hl]  ; sets l to [hl], then sets h to 0
+ldb: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to ldb macro"
+    ELIF _NARG > 2
+    FAIL "Too many arguments to ldb macro"
+    ENDC
+    ld LOW(\1), \2
+    ld HIGH(\1), 0
+ENDM
+
+;;; Loads one 16-bit register into another (using two ld instructions).
+;;;
+;;; Examples:
+;;;     ldw bc, de  ; sets c to e, and sets b to d
+;;;     ldw hl, bc  ; sets l to c, and sets h to b
 ldw: MACRO
     IF _NARG < 2
     FAIL "Too few arguments to ldw macro"
@@ -149,8 +170,8 @@ romb: MACRO
 ENDM
 
 ;;; Calls a function stored in ROMX after first switching to its ROM bank.
-;;; This also stores the ROM bank number in the a register (before calling the
-;;; function).
+;;; This also stores the new ROM bank number in the a register (before calling
+;;; the function).
 ;;;
 ;;; Examples:
 ;;;     xcall FuncX_Foo
@@ -173,6 +194,7 @@ COPY_FROM_CURR: MACRO
     ELIF _NARG > 2
     FAIL "Too many arguments to COPY_FROM_CURR macro"
     ENDC
+    ASSERT BANK(\1) == BANK(\2)
     ld de, (\1)
     ld bc, (\2) - (\1)
     call Func_MemCopy

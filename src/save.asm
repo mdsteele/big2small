@@ -201,8 +201,7 @@ Func_GetSaveSummaryPtr_hl::
     ASSERT NUM_SAVE_FILES * sizeof_SAVE <= $ff
     ASSERT sizeof_SAVE == 2
     rlca
-    ld e, a
-    ld d, 0
+    ldb de, a
     ld hl, Ram_SaveSummaries_save_arr
     add hl, de
     ret
