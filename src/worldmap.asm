@@ -59,6 +59,7 @@ Main_WorldMapScreen::
     ;; Copy the BG tile map to VRAM.
     ld hl, Vram_BgMap  ; dest
     COPY_FROM_ROMX DataX_WorldTileMap_start, DataX_WorldTileMap_end
+    ;; TODO: Load color palette numbers into the BG tile map.
     ;; TODO: Draw map paths between unlocked puzzles.
 _WorldMapScreen_DrawUnlockedNodes:
     ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0

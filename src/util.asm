@@ -52,6 +52,7 @@ Func_MemCopy::
 
 ;;;=========================================================================;;;
 
+;;; TODO: Make these functions work correctly when color is enabled.
 SECTION "FadeFunctions", ROM0
 
 FADE_STEP_FRAMES EQU 7

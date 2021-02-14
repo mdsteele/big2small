@@ -76,7 +76,10 @@ PUZZ_Intro_dlog_bptr   EQU (TERRAIN_COLS + 16 * 4)
 ;;; Outro: A banked pointer to the DLOG struct for the outro dialog.
 PUZZ_Outro_dlog_bptr   EQU (TERRAIN_COLS + 16 * 5)
 ;;; Tileset: A TILESET_* enum value indicating which tileset this puzzle uses.
-PUZZ_Tileset_u8        EQU (TERRAIN_COLS + 16 * 6)
+PUZZ_Tileset_u8        EQU (TERRAIN_COLS + 16 * 6 + 0)
+;;; Colorset: A COLORSET_* enum value indicating which set of background color
+;;;   palettes this puzzle uses.
+PUZZ_Colorset_u8       EQU (TERRAIN_COLS + 16 * 6 + 1)
 sizeof_PUZZ            EQU (TERRAIN_COLS + 16 * (TERRAIN_ROWS - 1))
 
 ;;;=========================================================================;;;

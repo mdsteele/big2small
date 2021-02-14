@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/charmap.inc"
+INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/vram.inc"
@@ -33,6 +34,15 @@ Ram_BottomOfStack:
 
 SECTION "Main", ROM0[$0150]
 Main::
+    ;; Determine whether we're running on a CGB-compatible device.
+    if_eq BOOTUP_A_CGB, jr, .enableColor
+    xor a
+    jr .doneColor
+    .enableColor
+    ld a, 1
+    .doneColor
+    ldh [Hram_ColorEnabled_bool], a
+    ;; Initialize stack and DMA routine.
     ld sp, Ram_BottomOfStack
     xcall FuncX_InitDmaCode
     ;; Enable VBlank interrupt.
@@ -70,6 +80,9 @@ Main::
     ldh [rBGP], a
     ldh [rOBP0], a
     ldh [rOBP1], a
+    xcall FuncX_InitObjColorPalettes
+    ld c, COLORSET_SUMMER
+    xcall FuncX_SetBgColorPalettes
     ;; Read summary data from SRAM.
     call Func_InitSaveSummaries
     ;; Turn on audio.

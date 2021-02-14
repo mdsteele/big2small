@@ -24,6 +24,13 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
+ARROW_PALETTE    EQU (OAMF_PAL1 | 0)
+ELEPHANT_PALETTE EQU (OAMF_PAL0 | 1)
+GOAT_PALETTE     EQU (OAMF_PAL1 | 2)
+MOUSE_PALETTE    EQU (OAMF_PAL0 | 3)
+PIPE_PALETTE     EQU (OAMF_PAL0 | 1)
+SMOKE_PALETTE    EQU (OAMF_PAL0 | 4)
+
 ELEPHANT_SL1_TILEID EQU $00
 ELEPHANT_NL1_TILEID EQU $08
 ELEPHANT_WL1_TILEID EQU $10
@@ -172,6 +179,10 @@ _BeginPuzzle_Init:
     .spaceTiles
     COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
     .doneTiles
+    ;; Transfer background color palettes.
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Colorset_u8]
+    ld c, a  ; colorset
+    xcall FuncX_SetBgColorPalettes
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
@@ -194,12 +205,12 @@ _BeginPuzzle_Init:
     ld [Ram_SelectedAnimal_u8], a
     call Func_UpdateSelectedAnimalObjs
     ;; Set up arrow objects.
-    ld a, OAMF_PAL1
+    ld a, ARROW_PALETTE
     ld [Ram_ArrowN_oama + OAMA_FLAGS], a
     ld [Ram_ArrowE_oama + OAMA_FLAGS], a
-    ld a, OAMF_PAL1 | OAMF_XFLIP
+    ld a, ARROW_PALETTE | OAMF_XFLIP
     ld [Ram_ArrowW_oama + OAMA_FLAGS], a
-    ld a, OAMF_PAL1 | OAMF_YFLIP
+    ld a, ARROW_PALETTE | OAMF_YFLIP
     ld [Ram_ArrowS_oama + OAMA_FLAGS], a
     call Func_UpdateMoveDirs
     ;; Set up pipe objects.
@@ -211,7 +222,7 @@ _BeginPuzzle_Init:
     ld [Ram_PipeEL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_PipeER_oama + OAMA_TILEID], a
-    ld a, OAMF_PRI
+    ld a, PIPE_PALETTE | OAMF_PRI
     ld [Ram_PipeWL_oama + OAMA_FLAGS], a
     ld [Ram_PipeWR_oama + OAMA_FLAGS], a
     ld [Ram_PipeEL_oama + OAMA_FLAGS], a
@@ -563,7 +574,7 @@ _UpdateSelectedAnimalObjs_ElephantTileAndFlags:
     ld [Ram_ElephantR_oama + OAMA_TILEID], a
     add 2
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
-    ld a, OAMF_XFLIP
+    ld a, ELEPHANT_PALETTE | OAMF_XFLIP
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
     ld [Ram_ElephantR_oama + OAMA_FLAGS], a
     ret
@@ -585,7 +596,7 @@ _UpdateSelectedAnimalObjs_ElephantTileAndFlags:
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_ElephantR_oama + OAMA_TILEID], a
-    xor a
+    ld a, ELEPHANT_PALETTE
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
     ld [Ram_ElephantR_oama + OAMA_FLAGS], a
     ret
@@ -688,7 +699,7 @@ _UpdateSelectedAnimalObjs_GoatTileAndFlags:
     ld [Ram_GoatR_oama + OAMA_TILEID], a
     add 2
     ld [Ram_GoatL_oama + OAMA_TILEID], a
-    ld a, OAMF_PAL1 | OAMF_XFLIP
+    ld a, GOAT_PALETTE | OAMF_XFLIP
     ld [Ram_GoatL_oama + OAMA_FLAGS], a
     ld [Ram_GoatR_oama + OAMA_FLAGS], a
     ret
@@ -710,7 +721,7 @@ _UpdateSelectedAnimalObjs_GoatTileAndFlags:
     ld [Ram_GoatL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_GoatR_oama + OAMA_TILEID], a
-    ld a, OAMF_PAL1
+    ld a, GOAT_PALETTE
     ld [Ram_GoatL_oama + OAMA_FLAGS], a
     ld [Ram_GoatR_oama + OAMA_FLAGS], a
     ret
@@ -766,7 +777,7 @@ _UpdateSelectedAnimalObjs_MouseTileAndFlags:
     ld [Ram_MouseR_oama + OAMA_TILEID], a
     add 2
     ld [Ram_MouseL_oama + OAMA_TILEID], a
-    ld a, OAMF_XFLIP
+    ld a, MOUSE_PALETTE | OAMF_XFLIP
     jr .setFlags
     .notEast
     bit DIRB_WEST, b
@@ -788,7 +799,7 @@ _UpdateSelectedAnimalObjs_MouseTileAndFlags:
     ld [Ram_MouseR_oama + OAMA_TILEID], a
     ;; If the mouse is going under a mouse hole, put its objects behind the
     ;; background.
-    xor a
+    ld a, MOUSE_PALETTE
     .setFlags
     bit ACTB_UNDER, e
     jr z, .over
@@ -812,7 +823,7 @@ _SetSelectedAnimalTiles_Elephant:
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_ElephantR_oama + OAMA_TILEID], a
-    xor a
+    ld a, SMOKE_PALETTE
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
     ld [Ram_ElephantR_oama + OAMA_FLAGS], a
     ret
@@ -821,7 +832,7 @@ _SetSelectedAnimalTiles_Goat:
     ld [Ram_GoatL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_GoatR_oama + OAMA_TILEID], a
-    xor a
+    ld a, SMOKE_PALETTE
     ld [Ram_GoatL_oama + OAMA_FLAGS], a
     ld [Ram_GoatR_oama + OAMA_FLAGS], a
     ret
@@ -830,7 +841,7 @@ _SetSelectedAnimalTiles_Mouse:
     ld [Ram_MouseL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_MouseR_oama + OAMA_TILEID], a
-    xor a
+    ld a, SMOKE_PALETTE
     ld [Ram_MouseL_oama + OAMA_FLAGS], a
     ld [Ram_MouseR_oama + OAMA_FLAGS], a
     ret
@@ -1294,7 +1305,7 @@ _AnimalMoving_Teleport:
     ld [Ram_TeleportL_oama + OAMA_TILEID], a
     add 2
     ld [Ram_TeleportR_oama + OAMA_TILEID], a
-    xor a
+    ld a, SMOKE_PALETTE
     ld [Ram_TeleportL_oama + OAMA_FLAGS], a
     ld [Ram_TeleportR_oama + OAMA_FLAGS], a
     ;; Set the selected animal's position to the teleporter destination.

@@ -162,6 +162,145 @@ ASSERT @ - DataX_TerrainTable <= 512
 
 ;;;=========================================================================;;;
 
+SECTION "TerrainPaletteTable", ROMX, ALIGN[8]
+
+DataX_TerrainPaletteTable:
+    ;; Open terrain:
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_EMP
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_GRS
+    DB 3, 3
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_BNS
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_BEW
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_RMD
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_RWL
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_RWR
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_BST
+    DB 3, 3
+    ;; Goal terrain:
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * G_PNT
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * G_APL
+    DB 2, 2
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * G_CHS
+    DB 5, 5
+    ;; Special terrain:
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_BSH
+    DB 3, 3
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_MTP
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_PPW
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_PPE
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_ARN
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_ARS
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_ARE
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_ARW
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_TEF
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_TGE
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_TMF
+    DB 7, 7
+    ;; River terrain:
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_RNS
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_REW
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_RNE
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_RNW
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_RSE
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_RSW
+    DB 4, 4
+    ;; Mousehole terrain:
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * M_RNA
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * M_RNS
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * M_FNS
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * M_BEW
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * M_BNS
+    DB 6, 6
+    ;; Wall terrain:
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_RCK
+    DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_FRT
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_FLT
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_FMD
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_TTP
+    DB 3, 3
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_TTR
+    DB 3, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_TST
+    DB 3, 3
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CSO
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_RNS
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CRV
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_RSO
+    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BN1
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BN3
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BNE
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BNW
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BS1
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BS3
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BSE
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BSW
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BEW
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BE3
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BW3
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BC4
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_SNN
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_SNE
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_SNW
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_ONN
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_ONE
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_ONW
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_OOP
+    DB 4, 4
+ASSERT @ - DataX_TerrainPaletteTable <= 256
+
+;;;=========================================================================;;;
+
 SECTION "TerrainFunctions", ROM0
 
 ;;; @param de A pointer to a terrain cell in a 256-byte-aligned PUZZ struct.
@@ -210,12 +349,29 @@ Func_LoadTerrainCellIntoVram::
 
 ;;; @param d High byte of pointer to 256-byte-aligned PUZZ struct.
 Func_LoadPuzzleTerrainIntoVram::
-    romb BANK(DataX_TerrainTable)
+    ;; Load terrain tile IDs into the BG tile map.
     ld e, 0
+    push de
+    romb BANK(DataX_TerrainTable)
     ld hl, Vram_BgMap
     REPT TERRAIN_ROWS
     call Func_LoadTerrainRow
     ENDR
+    pop de
+    ;; If color is disabled, we're done.
+    ldh a, [Hram_ColorEnabled_bool]
+    or a
+    ret z
+    ;; Load terrain color palette numbers into the BG tile map.
+    ld a, 1
+    ldh [rVBK], a
+    romb BANK(DataX_TerrainPaletteTable)
+    ld hl, Vram_BgMap
+    REPT TERRAIN_ROWS
+    call Func_LoadTerrainPaletteRow
+    ENDR
+    xor a
+    ldh [rVBK], a
     ret
 
 ;;; @prereq ROM bank is set to BANK(DataX_TerrainTable).
@@ -266,6 +422,55 @@ Func_LoadTerrainRow:
     ld [hl+], a
     inc c
     ld a, [bc]
+    ld [hl+], a
+    ld a, l
+    and %00011111
+    if_ne 2 * TERRAIN_COLS, jr, .botLoop
+    ;; Set up return values
+    ld bc, SCRN_VX_B - (2 * TERRAIN_COLS)
+    add hl, bc
+    ld a, e
+    add (16 - TERRAIN_COLS)
+    ld e, a
+    ret
+
+;;; @prereq ROM bank is set to BANK(DataX_TerrainPaletteTable).
+;;; @param de Pointer to start of Ram_PuzzleState_puzz row.
+;;; @param hl Pointer to start of Vram_BgMap row.
+;;; @return de Pointer to start of next Ram_PuzzleState_puzz row.
+;;; @return hl Pointer to start of next Vram_BgMap row.
+Func_LoadTerrainPaletteRow:
+    ;; Fill in the top row of VRAM tiles.
+    .topLoop
+    ld a, [de]
+    inc e
+    rlca
+    ld c, a
+    ASSERT LOW(DataX_TerrainPaletteTable) == 0
+    ld b, HIGH(DataX_TerrainPaletteTable)
+    ld a, [bc]
+    ld [hl+], a
+    ld [hl+], a
+    ld a, l
+    and %00011111
+    if_ne 2 * TERRAIN_COLS, jr, .topLoop
+    ;; Set up for the bottom row.
+    ld bc, SCRN_VX_B - (2 * TERRAIN_COLS)
+    add hl, bc
+    ld a, e
+    and %11110000
+    ld e, a
+    ;; Fill in the bottom row of VRAM tiles.
+    .botLoop
+    ld a, [de]
+    inc e
+    rlca
+    ld c, a
+    ASSERT LOW(DataX_TerrainPaletteTable) == 0
+    ld b, HIGH(DataX_TerrainPaletteTable)
+    inc c
+    ld a, [bc]
+    ld [hl+], a
     ld [hl+], a
     ld a, l
     and %00011111
