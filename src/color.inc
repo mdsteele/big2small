@@ -24,4 +24,18 @@ COLORSET_AUTUMN EQU 2
 COLORSET_WINTER EQU 3
 COLORSET_SPACE  EQU 4
 
+;;; The number of BG/obj color palettes.
+NUM_BG_CPAL  EQU 8
+NUM_OBJ_CPAL EQU 8
+
+;;;=========================================================================;;;
+
+;;; CPAL: Data for a single color palette.
+RSRESET
+CPAL_Color0_u16 RW 1
+CPAL_Color1_u16 RW 1
+CPAL_Color2_u16 RW 1
+CPAL_Color3_u16 RW 1
+sizeof_CPAL RB 0
+
 ;;;=========================================================================;;;

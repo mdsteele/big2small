@@ -100,7 +100,7 @@ FuncX_SetBgColorPalettes::
     ldh a, [Hram_ColorEnabled_bool]
     or a
     ret z
-    ;; Select chosen colorset.
+    ;; Store a pointer to the chosen colorset in hl.
     sla c
     ld b, 0
     ld hl, DataX_BgColorPalettes_Colorsets_ptr_arr
@@ -108,13 +108,26 @@ FuncX_SetBgColorPalettes::
     ld a, [hl+]
     ld h, [hl]
     ld l, a
-    ;; Transfer object color palette data.
+_SetBgColorPalettes_BgPalettes:
+    ;; Transfer BG color palette data.
     ld a, BCPSF_AUTOINC
     ldh [rBCPS], a
-    ld c, 64
+    ld c, NUM_BG_CPAL * sizeof_CPAL
     .loop
     ld a, [hl+]
     ldh [rBCPD], a
+    dec c
+    jr nz, .loop
+_SetBgColorPalettes_PipeObjPalette:
+    ;; Copy the last BG palette to object palette 7 (for pipe terrain).
+    ld bc, -sizeof_CPAL
+    add hl, bc
+    ld a, OCPSF_AUTOINC | (7 * sizeof_CPAL)
+    ldh [rOCPS], a
+    ld c, sizeof_CPAL
+    .loop
+    ld a, [hl+]
+    ldh [rOCPD], a
     dec c
     jr nz, .loop
     ret
@@ -122,17 +135,18 @@ FuncX_SetBgColorPalettes::
 DataX_BgColorPalettes_Colorsets_ptr_arr:
     .begin
     ASSERT @ - .begin == 2 * COLORSET_SPRING
-    DW DataX_BgColorPalettes_Spring
+    DW DataX_BgColorPalettes_Spring_cpal_arr
     ASSERT @ - .begin == 2 * COLORSET_SUMMER
-    DW DataX_BgColorPalettes_Summer
+    DW DataX_BgColorPalettes_Summer_cpal_arr
     ASSERT @ - .begin == 2 * COLORSET_AUTUMN
-    DW DataX_BgColorPalettes_Autumn
+    DW DataX_BgColorPalettes_Autumn_cpal_arr
     ASSERT @ - .begin == 2 * COLORSET_WINTER
-    DW DataX_BgColorPalettes_Winter
+    DW DataX_BgColorPalettes_Winter_cpal_arr
     ASSERT @ - .begin == 2 * COLORSET_SPACE
-    DW DataX_BgColorPalettes_Space
+    DW DataX_BgColorPalettes_Space_cpal_arr
 
-DataX_BgColorPalettes_Spring:
+DataX_BgColorPalettes_Spring_cpal_arr:
+    .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 255, 232
     D_COLOR 192, 224, 128
@@ -173,8 +187,10 @@ DataX_BgColorPalettes_Spring:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
+ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
 
-DataX_BgColorPalettes_Summer:
+DataX_BgColorPalettes_Summer_cpal_arr:
+    .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 232, 216
     D_COLOR 96, 192, 96
@@ -215,8 +231,10 @@ DataX_BgColorPalettes_Summer:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
+ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
 
-DataX_BgColorPalettes_Autumn:
+DataX_BgColorPalettes_Autumn_cpal_arr:
+    .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 255, 255
     D_COLOR 192, 96, 0
@@ -257,8 +275,10 @@ DataX_BgColorPalettes_Autumn:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
+ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
 
-DataX_BgColorPalettes_Winter:
+DataX_BgColorPalettes_Winter_cpal_arr:
+    .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 232, 232
     D_COLOR 224, 128, 128
@@ -299,8 +319,10 @@ DataX_BgColorPalettes_Winter:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
+ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
 
-DataX_BgColorPalettes_Space:
+DataX_BgColorPalettes_Space_cpal_arr:
+    .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 224, 255
     D_COLOR 192, 0, 192
@@ -341,5 +363,6 @@ DataX_BgColorPalettes_Space:
     D_COLOR 192, 224, 192
     D_COLOR 96, 128, 96
     D_COLOR 0, 0, 0
+ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
 
 ;;;=========================================================================;;;
