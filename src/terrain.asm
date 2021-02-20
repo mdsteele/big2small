@@ -71,6 +71,8 @@ DataX_TerrainTable:
     DB $c0, $c2, $c1, $c3
     ASSERT @ - DataX_TerrainTable == 4 * S_TGE
     DB $c4, $c6, $c5, $c7
+    ASSERT @ - DataX_TerrainTable == 4 * S_TME
+    DB $c8, $ca, $c9, $cb
     ASSERT @ - DataX_TerrainTable == 4 * S_TMF
     DB $c8, $ca, $c9, $cb
     ;; River terrain:
@@ -86,6 +88,20 @@ DataX_TerrainTable:
     DB $e8, $e2, $e5, $ef
     ASSERT @ - DataX_TerrainTable == 4 * R_RSW
     DB $e0, $ea, $ed, $e7
+    ASSERT @ - DataX_TerrainTable == 4 * R_SNN
+    DB $e0, $e2, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * R_SNE
+    DB $e0, $ea, $bc, $e7
+    ASSERT @ - DataX_TerrainTable == 4 * R_SNW
+    DB $e8, $e2, $e5, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * R_ONN
+    DB $ec, $ee, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * R_ONE
+    DB $bc, $ee, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * R_ONW
+    DB $ec, $bc, $bc, $bc
+    ASSERT @ - DataX_TerrainTable == 4 * R_OOP
+    DB $bc, $bc, $bc, $bc
     ;; Mousehole terrain:
     ASSERT @ - DataX_TerrainTable == 4 * M_RNA
     DB $ac, $ae, $ad, $af
@@ -144,20 +160,6 @@ DataX_TerrainTable:
     DB $d7, $d9, $d7, $d9
     ASSERT @ - DataX_TerrainTable == 4 * W_BC4
     DB $d9, $d9, $d9, $d9
-    ASSERT @ - DataX_TerrainTable == 4 * W_SNN
-    DB $e0, $e2, $bc, $bc
-    ASSERT @ - DataX_TerrainTable == 4 * W_SNE
-    DB $e0, $ea, $bc, $e7
-    ASSERT @ - DataX_TerrainTable == 4 * W_SNW
-    DB $e8, $e2, $e5, $bc
-    ASSERT @ - DataX_TerrainTable == 4 * W_ONN
-    DB $ec, $ee, $bc, $bc
-    ASSERT @ - DataX_TerrainTable == 4 * W_ONE
-    DB $bc, $ee, $bc, $bc
-    ASSERT @ - DataX_TerrainTable == 4 * W_ONW
-    DB $ec, $bc, $bc, $bc
-    ASSERT @ - DataX_TerrainTable == 4 * W_OOP
-    DB $bc, $bc, $bc, $bc
 ASSERT @ - DataX_TerrainTable <= 512
 
 ;;;=========================================================================;;;
@@ -210,6 +212,8 @@ DataX_TerrainPaletteTable:
     DB 7, 7
     ASSERT @ - DataX_TerrainPaletteTable == 2 * S_TGE
     DB 7, 7
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * S_TME
+    DB 7, 7
     ASSERT @ - DataX_TerrainPaletteTable == 2 * S_TMF
     DB 7, 7
     ;; River terrain:
@@ -224,6 +228,20 @@ DataX_TerrainPaletteTable:
     ASSERT @ - DataX_TerrainPaletteTable == 2 * R_RSE
     DB 4, 4
     ASSERT @ - DataX_TerrainPaletteTable == 2 * R_RSW
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_SNN
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_SNE
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_SNW
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_ONN
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_ONE
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_ONW
+    DB 4, 4
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * R_OOP
     DB 4, 4
     ;; Mousehole terrain:
     ASSERT @ - DataX_TerrainPaletteTable == 2 * M_RNA
@@ -283,20 +301,6 @@ DataX_TerrainPaletteTable:
     DB 6, 6
     ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BC4
     DB 6, 6
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_SNN
-    DB 4, 4
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_SNE
-    DB 4, 4
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_SNW
-    DB 4, 4
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_ONN
-    DB 4, 4
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_ONE
-    DB 4, 4
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_ONW
-    DB 4, 4
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_OOP
-    DB 4, 4
 ASSERT @ - DataX_TerrainPaletteTable <= 256
 
 ;;;=========================================================================;;;

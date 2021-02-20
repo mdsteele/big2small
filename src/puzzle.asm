@@ -1221,6 +1221,12 @@ _AnimalMoving_TerrainAction:
     ld c, $0e
     jr _AnimalMoving_Teleport
     .notGoatTeleporterE
+    if_ne S_TME, jr, .notMouseTeleporterE
+    ld a, [Ram_SelectedAnimal_u8]
+    if_ne ANIMAL_MOUSE, jr, _AnimalMoving_Update
+    ld c, $0e
+    jr _AnimalMoving_Teleport
+    .notMouseTeleporterE
     if_ne S_TMF, jr, .notMouseTeleporterF
     ld a, [Ram_SelectedAnimal_u8]
     if_ne ANIMAL_MOUSE, jr, _AnimalMoving_Update

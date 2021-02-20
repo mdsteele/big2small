@@ -46,6 +46,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_CityTrap1_puzz
     DW DataX_CityTrap2_puzz
     DW DataX_Space1_puzz
+    DW DataX_Space2_puzz
     DW DataX_Scratch_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
@@ -174,9 +175,9 @@ DataX_River1_puzz:
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_BNS, O_EMP, R_RNS, O_EMP, O_EMP, O_GRS
     DB TILESET_OCEAN, COLORSET_AUTUMN, 0, 0, 0, 0
-    DB W_SNN, W_SNN, W_SNE, G_CHS, R_RNS, G_APL, R_RNS, G_PNT, W_SNW, W_SNN
+    DB R_SNN, R_SNN, R_SNE, G_CHS, R_RNS, G_APL, R_RNS, G_PNT, R_SNW, R_SNN
     DS 6
-    DB W_OOP, W_OOP, W_ONE, W_SNN, W_ONN, W_SNN, W_ONN, W_SNN, W_ONW, W_OOP
+    DB R_OOP, R_OOP, R_ONE, R_SNN, R_ONN, R_SNN, R_ONN, R_SNN, R_ONW, R_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_River2_puzz:
@@ -286,7 +287,7 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Space1_puzz:
     .begin
-    DB W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP
+    DB R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP
     DB $51, DIRF_SOUTH, 0, 0, 0, 0
     DB W_BNE, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_BN1, O_EMP, O_EMP, W_BNW
     DB $17, DIRF_SOUTH, 0, 0, 0, 0
@@ -302,7 +303,28 @@ DataX_Space1_puzz:
     DB TILESET_SPACE, COLORSET_SPACE, 0, 0, 0, $78
     DB W_BSE, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, S_TEF, W_BSW
     DB 0, 0, 0, 0, 0, $63
-    DB W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP, W_OOP
+    DB R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Space2_puzz:
+    .begin
+    DB O_EMP, S_TME, O_EMP, S_MTP, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP, S_MTP
+    DB $00, DIRF_SOUTH, 0, 0, $36, $75
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BN1, S_MTP, W_BSW, W_BN1, O_EMP
+    DB $80, DIRF_SOUTH, 0, 0, 0, 0
+    DB O_EMP, W_BSW, W_BN1, O_EMP, G_CHS, W_BEW, O_EMP, O_EMP, W_BEW, G_PNT
+    DB $07, DIRF_WEST, 0, 0, 0, 0
+    DB O_EMP, O_EMP, W_BEW, O_EMP, O_EMP, W_BS1, S_TME, O_EMP, W_BEW, O_EMP
+    D_BPTR DataX_LightsOn_song, 0, $01, 0
+    DB S_ARS, O_EMP, W_BEW, S_ARE, O_EMP, O_EMP, W_BSW, W_BS3, W_BSE, O_EMP
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB O_EMP, O_EMP, W_BEW, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB R_SNN, O_EMP, W_BEW, O_EMP, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN
+    DB TILESET_SPACE, COLORSET_SPACE, 0, 0, 0, 0
+    DB O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP, S_ARW
+    DB 0, 0, 0, 0, 0, $05
+    DB O_EMP, O_EMP, O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Scratch_puzz:
