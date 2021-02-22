@@ -47,7 +47,6 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_CityTrap2_puzz
     DW DataX_Space1_puzz
     DW DataX_Space2_puzz
-    DW DataX_Scratch_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;
@@ -140,23 +139,23 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Mountain1_puzz:
     .begin
-    DB O_EMP, O_EMP, O_EMP, O_EMP, W_RSO, S_ARS, O_EMP, O_EMP, S_ARW, W_RSO
+    DB O_EMP, O_EMP, O_EMP, O_EMP, W_TTR, S_ARS, O_EMP, O_EMP, S_ARW, W_TTR
     DB $89, DIRF_SOUTH, 0, 0, 0, 0
-    DB W_RCK, O_EMP, O_EMP, O_EMP, S_ARW, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS
+    DB W_CS3, O_CW3, O_EMP, O_EMP, S_ARW, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS
     DB $12, DIRF_EAST, 0, 0, 0, 0
-    DB W_CSO, W_CSO, W_CSO, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO
+    DB O_GRS, W_CSW, W_CS3, O_RMD, W_CS3, M_RNA, W_CS3, O_RWL, O_RWR, W_CS3
     DB $07, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP
+    DB O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_CE3, W_CS3
     D_BPTR DataX_TitleMusic_song, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, O_EMP, W_TTP, W_FLT, W_FRT, W_TTR
+    DB O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, O_EMP, O_CE3, W_CS3, W_CSE, O_GRS
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK, W_TTR, O_EMP, O_EMP, S_ARS
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_CW1, W_CSE, O_GRS, O_EMP, S_ARS
     D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
-    DB TILESET_CITY, COLORSET_SPRING, 0, 0, 0, 0
-    DB O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    DB O_RMD, W_CE1, O_EMP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP
+    DB TILESET_CITY, COLORSET_SUMMER, 0, 0, 0, 0
+    DB O_EMP, G_PNT, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS
     DS 6
-    DB O_EMP, O_EMP, O_EMP, O_EMP, S_ARN, O_EMP, S_ARE, O_EMP, O_EMP, O_EMP
+    DB O_GRS, O_GRS, O_EMP, O_GRS, S_ARN, O_EMP, S_ARE, O_EMP, O_GRS, O_GRS
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_River1_puzz:
@@ -325,27 +324,6 @@ DataX_Space2_puzz:
     DB O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP, S_ARW
     DB 0, 0, 0, 0, 0, $05
     DB O_EMP, O_EMP, O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
-ASSERT @ - .begin == sizeof_PUZZ
-
-DataX_Scratch_puzz:
-    .begin
-    DB W_RCK, O_EMP, O_EMP, O_EMP, S_PPW, W_RSO, O_EMP, O_EMP, S_MTP, O_EMP
-    DB $01, DIRF_SOUTH, 0, 0, 0, 0
-    DB O_EMP, S_BSH, O_EMP, O_EMP, S_TEF, S_TGE, O_EMP, O_EMP, W_RCK, W_RCK
-    DB $10, DIRF_SOUTH, 0, 0, $46, $27
-    DB W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, S_TEF, W_RCK, W_RCK
-    DB $21, DIRF_SOUTH, 0, 0, 0, $14
-    DB W_CSO, W_CRV, O_RMD, W_CSO, M_RNA, W_CSO, O_RWL, O_RWR, W_CSO, W_CRV
-    D_BPTR DataX_LightsOn_song, 0, 0, 0
-    DB O_EMP, M_RNS, O_EMP, O_EMP, G_PNT, O_EMP, S_TGE, O_EMP, S_TMF, W_RSO
-    D_BPTR DataX_Null_dlog, 0, $15, $77
-    DB S_ARE, W_RSO, G_APL, O_EMP, O_EMP, W_RCK, W_RCK, W_RCK, R_RSE, R_REW
-    D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB R_REW, R_RSW, O_EMP, W_RCK, O_EMP, O_EMP, S_ARS, G_CHS, R_RNS, O_EMP
-    DB TILESET_CITY, COLORSET_SUMMER, 0, 0, 0, 0
-    DB O_EMP, R_RNE, R_REW, R_REW, R_REW, R_REW, R_RSW, S_TMF, R_RNS, O_EMP
-    DB 0, 0, 0, 0, 0, $48
-    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
 ;;;=========================================================================;;;

@@ -95,6 +95,8 @@ O_RMD RB 1  ; Ramp medium
 O_RWL RB 1  ; Ramp wide left
 O_RWR RB 1  ; Ramp wide right
 O_BST RB 1  ; Bush stump
+O_CE3 RB 1  ; Cliff east multi
+O_CW3 RB 1  ; Cliff west multi
 
 ;;; Goal terrain:
 G_PNT RB 1  ; Peanut
@@ -134,7 +136,6 @@ R_OOP RB 1  ; Open ocean
 ;;; Mousehole terrain:
 M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.
 M_RNA RB 1  ; Ramp narrow
-M_RNS RB 1  ; Rock wall north/south
 M_UNDER_MIN RB 0
 M_FNS RB 1  ; North/south mousehole through fence
 M_BEW RB 1  ; East/west mousehole through brick wall
@@ -150,10 +151,15 @@ W_FMD RB 1  ; Fence middle
 W_TTP RB 1  ; Tree top
 W_TTR RB 1  ; Tree trunk
 W_TST RB 1  ; Trees stacked
-W_CSO RB 1  ; Cliff face south
-W_RNS RB 1  ; Rock wall north/south
-W_CRV RB 1  ; Cliff face/rock wall vertical
-W_RSO RB 1  ; Rock wall south
+W_CS1 RB 1  ; Cliff south single
+W_CS3 RB 1  ; Cliff south multi
+W_CSE RB 1  ; Cliff south/east
+W_CSW RB 1  ; Cliff south/west
+W_CEW RB 1  ; Cliff east/west
+W_CE1 RB 1  ; Cliff east single
+W_CE3 RB 1  ; Cliff east multi
+W_CW1 RB 1  ; Cliff west single
+W_CW3 RB 1  ; Cliff west multi
 W_BN1 RB 1  ; Brick wall north single
 W_BN3 RB 1  ; Brick wall north multi
 W_BNE RB 1  ; Brick wall north/east

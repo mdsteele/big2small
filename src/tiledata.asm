@@ -89,7 +89,6 @@ DataX_TerrainTiles_start::
     INCBIN "out/data/forest.2bpp"
     INCBIN "out/data/mountain.2bpp"
     INCBIN "out/data/goal.2bpp"
-    DS sizeof_TILE * 4
     INCBIN "out/data/teleporter.2bpp"
 DataX_TerrainTiles_end::
 

@@ -43,13 +43,17 @@ DataX_TerrainTable:
     DB $a0, $9e, $a1, $9f
     ASSERT @ - DataX_TerrainTable == 4 * O_BST
     DB $78, $7a, $79, $7b
+    ASSERT @ - DataX_TerrainTable == 4 * O_CE3
+    DB $00, $a6, $00, $a7
+    ASSERT @ - DataX_TerrainTable == 4 * O_CW3
+    DB $a4, $00, $a5, $00
     ;; Goal terrain:
     ASSERT @ - DataX_TerrainTable == 4 * G_PNT
-    DB $b0, $b2, $b1, $b3
-    ASSERT @ - DataX_TerrainTable == 4 * G_APL
     DB $b4, $b6, $b5, $b7
-    ASSERT @ - DataX_TerrainTable == 4 * G_CHS
+    ASSERT @ - DataX_TerrainTable == 4 * G_APL
     DB $b8, $ba, $b9, $bb
+    ASSERT @ - DataX_TerrainTable == 4 * G_CHS
+    DB $bc, $be, $bd, $bf
     ;; Special terrain:
     ASSERT @ - DataX_TerrainTable == 4 * S_BSH
     DB $74, $76, $75, $77
@@ -105,8 +109,6 @@ DataX_TerrainTable:
     ;; Mousehole terrain:
     ASSERT @ - DataX_TerrainTable == 4 * M_RNA
     DB $ac, $ae, $ad, $af
-    ASSERT @ - DataX_TerrainTable == 4 * M_RNS
-    DB $a8, $aa, $a9, $ab
     ASSERT @ - DataX_TerrainTable == 4 * M_FNS
     DB $80, $82, $81, $83
     ASSERT @ - DataX_TerrainTable == 4 * M_BEW
@@ -128,14 +130,24 @@ DataX_TerrainTable:
     DB $90, $92, $91, $93
     ASSERT @ - DataX_TerrainTable == 4 * W_TST
     DB $8c, $8e, $89, $8b
-    ASSERT @ - DataX_TerrainTable == 4 * W_CSO
+    ASSERT @ - DataX_TerrainTable == 4 * W_CS1
+    DB $a8, $aa, $a9, $ab
+    ASSERT @ - DataX_TerrainTable == 4 * W_CS3
     DB $98, $9a, $99, $9b
-    ASSERT @ - DataX_TerrainTable == 4 * W_RNS
+    ASSERT @ - DataX_TerrainTable == 4 * W_CSE
+    DB $98, $aa, $99, $ab
+    ASSERT @ - DataX_TerrainTable == 4 * W_CSW
+    DB $a8, $9a, $a9, $9b
+    ASSERT @ - DataX_TerrainTable == 4 * W_CEW
     DB $a4, $a6, $a5, $a7
-    ASSERT @ - DataX_TerrainTable == 4 * W_CRV
-    DB $a8, $aa, $a5, $a7
-    ASSERT @ - DataX_TerrainTable == 4 * W_RSO
-    DB $a4, $a6, $a8, $aa
+    ASSERT @ - DataX_TerrainTable == 4 * W_CE1
+    DB $98, $b2, $99, $b3
+    ASSERT @ - DataX_TerrainTable == 4 * W_CE3
+    DB $00, $a6, $00, $a7
+    ASSERT @ - DataX_TerrainTable == 4 * W_CW1
+    DB $b0, $9a, $b1, $9b
+    ASSERT @ - DataX_TerrainTable == 4 * W_CW3
+    DB $a4, $00, $a5, $00
     ASSERT @ - DataX_TerrainTable == 4 * W_BN1
     DB $d6, $da, $d7, $db
     ASSERT @ - DataX_TerrainTable == 4 * W_BN3
@@ -177,13 +189,17 @@ DataX_TerrainPaletteTable:
     ASSERT @ - DataX_TerrainPaletteTable == 2 * O_BEW
     DB 1, 1
     ASSERT @ - DataX_TerrainPaletteTable == 2 * O_RMD
-    DB 1, 1
+    DB 6, 6
     ASSERT @ - DataX_TerrainPaletteTable == 2 * O_RWL
-    DB 1, 1
+    DB 6, 6
     ASSERT @ - DataX_TerrainPaletteTable == 2 * O_RWR
-    DB 1, 1
+    DB 6, 6
     ASSERT @ - DataX_TerrainPaletteTable == 2 * O_BST
     DB 3, 3
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_CE3
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * O_CW3
+    DB 6, 6
     ;; Goal terrain:
     ASSERT @ - DataX_TerrainPaletteTable == 2 * G_PNT
     DB 1, 1
@@ -245,9 +261,7 @@ DataX_TerrainPaletteTable:
     DB 4, 4
     ;; Mousehole terrain:
     ASSERT @ - DataX_TerrainPaletteTable == 2 * M_RNA
-    DB 1, 1
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * M_RNS
-    DB 1, 1
+    DB 6, 6
     ASSERT @ - DataX_TerrainPaletteTable == 2 * M_FNS
     DB 1, 1
     ASSERT @ - DataX_TerrainPaletteTable == 2 * M_BEW
@@ -269,14 +283,24 @@ DataX_TerrainPaletteTable:
     DB 3, 1
     ASSERT @ - DataX_TerrainPaletteTable == 2 * W_TST
     DB 3, 3
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CSO
-    DB 1, 1
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_RNS
-    DB 1, 1
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CRV
-    DB 1, 1
-    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_RSO
-    DB 1, 1
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CS1
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CS3
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CSE
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CSW
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CEW
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CE1
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CE3
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CW1
+    DB 6, 6
+    ASSERT @ - DataX_TerrainPaletteTable == 2 * W_CW3
+    DB 6, 6
     ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BN1
     DB 6, 6
     ASSERT @ - DataX_TerrainPaletteTable == 2 * W_BN3
