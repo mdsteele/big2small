@@ -17,8 +17,6 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-INCLUDE "src/vram.inc"
-
 ;;;=========================================================================;;;
 
 SECTION "BgTiles", ROMX
@@ -26,7 +24,7 @@ DataX_BgTiles_start::
     INCBIN "out/data/font.2bpp"
     INCBIN "out/data/portrait.2bpp"
     INCBIN "out/data/porvar.2bpp"
-    DS sizeof_TILE * 4
+    INCBIN "out/data/cow.2bpp"
     INCBIN "out/data/devices.2bpp"
 DataX_BgTiles_end::
 
@@ -36,6 +34,19 @@ SECTION "CityTiles", ROMX
 DataX_CityTiles_start::
     INCBIN "out/data/city.2bpp"
 DataX_CityTiles_end::
+
+;;;=========================================================================;;;
+
+SECTION "CowBlinkTiles", ROMX
+DataX_CowBlinkTiles_tile_arr::
+    INCBIN "out/data/cowblink.2bpp"
+
+;;;=========================================================================;;;
+
+SECTION "FarmTiles", ROMX
+DataX_FarmTiles_start::
+    INCBIN "out/data/farm.2bpp"
+DataX_FarmTiles_end::
 
 ;;;=========================================================================;;;
 

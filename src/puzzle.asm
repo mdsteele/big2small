@@ -171,10 +171,14 @@ _BeginPuzzle_Init:
     COPY_FROM_ROMX DataX_TerrainTiles_start, DataX_TerrainTiles_end
     ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
     if_eq TILESET_CITY, jr, .cityTiles
+    if_eq TILESET_FARM, jr, .farmTiles
     if_eq TILESET_SPACE, jr, .spaceTiles
     jr .doneTiles
     .cityTiles
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
+    jr .doneTiles
+    .farmTiles
+    COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
     jr .doneTiles
     .spaceTiles
     COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
@@ -935,9 +939,21 @@ _UpdateArrowObjs_West:
 
 Func_AnimateTerrain:
     ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
+    if_eq TILESET_FARM, jr, _AnimateTerrain_Farm
     if_eq TILESET_OCEAN, jr, _AnimateTerrain_Ocean
     if_eq TILESET_SPACE, jr, _AnimateTerrain_Stars
     ret
+_AnimateTerrain_Farm:
+    ld a, [Ram_AnimationClock_u8]
+    and %01111111
+    jr z, .blink
+    if_ne 10, ret
+    ld a, sizeof_TILE
+    .blink
+    ldb de, a
+    romb BANK(DataX_CowBlinkTiles_tile_arr)
+    ld hl, DataX_CowBlinkTiles_tile_arr
+    jr _AnimateTerrain_Copy
 _AnimateTerrain_Ocean:
     ld a, [Ram_AnimationClock_u8]
     and %00001111
@@ -945,7 +961,6 @@ _AnimateTerrain_Ocean:
     ld a, [Ram_AnimationClock_u8]
     and %00010000
     ASSERT sizeof_TILE == 16
-    ;rlca
     ldb de, a
     romb BANK(DataX_OceanTiles_tile_arr)
     ld hl, DataX_OceanTiles_tile_arr
@@ -962,7 +977,7 @@ _AnimateTerrain_Copy:
     add hl, de
     ldw de, hl
     ld bc, sizeof_TILE
-    ld hl, Vram_SharedTiles + sizeof_TILE * $3c
+    ld hl, Vram_BgTiles + sizeof_TILE * $68
     call Func_MemCopy
     ret
 

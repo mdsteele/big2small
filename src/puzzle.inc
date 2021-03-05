@@ -40,8 +40,9 @@ ANIMAL_MOUSE    EQU 2
 
 ;; Enum values for PUZZ_Tileset_u8:
 TILESET_CITY  EQU 0
-TILESET_OCEAN EQU 1
-TILESET_SPACE EQU 2
+TILESET_FARM  EQU 1
+TILESET_OCEAN EQU 2
+TILESET_SPACE EQU 3
 
 ;;;=========================================================================;;;
 
@@ -145,9 +146,15 @@ M_UNDER_END RB 0
 ;;; Wall terrain:
 W_MIN RB 0  ; Terrain types from W_MIN on up are walls.
 W_RCK RB 1  ; Rock
-W_FRT RB 1  ; Fence right
-W_FLT RB 1  ; Fence left
+W_COW RB 1  ; Cow
+W_FE1 RB 1  ; Fence east end
+W_FW1 RB 1  ; Fence west end
 W_FMD RB 1  ; Fence middle
+W_FNE RB 1  ; Fence north/east
+W_FNW RB 1  ; Fence north/west
+W_FSE RB 1  ; Fence south/east
+W_FSW RB 1  ; Fence south/west
+W_FEW RB 1  ; Fence east/west
 W_TTP RB 1  ; Tree top
 W_TTR RB 1  ; Tree trunk
 W_TST RB 1  ; Trees stacked
