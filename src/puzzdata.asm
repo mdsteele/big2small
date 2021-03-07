@@ -20,6 +20,7 @@
 INCLUDE "src/color.inc"
 INCLUDE "src/puzzle.inc"
 INCLUDE "src/save.inc"
+INCLUDE "src/tileset.inc"
 
 ;;;=========================================================================;;;
 
@@ -40,12 +41,12 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Bush1_puzz
     DW DataX_Farm1_puzz
     DW DataX_Mountain1_puzz
-    DW DataX_River1_puzz
-    DW DataX_River2_puzz
-    DW DataX_CityPipe1_puzz
-    DW DataX_CityPipe2_puzz
-    DW DataX_CityTrap1_puzz
-    DW DataX_CityTrap2_puzz
+    DW DataX_Seaside1_puzz
+    DW DataX_Seaside2_puzz
+    DW DataX_Sewer1_puzz
+    DW DataX_Sewer2_puzz
+    DW DataX_City1_puzz
+    DW DataX_City2_puzz
     DW DataX_Space1_puzz
     DW DataX_Space2_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
@@ -69,7 +70,7 @@ DataX_Forest1_puzz:
     DB W_TST, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, G_APL, W_TTP, O_EMP, W_TST
     D_BPTR DataX_Outro_dlog, 0, 0, 0
     DB W_TST, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, W_RCK, W_TTR, O_GRS, W_TST
-    DB TILESET_CITY, COLORSET_SPRING, 0, 0, 0, 0
+    DB TILESET_FARM, COLORSET_SPRING, 0, 0, 0, 0
     DB W_TST, O_EMP, W_TTP, O_GRS, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
     DS 6
     DB W_TST, W_TTP, W_TST, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TST
@@ -90,7 +91,7 @@ DataX_Forest2_puzz:
     DB W_TST, W_TTR, W_TTR, W_RCK, O_EMP, O_GRS, O_EMP, W_RCK, W_TTR, W_TST
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_TST, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, G_PNT, G_APL, G_CHS, W_TST
-    DB TILESET_CITY, COLORSET_SUMMER, 0, 0, 0, 0
+    DB TILESET_FARM, COLORSET_SUMMER, 0, 0, 0, 0
     DB W_TTR, O_EMP, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TTP, W_TST
     DS 6
     DB W_TTP, O_EMP, W_TTR, W_TST, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
@@ -111,7 +112,7 @@ DataX_Forest3_puzz:
     DB W_TTP, W_TTR, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_TST, O_GRS, G_APL, O_EMP, O_EMP, W_FW1, W_FMD, W_FMD, W_FE1, W_TST
-    DB TILESET_CITY, COLORSET_AUTUMN, 0, 0, 0, 0
+    DB TILESET_FARM, COLORSET_AUTUMN, 0, 0, 0, 0
     DB W_TST, O_GRS, O_GRS, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS, W_TST
     DS 6
     DB W_TST, W_TTP, O_GRS, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
@@ -132,7 +133,7 @@ DataX_Bush1_puzz:
     DB W_TTP, W_FMD, W_FE1, S_BSH, W_FW1, W_FMD, W_FE1, W_TTR, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_TTR, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_BSH, O_EMP, O_EMP
-    DB TILESET_CITY, COLORSET_WINTER, 0, 0, 0, 0
+    DB TILESET_FARM, COLORSET_WINTER, 0, 0, 0, 0
     DB O_GRS, O_EMP, O_EMP, G_CHS, W_RCK, O_EMP, O_EMP, W_TTP, G_PNT, O_EMP
     DS 6
     DB W_TTP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP, W_TST, W_TTP, W_TTP
@@ -140,9 +141,9 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Farm1_puzz:
     .begin
-    DB W_TTP, W_TTP, O_EMP, O_EMP, O_EMP, W_TTR, W_TTR, O_EMP, O_GRS, O_GRS
+    DB W_HNW, W_HNE, O_GRS, O_GRS, O_EMP, W_TTR, W_TTR, O_EMP, O_GRS, O_GRS
     DB $20, DIRF_EAST, 0, 0, 0, 0
-    DB W_TTR, W_TTR, O_EMP, G_PNT, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, O_GRS
+    DB W_HSW, W_HSE, O_EMP, G_PNT, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, O_GRS
     DB $67, DIRF_WEST, 0, 0, 0, 0
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     DB $80, DIRF_SOUTH, 0, 0, 0, 0
@@ -174,13 +175,13 @@ DataX_Mountain1_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_CW1, W_CSE, O_GRS, O_EMP, S_ARS
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB O_RMD, W_CE1, O_EMP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP
-    DB TILESET_CITY, COLORSET_SUMMER, 0, 0, 0, 0
+    DB TILESET_MOUNTAIN, COLORSET_SUMMER, 0, 0, 0, 0
     DB O_EMP, G_PNT, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS
     DS 6
     DB O_GRS, O_GRS, O_EMP, O_GRS, S_ARN, O_EMP, S_ARE, O_EMP, O_GRS, O_GRS
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_River1_puzz:
+DataX_Seaside1_puzz:
     .begin
     DB W_TTP, W_TTR, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
@@ -195,13 +196,13 @@ DataX_River1_puzz:
     DB O_GRS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, R_RSE, R_RNW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_BNS, O_EMP, R_RNS, O_EMP, O_EMP, O_GRS
-    DB TILESET_OCEAN, COLORSET_AUTUMN, 0, 0, 0, 0
+    DB TILESET_SEASIDE, COLORSET_AUTUMN, 0, 0, 0, 0
     DB R_SNN, R_SNN, R_SNE, G_CHS, R_RNS, G_APL, R_RNS, G_PNT, R_SNW, R_SNN
     DS 6
     DB R_OOP, R_OOP, R_ONE, R_SNN, R_ONN, R_SNN, R_ONN, R_SNN, R_ONW, R_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_River2_puzz:
+DataX_Seaside2_puzz:
     .begin
     DB W_TST, W_TTR, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, W_TST, W_TST
     DB $07, DIRF_WEST, 0, 0, 0, 0
@@ -216,13 +217,13 @@ DataX_River2_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, S_BSH, W_TTP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB R_RSE, R_REW, R_REW, O_BEW, R_REW, R_REW, R_RNW, W_RCK, O_EMP, W_TTR
-    DB TILESET_CITY, COLORSET_WINTER, 0, 0, 0, 0
+    DB TILESET_SEASIDE, COLORSET_WINTER, 0, 0, 0, 0
     DB R_RNW, W_TTP, O_EMP, S_BSH, O_EMP, O_EMP, W_FW1, W_FMD, M_FNS, W_FMD
     DS 6
     DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_CityPipe1_puzz:
+DataX_Sewer1_puzz:
     .begin
     DB O_EMP, O_EMP, W_BW3, W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BW3
     DB $11, DIRF_SOUTH, 0, 0, 0, 0
@@ -237,13 +238,13 @@ DataX_CityPipe1_puzz:
     DB W_BE3, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, G_APL, O_EMP, W_BN1, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_BC4, W_BN3, W_BNE, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP
-    DB TILESET_CITY, COLORSET_SUMMER, 0, 0, 0, 0
+    DB TILESET_SEWER, COLORSET_SUMMER, 0, 0, 0, 0
     DB W_BS3, W_BS3, W_BEW, O_EMP, O_EMP, O_EMP, W_BN1, O_EMP, O_EMP, O_EMP
     DS 6
     DB O_EMP, O_EMP, W_BW3, W_BN3, W_BN3, W_BN3, W_BC4, W_BN3, W_BN3, W_BN3
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_CityPipe2_puzz:
+DataX_Sewer2_puzz:
     .begin
     DB W_BC4, W_BE3, O_EMP, W_BEW, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, O_EMP
     DB $20, DIRF_EAST, 0, 0, 0, 0
@@ -258,13 +259,13 @@ DataX_CityPipe2_puzz:
     DB O_EMP, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB G_APL, O_EMP, O_EMP, S_ARS, O_EMP, O_EMP, G_PNT, W_BEW, O_EMP, G_CHS
-    DB TILESET_CITY, COLORSET_SUMMER, 0, 0, 0, 0
+    DB TILESET_SEWER, COLORSET_SUMMER, 0, 0, 0, 0
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_PPW, W_BEW, O_EMP, O_EMP
     DS 6
     DB W_BNE, O_EMP, S_ARN, O_EMP, S_ARN, O_EMP, O_EMP, W_BEW, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_CityTrap1_puzz:
+DataX_City1_puzz:
     .begin
     DB W_BE3, W_BS3, W_BS3, W_BEW, W_BS3, W_BS3, W_BS3, W_BS3, W_BS3, W_BW3
     DB $18, DIRF_SOUTH, 0, 0, 0, 0
@@ -285,7 +286,7 @@ DataX_CityTrap1_puzz:
     DB W_BC4, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BN3, W_BC4
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_CityTrap2_puzz:
+DataX_City2_puzz:
     .begin
     DB W_BC4, W_BE3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BW3, W_BC4
     DB $65, DIRF_SOUTH, 0, 0, 0, 0

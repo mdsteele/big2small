@@ -20,6 +20,7 @@
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/puzzle.inc"
+INCLUDE "src/tileset.inc"
 INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
@@ -167,22 +168,9 @@ _BeginPuzzle_Init:
     ld bc, sizeof_PUZZ           ; count
     call Func_MemCopy
     ;; Copy tiles to VRAM.
-    ld hl, Vram_SharedTiles  ; dest
-    COPY_FROM_ROMX DataX_TerrainTiles_start, DataX_TerrainTiles_end
     ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
-    if_eq TILESET_CITY, jr, .cityTiles
-    if_eq TILESET_FARM, jr, .farmTiles
-    if_eq TILESET_SPACE, jr, .spaceTiles
-    jr .doneTiles
-    .cityTiles
-    COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
-    jr .doneTiles
-    .farmTiles
-    COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
-    jr .doneTiles
-    .spaceTiles
-    COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
-    .doneTiles
+    ld b, a  ; tileset
+    call Func_LoadTileset
     ;; Transfer background color palettes.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Colorset_u8]
     ld c, a  ; colorset
@@ -196,7 +184,6 @@ _BeginPuzzle_Init:
     ld [Ram_AnimationClock_u8], a
     ld [Ram_WalkingCountdown_u8], a
     ld [Ram_WalkingAction_u8], a
-    call Func_AnimateTerrain
     ;; Set up animal objects.
     call Func_ClearOam
     ld a, ANIMAL_MOUSE
@@ -253,12 +240,10 @@ _BeginPuzzle_Init:
     ;; fall through to Main_PuzzleCommand
 
 Main_PuzzleCommand::
-    ld hl, Ram_AnimationClock_u8
-    inc [hl]
     call Func_UpdateArrowObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateTerrain
+    call Func_AnimatePuzzleTerrain
     call Func_UpdateButtonState
     ld a, [Ram_ButtonsPressed_u8]
     ld b, a
@@ -937,49 +922,13 @@ _UpdateArrowObjs_West:
 
 ;;;=========================================================================;;;
 
-Func_AnimateTerrain:
+Func_AnimatePuzzleTerrain:
+    ld hl, Ram_AnimationClock_u8
+    inc [hl]
+    ld c, [hl]  ; animation clock
     ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
-    if_eq TILESET_FARM, jr, _AnimateTerrain_Farm
-    if_eq TILESET_OCEAN, jr, _AnimateTerrain_Ocean
-    if_eq TILESET_SPACE, jr, _AnimateTerrain_Stars
-    ret
-_AnimateTerrain_Farm:
-    ld a, [Ram_AnimationClock_u8]
-    and %01111111
-    jr z, .blink
-    if_ne 10, ret
-    ld a, sizeof_TILE
-    .blink
-    ldb de, a
-    romb BANK(DataX_CowBlinkTiles_tile_arr)
-    ld hl, DataX_CowBlinkTiles_tile_arr
-    jr _AnimateTerrain_Copy
-_AnimateTerrain_Ocean:
-    ld a, [Ram_AnimationClock_u8]
-    and %00001111
-    ret nz
-    ld a, [Ram_AnimationClock_u8]
-    and %00010000
-    ASSERT sizeof_TILE == 16
-    ldb de, a
-    romb BANK(DataX_OceanTiles_tile_arr)
-    ld hl, DataX_OceanTiles_tile_arr
-    jr _AnimateTerrain_Copy
-_AnimateTerrain_Stars:
-    ld a, [Ram_AnimationClock_u8]
-    and %00000111
-    ASSERT sizeof_TILE == 16
-    swap a
-    ldb de, a
-    romb BANK(DataX_StarsTiles_tile_arr)
-    ld hl, DataX_StarsTiles_tile_arr
-_AnimateTerrain_Copy:
-    add hl, de
-    ldw de, hl
-    ld bc, sizeof_TILE
-    ld hl, Vram_BgTiles + sizeof_TILE * $68
-    call Func_MemCopy
-    ret
+    ld b, a  ; tileset
+    jp Func_AnimateTerrain
 
 ;;;=========================================================================;;;
 
@@ -1134,11 +1083,9 @@ _AnimalMoving_ContinueMovingGoat:
     ld a, 12
     ld [Ram_WalkingCountdown_u8], a
 _AnimalMoving_RunLoop:
-    ld hl, Ram_AnimationClock_u8
-    inc [hl]
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateTerrain
+    call Func_AnimatePuzzleTerrain
     ;; If the animal is pushing a pipe, animate the pipe moving.
     ld a, [Ram_WalkingAction_u8]
     if_ne ACTF_PUSHW, jr, .notPushingWestward
@@ -1344,6 +1291,7 @@ _AnimalMoving_Teleport:
 _AnimalMoving_TeleportLoop:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimatePuzzleTerrain
     ld a, [Ram_SmokeCounter_u8]
     inc a
     ld [Ram_SmokeCounter_u8], a
@@ -1390,6 +1338,7 @@ _AnimalMoving_Mousetrap:
 _AnimalMoving_SmokeLoop:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimatePuzzleTerrain
     ld a, [Ram_SmokeCounter_u8]
     inc a
     ld [Ram_SmokeCounter_u8], a

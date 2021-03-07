@@ -56,8 +56,6 @@ Main::
     ;; Copy tiles to VRAM.
     ld hl, Vram_BgTiles  ; dest
     COPY_FROM_ROMX DataX_BgTiles_start, DataX_BgTiles_end
-    ld hl, Vram_SharedTiles + $60 * sizeof_TILE  ; dest
-    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     ld hl, Vram_ObjTiles  ; dest
     COPY_FROM_ROMX DataX_ObjTiles_start, DataX_ObjTiles_end
     ;; Initialize window map.

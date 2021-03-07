@@ -20,6 +20,7 @@
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
+INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -56,6 +57,8 @@ Main_WorldMapScreen::
     ;; Copy the tile data to VRAM.
     ld hl, Vram_SharedTiles  ; dest
     COPY_FROM_ROMX DataX_MapTiles_start, DataX_MapTiles_end
+    ld hl, Vram_SharedTiles + $60 * sizeof_TILE  ; dest
+    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     ;; Copy the BG tile map to VRAM.
     ld hl, Vram_BgMap  ; dest
     COPY_FROM_ROMX DataX_WorldTileMap_start, DataX_WorldTileMap_end

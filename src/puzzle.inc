@@ -38,12 +38,6 @@ ANIMAL_ELEPHANT EQU 0
 ANIMAL_GOAT     EQU 1
 ANIMAL_MOUSE    EQU 2
 
-;; Enum values for PUZZ_Tileset_u8:
-TILESET_CITY  EQU 0
-TILESET_FARM  EQU 1
-TILESET_OCEAN EQU 2
-TILESET_SPACE EQU 3
-
 ;;;=========================================================================;;;
 
 ;;; ANIM: Describes an animal character.
@@ -155,6 +149,10 @@ W_FNW RB 1  ; Fence north/west
 W_FSE RB 1  ; Fence south/east
 W_FSW RB 1  ; Fence south/west
 W_FEW RB 1  ; Fence east/west
+W_HNE RB 1  ; House northeast
+W_HNW RB 1  ; House northwest
+W_HSE RB 1  ; House southeast
+W_HSW RB 1  ; House southwest
 W_TTP RB 1  ; Tree top
 W_TTR RB 1  ; Tree trunk
 W_TST RB 1  ; Trees stacked

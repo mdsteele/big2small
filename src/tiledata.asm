@@ -17,8 +17,6 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-;;;=========================================================================;;;
-
 SECTION "BgTiles", ROMX
 DataX_BgTiles_start::
     INCBIN "out/data/font.2bpp"
@@ -27,33 +25,6 @@ DataX_BgTiles_start::
     INCBIN "out/data/cow.2bpp"
     INCBIN "out/data/devices.2bpp"
 DataX_BgTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "CityTiles", ROMX
-DataX_CityTiles_start::
-    INCBIN "out/data/city.2bpp"
-DataX_CityTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "CowBlinkTiles", ROMX
-DataX_CowBlinkTiles_tile_arr::
-    INCBIN "out/data/cowblink.2bpp"
-
-;;;=========================================================================;;;
-
-SECTION "FarmTiles", ROMX
-DataX_FarmTiles_start::
-    INCBIN "out/data/farm.2bpp"
-DataX_FarmTiles_end::
-
-;;;=========================================================================;;;
-
-SECTION "MapTiles", ROMX
-DataX_MapTiles_start::
-    INCBIN "out/data/worldmap.2bpp"
-DataX_MapTiles_end::
 
 ;;;=========================================================================;;;
 
@@ -67,20 +38,50 @@ DataX_ObjTiles_start::
 DataX_ObjTiles_end::
 
 ;;;=========================================================================;;;
+;;; Terrain tiles:
 
-SECTION "OceanTiles", ROMX
-DataX_OceanTiles_tile_arr::
-    INCBIN "out/data/ocean.2bpp"
+SECTION "SharedTerrainTiles", ROMX
+DataX_SharedTerrainTiles_start::
+    INCBIN "out/data/goal.2bpp"
+    INCBIN "out/data/pipe.2bpp"
+    INCBIN "out/data/teleporter.2bpp"
+    INCBIN "out/data/forest.2bpp"
+DataX_SharedTerrainTiles_end::
 
-;;;=========================================================================;;;
+SECTION "BarnTiles", ROMX
+DataX_BarnTiles_start::
+    INCBIN "out/data/barn.2bpp"
+DataX_BarnTiles_end::
+
+SECTION "BridgeTiles", ROMX
+DataX_BridgeTiles_start::
+    INCBIN "out/data/bridge.2bpp"
+DataX_BridgeTiles_end::
+
+SECTION "CityTiles", ROMX
+DataX_CityTiles_start::
+    INCBIN "out/data/city.2bpp"
+DataX_CityTiles_end::
+
+SECTION "FarmTiles", ROMX
+DataX_FarmTiles_start::
+    INCBIN "out/data/farm.2bpp"
+DataX_FarmTiles_end::
+
+SECTION "MapTiles", ROMX
+DataX_MapTiles_start::
+    INCBIN "out/data/worldmap.2bpp"
+DataX_MapTiles_end::
+
+SECTION "MountainTiles", ROMX
+DataX_MountainTiles_start::
+    INCBIN "out/data/mountain.2bpp"
+DataX_MountainTiles_end::
 
 SECTION "RiverTiles", ROMX
 DataX_RiverTiles_start::
     INCBIN "out/data/river.2bpp"
-    INCBIN "out/data/pipe.2bpp"
 DataX_RiverTiles_end::
-
-;;;=========================================================================;;;
 
 SECTION "SpaceTiles", ROMX
 DataX_SpaceTiles_start::
@@ -88,19 +89,18 @@ DataX_SpaceTiles_start::
 DataX_SpaceTiles_end::
 
 ;;;=========================================================================;;;
+;;; Animated terrain tiles:
+
+SECTION "CowBlinkTiles", ROMX
+DataX_CowBlinkTiles_tile_arr::
+    INCBIN "out/data/cowblink.2bpp"
+
+SECTION "OceanTiles", ROMX
+DataX_OceanTiles_tile_arr::
+    INCBIN "out/data/ocean.2bpp"
 
 SECTION "StarsTiles", ROMX
 DataX_StarsTiles_tile_arr::
     INCBIN "out/data/stars.2bpp"
-
-;;;=========================================================================;;;
-
-SECTION "TerrainTiles", ROMX
-DataX_TerrainTiles_start::
-    INCBIN "out/data/forest.2bpp"
-    INCBIN "out/data/mountain.2bpp"
-    INCBIN "out/data/goal.2bpp"
-    INCBIN "out/data/teleporter.2bpp"
-DataX_TerrainTiles_end::
 
 ;;;=========================================================================;;;
