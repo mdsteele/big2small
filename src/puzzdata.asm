@@ -40,6 +40,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Forest3_puzz
     DW DataX_Bush1_puzz
     DW DataX_Farm1_puzz
+    DW DataX_Farm2_puzz
     DW DataX_Mountain1_puzz
     DW DataX_Seaside1_puzz
     DW DataX_Seaside2_puzz
@@ -158,6 +159,27 @@ DataX_Farm1_puzz:
     DB O_EMP, O_EMP, O_EMP, W_FSW, W_FMD, W_FMD, W_FMD, W_FMD, W_FSE, O_GRS
     DS 6
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, O_GRS
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Farm2_puzz:
+    .begin
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_APL, O_EMP, O_EMP
+    DB $66, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_TTP, O_EMP, O_EMP, W_TTP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP
+    DB $19, DIRF_WEST, 0, 0, 0, 0
+    DB W_TTR, O_EMP, S_BSH, W_TST, W_FW1, W_FMD, W_FMD, W_FMD, M_FNS, W_FMD
+    DB $60, DIRF_EAST, 0, 0, 0, 0
+    DB O_EMP, O_GRS, O_EMP, W_TTR, O_EMP, O_EMP, O_GRS, O_EMP, O_EMP, O_GRS
+    D_BPTR DataX_RestYe_song, 0, 0, 0
+    DB O_EMP, O_EMP, O_GRS, O_GRS, O_GRS, W_COW, O_EMP, O_GRS, S_BSH, O_GRS
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB W_FMD, M_FNS, W_FMD, W_FMD, W_FMD, W_FMD, W_FMD, W_FNE, O_EMP, O_GRS
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB O_EMP, O_EMP, O_EMP, W_HNW, W_HNE, O_EMP, O_GRS, W_FSW, M_FNS, W_FMD
+    DB TILESET_FARM, COLORSET_SUMMER, 0, 0, 0, 0
+    DB O_EMP, O_EMP, G_CHS, W_HSW, W_HSE, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP
+    DS 6
+    DB O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, W_COW
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Mountain1_puzz:
