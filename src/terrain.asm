@@ -100,6 +100,9 @@ DataX_TerrainTable:
     D_TERR R_ONE, ANI, $0e, ANI, ANI, SHORE_START
     D_TERR R_ONW, $0c, ANI, ANI, ANI, SHORE_START
     D_TERR R_OOP, ANI, ANI, ANI, ANI, SHORE_START
+    D_TERR R_EDG, $00, $02, ANI, ANI, SHORE_START
+    D_TERR R_GRT, $01, $03, ANI, ANI, SHORE_START
+    D_TERR R_GDR, $00, $00, ANI, ANI, SHORE_START
     ;; Mousehole terrain:
     D_TERR M_RNA, $14, $16, $15, $17, MOUNTAIN_START
     D_TERR M_FNS, $00, $02, $01, $03, FENCE_START + $00
@@ -141,7 +144,9 @@ DataX_TerrainTable:
     D_TERR W_BSE, $02, $04, $03, $05, BRICK_START + $04
     D_TERR W_BSW, $00, $02, $01, $03, BRICK_START + $04
     D_TERR W_BEW, $07, $0b, $07, $0b, BRICK_START + $04
+    D_TERR W_BE1, $02, $0f, $03, $05, BRICK_START + $04
     D_TERR W_BE3, $09, $0b, $09, $0b, BRICK_START + $04
+    D_TERR W_BW1, $0d, $02, $01, $03, BRICK_START + $04
     D_TERR W_BW3, $07, $09, $07, $09, BRICK_START + $04
     D_TERR W_BC4, $09, $09, $09, $09, BRICK_START + $04
 ASSERT @ - DataX_TerrainTable <= 512
@@ -193,6 +198,9 @@ DataX_TerrainPaletteTable:
     D_PAL R_ONE, 4
     D_PAL R_ONW, 4
     D_PAL R_OOP, 4
+    D_PAL R_EDG, 6, 4
+    D_PAL R_GRT, 6, 4
+    D_PAL R_GDR, 7, 4
     ;; Mousehole terrain:
     D_PAL M_RNA, 6
     D_PAL M_FNS, 1
@@ -234,7 +242,9 @@ DataX_TerrainPaletteTable:
     D_PAL W_BSE, 6
     D_PAL W_BSW, 6
     D_PAL W_BEW, 6
+    D_PAL W_BE1, 6
     D_PAL W_BE3, 6
+    D_PAL W_BW1, 6
     D_PAL W_BW3, 6
     D_PAL W_BC4, 6
 ASSERT @ - DataX_TerrainPaletteTable <= 256

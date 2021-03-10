@@ -57,14 +57,17 @@ TELEPORT_L1_TILEID EQU $5c
 TELEPORT_L2_TILEID EQU $60
 TELEPORT_L3_TILEID EQU $64
 
-PIPE_WL_TILEID EQU $f8
-PIPE_EL_TILEID EQU $fc
+PIPE_WL_TILEID EQU $8c
+PIPE_EL_TILEID EQU $90
 
 ;;; The number of frames per step of the smoke animation:
 SMOKE_FRAMES EQU 6
 
 ;;; The number of frames per step of the teleport animation:
 TELEPORT_FRAMES EQU 3
+
+;;; Sentinel value for Ram_TerrainCellToUpdate_u8:
+NO_CELL_TO_UPDATE EQU $ff
 
 ;;;=========================================================================;;;
 
@@ -122,6 +125,12 @@ Ram_WalkingAction_u8:
 
 ;;; Frame counter for the smoke animation.
 Ram_SmokeCounter_u8:
+    DB
+
+;;; If this is not NO_CELL_TO_UPDATE, then it gives the position of a terrain
+;;; cell that needs to be reloaded into the BG map in VRAM after the next
+;;; VBlank (because that cell's terrain type changed).
+Ram_TerrainCellToUpdate_u8:
     DB
 
 ;;;=========================================================================;;;
@@ -184,6 +193,8 @@ _BeginPuzzle_Init:
     ld [Ram_AnimationClock_u8], a
     ld [Ram_WalkingCountdown_u8], a
     ld [Ram_WalkingAction_u8], a
+    ld a, NO_CELL_TO_UPDATE
+    ld [Ram_TerrainCellToUpdate_u8], a
     ;; Set up animal objects.
     call Func_ClearOam
     ld a, ANIMAL_MOUSE
@@ -243,7 +254,7 @@ Main_PuzzleCommand::
     call Func_UpdateArrowObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_UpdatePuzzleTerrain
     call Func_UpdateButtonState
     ld a, [Ram_ButtonsPressed_u8]
     ld b, a
@@ -922,7 +933,18 @@ _UpdateArrowObjs_West:
 
 ;;;=========================================================================;;;
 
-Func_AnimatePuzzleTerrain:
+Func_UpdatePuzzleTerrain:
+    ;; Update terrain cell if needed:
+    ld a, [Ram_TerrainCellToUpdate_u8]
+    if_eq NO_CELL_TO_UPDATE, jr, .doneUpdateCell
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld d, HIGH(Ram_PuzzleState_puzz)
+    ld e, a
+    call Func_LoadTerrainCellIntoVram
+    ld a, NO_CELL_TO_UPDATE
+    ld [Ram_TerrainCellToUpdate_u8], a
+    .doneUpdateCell
+    ;; Animate terrain:
     ld hl, Ram_AnimationClock_u8
     inc [hl]
     ld c, [hl]  ; animation clock
@@ -1021,7 +1043,8 @@ _AnimalMoving_ContinueMovingElephant:
     ;; Change the pushed terrain cell to empty.
     ld a, O_EMP
     ld [de], a
-    call Func_LoadTerrainCellIntoVram
+    ld a, e
+    ld [Ram_TerrainCellToUpdate_u8], a
     ;; Play a sound effect.
     ld c, BANK(DataX_PushPipe_sfx4)
     ld hl, DataX_PushPipe_sfx4
@@ -1085,7 +1108,7 @@ _AnimalMoving_ContinueMovingGoat:
 _AnimalMoving_RunLoop:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_UpdatePuzzleTerrain
     ;; If the animal is pushing a pipe, animate the pipe moving.
     ld a, [Ram_WalkingAction_u8]
     if_ne ACTF_PUSHW, jr, .notPushingWestward
@@ -1131,18 +1154,17 @@ _AnimalMoving_AnimalAction:
     inc e
     inc e
     ld a, S_PPE
-    ld [de], a
-    call Func_LoadTerrainCellIntoVram
-    jr .donePushing
+    jr .finishPushing
     .notPushingEastward
     ;; Check if the animal just finished pushing a pipe westward.
     if_ne ACTF_PUSHW, jr, .notPushingWestward
     dec e
     dec e
     ld a, S_PPW
+    .finishPushing
     ld [de], a
-    call Func_LoadTerrainCellIntoVram
-    .donePushing
+    ld a, e
+    ld [Ram_TerrainCellToUpdate_u8], a
     xor a
     ld [Ram_PipeWL_oama + OAMA_Y], a
     ld [Ram_PipeWR_oama + OAMA_Y], a
@@ -1153,6 +1175,7 @@ _AnimalMoving_AnimalAction:
 _AnimalMoving_TerrainAction:
     ;; Store the terrain type the animal is standing on in a.
     ld a, [de]
+    if_lt S_MIN, jr, _AnimalMoving_Update  ; fast path for common case
     ;; If the animal steps on an arrow, change the value of its ANIM_Facing_u8.
     if_ne S_ARN, jr, .notNorthArrow
     ld [hl], DIRF_NORTH
@@ -1205,7 +1228,8 @@ _AnimalMoving_TerrainAction:
     if_ne S_BSH, jr, .notBush
     ld a, O_BST
     ld [de], a
-    call Func_LoadTerrainCellIntoVram
+    ld a, e
+    ld [Ram_TerrainCellToUpdate_u8], a
     .notBush
 _AnimalMoving_Update:
     call Func_UpdateSelectedAnimalObjs
@@ -1291,7 +1315,7 @@ _AnimalMoving_Teleport:
 _AnimalMoving_TeleportLoop:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_UpdatePuzzleTerrain
     ld a, [Ram_SmokeCounter_u8]
     inc a
     ld [Ram_SmokeCounter_u8], a
@@ -1325,7 +1349,8 @@ _AnimalMoving_Mousetrap:
     ;; Set current terrain to empty.
     ld a, O_EMP
     ld [de], a
-    call Func_LoadTerrainCellIntoVram
+    ld a, e
+    ld [Ram_TerrainCellToUpdate_u8], a
     ;; Play a sound effect.
     ld c, BANK(DataX_Mousetrap_sfx4)
     ld hl, DataX_Mousetrap_sfx4
@@ -1338,7 +1363,7 @@ _AnimalMoving_Mousetrap:
 _AnimalMoving_SmokeLoop:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_UpdatePuzzleTerrain
     ld a, [Ram_SmokeCounter_u8]
     inc a
     ld [Ram_SmokeCounter_u8], a

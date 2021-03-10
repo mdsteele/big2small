@@ -17,16 +17,20 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-;; Enum values for FuncX_SetBgColorPalettes:
-COLORSET_SPRING EQU 0
-COLORSET_SUMMER EQU 1
-COLORSET_AUTUMN EQU 2
-COLORSET_WINTER EQU 3
-COLORSET_SPACE  EQU 4
-
 ;;; The number of BG/obj color palettes.
 NUM_BG_CPAL  EQU 8
 NUM_OBJ_CPAL EQU 8
+
+;;;=========================================================================;;;
+
+;; Enum values for FuncX_SetBgColorPalettes:
+RSRESET
+COLORSET_SPRING RB 1
+COLORSET_SUMMER RB 1
+COLORSET_AUTUMN RB 1
+COLORSET_WINTER RB 1
+COLORSET_SEWER  RB 1
+COLORSET_SPACE  RB 1
 
 ;;;=========================================================================;;;
 

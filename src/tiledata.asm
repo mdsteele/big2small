@@ -63,10 +63,20 @@ DataX_CityTiles_start::
     INCBIN "out/data/city.2bpp"
 DataX_CityTiles_end::
 
+SECTION "EdgeTiles", ROMX
+DataX_EdgeTiles_start::
+    INCBIN "out/data/edge.2bpp"
+DataX_EdgeTiles_end::
+
 SECTION "FarmTiles", ROMX
 DataX_FarmTiles_start::
     INCBIN "out/data/farm.2bpp"
 DataX_FarmTiles_end::
+
+SECTION "GirderTiles", ROMX
+DataX_GirderTiles_start::
+    INCBIN "out/data/girder.2bpp"
+DataX_GirderTiles_end::
 
 SECTION "MapTiles", ROMX
 DataX_MapTiles_start::

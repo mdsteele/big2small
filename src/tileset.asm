@@ -56,7 +56,7 @@ _LoadTileset_Farm:
     COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
     SKIP_TILES $0c
     COPY_FROM_ROMX DataX_BarnTiles_start, DataX_BarnTiles_end
-    ld de, DataX_CowBlinkTiles_tile_arr
+    ld hl, DataX_CowBlinkTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_Mountain:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
@@ -67,23 +67,21 @@ _LoadTileset_Mountain:
 _LoadTileset_Seaside:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
-    ld de, DataX_OceanTiles_tile_arr
+    ld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_Sewer:
-    ;; TODO: Use different river/bridge tiles for sewer
-    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    COPY_FROM_ROMX DataX_EdgeTiles_start, DataX_EdgeTiles_end
+    SKIP_TILES $0c
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
     SKIP_TILES $08
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
-    ld de, DataX_OceanTiles_tile_arr
+    ld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_Space:
-    ;; TODO: Use different river/bridge tiles for space
-    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
-    COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
-    SKIP_TILES $08
+    COPY_FROM_ROMX DataX_GirderTiles_start, DataX_GirderTiles_end
+    SKIP_TILES $1f
     COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
-    ld de, DataX_StarsTiles_tile_arr
+    ld hl, DataX_StarsTiles_tile_arr
     jp Func_SetAnimatedTerrain
 
 ;;; @param b The TILESET_* enum value.
@@ -127,13 +125,18 @@ _AnimateTerrain_Stars:
     ld hl, DataX_StarsTiles_tile_arr
 _AnimateTerrain_Copy:
     add hl, de
-    ldw de, hl
     ;; fall through to Func_SetAnimatedTerrain
 
-;;; @param de A pointer to the tile to copy.
+;;; @param hl A pointer to the tile to copy.
 Func_SetAnimatedTerrain:
-    ld bc, sizeof_TILE
-    ld hl, Vram_BgTiles + sizeof_TILE * ANIMATED_TILE_ID
-    jp Func_MemCopy
+    ld de, Vram_BgTiles + sizeof_TILE * ANIMATED_TILE_ID
+    REPT sizeof_TILE - 1
+    ld a, [hl+]
+    ld [de], a
+    inc e
+    ENDR
+    ld a, [hl]
+    ld [de], a
+    ret
 
 ;;;=========================================================================;;;

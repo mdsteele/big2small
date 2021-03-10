@@ -142,6 +142,8 @@ DataX_BgColorPalettes_Colorsets_ptr_arr:
     DW DataX_BgColorPalettes_Autumn_cpal_arr
     ASSERT @ - .begin == 2 * COLORSET_WINTER
     DW DataX_BgColorPalettes_Winter_cpal_arr
+    ASSERT @ - .begin == 2 * COLORSET_SEWER
+    DW DataX_BgColorPalettes_Sewer_cpal_arr
     ASSERT @ - .begin == 2 * COLORSET_SPACE
     DW DataX_BgColorPalettes_Space_cpal_arr
 
@@ -318,6 +320,50 @@ DataX_BgColorPalettes_Winter_cpal_arr:
     D_COLOR 255, 255, 255
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
+    D_COLOR 0, 0, 0
+ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
+
+DataX_BgColorPalettes_Sewer_cpal_arr:
+    .begin
+    ;; Palette 0 (menu)
+    D_COLOR 255, 224, 255
+    D_COLOR 192, 0, 192
+    D_COLOR 96, 0, 96
+    D_COLOR 0, 0, 0
+    ;; Palette 1 (wood)
+    D_COLOR 216, 216, 224
+    D_COLOR 192, 128, 64
+    D_COLOR 128, 96, 32
+    D_COLOR 64, 32, 16
+    ;; Palette 2 (apple)
+    D_COLOR 216, 216, 224
+    D_COLOR 255, 0, 0
+    D_COLOR 0, 192, 0
+    D_COLOR 0, 64, 0
+    ;; Palette 3 (plants)
+    D_COLOR 216, 216, 224
+    D_COLOR 0, 255, 0
+    D_COLOR 0, 128, 0
+    D_COLOR 0, 64, 0
+    ;; Palette 4 (water)
+    D_COLOR 255, 192, 255
+    D_COLOR 128, 192, 128
+    D_COLOR 128, 96, 32
+    D_COLOR 64, 32, 0
+    ;; Palette 5 (cheese)
+    D_COLOR 216, 216, 224
+    D_COLOR 255, 192, 0
+    D_COLOR 128, 96, 0
+    D_COLOR 64, 48, 0
+    ;; Palette 6 (walls)
+    D_COLOR 216, 216, 224
+    D_COLOR 128, 192, 128
+    D_COLOR 96, 96, 128
+    D_COLOR 0, 0, 16
+    ;; Palette 7 (metal)
+    D_COLOR 216, 216, 224
+    D_COLOR 224, 192, 192
+    D_COLOR 128, 96, 96
     D_COLOR 0, 0, 0
 ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
 

@@ -99,6 +99,7 @@ G_APL RB 1  ; Apple
 G_CHS RB 1  ; Cheese
 
 ;; Special terrain:
+S_MIN RB 0  ; Terrain types less than S_MIN have no terrain action.
 S_BSH RB 1  ; Bush
 S_MTP RB 1  ; Mousetrap
 S_PPW RB 1  ; Pipe west
@@ -127,6 +128,9 @@ R_ONN RB 1  ; Ocean with shore in northern corners
 R_ONE RB 1  ; Ocean with shore in northeast corner
 R_ONW RB 1  ; Ocean with shore in northwest corner
 R_OOP RB 1  ; Open ocean
+R_EDG RB 1  ; Edge of sewer platform
+R_GRT RB 1  ; Sewer grating
+R_GDR RB 1  ; Space girder
 
 ;;; Mousehole terrain:
 M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.
@@ -174,7 +178,9 @@ W_BS3 RB 1  ; Brick wall south multi
 W_BSE RB 1  ; Brick wall south/east
 W_BSW RB 1  ; Brick wall south/west
 W_BEW RB 1  ; Brick wall east/west
+W_BE1 RB 1  ; Brick wall east single
 W_BE3 RB 1  ; Brick wall east multi
+W_BW1 RB 1  ; Brick wall west single
 W_BW3 RB 1  ; Brick wall west multi
 W_BC4 RB 1  ; Brick wall center
 
