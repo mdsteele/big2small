@@ -146,8 +146,10 @@ W_MIN RB 0  ; Terrain types from W_MIN on up are walls.
 W_RCK RB 1  ; Rock
 W_COW RB 1  ; Cow
 W_FE1 RB 1  ; Fence east end
+W_FE3 RB 1  ; Fence east with westward split
 W_FW1 RB 1  ; Fence west end
-W_FMD RB 1  ; Fence middle
+W_FW3 RB 1  ; Fence west with eastward split
+W_FNS RB 1  ; Fence north/south
 W_FNE RB 1  ; Fence north/east
 W_FNW RB 1  ; Fence north/west
 W_FSE RB 1  ; Fence south/east

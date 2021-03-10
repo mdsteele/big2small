@@ -112,8 +112,10 @@ DataX_TerrainTable:
     D_TERR W_RCK, $0c, $0e, $0d, $0f, TREE_START
     D_TERR W_COW, ANI, $6a, $69, $6b, 0
     D_TERR W_FE1, $04, $06, $05, $07, FENCE_START
+    D_TERR W_FE3, $09, $0f, $08, $0e, FENCE_START
     D_TERR W_FW1, $04, $04, $13, $05, FENCE_START
-    D_TERR W_FMD, $04, $04, $05, $05, FENCE_START
+    D_TERR W_FW3, $0d, $0b, $0c, $0a, FENCE_START
+    D_TERR W_FNS, $04, $04, $05, $05, FENCE_START
     D_TERR W_FNE, $06, EMP, $08, $0e, FENCE_START
     D_TERR W_FNW, EMP, $04, $0c, $0a, FENCE_START
     D_TERR W_FSE, $09, $0f, $07, EMP, FENCE_START
@@ -210,8 +212,10 @@ DataX_TerrainPaletteTable:
     D_PAL W_RCK, 7
     D_PAL W_COW, 6
     D_PAL W_FE1, 1
+    D_PAL W_FE3, 1
     D_PAL W_FW1, 1
-    D_PAL W_FMD, 1
+    D_PAL W_FW3, 1
+    D_PAL W_FNS, 1
     D_PAL W_FNE, 1
     D_PAL W_FNW, 1
     D_PAL W_FSE, 1
