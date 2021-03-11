@@ -463,8 +463,11 @@ _MusicStartNoteCh1_Decode:
     and %00000111
     or  %10000000
     ldh [rAUD1HIGH], a
+    jr .duration
     .skipPlaying
+    inc hl
     ;; Determine duration:
+    .duration
     bit 5, b
     jr z, _MusicStartNoteCh1_NoteTone
 _MusicStartNoteCh1_NoteSame:
@@ -511,7 +514,8 @@ _MusicStartNoteCh1_NoteRestOrHalt:
     ldh [rAUD1ENV], a
     .skipDisable
     ;; If the rest duration is zero, this is a HALT.
-    or d
+    ld a, d
+    or a
     jr nz, .rest
     ;; For a HALT, we mark the channel as inactive and return.
     ld hl, Ram_MusicActiveChannels_u8
@@ -813,7 +817,8 @@ _MusicStartNoteCh4_NoteRestOrHalt:
     ldh [rAUD4ENV], a
     .skipDisable
     ;; If the rest duration is zero, this is a HALT.
-    or d
+    ld a, d
+    or a
     jr nz, .rest
     ;; For a HALT, we mark the channel as inactive and return.
     ld hl, Ram_MusicActiveChannels_u8
