@@ -38,7 +38,21 @@ DataX_ObjTiles_start::
 DataX_ObjTiles_end::
 
 ;;;=========================================================================;;;
-;;; Terrain tiles:
+;;; Map terrain tiles:
+
+SECTION "SharedMapTiles", ROMX
+DataX_SharedMapTiles_start::
+    INCBIN "out/data/worldmap.2bpp"
+DataX_SharedMapTiles_end::
+
+SECTION "SewerMapTiles", ROMX
+DataX_SewerMapTiles_start::
+    INCBIN "out/data/sewer_map_pipe.2bpp"
+    INCBIN "out/data/sewer_map_brick.2bpp"
+DataX_SewerMapTiles_end::
+
+;;;=========================================================================;;;
+;;; Puzzle terrain tiles:
 
 SECTION "SharedTerrainTiles", ROMX
 DataX_SharedTerrainTiles_start::
@@ -77,11 +91,6 @@ SECTION "GirderTiles", ROMX
 DataX_GirderTiles_start::
     INCBIN "out/data/girder.2bpp"
 DataX_GirderTiles_end::
-
-SECTION "MapTiles", ROMX
-DataX_MapTiles_start::
-    INCBIN "out/data/worldmap.2bpp"
-DataX_MapTiles_end::
 
 SECTION "MountainTiles", ROMX
 DataX_MountainTiles_start::

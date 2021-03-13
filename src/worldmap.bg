@@ -1,6 +1,7 @@
 @BG 255 255 255 32x32
->worldmap
+>ocean
 >river
+>worldmap
 
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAABPBDBBBDBBBDBBBDBBBDBBBDBBBDBBBDBBBDBBBDBBBDBBBDBDBBBDBNAAAA
@@ -20,17 +21,17 @@ AABH                                                        BEAA
 AABH                                                        BFAA
 AABH                                                        BEAA
 AABH                                                        BFAA
-AABH  ADAD                                                  BEAA
-AABH  AD                                                    BFAA
-AABH    ADADAD                                              BEAA
-AABH  AD                    ABAB                            BFAA
-AABH  AD                        AB                          BEAA
-AABH    ADADADAD    ABAB          AB                        BFAA
-AABH  AD      ABAD  AB          ABAB                        BEAA
-AABH          AD  ADAD        ABAB                          BFAA
-AABOBK      ADABABABAB      ABAB                            BEAA
-AAAABOBCBK  ADABABABABAB                                    BFAA
-AAAAAAAABH    ABABABAB  ABABABAB                            BEAA
+AABH                                                        BEAA
+AABH                                                        BFAA
+AABH  CACACA  CACACA  CACA    CACACA                        BEAA
+AABH    CA    CA  CA  CA  CACBCA  CA                        BFAA
+AABH    CA    CACACA  CACA    CACACA                        BEAA
+AABH                CBCB          CB                        BFAA
+AABH          CB    CB          CBCB                        BEAA
+AABH                          CBCB                          BFAA
+AABOBK        CBCBCBCB      CBCB                            BEAA
+AAAABOBCBK    CBCBCBCBCB                                    BFAA
+AAAAAAAABH    CBCBCBCB  CBCBCBCB                            BEAA
 AAAAAAAABH                                                  BFAA
 AAAAAAAABOBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBCBMAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

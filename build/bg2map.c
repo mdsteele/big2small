@@ -19,6 +19,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+/*===========================================================================*/
+
+#define MAX_TILESETS 64
 
 /*===========================================================================*/
 
@@ -47,6 +52,21 @@ int from_base64(int ch) {
   }
 }
 
+char *read_tileset(void) {
+  int ch = fgetc(stdin);
+  if (ch == '\n') return NULL;
+  int index = 0;
+  char buffer[80] = {0};
+  while (index + 1 < sizeof(buffer)) {
+    ch = fgetc(stdin);
+    if (ch == EOF || ch == '\n') break;
+    buffer[index++] = ch;
+  }
+  return strcpy(calloc(index + 1, sizeof(char)), buffer);
+}
+
+/*===========================================================================*/
+
 int main(int argc, char **argv) {
   // Read header:
   int width, height;
@@ -60,16 +80,17 @@ int main(int argc, char **argv) {
   }
   if (!read_newline()) return EXIT_FAILURE;
 
-  // Skip tilesets:
-  for (int on_tileset = 1; on_tileset;) {
-    on_tileset = 0;
-    while (1) {
-      int ch = fgetc(stdin);
-      if (ch == '\n' || ch == EOF) {
-        break;
-      }
-      on_tileset = 1;
+  // Read tilesets:
+  char *tilesets[MAX_TILESETS] = {0};
+  int num_tilesets = 0;
+  while (1) {
+    char *tileset = read_tileset();
+    if (tileset == NULL) break;
+    if (num_tilesets >= MAX_TILESETS) {
+      fprintf(stderr, "too many tilesets\n");
+      return EXIT_FAILURE;
     }
+    tilesets[num_tilesets++] = tileset;
   }
 
   // Read grid:
@@ -79,14 +100,28 @@ int main(int argc, char **argv) {
       if (ch == '\n' || ch == EOF) {
         goto end_row;
       }
-      int value1 = from_base64(ch);
-      int value2 = from_base64(fgetc(stdin));
-      if (value1 < 0 || value2 < 0) {
+      int tileset_index = from_base64(ch);
+      if (tileset_index >= num_tilesets) {
+        fprintf(stderr, "tileset index %d out of range\n", tileset_index);
+        return EXIT_FAILURE;
+      }
+      const char *tileset = tilesets[tileset_index];
+      int tile_index = from_base64(fgetc(stdin));
+      if (tileset_index < 0 || tile_index < 0) {
         fputc(0x00, stdout);
-      } else if (value1 == 0) {
-        fputc(0x80 + value2, stdout);
-      } else if (value1 == 1) {
-        fputc(0xE0 + value2, stdout);
+      } else if (0 == strcmp(tileset, "ocean")) {
+        fputc(0x68, stdout);
+      } else if (0 == strcmp(tileset, "river")) {
+        fputc(0xE0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "sewer_map_brick")) {
+        fputc(0xD0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "sewer_map_pipe")) {
+        fputc(0xC0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "worldmap")) {
+        fputc(0x80 + tile_index, stdout);
+      } else {
+        fprintf(stderr, "unknown tileset: %s\n", tileset);
+        return EXIT_FAILURE;
       }
     }
     if (!read_newline()) return EXIT_FAILURE;

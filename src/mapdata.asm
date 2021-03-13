@@ -18,41 +18,23 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/hardware.inc"
-INCLUDE "src/save.inc"
-INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "WorldTileMap", ROMX
+SECTION "ForestTileMap", ROMX
+DataX_ForestTileMap_start::
+    INCBIN "out/data/forest_map.map"
+ASSERT @ - DataX_ForestTileMap_start == SCRN_X_B * (SCRN_Y_B - 2)
 
+SECTION "SewerTileMap", ROMX
+DataX_SewerTileMap_start::
+    INCBIN "out/data/sewer_map.map"
+ASSERT @ - DataX_SewerTileMap_start == SCRN_X_B * (SCRN_Y_B - 2)
+
+SECTION "WorldTileMap", ROMX
 DataX_WorldTileMap_start::
     INCBIN "out/data/worldmap.map"
 DataX_WorldTileMap_end::
 ASSERT @ - DataX_WorldTileMap_start == SCRN_VX_B * SCRN_VY_B
-
-;;;=========================================================================;;;
-
-SECTION "WorldMapData", ROM0
-
-;; BG map row/col positions for each puzzle node.
-Data_PuzzleMapPositions_u8_pair_arr::
-    DB 28, 6
-    DB 25, 6
-    DB 25, 8
-    DB 25, 11
-    DB 23, 8
-    DB 23, 3
-    DB 25, 3
-    DB 20, 3
-    DB 20, 7
-    DB 18, 5
-    DB 18, 8
-    DB 18, 11
-    DB 18, 14
-    DB 18, 17
-    DB 18, 20
-    DB 18, 23
-    DB 18, 26
-ASSERT @ - Data_PuzzleMapPositions_u8_pair_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;

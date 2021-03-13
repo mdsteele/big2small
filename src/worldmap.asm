@@ -17,9 +17,11 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/areamap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
+INCLUDE "src/tileset.inc"
 INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
@@ -55,51 +57,12 @@ Main_WorldMapScreen::
     call Func_SaveFile
     .notSolved
     ;; Copy the tile data to VRAM.
-    ld hl, Vram_SharedTiles  ; dest
-    COPY_FROM_ROMX DataX_MapTiles_start, DataX_MapTiles_end
-    ld hl, Vram_SharedTiles + $60 * sizeof_TILE  ; dest
-    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    ld b, TILESET_MAP_WORLD  ; param: tileset
+    call Func_LoadTileset
     ;; Copy the BG tile map to VRAM.
     ld hl, Vram_BgMap  ; dest
     COPY_FROM_ROMX DataX_WorldTileMap_start, DataX_WorldTileMap_end
     ;; TODO: Load color palette numbers into the BG tile map.
-    ;; TODO: Draw map paths between unlocked puzzles.
-_WorldMapScreen_DrawUnlockedNodes:
-    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
-    ld de, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
-    .puzzLoop
-    ;; Check if puzzle number e is unlocked.
-    ld a, [de]
-    bit STATB_UNLOCKED, a
-    jr z, .locked
-    ;; Make hl point to the position entry for puzzle number e.
-    ldb bc, e
-    sla c
-    ASSERT NUM_PUZZLES * 2 < $100
-    ld hl, Data_PuzzleMapPositions_u8_pair_arr
-    add hl, bc
-    ;; Load position row into a and col into c.
-    ld a, [hl+]
-    ld c, [hl]
-    ;; Make hl point to the VRAM BG map cell for the position.
-    rlca
-    swap a
-    ld b, a
-    and %00000011
-    add HIGH(Vram_BgMap)
-    ld h, a
-    ld a, b
-    and %11100000
-    ASSERT LOW(Vram_BgMap) == 0
-    add c
-    ld l, a
-    ;; Draw the puzzle node into VRAM.
-    ld [hl], PUZZLE_NODE_TILEID
-    ;; Move on to check the next puzzle.
-    .locked
-    inc e
-    ld a, e
-    if_lt NUM_PUZZLES, jr, .puzzLoop
 _WorldMapScreen_SetUpObjects:
     ;; Set up objects.
     call Func_ClearOam
@@ -109,7 +72,7 @@ _WorldMapScreen_SetUpObjects:
     ld hl, DataX_RestYe_song
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
-    call Func_ScrollMapToCurrentPuzzle
+    call Func_ScrollMapToCurrentArea
     call Func_PerformDma
     call Func_FadeIn
 _WorldMapScreen_RunLoop:
@@ -122,24 +85,46 @@ _WorldMapScreen_RunLoop:
 _WorldMapScreen_StartNextPuzzle:
     call Func_FadeOut
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ld c, a  ; current puzzle number
-    jp Main_BeginPuzzle
+    ld c, a  ; param: puzzle number
+    call Func_GetPuzzleArea_c  ; param: area
+    jp Main_AreaMapScreen
 
 ;;;=========================================================================;;;
 
-;;; Set rSCX and rSCY to try to center the current puzzle node on the screen,
+Data_AreaPositions_u8_pair_arr:
+    .begin
+    ASSERT @ - .begin == 2 * AREA_FOREST
+    DB 28, 6
+    ASSERT @ - .begin == 2 * AREA_FARM
+    DB 28, 6
+    ASSERT @ - .begin == 2 * AREA_MOUNTAIN
+    DB 28, 6
+    ASSERT @ - .begin == 2 * AREA_SEASIDE
+    DB 28, 6
+    ASSERT @ - .begin == 2 * AREA_SEWER
+    DB 28, 6
+    ASSERT @ - .begin == 2 * AREA_CITY
+    DB 28, 6
+    ASSERT @ - .begin == 2 * AREA_SPACE
+    DB 28, 6
+ASSERT @ - .begin == 2 * NUM_AREAS
+
+;;; Set rSCX and rSCY to try to center the current area node on the screen,
 ;;; while clamping the camera position.
-Func_ScrollMapToCurrentPuzzle:
+Func_ScrollMapToCurrentArea:
     ;; Make hl point to the current puzzle's position entry.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ASSERT NUM_PUZZLES * 2 < $100
+    ld c, a
+    call Func_GetPuzzleArea_c
+    ld a, c
+    ASSERT NUM_AREAS * 2 < $100
     rlca
-    add LOW(Data_PuzzleMapPositions_u8_pair_arr)
+    add LOW(Data_AreaPositions_u8_pair_arr)
     ld l, a
-    ld a, HIGH(Data_PuzzleMapPositions_u8_pair_arr)
+    ld a, HIGH(Data_AreaPositions_u8_pair_arr)
     adc 0
     ld h, a
-_ScrollMapToCurrentPuzzle_ScrollY:
+_ScrollMapToCurrentArea_ScrollY:
     ;; Store row * 8 + 4 into a.
     ld a, [hl+]
     swap a
@@ -157,7 +142,7 @@ _ScrollMapToCurrentPuzzle_ScrollY:
     sub SCRN_Y / 2
     .setPos
     ldh [rSCY], a
-_ScrollMapToCurrentPuzzle_ScrollX:
+_ScrollMapToCurrentArea_ScrollX:
     ;; Store col * 8 + 4 into a.
     ld a, [hl]
     swap a

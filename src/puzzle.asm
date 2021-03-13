@@ -111,7 +111,7 @@ Ram_MoveDirs_u8:
 
 ;;; A counter that is incremented once per frame and that can be used to drive
 ;;; looping animations.
-Ram_AnimationClock_u8:
+Ram_PuzzleAnimationClock_u8:
     DB
 
 ;;; The number of frames left until the currently-moving animal reaches the
@@ -190,7 +190,7 @@ _BeginPuzzle_Init:
     call Func_LoadPuzzleTerrainIntoVram
     ;; Initialize state.
     xor a
-    ld [Ram_AnimationClock_u8], a
+    ld [Ram_PuzzleAnimationClock_u8], a
     ld [Ram_WalkingCountdown_u8], a
     ld [Ram_WalkingAction_u8], a
     ld a, NO_CELL_TO_UPDATE
@@ -873,7 +873,7 @@ Func_UpdateArrowObjs:
     ld [Ram_ArrowE_oama + OAMA_Y], a
     ld [Ram_ArrowW_oama + OAMA_Y], a
     ;; Store (clock % 32 >= 16 ? 1 : 0) in e.
-    ld a, [Ram_AnimationClock_u8]
+    ld a, [Ram_PuzzleAnimationClock_u8]
     and %00010000
     swap a
     ld e, a
@@ -945,7 +945,7 @@ Func_UpdatePuzzleTerrain:
     ld [Ram_TerrainCellToUpdate_u8], a
     .doneUpdateCell
     ;; Animate terrain:
-    ld hl, Ram_AnimationClock_u8
+    ld hl, Ram_PuzzleAnimationClock_u8
     inc [hl]
     ld c, [hl]  ; animation clock
     ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]

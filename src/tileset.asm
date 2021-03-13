@@ -36,21 +36,41 @@ SECTION "TilesetFunctions", ROM0
 ;;; Populates Vram_SharedTiles with tile data for the specified tileset.
 ;;; @param b The TILESET_* enum value.
 Func_LoadTileset::
-    push bc
     ld hl, Vram_SharedTiles  ; dest
+    ld a, b
+    if_ge TILESET_PUZZ_MIN, jr, _LoadTileset_Puzz
+_LoadTileset_Map:
+    push af
+    COPY_FROM_ROMX DataX_SharedMapTiles_start, DataX_SharedMapTiles_end
+    SKIP_TILES $0c
+    pop af
+    if_eq TILESET_MAP_SEWER, jr, _LoadTileset_MapSewer
+    if_eq TILESET_MAP_WORLD, jr, _LoadTileset_MapWorld
+_LoadTileset_Puzz:
+    push af
     COPY_FROM_ROMX DataX_SharedTerrainTiles_start, DataX_SharedTerrainTiles_end
     pop af
-    if_eq TILESET_CITY, jr, _LoadTileset_City
-    if_eq TILESET_FARM, jr, _LoadTileset_Farm
-    if_eq TILESET_MOUNTAIN, jr, _LoadTileset_Mountain
-    if_eq TILESET_SEASIDE, jp, _LoadTileset_Seaside
-    if_eq TILESET_SEWER, jp, _LoadTileset_Sewer
-    if_eq TILESET_SPACE, jp, _LoadTileset_Space
-_LoadTileset_City:
+    if_eq TILESET_PUZZ_CITY, jr, _LoadTileset_PuzzCity
+    if_eq TILESET_PUZZ_FARM, jr, _LoadTileset_PuzzFarm
+    if_eq TILESET_PUZZ_MOUNTAIN, jp, _LoadTileset_PuzzMountain
+    if_eq TILESET_PUZZ_SEASIDE, jp, _LoadTileset_PuzzSeaside
+    if_eq TILESET_PUZZ_SEWER, jp, _LoadTileset_PuzzSewer
+    if_eq TILESET_PUZZ_SPACE, jp, _LoadTileset_PuzzSpace
+_LoadTileset_MapSewer:
+    SKIP_TILES $30
+    COPY_FROM_ROMX DataX_SewerMapTiles_start, DataX_SewerMapTiles_end
+    ld hl, DataX_OceanTiles_tile_arr
+    jp Func_SetAnimatedTerrain
+_LoadTileset_MapWorld:
+    SKIP_TILES $50
+    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    ld hl, DataX_OceanTiles_tile_arr
+    jp Func_SetAnimatedTerrain
+_LoadTileset_PuzzCity:
     SKIP_TILES $20
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
     ret
-_LoadTileset_Farm:
+_LoadTileset_PuzzFarm:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     SKIP_TILES $10
     COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
@@ -58,18 +78,18 @@ _LoadTileset_Farm:
     COPY_FROM_ROMX DataX_BarnTiles_start, DataX_BarnTiles_end
     ld hl, DataX_CowBlinkTiles_tile_arr
     jp Func_SetAnimatedTerrain
-_LoadTileset_Mountain:
+_LoadTileset_PuzzMountain:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
     SKIP_TILES $08
     COPY_FROM_ROMX DataX_MountainTiles_start, DataX_MountainTiles_end
     ret
-_LoadTileset_Seaside:
+_LoadTileset_PuzzSeaside:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
     ld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
-_LoadTileset_Sewer:
+_LoadTileset_PuzzSewer:
     COPY_FROM_ROMX DataX_EdgeTiles_start, DataX_EdgeTiles_end
     SKIP_TILES $0c
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
@@ -77,7 +97,7 @@ _LoadTileset_Sewer:
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
     ld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
-_LoadTileset_Space:
+_LoadTileset_PuzzSpace:
     COPY_FROM_ROMX DataX_GirderTiles_start, DataX_GirderTiles_end
     SKIP_TILES $1f
     COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
@@ -88,10 +108,12 @@ _LoadTileset_Space:
 ;;; @param c The animation counter (0-255).
 Func_AnimateTerrain::
     ld a, b
-    if_eq TILESET_FARM, jr, _AnimateTerrain_Cow
-    if_eq TILESET_SEASIDE, jr, _AnimateTerrain_Ocean
-    if_eq TILESET_SEWER, jr, _AnimateTerrain_Ocean
-    if_eq TILESET_SPACE, jr, _AnimateTerrain_Stars
+    if_eq TILESET_MAP_SEWER, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_MAP_WORLD, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_PUZZ_FARM, jr, _AnimateTerrain_Cow
+    if_eq TILESET_PUZZ_SEASIDE, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_PUZZ_SEWER, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_PUZZ_SPACE, jr, _AnimateTerrain_Stars
     ret
 _AnimateTerrain_Cow:
     ld a, c
