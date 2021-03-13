@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
         fputc(0xD0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "sewer_map_pipe")) {
         fputc(0xC0 + tile_index, stdout);
-      } else if (0 == strcmp(tileset, "worldmap")) {
+      } else if (0 == strcmp(tileset, "shared_map")) {
         fputc(0x80 + tile_index, stdout);
       } else {
         fprintf(stderr, "unknown tileset: %s\n", tileset);

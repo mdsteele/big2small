@@ -23,17 +23,17 @@ INCLUDE "src/hardware.inc"
 
 SECTION "ForestTileMap", ROMX
 DataX_ForestTileMap_start::
-    INCBIN "out/data/forest_map.map"
+    INCBIN "out/data/maps/forest.map"
 ASSERT @ - DataX_ForestTileMap_start == SCRN_X_B * (SCRN_Y_B - 2)
 
 SECTION "SewerTileMap", ROMX
 DataX_SewerTileMap_start::
-    INCBIN "out/data/sewer_map.map"
+    INCBIN "out/data/maps/sewer.map"
 ASSERT @ - DataX_SewerTileMap_start == SCRN_X_B * (SCRN_Y_B - 2)
 
 SECTION "WorldTileMap", ROMX
 DataX_WorldTileMap_start::
-    INCBIN "out/data/worldmap.map"
+    INCBIN "out/data/maps/world.map"
 DataX_WorldTileMap_end::
 ASSERT @ - DataX_WorldTileMap_start == SCRN_VX_B * SCRN_VY_B
 

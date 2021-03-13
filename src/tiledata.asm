@@ -19,22 +19,22 @@
 
 SECTION "BgTiles", ROMX
 DataX_BgTiles_start::
-    INCBIN "out/data/font.2bpp"
-    INCBIN "out/data/portrait.2bpp"
-    INCBIN "out/data/porvar.2bpp"
-    INCBIN "out/data/cow.2bpp"
-    INCBIN "out/data/devices.2bpp"
+    INCBIN "out/data/tiles/font.2bpp"
+    INCBIN "out/data/tiles/portrait.2bpp"
+    INCBIN "out/data/tiles/porvar.2bpp"
+    INCBIN "out/data/tiles/cow.2bpp"
+    INCBIN "out/data/tiles/devices.2bpp"
 DataX_BgTiles_end::
 
 ;;;=========================================================================;;;
 
 SECTION "ObjTiles", ROMX
 DataX_ObjTiles_start::
-    INCBIN "out/data/elephant.2bpp"
-    INCBIN "out/data/goat.2bpp"
-    INCBIN "out/data/mouse.2bpp"
-    INCBIN "out/data/cursor.2bpp"
-    INCBIN "out/data/smoke.2bpp"
+    INCBIN "out/data/tiles/elephant.2bpp"
+    INCBIN "out/data/tiles/goat.2bpp"
+    INCBIN "out/data/tiles/mouse.2bpp"
+    INCBIN "out/data/tiles/cursor.2bpp"
+    INCBIN "out/data/tiles/smoke.2bpp"
 DataX_ObjTiles_end::
 
 ;;;=========================================================================;;;
@@ -42,13 +42,13 @@ DataX_ObjTiles_end::
 
 SECTION "SharedMapTiles", ROMX
 DataX_SharedMapTiles_start::
-    INCBIN "out/data/worldmap.2bpp"
+    INCBIN "out/data/tiles/shared_map.2bpp"
 DataX_SharedMapTiles_end::
 
 SECTION "SewerMapTiles", ROMX
 DataX_SewerMapTiles_start::
-    INCBIN "out/data/sewer_map_pipe.2bpp"
-    INCBIN "out/data/sewer_map_brick.2bpp"
+    INCBIN "out/data/tiles/sewer_map_pipe.2bpp"
+    INCBIN "out/data/tiles/sewer_map_brick.2bpp"
 DataX_SewerMapTiles_end::
 
 ;;;=========================================================================;;;
@@ -56,55 +56,55 @@ DataX_SewerMapTiles_end::
 
 SECTION "SharedTerrainTiles", ROMX
 DataX_SharedTerrainTiles_start::
-    INCBIN "out/data/goal.2bpp"
-    INCBIN "out/data/pipe.2bpp"
-    INCBIN "out/data/teleporter.2bpp"
-    INCBIN "out/data/forest.2bpp"
+    INCBIN "out/data/tiles/goal.2bpp"
+    INCBIN "out/data/tiles/pipe.2bpp"
+    INCBIN "out/data/tiles/teleporter.2bpp"
+    INCBIN "out/data/tiles/forest.2bpp"
 DataX_SharedTerrainTiles_end::
 
 SECTION "BarnTiles", ROMX
 DataX_BarnTiles_start::
-    INCBIN "out/data/barn.2bpp"
+    INCBIN "out/data/tiles/barn.2bpp"
 DataX_BarnTiles_end::
 
 SECTION "BridgeTiles", ROMX
 DataX_BridgeTiles_start::
-    INCBIN "out/data/bridge.2bpp"
+    INCBIN "out/data/tiles/bridge.2bpp"
 DataX_BridgeTiles_end::
 
 SECTION "CityTiles", ROMX
 DataX_CityTiles_start::
-    INCBIN "out/data/city.2bpp"
+    INCBIN "out/data/tiles/city.2bpp"
 DataX_CityTiles_end::
 
 SECTION "EdgeTiles", ROMX
 DataX_EdgeTiles_start::
-    INCBIN "out/data/edge.2bpp"
+    INCBIN "out/data/tiles/edge.2bpp"
 DataX_EdgeTiles_end::
 
 SECTION "FarmTiles", ROMX
 DataX_FarmTiles_start::
-    INCBIN "out/data/farm.2bpp"
+    INCBIN "out/data/tiles/farm.2bpp"
 DataX_FarmTiles_end::
 
 SECTION "GirderTiles", ROMX
 DataX_GirderTiles_start::
-    INCBIN "out/data/girder.2bpp"
+    INCBIN "out/data/tiles/girder.2bpp"
 DataX_GirderTiles_end::
 
 SECTION "MountainTiles", ROMX
 DataX_MountainTiles_start::
-    INCBIN "out/data/mountain.2bpp"
+    INCBIN "out/data/tiles/mountain.2bpp"
 DataX_MountainTiles_end::
 
 SECTION "RiverTiles", ROMX
 DataX_RiverTiles_start::
-    INCBIN "out/data/river.2bpp"
+    INCBIN "out/data/tiles/river.2bpp"
 DataX_RiverTiles_end::
 
 SECTION "SpaceTiles", ROMX
 DataX_SpaceTiles_start::
-    INCBIN "out/data/space.2bpp"
+    INCBIN "out/data/tiles/space.2bpp"
 DataX_SpaceTiles_end::
 
 ;;;=========================================================================;;;
@@ -112,14 +112,14 @@ DataX_SpaceTiles_end::
 
 SECTION "CowBlinkTiles", ROMX
 DataX_CowBlinkTiles_tile_arr::
-    INCBIN "out/data/cowblink.2bpp"
+    INCBIN "out/data/tiles/cowblink.2bpp"
 
 SECTION "OceanTiles", ROMX
 DataX_OceanTiles_tile_arr::
-    INCBIN "out/data/ocean.2bpp"
+    INCBIN "out/data/tiles/ocean.2bpp"
 
 SECTION "StarsTiles", ROMX
 DataX_StarsTiles_tile_arr::
-    INCBIN "out/data/stars.2bpp"
+    INCBIN "out/data/tiles/stars.2bpp"
 
 ;;;=========================================================================;;;
