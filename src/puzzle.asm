@@ -238,7 +238,6 @@ _BeginPuzzle_Init:
     ld l, a     ; ptr
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
-    call Func_PerformDma
     xor a
     ldh [rSCX], a
     ldh [rSCY], a
@@ -376,7 +375,7 @@ Func_UpdateMoveDirs:
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld h, HIGH(Ram_PuzzleState_puzz)
     ;; We'll track the new value for Ram_MoveDirs_u8 in b.  To start with,
-	;; initialize it to allow all four dirations.
+    ;; initialize it to allow all four dirations.
     ld b, DIRF_NORTH | DIRF_SOUTH | DIRF_EAST | DIRF_WEST
     ld c, l
 _UpdateMoveDirs_West:
@@ -520,7 +519,7 @@ _IsBlocked_Yes:
 
 ;;;=========================================================================;;;
 
-;;; Updates the OAMA struct for the currently selected animal.
+;;; Updates the shadow OAMA struct for the currently selected animal.
 Func_UpdateSelectedAnimalObjs:
     ld a, [Ram_SelectedAnimal_u8]
     if_eq ANIMAL_MOUSE, jp, _UpdateSelectedAnimalObjs_Mouse
@@ -1406,9 +1405,9 @@ Main_Victory:
     ;; Run outro dialog.
     ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr
     call Func_RunDialog
-    ;; Fade out and return to world map.
+    ;; Fade out and return to the area map.
     call Func_FadeOut
-    ld c, 1  ; is victory (1=true)
-    jp Main_WorldMapScreen
+    ld c, 1  ; param: is victory (1=true)
+    jp Main_AreaMapResume
 
 ;;;=========================================================================;;;

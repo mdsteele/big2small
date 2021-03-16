@@ -325,7 +325,7 @@ Func_UpdateSfx1:
     or a
     ret z
     ;; Decrement the number of remaining frames.  If it's still nonzero, we're
-	;; done.
+    ;; done.
     dec a
     ld [Ram_AudioCh1_chan + CHAN_SfxFrames_u8], a
     ret nz
@@ -387,7 +387,7 @@ Func_UpdateSfx4:
     or a
     ret z
     ;; Decrement the number of remaining frames.  If it's still nonzero, we're
-	;; done.
+    ;; done.
     dec a
     ld [Ram_AudioCh4_chan + CHAN_SfxFrames_u8], a
     ret nz

@@ -35,6 +35,7 @@ DataX_ObjTiles_start::
     INCBIN "out/data/tiles/mouse.2bpp"
     INCBIN "out/data/tiles/cursor.2bpp"
     INCBIN "out/data/tiles/smoke.2bpp"
+    INCBIN "out/data/tiles/mini.2bpp"
 DataX_ObjTiles_end::
 
 ;;;=========================================================================;;;

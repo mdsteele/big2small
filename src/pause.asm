@@ -182,9 +182,9 @@ _PauseMenu_QuitPuzzle:
     ;; Disable LY=LYC interrupt.
     ld a, IEF_VBLANK
     ldh [rIE], a
-    ;; Return to map screen.
+    ;; Return to the area map screen.
     ld c, 0  ; is victory (0=false)
-    jp Main_WorldMapScreen
+    jp Main_AreaMapResume
 
 _PauseMenu_ResetPuzzle:
     call Func_FadeOut

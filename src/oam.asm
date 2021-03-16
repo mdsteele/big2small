@@ -104,7 +104,7 @@ DataX_DmaCode_start:
     ld a, HIGH(Ram_ShadowOam_start)
     ldh [rDMA], a  ; Start DMA transfer.
     ;; We need to wait 160 microseconds for the transfer to complete; the
-	;; following loop takes exactly that long.
+    ;; following loop takes exactly that long.
     ld a, 40
     .loop
     dec a

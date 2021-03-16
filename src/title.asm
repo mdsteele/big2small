@@ -143,7 +143,7 @@ _TitleScreen_LoadFile:
     ld b, a  ; save file number
     call Func_LoadFile
     ld c, 0  ; is victory (0=false)
-    jp Main_WorldMapScreen
+    jp Main_AreaMapResume
 
 _TitleScreen_EraseFile:
     ;; Change the menu text to indicate that the file is empty.
@@ -200,7 +200,7 @@ FILE_NUMBER = FILE_NUMBER + 1
 
 ;;; @param b The menu item number.
 ;;; @return hl A pointer to the first BG map tile of the menu item.
-;;; @preserves bc
+;;; @preserve bc
 Func_GetTitleMenuItemPtr_hl:
     ;; Store SCRN_VX_B * b in de.
     ASSERT TITLE_MENU_NUM_ITEMS < 8

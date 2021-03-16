@@ -95,11 +95,12 @@ NODE_Trail_u8_arr   RB 11
 ;;;   the special EXIT_NODE value if following this link should exit the area.
 NODE_Prev_u8        RB 1
 ;;; Next: Describes how to reach the next node.  This is encoded exactly as
-;;;   for the Prev field, except that the Next field may be zero if there is no
-;;;   next node.
+;;;   for the Prev field, except that the whole field may be zero if there is
+;;;   no next node.
 NODE_Next_u8        RB 1
 ;;; Bonus: Describes how to reach this node's bonus node, if any.  This is
-;;;   encoded exactly as for the Next field.
+;;;   encoded exactly as for the Next field, except that the special EXIT_NODE
+;;;   value may not be used for the node index.
 NODE_Bonus_u8       RB 1
 ;;; Title: An 16-character string containing the puzzle title, padded with
 ;;;   spaces on either side so that the title is centered.

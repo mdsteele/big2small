@@ -33,29 +33,7 @@ PUZZLE_NODE_TILEID EQU $82
 SECTION "WorldMapFunctions", ROM0
 
 ;;; @prereq LCD is off.
-;;; @param c 1 if current puzzle was just solved, 0 otherwise.
 Main_WorldMapScreen::
-    ;; If the current puzzle was just solved, mark it as solved and the next
-    ;; puzzle as unlocked.
-    bit 0, c
-    jr z, .notSolved
-    ld hl, Ram_Progress_file + FILE_CurrentPuzzleNumber_u8
-    ldb de, [hl]
-    inc [hl]
-    ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
-    add hl, de
-    bit STATB_SOLVED, [hl]
-    jr nz, .alreadySolved
-    set STATB_SOLVED, [hl]
-    ld a, [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8]
-    add 1
-    daa
-    ld [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8], a
-    .alreadySolved
-    inc hl
-    set STATB_UNLOCKED, [hl]
-    call Func_SaveFile
-    .notSolved
     ;; Copy the tile data to VRAM.
     ld b, TILESET_MAP_WORLD  ; param: tileset
     call Func_LoadTileset
@@ -73,7 +51,6 @@ _WorldMapScreen_SetUpObjects:
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
     call Func_ScrollMapToCurrentArea
-    call Func_PerformDma
     call Func_FadeIn
 _WorldMapScreen_RunLoop:
     call Func_UpdateAudio
@@ -87,7 +64,7 @@ _WorldMapScreen_StartNextPuzzle:
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     ld c, a  ; param: puzzle number
     call Func_GetPuzzleArea_c  ; param: area
-    jp Main_AreaMapScreen
+    jp Main_AreaMapEnter
 
 ;;;=========================================================================;;;
 

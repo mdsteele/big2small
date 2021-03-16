@@ -71,7 +71,7 @@ Func_FadeIn::
     .loop1
     push bc
     call Func_UpdateAudio
-    call Func_WaitForVBlank
+    call Func_WaitForVBlankAndPerformDma
     pop bc
     dec b
     jr nz, .loop1
@@ -98,7 +98,7 @@ Func_FadeIn::
 ;;; @prereq LCD is on.
 Func_FadeOut::
     call Func_UpdateAudio
-    call Func_WaitForVBlank
+    call Func_WaitForVBlankAndPerformDma
     ld a, %10010000
     ldh [rBGP], a
     ldh [rOBP0], a
