@@ -174,9 +174,7 @@ Func_UpdateAudio::
     jp nz, _UpdateAudio_KeepPlaying
 _UpdateAudio_LoadAndExecOpcode:
     ld hl, Ram_MusicOpcode_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
 _UpdateAudio_ExecOpcode:
     ld a, [hl]
     bit 6, a
@@ -238,9 +236,7 @@ _UpdateAudio_ExecOpcodePlay:
     ;; Store ptr to section table in hl.
     push hl
     ld hl, Ram_MusicSectTable_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Load section.
     add hl, bc
     ld a, [hl+]
@@ -331,9 +327,7 @@ Func_UpdateSfx1:
     ret nz
     ;; Load pointer to next SFX block into hl.
     ld hl, Ram_AudioCh1_chan + CHAN_NextSfx_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Switch ROM bank.
     ld a, [Ram_AudioCh1_chan + CHAN_SfxBank_u8]
 _UpdateSfx1_SwitchBank:
@@ -393,9 +387,7 @@ Func_UpdateSfx4:
     ret nz
     ;; Load pointer to next SFX block into hl.
     ld hl, Ram_AudioCh4_chan + CHAN_NextSfx_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Switch ROM bank.
     ld a, [Ram_AudioCh4_chan + CHAN_SfxBank_u8]
 _UpdateSfx4_SwitchBank:
@@ -437,9 +429,7 @@ Func_MusicKeepPlayingCh1:
 Func_MusicStartNoteCh1:
     ;; Copy the pointer to the start of the next note into hl.
     ld hl, Ram_AudioCh1_chan + CHAN_NextNote_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
 _MusicStartNoteCh1_Decode:
     ld a, [hl+]
     bit 7, a
@@ -489,9 +479,7 @@ _MusicStartNoteCh1_NoteInst:
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]
@@ -546,9 +534,7 @@ Func_MusicKeepPlayingCh2:
 Func_MusicStartNoteCh2:
     ;; Copy the pointer to the start of the next note into hl.
     ld hl, Ram_AudioCh2_chan + CHAN_NextNote_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
 _MusicStartNoteCh2_Decode:
     ld a, [hl+]
     bit 7, a
@@ -589,9 +575,7 @@ _MusicStartNoteCh2_NoteInst:
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]
@@ -640,9 +624,7 @@ Func_MusicKeepPlayingCh3:
 Func_MusicStartNoteCh3:
     ;; Copy the pointer to the start of the next note into hl.
     ld hl, Ram_AudioCh3_chan + CHAN_NextNote_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
 _MusicStartNoteCh3_Decode:
     ld a, [hl+]
     bit 7, a
@@ -686,18 +668,14 @@ _MusicStartNoteCh3_NoteInst:
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]
     ld [Ram_AudioCh3_chan + CHAN_Instrument_inst + INST_Envelope_u8], a
     inc hl  ; Skip INST_Effect_u8 (unused for ch3)
     ;; Store the pointer to the WAVE struct in hl.
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; We must disable the channel before writing to wave RAM.
     xor a
     ldh [rAUD3ENA], a
@@ -751,9 +729,7 @@ Func_MusicKeepPlayingCh4:
 Func_MusicStartNoteCh4:
     ;; Copy the pointer to the start of the next note into hl.
     ld hl, Ram_AudioCh4_chan + CHAN_NextNote_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
 _MusicStartNoteCh4_Decode:
     ld a, [hl+]
     bit 7, a
@@ -794,9 +770,7 @@ _MusicStartNoteCh4_NoteInst:
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
     ld hl, Ram_MusicInstTable_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Load instrument.
     add hl, bc
     ld a, [hl+]

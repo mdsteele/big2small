@@ -107,6 +107,32 @@ ENDM
 
 ;;;=========================================================================;;;
 
+;;; If hl points to a 2-byte little-endian value stored in memory (such as
+;;; another pointer), this reads that value into the specified 16-bit register.
+;;; The a and hl registers are destroyed in the process.
+;;;
+;;; Examples:
+;;;     deref de, hl  ; stores [hl] in e and [hl+1] in d, destroying a and hl
+;;;     deref hl, hl  ; replaces hl with the value hl pointed to, destroying a
+;;;     deref hl      ; shorthand for "deref hl, hl"
+deref: MACRO
+    IF _NARG < 1
+    FAIL "Too few arguments to deref macro"
+    ELIF _NARG == 1
+    STATIC_ASSERT "\1" == "hl"
+    ld a, [hl+]
+    ld HIGH(hl), [hl]
+    ld LOW(hl), a
+    ELIF _NARG == 2
+    STATIC_ASSERT "\2" == "hl"
+    ld a, [hl+]
+    ld HIGH(\1), [hl]
+    ld LOW(\1), a
+    ELSE
+    FAIL "Too many arguments to deref macro"
+    ENDC
+ENDM
+
 ;;; Loads an 8-bit register into a 16-bit register (using two ld instructions).
 ;;;
 ;;; Examples:

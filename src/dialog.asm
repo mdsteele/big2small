@@ -58,9 +58,7 @@ Func_RunDialog::
     ;; Read the banked pointer that hl points to.
     ld a, [hl+]
     ld [Ram_DialogBank_u8], a
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Read the first portrait number from the DLOG struct.  If this is a null
     ;; dialog, return immediately.
     romb [Ram_DialogBank_u8]
@@ -116,9 +114,7 @@ _RunDialog_StartNextText:
     call Func_ClearDialogText
     ;; Load the pointer to the next DLOG frame into hl.
     ld hl, Ram_DialogNext_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     ;; Read the next portrait number.  If there's no more dialog, start
     ;; hiding the window.
     romb [Ram_DialogBank_u8]

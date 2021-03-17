@@ -105,9 +105,7 @@ FuncX_SetBgColorPalettes::
     ld b, 0
     ld hl, DataX_BgColorPalettes_Colorsets_ptr_arr
     add hl, bc
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
 _SetBgColorPalettes_BgPalettes:
     ;; Transfer BG color palette data.
     ld a, BCPSF_AUTOINC

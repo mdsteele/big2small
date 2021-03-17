@@ -45,12 +45,14 @@ Ram_AreaMapAnimationClock_u8:
 ;;; The tileset for the current area map (using the TILESET_* enum values).
 Ram_AreaMapTileset_u8:
     DB
-
 ;;; The puzzle number for node zero of this area.  Each node in the area has a
 ;;; puzzle number equal to the node index plus this number.
 Ram_AreaMapFirstPuzzle_u8:
     DB
-
+;;; A pointer to the start of the current area's exit trail array in
+;;; BANK("AreaData").
+Ram_AreaMapExitTrail_u8_arr_ptr:
+    DW
 ;;; A pointer to the start of the NODE array in BANK("AreaData") for the
 ;;; current area.
 Ram_AreaMapNodes_node_arr_ptr:
@@ -63,9 +65,30 @@ Ram_AreaMapCurrentNode_u8:
 ;;; The BG tile row on the area map where the avatar is currently located.
 Ram_AreaMapAvatarRow_u8:
     DB
-
 ;;; The BG tile column on the area map where the avatar is currently located.
-Ram_AreaMapAvatarCol_u8:
+;;; This can be -1 if the avatar walks off the left side of the screen.
+Ram_AreaMapAvatarCol_i8:
+    DB
+;;; The direction that the avatar is facing (one of the TRAIL_* constants).
+Ram_AreaMapAvatarFacing_u8:
+    DB
+;;; How many pixels backwards along its facing direction to draw the avatar
+;;; from its row/col tile.
+Ram_AreaMapAvatarOffset_u8:
+    DB
+
+;;; The trail that the avatar is currently following, if we are in
+;;; Main_AreaMapFollowTrail.  This will be a possibly-reversed copy of a node
+;;; trail or area exit trail.
+Ram_AreaMapWalkingTrail_u8_arr:
+    DS MAX_TRAIL_LENGTH
+;;; The index of the entry in Ram_AreaMapWalkingTrail_u8_arr that the avatar is
+;;; currently traversing.
+Ram_AreaMapWalkingIndex_u8:
+    DB
+;;; The node index that the avatar is walking on a trail towards (or EXIT_NODE
+;;; if the avatar is leaving the area map).
+Ram_AreaMapWalkingDestinationNode_u8:
     DB
 
 ;;;=========================================================================;;;
@@ -83,11 +106,34 @@ Main_AreaMapEnter::
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8
     ldh [rLCDC], a
     ;; Unlock the first node if needed.
-    ld c, 0  ; param: node index to unlock
+    ld c, 0  ; param: node index
     call Func_UnlockNode
+_AreaMapEnter_PositionAvatar:
+    ;; Make hl point to the area's first NODE struct.
+    ld c, 0  ; param: node index
+    call Func_GetPointerToNode_hl
+    ;; Position the avatar at the first node.
+    ASSERT NODE_Row_u8 == 0
+    ld a, [hl+]
+    ld [Ram_AreaMapAvatarRow_u8], a
+    ASSERT NODE_Col_u8 == 1
+    ld a, [hl+]
+    ld [Ram_AreaMapAvatarCol_i8], a
+    ;; Move the avatar along the first node's trail.
+    ASSERT NODE_Trail_u8_arr == 2
+    .trailLoop
+    ld a, [hl+]
+    ld e, a  ; param: trail entry
+    call Func_AreaMapAvatarApplyTrailEntry  ; preserves e and hl
+    bit TRAILB_END, e
+    jr z, .trailLoop
+    ;; Zero the avatar's walking offset.
+    xor a
+    ld [Ram_AreaMapAvatarOffset_u8], a
+_AreaMapEnter_WalkIn:
     ;; Walk the avatar in from the entrance.
     ld d, 0  ; param: destination node
-    ld c, d  ; param: trail node
+    ld e, d  ; param: trail node
     jp Main_AreaMapFollowTrail
 
 ;;; Runs the area map screen for the current puzzle's area, with the avatar
@@ -108,6 +154,8 @@ Main_AreaMapResume::
     sub b
     ld [Ram_AreaMapCurrentNode_u8], a
     call Func_PlaceAvatarAtCurrentNode
+    ld a, TRAIL_SOUTH
+    ld [Ram_AreaMapAvatarFacing_u8], a
     ;; Turn on the LCD and fade in.
     call Func_FadeIn
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8
@@ -155,9 +203,7 @@ Func_LoadAreaMap:
     ld b, 0
     ld hl, Data_AreaTable_area_ptr_arr
     add hl, bc
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     romb BANK("AreaData")
 _LoadAreaMap_InitMusic:
     ;; Read the banked pointer to the SONG data from the AREA struct, then
@@ -247,31 +293,78 @@ _LoadAreaMap_DrawAreaTitle:
     dec c
     jr nz, .loop
 _LoadAreaMap_StoreNodeMetadata:
+    ;; Store the exit trail pointer for later.
+    ASSERT AREA_ExitTrail_u8_arr == 28
+    ld a, l
+    ld [Ram_AreaMapExitTrail_u8_arr_ptr + 0], a
+    ld a, h
+    ld [Ram_AreaMapExitTrail_u8_arr_ptr + 1], a
+    ld bc, MAX_TRAIL_LENGTH
+    add hl, bc
     ;; Read and store the first puzzle number for later.
-    ASSERT AREA_FirstPuzzle_u8 == 28
+    ASSERT AREA_FirstPuzzle_u8 == 39
     ld a, [hl+]
     ld [Ram_AreaMapFirstPuzzle_u8], a
     ;; Read the number of nodes and put it in c.
-    ASSERT AREA_NumNodes_u8 == 29
+    ASSERT AREA_NumNodes_u8 == 40
     ld a, [hl+]
     ld c, a
     ;; Store the pointer to the nodes array for later.
-    ASSERT AREA_Nodes_node_arr == 30
+    ASSERT AREA_Nodes_node_arr == 41
     ld a, l
     ld [Ram_AreaMapNodes_node_arr_ptr + 0], a
     ld a, h
     ld [Ram_AreaMapNodes_node_arr_ptr + 1], a
+_LoadAreaMap_DrawExitTrail:
+    ;; At this point, c holds the number of nodes in this area.
+    push bc
+    dec c
+    ;; Set a to the puzzle number for the last node.
+    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    add c
+    ;; Make hl point to the progress entry for puzzle number a.
+    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld l, a
+    ;; If the last puzzle isn't solved, skip drawing the exit trail.
+    bit STATB_SOLVED, [hl]
+    jr z, .noExitTrail
+    ;; Make de point to the exit trail array.
+    ld hl, Ram_AreaMapExitTrail_u8_arr_ptr
+    deref de, hl
+    ;; Make hl point to the VRAM BG map cell for the last node's position.
+    ;; Note that for now, c is still set to the index of the last node.
+    call Func_GetPointerToNode_hl  ; preserves de
+    ASSERT NODE_Row_u8 == 0
+    ld a, [hl+]
+    ASSERT NODE_Col_u8 == 1
+    ld c, [hl]
+    rlca
+    swap a
+    ld b, a
+    and %00000011
+    add HIGH(Vram_BgMap)
+    ld h, a
+    ld a, b
+    and %11100000
+    ASSERT LOW(Vram_BgMap) == 0
+    add c
+    ld l, a
+    ;; Draw the exit trail.
+    call Func_DrawTrail
+    .noExitTrail
+    pop bc
 _LoadAreaMap_DrawUnlockedNodes:
     ;; At this point, c holds the number of nodes in this area.
     .loop
     dec c
-    ;; Set de to the puzzle number for node c.
+    ;; Set a to the puzzle number for node c.
     ld a, [Ram_AreaMapFirstPuzzle_u8]
     add c
-    ldb de, a
-    ;; Make hl point to the progress entry for puzzle number de.
-    ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
-    add hl, de
+    ;; Make hl point to the progress entry for puzzle number a.
+    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld l, a
     ;; If the puzzle is still locked, skip it.
     bit STATB_UNLOCKED, [hl]
     jr z, .loop
@@ -288,8 +381,7 @@ _LoadAreaMap_InitState:
     ldh [rSCX], a
     ldh [rSCY], a
     call Func_ClearOam
-    ;; Clear node title in the BG tile map.
-    jp Func_ClearNodeTitle
+    jp Func_ClearAreaMapNodeTitle
 
 ;;;=========================================================================;;;
 
@@ -367,7 +459,7 @@ _AreaMapCommand_FollowPrevTrail:
     and $0f
     ld d, a  ; param: destination node
     ld a, [Ram_AreaMapCurrentNode_u8]
-    ld c, a  ; param: trail node
+    ld e, a  ; param: trail node
     jp Main_AreaMapFollowTrail
 
 _AreaMapCommand_FollowNextTrail:
@@ -387,7 +479,7 @@ _AreaMapCommand_FollowNextTrail:
     ld a, e
     and $0f
     ld d, a  ; param: destination node
-    ld c, d  ; param: trail node
+    ld e, d  ; param: trail node
     jp Main_AreaMapFollowTrail
 
 _AreaMapCommand_FollowBonusTrail:
@@ -405,20 +497,108 @@ _AreaMapCommand_FollowBonusTrail:
     bit STATB_UNLOCKED, [hl]
     jr z, _AreaMapCommand_CannotMove
     ;; Follow the trail to the bonus node.
-    ld c, d  ; param: trail node
+    ld e, d  ; param: trail node
     jp Main_AreaMapFollowTrail
 
 ;;;=========================================================================;;;
 
 ;;; Animates the area map avatar walking from node to node, then switches modes
 ;;; appropariately depending on whether the destination is an exit node.
-;;; @param c The node index of the trail to follow.
-;;; @param d The destination node index.
+;;; @param d The destination node index (or EXIT_NODE if leaving the area).
+;;; @param e The node index of the trail to use (or EXIT_NODE for exit trail).
 Main_AreaMapFollowTrail:
-    ;; TODO: Animate walking the trail, forwards if c != d, else backwards.
-    ;; TODO: If c == EXIT_NODE, we need to follow the area's exit trail.
-    ;; TODO: Blank out the origin node's title while walking.
+    ;; Store the destination node index for later.
     ld a, d
+    ld [Ram_AreaMapWalkingDestinationNode_u8], a
+    ;; If the trail node index is EXIT_NODE, then we're following the area's
+    ;; exit trail (forwards, since we never follow the exit trail backwards).
+    ld a, e
+    if_eq EXIT_NODE, jr, _AreaMapFollowTrail_CopyExitTrail
+    ;; Otherwise, make hl point to the trail node's trail array.
+    ld c, e  ; param: node index
+    call Func_GetPointerToNode_hl  ; preserves de
+    ld bc, NODE_Trail_u8_arr
+    add hl, bc
+    ;; Node trails start at that node and proceed towards the previous node.
+    ;; So if the destination node is the same as the trail node, that means
+    ;; we're following a node's trail back to itself, so we need to reverse the
+    ;; trail.
+    ld a, d
+    if_eq e, jr, _AreaMapFollowTrail_CopyTrailReverse
+    jr _AreaMapFollowTrail_CopyTrailForward
+_AreaMapFollowTrail_CopyExitTrail:
+    romb BANK("AreaData")
+    ld hl, Ram_AreaMapExitTrail_u8_arr_ptr
+    deref hl
+_AreaMapFollowTrail_CopyTrailForward:
+    ;; At this point, hl points to a trail array to copy as-is.
+    ldw de, hl                             ; param: src
+    ld hl, Ram_AreaMapWalkingTrail_u8_arr  ; param: dest
+    ld bc, MAX_TRAIL_LENGTH                ; param: count
+    call Func_MemCopy
+    jr _AreaMapFollowTrail_StartFollowing
+_AreaMapFollowTrail_CopyTrailReverse:
+    ;; At this point, hl points to a trail array to copy.  Put the length of
+    ;; the trail in c and make hl point to the last trail entry.
+    ld c, 0
+    .lenLoop
+    inc c
+    ld a, [hl+]
+    bit TRAILB_END, a
+    jr z, .lenLoop
+    dec hl
+    ;; Copy the trail array, in reserve order, with directions reversed, and
+    ;; with the TRAILB_END flags fixed.
+    ld de, Ram_AreaMapWalkingTrail_u8_arr
+    .revLoop
+    ld a, [hl-]
+    xor TRAIL_DIR_MASK
+    dec c
+    jr z, .finishRev
+    res TRAILB_END, a
+    ld [de], a
+    inc de
+    jr .revLoop
+    .finishRev
+    set TRAILB_END, a
+    ld [de], a
+_AreaMapFollowTrail_StartFollowing:
+    xor a
+    ld [Ram_AreaMapWalkingIndex_u8], a
+    ld hl, Ram_AreaMapWalkingTrail_u8_arr
+_AreaMapFollowTrail_StartTrailTick:
+    ;; At this point, hl points to the next entry in the trail array.  Start
+    ;; moving the avatar along that entry.
+    ld e, [hl]  ; param: trail entry
+    call Func_AreaMapAvatarApplyTrailEntry
+_AreaMapFollowTrail_RunLoop:
+    call Func_UpdateAudio
+    call Func_UpdateAreaMapAvatarObj
+    call Func_WaitForVBlankAndPerformDma
+    call Func_ClearAreaMapNodeTitle
+    call Func_AnimateAreaMapTiles
+    ld a, [Ram_AreaMapAvatarOffset_u8]
+    dec a
+    ld [Ram_AreaMapAvatarOffset_u8], a
+    jr nz, _AreaMapFollowTrail_RunLoop
+_AreaMapFollowTrail_EndTrailTick:
+    ;; Increment the trail index, and set bc to the old index value.
+    ld hl, Ram_AreaMapWalkingIndex_u8
+    ldb bc, [hl]
+    inc [hl]
+    ;; Make hl point to the trail entry we just finished.
+    ld hl, Ram_AreaMapWalkingTrail_u8_arr
+    add hl, bc
+    ;; Copy the trail entry we just finished into a, and also increment hl to
+    ;; point to the next trail entry (in case we need to jump back to
+    ;; _AreaMapFollowTrail_StartTrailTick).
+    ld a, [hl+]
+    ;; If we just finished the last entry in the trail, then we're done;
+    ;; otherwise, start the next entry (which hl already points to).
+    bit TRAILB_END, a
+    jr z, _AreaMapFollowTrail_StartTrailTick
+_AreaMapFollowTrail_FinishFollowing:
+    ld a, [Ram_AreaMapWalkingDestinationNode_u8]
     if_eq EXIT_NODE, jp, Main_AreaMapBackToWorldMap
     ld [Ram_AreaMapCurrentNode_u8], a
     call Func_PlaceAvatarAtCurrentNode
@@ -475,9 +655,7 @@ Func_GetPointerToNode_hl:
     ld b, a
     ;; Make hl point to the NODE struct.
     ld hl, Ram_AreaMapNodes_node_arr_ptr
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref hl
     add hl, bc
     ;; Switch to the ROM bank that holds the NODE struct.
     romb BANK("AreaData")
@@ -486,7 +664,7 @@ Func_GetPointerToNode_hl:
 ;;;=========================================================================;;;
 
 ;;; Writes a row of spaces to VRAM on the bottom BG tile row of the screen.
-Func_ClearNodeTitle:
+Func_ClearAreaMapNodeTitle:
     ld hl, Vram_BgMap + SCRN_VX_B * (SCRN_Y_B - 1)
     xor a
     ld c, SCRN_X_B
@@ -506,18 +684,22 @@ Func_AnimateAreaMapTiles:
     ld b, a     ; param: tileset
     jp Func_AnimateTerrain
 
-;;; Sets Ram_AreaMapAvatarRow_u8 and Ram_AreaMapAvatarCol_u8 to the row/col of
+;;;=========================================================================;;;
+
+;;; Sets Ram_AreaMapAvatarRow_u8 and Ram_AreaMapAvatarCol_i8 to the row/col of
 ;;; the current node, and writes the current node's title to VRAM on the bottom
 ;;; BG tile row of the screen.
 Func_PlaceAvatarAtCurrentNode:
     call Func_GetPointerToCurrentNode_hl
-    ;; Set the avatar's row/col.
+    ;; Set the avatar's row/col/offset.
     ASSERT NODE_Row_u8 == 0
     ld a, [hl+]
     ld [Ram_AreaMapAvatarRow_u8], a
     ASSERT NODE_Col_u8 == 1
     ld a, [hl]
-    ld [Ram_AreaMapAvatarCol_u8], a
+    ld [Ram_AreaMapAvatarCol_i8], a
+    xor a
+    ld [Ram_AreaMapAvatarOffset_u8], a
     ;; Draw the node's title on the bottom row of the screen.
     ld bc, NODE_Title_u8_arr16 - NODE_Col_u8
     add hl, bc
@@ -531,30 +713,106 @@ Func_PlaceAvatarAtCurrentNode:
     jr nz, .titleLoop
     ret
 
+;;; Updates the avatar's row, col, facing direction, and offset to begin
+;;; walking along a trail entry from its current position.
+;;; @param e The trail entry to apply.
+;;; @preserve e, hl
+Func_AreaMapAvatarApplyTrailEntry:
+    ;; Set d to the trail entry's direction, and set the avatar's facing
+    ;; direction to match.
+    ld a, e
+    and TRAIL_DIR_MASK
+    ld d, a
+    ld [Ram_AreaMapAvatarFacing_u8], a
+    ;; Set c to the trail entry's tile distance, and set the avatar's pixel
+    ;; offset to 8 times that distance.
+    ld a, e
+    and TRAIL_DIST_MASK
+    ld c, a
+    swap a
+    rrca
+    ld [Ram_AreaMapAvatarOffset_u8], a
+    ;; Update the avatar's row/col based on the direction and distance.
+    ld a, d
+    if_eq TRAIL_EAST, jr, .east
+    if_eq TRAIL_NORTH, jr, .north
+    if_eq TRAIL_SOUTH, jr, .south
+    .west
+    xor a
+    sub c
+    ld c, a
+    .east
+    ld a, [Ram_AreaMapAvatarCol_i8]
+    add c
+    ld [Ram_AreaMapAvatarCol_i8], a
+    ret
+    .north
+    xor a
+    sub c
+    ld c, a
+    .south
+    ld a, [Ram_AreaMapAvatarRow_u8]
+    add c
+    ld [Ram_AreaMapAvatarRow_u8], a
+    ret
+
 ;;; Updates the shadow OAMA struct for the area map avatar.
 Func_UpdateAreaMapAvatarObj:
+    ;; Based on the direction the avatar is facing, store flags in b, base tile
+    ;; ID in c, Y-offset in d, and X-offset in e.
+    ld b, AVATAR_PALETTE
+    ld a, [Ram_AreaMapAvatarOffset_u8]
+    ld d, a
+    ld a, [Ram_AreaMapAvatarFacing_u8]
+    if_eq TRAIL_SOUTH, jr, .southFacing
+    if_eq TRAIL_NORTH, jr, .northFacing
+    ld c, AVATAR_W1_TILEID
+    if_eq TRAIL_WEST, jr, .westFacing
+    .eastFacing
+    ld b, AVATAR_PALETTE | OAMF_XFLIP
+    ld e, d
+    ld d, 0
+    jr .doneFacing
+    .westFacing
+    xor a
+    sub d
+    ld e, a
+    ld d, 0
+    jr .doneFacing
+    .southFacing
+    ld c, AVATAR_S1_TILEID
+    jr .vertFacing
+    .northFacing
+    ld c, AVATAR_N1_TILEID
+    xor a
+    sub d
+    ld d, a
+    .vertFacing
+    ld e, 0
+    .doneFacing
     ;; Set Y position:
     ld a, [Ram_AreaMapAvatarRow_u8]
     swap a
     rrca
     add 13
+    sub d
     ld [Ram_ElephantL_oama + OAMA_Y], a
     ;; Set X position:
-    ld a, [Ram_AreaMapAvatarCol_u8]
+    ld a, [Ram_AreaMapAvatarCol_i8]
+    and %00011111  ; account for possibility that col is negative
     swap a
     rrca
     add 7
+    sub e
     ld [Ram_ElephantL_oama + OAMA_X], a
     ;; Set tile ID:
     ld a, [Ram_AreaMapAnimationClock_u8]
     and %00010000
     swap a
-    ;; TODO: Don't always face south.
-    add AVATAR_S1_TILEID
+    add c
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
     ;; Set flags:
-    ld a, AVATAR_PALETTE
-    ;; TODO: Set horizontal flip flag as needed.
+    ld a, b
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
     ret
 
@@ -590,8 +848,13 @@ _DrawNodeAndTrail_Node:
     ld l, a
     ;; Draw the puzzle node into VRAM.
     ld [hl], NODE_TILEID
-_DrawNodeAndTrail_Trail:
-    ;; At this point, de points to the start of the Trail array.
+    ;; fall through to Func_DrawTrail
+
+;;; Draws the trail tick marks for a node trail or area exit trail.
+;;; @prereq ROM bank is set to BANK("AreaData").
+;;; @param de A pointer to the trail array.
+;;; @param hl A pointer to BG map byte in VRAM for the start of the trail.
+Func_DrawTrail:
     .trailLoop
     ;; If this is the last entry in the trail, we're done.  (We don't draw a
     ;; trail tick mark for the last trail entry, since in general it would be
@@ -601,7 +864,7 @@ _DrawNodeAndTrail_Trail:
     ret nz
     ;; Extract the direction from the trail entry, and set bc to the byte
     ;; offset in VRAM for one step in that direction.
-    and %11110000
+    and TRAIL_DIR_MASK
     if_eq TRAIL_SOUTH, jr, .south
     if_eq TRAIL_EAST, jr, .east
     if_eq TRAIL_WEST, jr, .west
@@ -619,7 +882,7 @@ _DrawNodeAndTrail_Trail:
     .dirDone
     ;; Now extract the distance from the trail entry and store it in a.
     ld a, [de]
-    and %00001111
+    and TRAIL_DIST_MASK
     ;; Add (bc * a) to hl, thus making hl point to the VRAM location where we
     ;; should draw the next trail tick mark.
     .distLoop

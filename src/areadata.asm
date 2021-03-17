@@ -82,22 +82,23 @@ TS2 EQU (TRAIL_SOUTH | 2)
 TE2 EQU (TRAIL_EAST  | 2)
 TW2 EQU (TRAIL_WEST  | 2)
 
-;;; Declares a Trail field within a NODE struct.  There should be 1 to 11
-;;; arguments (inclusive), each being one of the above T?? constants.  The last
-;;; entry will automatically be marked with TRAILB_END, and the field will
-;;; automatically be padded to 11 bytes.
+;;; Declares a Trail/ExitTrail field within a NODE/AREA struct.  There should
+;;; be 1 to MAX_TRAIL_LENGTH arguments (inclusive), with each being one of the
+;;; above T?? constants.  The last entry will automatically be marked with
+;;; TRAILB_END, and the field will automatically be padded to MAX_TRAIL_LENGTH
+;;; bytes.
 ;;;
 ;;; Example:
 ;;;     D_TRAIL TS1, TS1, TS1, TE1, TE2, TE1
 D_TRAIL: MACRO
-TRAIL_LENGTH = _NARG
-    ASSERT TRAIL_LENGTH >= 1 && TRAIL_LENGTH <= 11
-    REPT TRAIL_LENGTH - 1
+_TRAIL_LENGTH = _NARG
+    ASSERT _TRAIL_LENGTH >= 1 && _TRAIL_LENGTH <= MAX_TRAIL_LENGTH
+    REPT _TRAIL_LENGTH - 1
     DB \1
     SHIFT
     ENDR
     DB (\1) | (1 << TRAILB_END)
-    DS 11 - TRAIL_LENGTH
+    DS MAX_TRAIL_LENGTH - _TRAIL_LENGTH
 ENDM
 
 ;;;=========================================================================;;;
@@ -166,6 +167,7 @@ DataX_Forest_area:
     DB TILESET_MAP_WORLD
     D_BPTR DataX_ForestTileMap_start
     D_TITLE 20, "GIANT'S FOREST"
+    D_TRAIL TN1, TN1, TN1, TN1
     DB FIRST_FOREST_PUZZLE
     DB NUM_FOREST_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
@@ -215,6 +217,7 @@ DataX_Mountain_area:
     DB TILESET_MAP_SEWER  ; TODO: use mountain map tileset
     D_BPTR DataX_SewerTileMap_start  ; TODO: use mountain tile map
     D_TITLE 20, "MT. BIGHORN"
+    D_TRAIL TN1, TN1, TN1
     DB FIRST_MOUNTAIN_PUZZLE
     DB NUM_MOUNTAIN_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
@@ -239,6 +242,7 @@ DataX_Sewer_area:
     DB TILESET_MAP_SEWER
     D_BPTR DataX_SewerTileMap_start
     D_TITLE 20, "DEMI SEWER"
+    D_TRAIL TN1, TN2, TN1
     DB FIRST_SEWER_PUZZLE
     DB NUM_SEWER_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr

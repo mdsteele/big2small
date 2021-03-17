@@ -232,10 +232,8 @@ _BeginPuzzle_Init:
     ;; Initialize music.
     ld hl, Ram_PuzzleState_puzz + PUZZ_Music_song_bptr
     ld a, [hl+]
-    ld c, a     ; bank
-    ld a, [hl+]
-    ld h, [hl]  ; ptr
-    ld l, a     ; ptr
+    ld c, a   ; param: SONG bank
+    deref hl  ; param: SONG ptr
     call Func_MusicStart
     ;; Turn on the LCD and fade in.
     xor a
