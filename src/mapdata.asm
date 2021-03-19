@@ -21,20 +21,30 @@ INCLUDE "src/hardware.inc"
 
 ;;;=========================================================================;;;
 
+AREA_MAP_LENGTH EQU SCRN_X_B * (SCRN_Y_B - 2)
+WORLD_MAP_LENGTH EQU SCRN_VX_B * SCRN_VY_B
+
+;;;=========================================================================;;;
+
+SECTION "FarmTileMap", ROMX
+DataX_FarmTileMap_start::
+    INCBIN "out/data/maps/farm.map"
+ASSERT @ - DataX_FarmTileMap_start == AREA_MAP_LENGTH
+
 SECTION "ForestTileMap", ROMX
 DataX_ForestTileMap_start::
     INCBIN "out/data/maps/forest.map"
-ASSERT @ - DataX_ForestTileMap_start == SCRN_X_B * (SCRN_Y_B - 2)
+ASSERT @ - DataX_ForestTileMap_start == AREA_MAP_LENGTH
 
 SECTION "SewerTileMap", ROMX
 DataX_SewerTileMap_start::
     INCBIN "out/data/maps/sewer.map"
-ASSERT @ - DataX_SewerTileMap_start == SCRN_X_B * (SCRN_Y_B - 2)
+ASSERT @ - DataX_SewerTileMap_start == AREA_MAP_LENGTH
 
 SECTION "WorldTileMap", ROMX
 DataX_WorldTileMap_start::
     INCBIN "out/data/maps/world.map"
 DataX_WorldTileMap_end::
-ASSERT @ - DataX_WorldTileMap_start == SCRN_VX_B * SCRN_VY_B
+ASSERT @ - DataX_WorldTileMap_start == WORLD_MAP_LENGTH
 
 ;;;=========================================================================;;;

@@ -17,11 +17,9 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-INCLUDE "src/charmap.inc"
 INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
-INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -58,21 +56,6 @@ Main::
     COPY_FROM_ROMX DataX_BgTiles_start, DataX_BgTiles_end
     ld hl, Vram_ObjTiles  ; dest
     COPY_FROM_ROMX DataX_ObjTiles_start, DataX_ObjTiles_end
-    ;; Initialize window map.
-    ld hl, Vram_WindowMap
-    ld e, "+"  ; edge tile ID
-    ld d, "="  ; middle tile ID
-    call Func_WindowHorzBar  ; updates hl
-    ld e, "|"  ; edge tile ID
-    ld d, " "  ; middle tile ID
-    ld b, 3
-    .windowLoop
-    call Func_WindowHorzBar  ; preserves b and de, updates hl
-    dec b
-    jr nz, .windowLoop
-    ld e, "+"  ; edge tile ID
-    ld d, "="  ; middle tile ID
-    call Func_WindowHorzBar
     ;; Initialize palettes.
     ld a, %11100100
     ldh [rBGP], a
@@ -87,29 +70,5 @@ Main::
     call Func_InitAudio
     ;; Go to title screen.
     jp Main_TitleScreen
-
-;;;=========================================================================;;;
-
-;;; @param d Middle tile ID.
-;;; @param e Edge tile ID.
-;;; @param hl Pointer to the start of a VRAM map row.
-;;; @return hl Pointer to the start of the next VRAM map row.
-;;; @preserve b, de
-Func_WindowHorzBar:
-    ld a, e
-    ld [hl+], a
-    ld a, d
-    ld c, SCRN_X_B - 2
-    .loop
-    ld [hl+], a
-    dec c
-    jr nz, .loop
-    ld a, e
-    ld [hl], a
-    ld a, l
-    or SCRN_VX_B - 1
-    ld l, a
-    inc hl
-    ret
 
 ;;;=========================================================================;;;

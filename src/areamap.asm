@@ -42,6 +42,9 @@ SECTION "AreaMapState", WRAM0
 Ram_AreaMapAnimationClock_u8:
     DB
 
+;;; The current area number (one of the AREA_* enum values).
+Ram_AreaMapCurrentArea_u8:
+    DB
 ;;; The tileset for the current area map (using the TILESET_* enum values).
 Ram_AreaMapTileset_u8:
     DB
@@ -197,13 +200,9 @@ Main_AreaMapResume::
 ;;; @prereq LCD is off.
 ;;; @param c The area to load (one of the AREA_* enum values).
 Func_LoadAreaMap:
-    ;; Make hl point to the AREA struct corresponding to the AREA_* enum value
-    ;; stored in c.
-    sla c
-    ld b, 0
-    ld hl, Data_AreaTable_area_ptr_arr
-    add hl, bc
-    deref hl
+    ld a, c
+    ld [Ram_AreaMapCurrentArea_u8], a
+    call Func_GetAreaData_hl
     romb BANK("AreaData")
 _LoadAreaMap_InitMusic:
     ;; Read the banked pointer to the SONG data from the AREA struct, then
@@ -367,11 +366,12 @@ _LoadAreaMap_DrawUnlockedNodes:
     ld l, a
     ;; If the puzzle is still locked, skip it.
     bit STATB_UNLOCKED, [hl]
-    jr z, .loop
+    jr z, .noTrail
     ;; The puzzle is unlocked, so draw the node and its trail.
     push bc
     call Func_DrawNodeAndTrail
     pop bc
+    .noTrail
     xor a
     or c
     jr nz, .loop
@@ -610,6 +610,8 @@ _AreaMapFollowTrail_FinishFollowing:
 Main_AreaMapBackToWorldMap:
     call Func_ClearOam
     call Func_FadeOut
+    ld a, [Ram_AreaMapCurrentArea_u8]
+    ld c, a  ; param: area number
     jp Main_WorldMapScreen
 
 ;;; Fades out the LCD and starts the puzzle for the current node.

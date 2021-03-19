@@ -188,6 +188,8 @@ _BeginPuzzle_Init:
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
     call Func_LoadPuzzleTerrainIntoVram
+    ;; Initialize window.
+    xcall FuncX_DrawWindowFrame
     ;; Initialize state.
     xor a
     ld [Ram_PuzzleAnimationClock_u8], a

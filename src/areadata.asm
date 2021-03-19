@@ -103,11 +103,11 @@ ENDM
 
 ;;;=========================================================================;;;
 
-SECTION "AreaTable", ROM0
+SECTION "AreaFunctions", ROM0
 
 ;;; An array that maps from AREA_* enum values to pointers to AREA structs
 ;;; stored in BANK("AreaData").
-Data_AreaTable_area_ptr_arr::
+Data_AreaTable_area_ptr_arr:
     .begin
     ASSERT @ - .begin == 2 * AREA_FOREST
     DW DataX_Forest_area
@@ -123,6 +123,19 @@ Data_AreaTable_area_ptr_arr::
     DW DataX_City_area
     ASSERT @ - .begin == 2 * AREA_SPACE
     DW DataX_Space_area
+
+;;; Returns a pointer to the specified AREA struct in BANK("AreaData").  Note
+;;; that this function does *not* set the ROM bank.
+;;; @param c The area number (one of the AREA_* enum values).
+;;; @return hl A pointer to the specified AREA struct.
+;;; @preserve de
+Func_GetAreaData_hl::
+    sla c
+    ld b, 0
+    ld hl, Data_AreaTable_area_ptr_arr
+    add hl, bc
+    deref hl
+    ret
 
 ;;; Returns the area that a given puzzle is in.
 ;;; @param c The puzzle number.
@@ -209,7 +222,46 @@ _Forest_Node3:
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Forest_Node0 == NUM_FOREST_PUZZLES * sizeof_NODE
 
-DataX_Farm_area:  ; TODO: populate this
+DataX_Farm_area:
+    .begin
+    D_BPTR DataX_RestYe_song
+    DB COLORSET_AUTUMN
+    DB TILESET_MAP_WORLD
+    D_BPTR DataX_FarmTileMap_start
+    D_TITLE 20, "HUGHSON FARMS"
+    D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
+    DB FIRST_FARM_PUZZLE
+    DB NUM_FARM_PUZZLES
+    ASSERT @ - .begin == AREA_Nodes_node_arr
+_Farm_Node0:
+    .begin
+    DB 8, 4  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TW1
+    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_RIGHT | 1          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Farm0"
+    ASSERT @ - .begin == sizeof_NODE
+_Farm_Node1:
+    .begin
+    DB 8, 8  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 0           ; prev
+    DB PADF_RIGHT | 2          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Farm1"
+    ASSERT @ - .begin == sizeof_NODE
+_Farm_Node2:
+    .begin
+    DB 8, 12  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 1           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Farm2"
+    ASSERT @ - .begin == sizeof_NODE
+ASSERT @ - _Farm_Node0 == NUM_FARM_PUZZLES * sizeof_NODE
+
 DataX_Mountain_area:
     .begin
     D_BPTR DataX_TitleMusic_song
@@ -232,9 +284,37 @@ _Mountain_Node0:
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Mountain_Node0 == NUM_MOUNTAIN_PUZZLES * sizeof_NODE
 
-DataX_Seaside_area:  ; TODO: populate this
-DataX_City_area:  ; TODO: populate this
-DataX_Space_area:  ; TODO: populate this
+DataX_Seaside_area:
+    .begin
+    D_BPTR DataX_RestYe_song
+    DB COLORSET_AUTUMN
+    DB TILESET_MAP_WORLD
+    D_BPTR DataX_FarmTileMap_start  ; TODO: use seaside tile map
+    D_TITLE 20, "MEDI LAKE"
+    D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
+    DB FIRST_SEASIDE_PUZZLE
+    DB NUM_SEASIDE_PUZZLES
+    ASSERT @ - .begin == AREA_Nodes_node_arr
+_Seaside_Node0:
+    .begin
+    DB 8, 4  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TW1
+    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_RIGHT | 1          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Seaside0"
+    ASSERT @ - .begin == sizeof_NODE
+_Seaside_Node1:
+    .begin
+    DB 8, 12  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 0           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Seaside1"
+    ASSERT @ - .begin == sizeof_NODE
+ASSERT @ - _Seaside_Node0 == NUM_SEASIDE_PUZZLES * sizeof_NODE
+
 DataX_Sewer_area:
     .begin
     D_BPTR DataX_RestYe_song
@@ -265,5 +345,76 @@ _Sewer_Node1:
     D_TITLE 16, "Blocked Drain"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Sewer_Node0 == NUM_SEWER_PUZZLES * sizeof_NODE
+
+DataX_City_area:
+    .begin
+    D_BPTR DataX_RestYe_song
+    DB COLORSET_AUTUMN
+    DB TILESET_MAP_WORLD
+    D_BPTR DataX_FarmTileMap_start  ; TODO: use city tile map
+    D_TITLE 20, "MICROVILLE"
+    D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
+    DB FIRST_CITY_PUZZLE
+    DB NUM_CITY_PUZZLES
+    ASSERT @ - .begin == AREA_Nodes_node_arr
+_City_Node0:
+    .begin
+    DB 8, 4  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TW1
+    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_RIGHT | 1          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "City0"
+    ASSERT @ - .begin == sizeof_NODE
+_City_Node1:
+    .begin
+    DB 8, 12  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 0           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "City1"
+    ASSERT @ - .begin == sizeof_NODE
+ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
+
+DataX_Space_area:
+    .begin
+    D_BPTR DataX_RestYe_song
+    DB COLORSET_SPACE
+    DB TILESET_MAP_WORLD
+    D_BPTR DataX_FarmTileMap_start  ; TODO: use space tile map
+    D_TITLE 20, "NEUTRINO STATION"
+    D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
+    DB FIRST_SPACE_PUZZLE
+    DB NUM_SPACE_PUZZLES
+    ASSERT @ - .begin == AREA_Nodes_node_arr
+_Space_Node0:
+    .begin
+    DB 8, 4  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TW1
+    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_RIGHT | 1          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Space0"
+    ASSERT @ - .begin == sizeof_NODE
+_Space_Node1:
+    .begin
+    DB 8, 8  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 0           ; prev
+    DB PADF_RIGHT | 2          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Space1"
+    ASSERT @ - .begin == sizeof_NODE
+_Space_Node2:
+    .begin
+    DB 8, 12  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 1           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Space2"
+    ASSERT @ - .begin == sizeof_NODE
+ASSERT @ - _Space_Node0 == NUM_SPACE_PUZZLES * sizeof_NODE
 
 ;;;=========================================================================;;;
