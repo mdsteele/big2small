@@ -36,9 +36,9 @@ DataX_Null_dlog::
 
 DataX_Forest0Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_OPEN
-    DB "Boy, am I ever\n"
-    DB "hungry. I wish\n"
-    DB "I had a peanut!\r"
+    DB "Hi, my name is\n"
+    DB "Elle! I wish\n"
+    DB "I had a peanut.\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "Hey, I think I\n"
     DB "see a peanut up\n"
@@ -61,32 +61,39 @@ DataX_Forest0Outro_dlog::
 
 ;;;=========================================================================;;;
 
-DataX_Intro_dlog::
-    DB DIALOG_ELEPHANT_EYES_OPEN
-    DB "Boy, am I ever\n"
-    DB "hungry. I wish\n"
-    DB "I had a peanut!\r"
+DataX_Forest1Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
-    DB "I could use an\n"
-    DB "apple, myself.\r"
+    DB "Hi there, my\n"
+    DB "name's Gisele.\n"
+    DB "What's yours?\r"
     DB DIALOG_ELEPHANT_EYES_CLOSED
-    DB "Sounds great!\r"
-    DB DIALOG_MOUSE
-    DB "Don't forget\n"
-    DB "me! I want some\n"
-    DB "cheese!\r"
-    DB DIALOG_GOAT_MOUTH_OPEN
-    DB "Sounds like a\n"
-    DB "party, then!\r"
+    DB "I'm Elle! Are\n"
+    DB "you looking for\n"
+    DB "peanuts too?\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "I think I'd\n"
+    DB "rather eat\n"
+    DB "that apple.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Okay! Let's eat\n"
+    DB "once we've both\n"
+    DB "got our food.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Press A or B to\n"
+    DB "change which of\n"
+    DB "us is selected!\r"
     DB DIALOG_END
 
-DataX_Outro_dlog::
-    DB DIALOG_ELEPHANT_EYES_CLOSED
-    DB "This peanut is\n"
-    DB "delicious!\r"
+DataX_Forest1Outro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Mmm, this apple\n"
+    DB "is very...\r"
     DB DIALOG_GOAT_MOUTH_OPEN
-    DB "Let's go find\n"
-    DB "more food!\r"
+    DB "...APPealing!\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "We make a good\n"
+    DB "team!  Let's\n"
+    DB "be friends!\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
