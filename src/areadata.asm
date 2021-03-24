@@ -28,7 +28,7 @@ INCLUDE "src/tileset.inc"
 ;;;=========================================================================;;;
 
 ;;; The number of puzzles in each area:
-NUM_FOREST_PUZZLES EQU 4
+NUM_FOREST_PUZZLES EQU 5
 NUM_FARM_PUZZLES EQU 3
 NUM_MOUNTAIN_PUZZLES EQU 1
 NUM_SEASIDE_PUZZLES EQU 2
@@ -216,9 +216,18 @@ _Forest_Node3:
     DB 4, 8  ; row/col
     D_TRAIL TE1, TE1, TE1, TS1, TS1, TS1, TS1, TS1
     DB PADF_RIGHT | 2          ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_LEFT | 4           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Forest3"
+    ASSERT @ - .begin == sizeof_NODE
+_Forest_Node4:
+    .begin
+    DB 4, 6  ; row/col
+    D_TRAIL TE1, TE1
+    DB PADF_RIGHT | 3          ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Forest4"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Forest_Node0 == NUM_FOREST_PUZZLES * sizeof_NODE
 

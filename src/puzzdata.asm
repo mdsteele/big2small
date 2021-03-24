@@ -39,6 +39,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Forest2_puzz
     DW DataX_Forest3_puzz
     DW DataX_Bush1_puzz
+    DW DataX_Bush2_puzz
     DW DataX_Farm1_puzz
     DW DataX_Farm2_puzz
     DW DataX_Farm3_puzz
@@ -140,6 +141,27 @@ DataX_Bush1_puzz:
     DB O_GRS, O_EMP, O_EMP, G_CHS, W_RCK, O_EMP, O_EMP, W_TTP, G_PNT, O_EMP
     DS 6
     DB W_TTP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP, W_TST, W_TTP, W_TTP
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Bush2_puzz:
+    .begin
+    DB W_TTP, O_GRS, O_EMP, W_TTR, O_EMP, W_TTR, W_TTR, W_TTP, O_EMP, O_GRS
+    DB $32, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_TST, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, W_TST, G_PNT, O_EMP
+    DB $57, DIRF_EAST, 0, 0, 0, 0
+    DB W_TST, O_EMP, O_EMP, S_BSH, O_EMP, O_EMP, O_GRS, W_TTR, O_EMP, O_EMP
+    DB $31, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_TST, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, S_BSH, O_EMP, O_EMP
+    D_BPTR DataX_TitleMusic_song, 0, 0, 0
+    DB W_TST, W_FW1, W_FE1, W_TTR, O_EMP, O_EMP, W_TTP, W_FW1, W_FE1, W_TTP
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB W_TTR, W_TTP, O_EMP, O_EMP, O_EMP, O_GRS, W_TTR, O_EMP, O_EMP, W_TST
+    D_BPTR DataX_Null_dlog, 0, 0, 0
+    DB G_APL, W_TTR, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TST
+    DB TILESET_PUZZ_FARM, COLORSET_SUMMER, 0, 0, 0, 0
+    DB O_GRS, O_GRS, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, O_EMP, O_GRS, W_TST
+    DS 6
+    DB W_TTP, W_TTP, W_TTP, O_EMP, O_EMP, O_EMP, W_TTP, O_GRS, O_GRS, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Farm1_puzz:
