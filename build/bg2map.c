@@ -109,7 +109,8 @@ int main(int argc, char **argv) {
       int tile_index = from_base64(fgetc(stdin));
       if (tileset_index < 0 || tile_index < 0) {
         fputc(0x00, stdout);
-      } else if (0 == strcmp(tileset, "ocean")) {
+      } else if (0 == strcmp(tileset, "ocean") ||
+                 0 == strcmp(tileset, "twinkle")) {
         fputc(0x68, stdout);
       } else if (0 == strcmp(tileset, "river")) {
         fputc(0xE0 + tile_index, stdout);
@@ -119,6 +120,12 @@ int main(int argc, char **argv) {
         fputc(0xC0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "shared_map")) {
         fputc(0x80 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "space_map_earth")) {
+        fputc(0xD0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "space_map_stars")) {
+        fputc(0xE0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "space_map_station")) {
+        fputc(0xC0 + tile_index, stdout);
       } else {
         fprintf(stderr, "unknown tileset: %s\n", tileset);
         return EXIT_FAILURE;

@@ -21,24 +21,22 @@ INCLUDE "src/hardware.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "HeaderInit", ROM0[$0100]
-    ;; Execution starts here.
+SECTION "Header", ROM0[$0100]
+    ;; $0100-$0104: Execution starts here.
     nop
     jp Main
 
-SECTION "HeaderLogo", ROM0[$0104]
     ;; $0104-$0133: Nintendo logo
-    DS 48  ; This gets filled in by rgbfix.
+    STATIC_ASSERT @ == $0104
+    DS $30  ; This gets filled in by rgbfix.
 
-SECTION "HeaderTitle", ROM0[$0134]
-Data_HeaderTitle:
-    ;; 11-byte-max game title, padded with zeros.
+    ;; $0134-$013e: 11-byte-max game title, padded with zeros.
+    STATIC_ASSERT @ == $0134
     DB "BIG2SMALL", 0, 0
-    ASSERT @ - Data_HeaderTitle == 11
+    STATIC_ASSERT @ == $013f
 
-SECTION "HeaderMetadata", ROM0[$013f]
-    ;; $013F-$0142: Manufacturer code
-    DS 4  ; blank
+    ;; $013f-$0142: Manufacturer code
+    DB 0, 0, 0, 0  ; blank
     ;; $0143: Game Boy Color flag
     DB CART_COMPATIBLE_DMG_GBC
     ;; $0144-$0145: New licensee code
@@ -48,18 +46,19 @@ SECTION "HeaderMetadata", ROM0[$013f]
     ;; $0147: Cartridge type
     DB CART_ROM_MBC5_RAM_BAT
     ;; $0148: ROM size
-    DB CART_ROM_32KB
+    DB CART_ROM_64KB
     ;; $0149: RAM size
     DB CART_SRAM_8KB
-    ;; $014A: Destination code
+    ;; $014a: Destination code
     DB CART_DEST_NON_JAPANESE
-    ;; $014B: Old licensee code
+    ;; $014b: Old licensee code
     DB $33  ; Use new licensee code
-    ;; $014C: Mask ROM version
+    ;; $014c: Mask ROM version
     DB $00
-    ;; $014D: Header checksum
+    ;; $014d: Header checksum
     DB $00  ; This gets filled in by rgbfix.
-    ;; $014E-$014F: Global checksum
+    ;; $014e-$014f: Global checksum
     DW $0000  ; This gets filled in by rgbfix.
+    STATIC_ASSERT @ == $0150
 
 ;;;=========================================================================;;;

@@ -381,8 +381,8 @@ DataX_Space_area:
     .begin
     D_BPTR DataX_RestYe_song
     DB COLORSET_SPACE
-    DB TILESET_MAP_WORLD
-    D_BPTR DataX_FarmTileMap_start  ; TODO: use space tile map
+    DB TILESET_MAP_SPACE
+    D_BPTR DataX_SpaceTileMap_start
     D_TITLE 20, "NEUTRINO STATION"
     D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
     DB FIRST_SPACE_PUZZLE
@@ -395,7 +395,7 @@ _Space_Node0:
     DB PADF_LEFT | EXIT_NODE   ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space0"
+    D_TITLE 16, "Warp Speedway"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node1:
     .begin

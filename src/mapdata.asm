@@ -41,6 +41,11 @@ DataX_SewerTileMap_start::
     INCBIN "out/data/maps/sewer.map"
 ASSERT @ - DataX_SewerTileMap_start == AREA_MAP_LENGTH
 
+SECTION "SpaceTileMap", ROMX
+DataX_SpaceTileMap_start::
+    INCBIN "out/data/maps/space.map"
+ASSERT @ - DataX_SpaceTileMap_start == AREA_MAP_LENGTH
+
 SECTION "WorldTileMap", ROMX
 DataX_WorldTileMap_start::
     INCBIN "out/data/maps/world.map"

@@ -45,7 +45,9 @@ _LoadTileset_Map:
     SKIP_TILES $0c
     pop af
     if_eq TILESET_MAP_SEWER, jr, _LoadTileset_MapSewer
+    if_eq TILESET_MAP_SPACE, jr, _LoadTileset_MapSpace
     if_eq TILESET_MAP_WORLD, jr, _LoadTileset_MapWorld
+    ret
 _LoadTileset_Puzz:
     push af
     COPY_FROM_ROMX DataX_SharedTerrainTiles_start, DataX_SharedTerrainTiles_end
@@ -56,10 +58,16 @@ _LoadTileset_Puzz:
     if_eq TILESET_PUZZ_SEASIDE, jp, _LoadTileset_PuzzSeaside
     if_eq TILESET_PUZZ_SEWER, jp, _LoadTileset_PuzzSewer
     if_eq TILESET_PUZZ_SPACE, jp, _LoadTileset_PuzzSpace
+    ret
 _LoadTileset_MapSewer:
     SKIP_TILES $30
     COPY_FROM_ROMX DataX_SewerMapTiles_start, DataX_SewerMapTiles_end
     ld hl, DataX_OceanTiles_tile_arr
+    jp Func_SetAnimatedTerrain
+_LoadTileset_MapSpace:
+    SKIP_TILES $30
+    COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
+    ld hl, DataX_TwinkleTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_MapWorld:
     SKIP_TILES $50
@@ -109,6 +117,7 @@ _LoadTileset_PuzzSpace:
 Func_AnimateTerrain::
     ld a, b
     if_eq TILESET_MAP_SEWER, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_MAP_SPACE, jr, _AnimateTerrain_Twinkle
     if_eq TILESET_MAP_WORLD, jr, _AnimateTerrain_Ocean
     if_eq TILESET_PUZZ_FARM, jr, _AnimateTerrain_Cow
     if_eq TILESET_PUZZ_SEASIDE, jr, _AnimateTerrain_Ocean
@@ -145,6 +154,18 @@ _AnimateTerrain_Stars:
     ldb de, a
     romb BANK(DataX_StarsTiles_tile_arr)
     ld hl, DataX_StarsTiles_tile_arr
+    jr _AnimateTerrain_Copy
+_AnimateTerrain_Twinkle:
+    ld a, c
+    and %00000111
+    ret nz
+    ld a, c
+    and %00011000
+    ASSERT sizeof_TILE == 16
+    rlca
+    ldb de, a
+    romb BANK(DataX_TwinkleTiles_tile_arr)
+    ld hl, DataX_TwinkleTiles_tile_arr
 _AnimateTerrain_Copy:
     add hl, de
     ;; fall through to Func_SetAnimatedTerrain

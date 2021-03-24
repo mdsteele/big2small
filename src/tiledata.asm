@@ -17,6 +17,10 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/vram.inc"
+
+;;;=========================================================================;;;
+
 SECTION "BgTiles", ROMX
 DataX_BgTiles_start::
     INCBIN "out/data/tiles/font.2bpp"
@@ -51,6 +55,15 @@ DataX_SewerMapTiles_start::
     INCBIN "out/data/tiles/sewer_map_pipe.2bpp"
     INCBIN "out/data/tiles/sewer_map_brick.2bpp"
 DataX_SewerMapTiles_end::
+
+SECTION "SpaceMapTiles", ROMX
+DataX_SpaceMapTiles_start::
+    INCBIN "out/data/tiles/space_map_station.2bpp"
+    DS 4 * sizeof_TILE
+    INCBIN "out/data/tiles/space_map_earth.2bpp"
+    DS 11 * sizeof_TILE
+    INCBIN "out/data/tiles/space_map_stars.2bpp"
+DataX_SpaceMapTiles_end::
 
 ;;;=========================================================================;;;
 ;;; Puzzle terrain tiles:
@@ -122,5 +135,9 @@ DataX_OceanTiles_tile_arr::
 SECTION "StarsTiles", ROMX
 DataX_StarsTiles_tile_arr::
     INCBIN "out/data/tiles/stars.2bpp"
+
+SECTION "TwinkleTiles", ROMX
+DataX_TwinkleTiles_tile_arr::
+    INCBIN "out/data/tiles/twinkle.2bpp"
 
 ;;;=========================================================================;;;
