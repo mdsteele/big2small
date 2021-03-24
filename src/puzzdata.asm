@@ -35,6 +35,7 @@ SECTION "PuzzlePtrs", ROMX
 ;;; An array that maps from puzzle numbers to pointers to PUZZ structs stored
 ;;; in BANK("PuzzleData").
 DataX_Puzzles_puzz_ptr_arr::
+    DW DataX_Forest0_puzz
     DW DataX_Forest1_puzz
     DW DataX_Forest2_puzz
     DW DataX_Forest3_puzz
@@ -58,6 +59,27 @@ ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 ;;;=========================================================================;;;
 
 SECTION "PuzzleData", ROMX
+
+DataX_Forest0_puzz:
+    .begin
+    DB W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST
+    DB $41, DIRF_EAST, 0, 0, 0, 0
+    DB W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST
+    DB $1c, 0, G_APL, 0, 0, 0
+    DB W_TST, W_TST, W_TST, W_TST, W_TST, W_TTR, W_TTR, W_TTR, W_TTR, W_TST
+    DB $2c, 0, G_CHS, 0, 0, 0
+    DB W_TST, W_TTR, W_TTR, W_TTR, W_TTR, O_EMP, O_EMP, O_EMP, G_PNT, W_TST
+    D_BPTR DataX_TitleMusic_song, 0, 0, 0
+    DB W_TST, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP, W_TTP, W_TTP, W_TST
+    D_BPTR DataX_Forest0Intro_dlog, 0, 0, 0
+    DB W_TST, W_TTP, W_TTP, O_EMP, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
+    D_BPTR DataX_Forest0Outro_dlog, 0, 0, 0
+    DB W_TST, W_TST, W_TST, W_TTP, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST
+    DB TILESET_PUZZ_FARM, COLORSET_SPRING, 0, 0, 0, 0
+    DB W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST
+    DS 6
+    DB W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST, W_TST
+ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Forest1_puzz:
     .begin

@@ -32,6 +32,35 @@ SECTION "DialogData", ROMX
 DataX_Null_dlog::
     DB DIALOG_END
 
+;;;=========================================================================;;;
+
+DataX_Forest0Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Boy, am I ever\n"
+    DB "hungry. I wish\n"
+    DB "I had a peanut!\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Hey, I think I\n"
+    DB "see a peanut up\n"
+    DB "ahead there!\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Please use the\n"
+    DB "D-pad to take\n"
+    DB "me there!\r"
+    DB DIALOG_END
+
+DataX_Forest0Outro_dlog::
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "This peanut is\n"
+    DB "so delicious.\n"
+    DB "Thank you!\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "I'm going to go\n"
+    DB "look for more!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 DataX_Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "Boy, am I ever\n"
