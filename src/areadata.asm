@@ -225,7 +225,7 @@ _Forest_Node4:
     DB 4, 6  ; row/col
     D_TRAIL TE1, TE1
     DB PADF_RIGHT | 3          ; prev
-    DB PADF_UP | 5             ; next
+    DB PADF_LEFT | 5           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Forest4"
     ASSERT @ - .begin == sizeof_NODE

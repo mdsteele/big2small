@@ -97,3 +97,59 @@ DataX_Forest1Outro_dlog::
     DB DIALOG_END
 
 ;;;=========================================================================;;;
+
+DataX_Forest2Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "A new friend!\n"
+    DB "Hi! We're Elle\n"
+    DB "and Gisele.\r"
+    DB DIALOG_MOUSE
+    DB "Hello. My name\n"
+    DB "is Mel.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "We're looking\n"
+    DB "for some food.\n"
+    DB "What about you?\r"
+    DB DIALOG_MOUSE
+    DB "I'm looking for\n"
+    DB "a spaceship to\n"
+    DB "go to the moon.\r"
+    DB DIALOG_MOUSE
+    DB "...But in the\n"
+    DB "meantime I want\n"
+    DB "some cheese.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Great, then we\n"
+    DB "can all work\n"
+    DB "together!\r"
+    DB DIALOG_END
+
+DataX_Forest2Outro_dlog::
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Ahh, nothing\n"
+    DB "like good food!\n"
+    DB "Let's get more!\r"
+    DB DIALOG_MOUSE
+    DB "Okay.  But I\n"
+    DB "still want\n"
+    DB "that spaceship.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+DataX_Forest3Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "The game might\n"
+    DB "start getting\n"
+    DB "harder now...\r"
+    DB DIALOG_MOUSE
+    DB "But what if we\n"
+    DB "want to start\n"
+    DB "over?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "We can always\n"
+    DB "press START to\n"
+    DB "open the menu!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;

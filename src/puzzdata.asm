@@ -104,23 +104,23 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Forest2_puzz:
     .begin
-    DB W_TST, W_TST, W_TST, W_TST, O_GRS, W_TTR, W_TST, W_TTR, W_TST, W_TST
-    DB $63, DIRF_EAST, 0, 0, 0, 0
-    DB W_TST, W_TST, W_TTR, W_TTR, O_EMP, O_EMP, W_TTR, O_EMP, W_TST, W_TST
-    DB $62, DIRF_EAST, 0, 0, 0, 0
-    DB W_TST, W_TST, W_FW1, W_FNS, W_FNS, W_FNS, W_FNS, W_FE1, W_TTR, W_TST
-    DB $61, DIRF_EAST, 0, 0, 0, 0
-    DB W_TST, W_TTR, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, W_TTR
+    DB W_TTP, W_TTR, W_TTR, W_TTR, W_TST, W_TST, W_TTR, W_TTR, W_TTR, W_TST
+    DB $58, DIRF_SOUTH, 0, 0, 0, 0
+    DB W_TST, O_EMP, O_EMP, O_EMP, W_TTR, W_TTR, O_EMP, O_EMP, O_EMP, W_TST
+    DB $38, DIRF_WEST, 0, 0, 0, 0
+    DB W_TST, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_PNT, O_EMP, W_TST
+    DB $11, DIRF_EAST, 0, 0, 0, 0
+    DB W_TST, W_TTP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR
     D_BPTR DataX_RestYe_song, 0, 0, 0
-    DB W_TST, W_TTP, W_TST, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, W_TTP, W_TTP
-    D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB W_TST, W_TTR, W_TTR, W_RCK, O_EMP, O_GRS, O_EMP, W_RCK, W_TTR, W_TST
-    D_BPTR DataX_Null_dlog, 0, 0, 0
-    DB W_TST, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, G_PNT, G_APL, G_CHS, W_TST
+    DB W_TST, W_TTR, O_EMP, O_GRS, W_TST, W_TTP, O_EMP, W_FW1, W_FNS, W_FNS
+    D_BPTR DataX_Forest2Intro_dlog, 0, 0, 0
+    DB W_TST, O_EMP, O_EMP, O_EMP, W_TTR, W_TTR, O_EMP, O_EMP, O_EMP, W_TTP
+    D_BPTR DataX_Forest2Outro_dlog, 0, 0, 0
+    DB W_TTR, O_GRS, O_EMP, O_EMP, O_GRS, W_RCK, O_EMP, O_GRS, O_GRS, W_TST
     DB TILESET_PUZZ_FARM, COLORSET_SUMMER, 0, 0, 0, 0
-    DB W_TTR, O_EMP, W_TTP, W_TTP, O_EMP, O_EMP, W_TTP, W_TTP, W_TTP, W_TST
+    DB W_TTP, O_EMP, G_CHS, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, W_TTP, W_TST
     DS 6
-    DB W_TTP, O_EMP, W_TTR, W_TST, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
+    DB W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TST, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Forest3_puzz:
@@ -134,7 +134,7 @@ DataX_Forest3_puzz:
     DB W_TTP, O_GRS, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, W_RCK, W_TST
     D_BPTR DataX_TitleMusic_song, 0, 0, 0
     DB W_TTR, W_TTP, W_FW1, W_FNS, W_FE1, W_TTR, W_RCK, O_EMP, O_GRS, W_TST
-    D_BPTR DataX_Null_dlog, 0, 0, 0
+    D_BPTR DataX_Forest3Intro_dlog, 0, 0, 0
     DB W_TTP, W_TTR, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
     D_BPTR DataX_Null_dlog, 0, 0, 0
     DB W_TST, O_GRS, G_APL, O_EMP, O_EMP, W_FW1, W_FNS, W_FNS, W_FE1, W_TST
