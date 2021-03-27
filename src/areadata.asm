@@ -29,7 +29,7 @@ INCLUDE "src/tileset.inc"
 
 ;;; The number of puzzles in each area:
 NUM_FOREST_PUZZLES EQU 8
-NUM_FARM_PUZZLES EQU 3
+NUM_FARM_PUZZLES EQU 7
 NUM_MOUNTAIN_PUZZLES EQU 1
 NUM_SEASIDE_PUZZLES EQU 2
 NUM_SEWER_PUZZLES EQU 2
@@ -81,6 +81,10 @@ TN2 EQU (TRAIL_NORTH | 2)
 TS2 EQU (TRAIL_SOUTH | 2)
 TE2 EQU (TRAIL_EAST  | 2)
 TW2 EQU (TRAIL_WEST  | 2)
+UN1 EQU (TRAIL_NORTH | 1 | TRAILF_UNDER)
+US1 EQU (TRAIL_SOUTH | 1 | TRAILF_UNDER)
+UE1 EQU (TRAIL_EAST  | 1 | TRAILF_UNDER)
+UW1 EQU (TRAIL_WEST  | 1 | TRAILF_UNDER)
 UN2 EQU (TRAIL_NORTH | 2 | TRAILF_UNDER)
 US2 EQU (TRAIL_SOUTH | 2 | TRAILF_UNDER)
 UE2 EQU (TRAIL_EAST  | 2 | TRAILF_UNDER)
@@ -270,39 +274,75 @@ DataX_Farm_area:
     .begin
     D_BPTR DataX_RestYe_song
     DB COLORSET_AUTUMN
-    DB TILESET_MAP_WORLD
+    DB TILESET_MAP_FOREST
     D_BPTR DataX_FarmTileMap_start
     D_TITLE 20, "HUGHSON FARMS"
-    D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
+    D_TRAIL TE1, TE1, TE1, TE1
     DB FIRST_FARM_PUZZLE
     DB NUM_FARM_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Farm_Node0:
     .begin
-    DB 8, 4  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1, TW1
-    DB PADF_LEFT | EXIT_NODE   ; prev
-    DB PADF_RIGHT | 1          ; next
+    DB 12, 5  ; row/col
+    D_TRAIL TS1, TS1, TS1, US1
+    DB PADF_DOWN | EXIT_NODE   ; prev
+    DB PADF_UP | 1             ; next
     DB 0                       ; bonus
     D_TITLE 16, "Farm0"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node1:
     .begin
-    DB 8, 8  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
-    DB PADF_LEFT | 0           ; prev
+    DB 7, 5  ; row/col
+    D_TRAIL TS1, TS1, TS1, TS1, TS1
+    DB PADF_DOWN | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Farm1"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node2:
     .begin
-    DB 8, 12  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
+    DB 5, 10  ; row/col
+    D_TRAIL TW1, TW1, TS1, TS1, TW1, TW1, TW1
     DB PADF_LEFT | 1           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Farm2"
+    ASSERT @ - .begin == sizeof_NODE
+_Farm_Node3:
+    .begin
+    DB 4, 17  ; row/col
+    D_TRAIL TW1, TW1, TW1, TS1, TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 2           ; prev
+    DB PADF_DOWN | 4           ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Farm3"
+    ASSERT @ - .begin == sizeof_NODE
+_Farm_Node4:
+    .begin
+    DB 8, 15  ; row/col
+    D_TRAIL TE1, TE1, TN1, TN1, TN1, TN1
+    DB PADF_RIGHT | 3          ; prev
+    DB PADF_DOWN | 6           ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Farm4"
+    ASSERT @ - .begin == sizeof_NODE
+_Farm_Node5:
+    .begin
+    DB 12, 11  ; row/col
+    D_TRAIL TS1, TS1, TE1, TE1, TE1, TE1, TE1, TN1, TN1
+    DB PADF_DOWN | 6           ; prev
+    DB 0                       ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Farm Bonus"
+    ASSERT @ - .begin == sizeof_NODE
+_Farm_Node6:
+    .begin
+    DB 12, 16  ; row/col
+    D_TRAIL TW1, TN1, TN1, TN1, TN1
+    DB PADF_LEFT | 4           ; prev
+    DB PADF_RIGHT | EXIT_NODE  ; next
+    DB PADF_DOWN | 5           ; bonus
+    D_TITLE 16, "Farm6"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Farm_Node0 == NUM_FARM_PUZZLES * sizeof_NODE
 

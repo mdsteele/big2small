@@ -55,6 +55,10 @@ DataX_ForestMapTiles_start::
     INCBIN "out/data/tiles/forest_map_fence.2bpp"
     DS 9 * sizeof_TILE
     INCBIN "out/data/tiles/forest_map_tree.2bpp"
+    DS 6 * sizeof_TILE
+    INCBIN "out/data/tiles/map_silo.2bpp"
+    DS 14 * sizeof_TILE
+    INCBIN "out/data/tiles/map_barn.2bpp"
 DataX_ForestMapTiles_end::
 
 SECTION "SewerMapTiles", ROMX

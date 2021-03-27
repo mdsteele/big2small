@@ -45,7 +45,11 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Bush2_puzz  ; TODO
     DW DataX_Farm1_puzz
     DW DataX_Farm2_puzz
-    DW DataX_Farm3_puzz
+    DW DataX_Farm2_puzz  ; TODO
+    DW DataX_Farm2_puzz  ; TODO
+    DW DataX_Farm2_puzz  ; TODO
+    DW DataX_FarmBonus_puzz
+    DW DataX_Farm2_puzz  ; TODO
     DW DataX_Mountain1_puzz
     DW DataX_Seaside1_puzz
     DW DataX_Seaside2_puzz
@@ -230,7 +234,7 @@ DataX_Farm2_puzz:
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, W_COW
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Farm3_puzz:
+DataX_FarmBonus_puzz:
     .begin
     DB O_GRS, O_GRS, O_EMP, O_EMP, W_COW, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     DB $80, DIRF_EAST, 0, 0, 0, 0

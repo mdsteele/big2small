@@ -98,6 +98,9 @@ int main(int argc, char **argv) {
     for (int col = 0; col < width; ++col) {
       int ch = fgetc(stdin);
       if (ch == '\n' || ch == EOF) {
+        for (; col < width; ++col) {
+          fputc(0x00, stdout);
+        }
         goto end_row;
       }
       int tileset_index = from_base64(ch);
@@ -116,6 +119,10 @@ int main(int argc, char **argv) {
         fputc(0xa0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "forest_map_tree")) {
         fputc(0xb0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "map_barn")) {
+        fputc(0xd0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "map_silo")) {
+        fputc(0xc0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "river")) {
         fputc(0xe0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "sewer_map_brick")) {
