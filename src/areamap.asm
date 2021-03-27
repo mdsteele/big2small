@@ -24,7 +24,8 @@ INCLUDE "src/save.inc"
 
 ;;;=========================================================================;;;
 
-NODE_TILEID  EQU $82
+NODE1_TILEID EQU $81
+NODE2_TILEID EQU $82
 TRAIL_TILEID EQU $83
 
 AVATAR_PALETTE EQU (OAMF_PAL0 | 1)
@@ -78,6 +79,9 @@ Ram_AreaMapAvatarFacing_u8:
 ;;; How many pixels backwards along its facing direction to draw the avatar
 ;;; from its row/col tile.
 Ram_AreaMapAvatarOffset_u8:
+    DB
+;;; The priority of the avatar object (either 0 or OAMF_PRI):
+Ram_AreaMapAvatarPriority_u8:
     DB
 
 ;;; The trail that the avatar is currently following, if we are in
@@ -702,6 +706,7 @@ Func_PlaceAvatarAtCurrentNode:
     ld [Ram_AreaMapAvatarCol_i8], a
     xor a
     ld [Ram_AreaMapAvatarOffset_u8], a
+    ld [Ram_AreaMapAvatarPriority_u8], a
     ;; Draw the node's title on the bottom row of the screen.
     ld bc, NODE_Title_u8_arr16 - NODE_Col_u8
     add hl, bc
@@ -720,6 +725,13 @@ Func_PlaceAvatarAtCurrentNode:
 ;;; @param e The trail entry to apply.
 ;;; @preserve e, hl
 Func_AreaMapAvatarApplyTrailEntry:
+    ;; Set the avatar's priority.
+    xor a
+    bit TRAILB_UNDER, e
+    jr z, .over
+    ld a, OAMF_PRI
+    .over
+    ld [Ram_AreaMapAvatarPriority_u8], a
     ;; Set d to the trail entry's direction, and set the avatar's facing
     ;; direction to match.
     ld a, e
@@ -814,7 +826,8 @@ Func_UpdateAreaMapAvatarObj:
     add c
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
     ;; Set flags:
-    ld a, b
+    ld a, [Ram_AreaMapAvatarPriority_u8]
+    or b
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
     ret
 
@@ -826,30 +839,44 @@ Func_UpdateAreaMapAvatarObj:
 ;;; @param c The node index to draw.
 Func_DrawNodeAndTrail:
     call Func_GetPointerToNode_hl
-_DrawNodeAndTrail_Node:
     ;; Load position row into a and col into c.
     ASSERT NODE_Row_u8 == 0
     ld a, [hl+]
     ASSERT NODE_Col_u8 == 1
     ld c, [hl]
     inc hl
-    ;; Make de point to the NODE struct's Trail array.
+    ;; Save the pointer to the NODE struct's Trail array for later.
     ASSERT NODE_Trail_u8_arr == 2
-    ldw de, hl
+    push hl
+    ;; Set b to the NODE struct's Bonus field.
+    ld de, NODE_Bonus_u8 - NODE_Trail_u8_arr
+    add hl, de
+    ld b, [hl]
     ;; Make hl point to the VRAM BG map cell for the node position.
     rlca
     swap a
-    ld b, a
+    ld e, a
     and %00000011
     add HIGH(Vram_BgMap)
     ld h, a
-    ld a, b
+    ld a, e
     and %11100000
     ASSERT LOW(Vram_BgMap) == 0
     add c
     ld l, a
-    ;; Draw the puzzle node into VRAM.
-    ld [hl], NODE_TILEID
+    ;; Draw the puzzle node into VRAM, using NODE2_TILEID if the node has a
+    ;; bonus exit, or NODE1_TILEID otherwise.
+    ld a, b
+    or a
+    jr nz, .node2
+    ld [hl], NODE1_TILEID
+    jr .nodeDone
+    .node2
+    ld [hl], NODE2_TILEID
+    .nodeDone
+    call Func_SetTrailTileColor  ; preserves hl
+    ;; Draw the node's trail.
+    pop de  ; param: trail array ptr
     ;; fall through to Func_DrawTrail
 
 ;;; Draws the trail tick marks for a node trail or area exit trail.
@@ -893,9 +920,24 @@ Func_DrawTrail:
     jr nz, .distLoop
     ;; Draw the trail tick mark into VRAM.
     ld [hl], TRAIL_TILEID
+    call Func_SetTrailTileColor  ; preserves de, hl
     ;; Continue to the next trail entry.
     inc de
     jr .trailLoop
+
+;;; If color is enabled, sets the palette number for the specified trail tile.
+;;; @param hl A pointer to BG map byte in VRAM for the trail tile.
+;;; @preserve bc, de, hl
+Func_SetTrailTileColor:
+    ldh a, [Hram_ColorEnabled_bool]
+    or a
+    ret z
+    ld a, 1
+    ldh [rVBK], a
+    ld [hl], 5
+    xor a
+    ldh [rVBK], a
+    ret
 
 ;;;=========================================================================;;;
 
@@ -970,7 +1012,7 @@ Func_LoadAreaMapColorRow:
 
 ;;; Maps from bits 4-6 of an area map tile ID to a color palette number.
 Data_AreaMapBgPalettes_u8_arr8:
-    DB 5, 1, 1, 1, 7, 6, 4, 1
+    DB 5, 1, 1, 3, 7, 6, 4, 1
 
 ;;;=========================================================================;;;
 

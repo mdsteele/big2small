@@ -50,6 +50,13 @@ DataX_SharedMapTiles_start::
     INCBIN "out/data/tiles/shared_map.2bpp"
 DataX_SharedMapTiles_end::
 
+SECTION "ForestMapTiles", ROMX
+DataX_ForestMapTiles_start::
+    INCBIN "out/data/tiles/forest_map_fence.2bpp"
+    DS 9 * sizeof_TILE
+    INCBIN "out/data/tiles/forest_map_tree.2bpp"
+DataX_ForestMapTiles_end::
+
 SECTION "SewerMapTiles", ROMX
 DataX_SewerMapTiles_start::
     INCBIN "out/data/tiles/sewer_map_pipe.2bpp"

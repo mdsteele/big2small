@@ -41,6 +41,8 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Forest3_puzz
     DW DataX_Bush1_puzz
     DW DataX_Bush2_puzz
+    DW DataX_Bush2_puzz  ; TODO
+    DW DataX_Bush2_puzz  ; TODO
     DW DataX_Farm1_puzz
     DW DataX_Farm2_puzz
     DW DataX_Farm3_puzz

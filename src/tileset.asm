@@ -29,6 +29,11 @@ SKIP_TILES: MACRO
     add hl, bc
 ENDM
 
+SKIP_TO_TILE: MACRO
+    STATIC_ASSERT _NARG == 1
+    ld hl, Vram_SharedTiles + ((\1) - $80) * sizeof_TILE
+ENDM
+
 ;;;=========================================================================;;;
 
 SECTION "TilesetFunctions", ROM0
@@ -44,6 +49,7 @@ _LoadTileset_Map:
     COPY_FROM_ROMX DataX_SharedMapTiles_start, DataX_SharedMapTiles_end
     SKIP_TILES $0c
     pop af
+    if_eq TILESET_MAP_FOREST, jr, _LoadTileset_MapForest
     if_eq TILESET_MAP_SEWER, jr, _LoadTileset_MapSewer
     if_eq TILESET_MAP_SPACE, jr, _LoadTileset_MapSpace
     if_eq TILESET_MAP_WORLD, jr, _LoadTileset_MapWorld
@@ -53,11 +59,15 @@ _LoadTileset_Puzz:
     COPY_FROM_ROMX DataX_SharedTerrainTiles_start, DataX_SharedTerrainTiles_end
     pop af
     if_eq TILESET_PUZZ_CITY, jr, _LoadTileset_PuzzCity
-    if_eq TILESET_PUZZ_FARM, jr, _LoadTileset_PuzzFarm
+    if_eq TILESET_PUZZ_FARM, jp, _LoadTileset_PuzzFarm
     if_eq TILESET_PUZZ_MOUNTAIN, jp, _LoadTileset_PuzzMountain
     if_eq TILESET_PUZZ_SEASIDE, jp, _LoadTileset_PuzzSeaside
     if_eq TILESET_PUZZ_SEWER, jp, _LoadTileset_PuzzSewer
     if_eq TILESET_PUZZ_SPACE, jp, _LoadTileset_PuzzSpace
+    ret
+_LoadTileset_MapForest:
+    SKIP_TO_TILE $a0
+    COPY_FROM_ROMX DataX_ForestMapTiles_start, DataX_ForestMapTiles_end
     ret
 _LoadTileset_MapSewer:
     SKIP_TILES $30
@@ -70,7 +80,7 @@ _LoadTileset_MapSpace:
     ld hl, DataX_TwinkleTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_MapWorld:
-    SKIP_TILES $50
+    SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     ld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain

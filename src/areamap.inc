@@ -44,6 +44,10 @@ TRAIL_WEST      EQU %00110000
 TRAIL_DIR_MASK  EQU %00110000
 ;;; Mask for extracting the distance from a trail entry.
 TRAIL_DIST_MASK EQU %00001111
+;;; If this bit is set for a trail entry, then the avatar should be drawn
+;;; underneath the map terrain while following this trail segment.
+TRAILB_UNDER EQU 6
+TRAILF_UNDER EQU (1 << TRAILB_UNDER)
 ;;; This bit is set for the last entry in NODE_Trail_u8_arr entry.
 TRAILB_END EQU 7
 

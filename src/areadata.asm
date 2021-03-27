@@ -28,7 +28,7 @@ INCLUDE "src/tileset.inc"
 ;;;=========================================================================;;;
 
 ;;; The number of puzzles in each area:
-NUM_FOREST_PUZZLES EQU 6
+NUM_FOREST_PUZZLES EQU 8
 NUM_FARM_PUZZLES EQU 3
 NUM_MOUNTAIN_PUZZLES EQU 1
 NUM_SEASIDE_PUZZLES EQU 2
@@ -81,6 +81,14 @@ TN2 EQU (TRAIL_NORTH | 2)
 TS2 EQU (TRAIL_SOUTH | 2)
 TE2 EQU (TRAIL_EAST  | 2)
 TW2 EQU (TRAIL_WEST  | 2)
+UN2 EQU (TRAIL_NORTH | 2 | TRAILF_UNDER)
+US2 EQU (TRAIL_SOUTH | 2 | TRAILF_UNDER)
+UE2 EQU (TRAIL_EAST  | 2 | TRAILF_UNDER)
+UW2 EQU (TRAIL_WEST  | 2 | TRAILF_UNDER)
+UN3 EQU (TRAIL_NORTH | 3 | TRAILF_UNDER)
+US3 EQU (TRAIL_SOUTH | 3 | TRAILF_UNDER)
+UE3 EQU (TRAIL_EAST  | 3 | TRAILF_UNDER)
+UW3 EQU (TRAIL_WEST  | 3 | TRAILF_UNDER)
 
 ;;; Declares a Trail/ExitTrail field within a NODE/AREA struct.  There should
 ;;; be 1 to MAX_TRAIL_LENGTH arguments (inclusive), with each being one of the
@@ -177,53 +185,53 @@ DataX_Forest_area:
     .begin
     D_BPTR DataX_TitleMusic_song
     DB COLORSET_SUMMER
-    DB TILESET_MAP_WORLD
+    DB TILESET_MAP_FOREST
     D_BPTR DataX_ForestTileMap_start
     D_TITLE 20, "GIANT'S FOREST"
-    D_TRAIL TN1, TN1, TN1, TN1
+    D_TRAIL TN1, TN1, TN1
     DB FIRST_FOREST_PUZZLE
     DB NUM_FOREST_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Forest_Node0:
     .begin
-    DB 8, 4  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1, TW1
+    DB 9, 3  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
     DB PADF_LEFT | EXIT_NODE   ; prev
     DB PADF_DOWN | 1           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Forest0"
+    D_TITLE 16, "Peanut Pathway"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node1:
     .begin
     DB 13, 7  ; row/col
-    D_TRAIL TW1, TW1, TW1, TN1, TN1, TN1, TN1, TN1
+    D_TRAIL TW1, TW1, TW1, TW1, TN1, TN1, TN1, TN1
     DB PADF_LEFT | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Forest1"
+    D_TITLE 16, "Goat Grove"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node2:
     .begin
-    DB 9, 11  ; row/col
-    D_TRAIL TS1, TS1, TS1, TS1, TW1, TW1, TW1, TW1
-    DB PADF_DOWN | 1           ; prev
-    DB PADF_UP | 3             ; next
+    DB 13, 13  ; row/col
+    D_TRAIL TW1, UW3, TW1, TW1
+    DB PADF_LEFT | 1           ; prev
+    DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Forest2"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node3:
     .begin
-    DB 4, 8  ; row/col
-    D_TRAIL TE1, TE1, TE1, TS1, TS1, TS1, TS1, TS1
-    DB PADF_RIGHT | 2          ; prev
-    DB PADF_LEFT | 4           ; next
+    DB 11, 17  ; row/col
+    D_TRAIL TW1, TW1, TS1, TS1, TW1, TW1
+    DB PADF_LEFT | 2           ; prev
+    DB PADF_UP | 4             ; next
     DB 0                       ; bonus
     D_TITLE 16, "Forest3"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node4:
     .begin
-    DB 4, 6  ; row/col
-    D_TRAIL TE1, TE1
+    DB 6, 15  ; row/col
+    D_TRAIL TE1, TE1, TS1, TS1, TS1, TS1, TS1
     DB PADF_RIGHT | 3          ; prev
     DB PADF_LEFT | 5           ; next
     DB 0                       ; bonus
@@ -231,12 +239,30 @@ _Forest_Node4:
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node5:
     .begin
-    DB 4, 4  ; row/col
-    D_TRAIL TE1, TE1
-    DB PADF_RIGHT | 4          ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB 8, 12  ; row/col
+    D_TRAIL TN1, TN1, TE1, TE1, TE1
+    DB PADF_UP | 4             ; prev
+    DB PADF_LEFT | 7           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Forest5"
+    ASSERT @ - .begin == sizeof_NODE
+_Forest_Node6:
+    .begin
+    DB 4, 1  ; row/col
+    D_TRAIL TE1, UE3, TE1, TE1, TE1, TE1
+    DB PADF_RIGHT | 7          ; prev
+    DB 0                       ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Forest Bonus"
+    ASSERT @ - .begin == sizeof_NODE
+_Forest_Node7:
+    .begin
+    DB 4, 9  ; row/col
+    D_TRAIL TS1, TS1, TS1, TS1, TE1, TE1, TE1
+    DB PADF_DOWN | 5           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_LEFT | 6           ; bonus
+    D_TITLE 16, "Forest7"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Forest_Node0 == NUM_FOREST_PUZZLES * sizeof_NODE
 

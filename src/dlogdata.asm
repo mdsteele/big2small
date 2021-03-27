@@ -92,7 +92,7 @@ DataX_Forest1Outro_dlog::
     DB "...APPealing!\r"
     DB DIALOG_ELEPHANT_EYES_CLOSED
     DB "We make a good\n"
-    DB "team!  Let's\n"
+    DB "team! Let's\n"
     DB "be friends!\r"
     DB DIALOG_END
 
@@ -130,7 +130,7 @@ DataX_Forest2Outro_dlog::
     DB "like good food!\n"
     DB "Let's get more!\r"
     DB DIALOG_MOUSE
-    DB "Okay.  But I\n"
+    DB "Okay. But I\n"
     DB "still want\n"
     DB "that spaceship.\r"
     DB DIALOG_END

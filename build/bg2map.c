@@ -112,20 +112,24 @@ int main(int argc, char **argv) {
       } else if (0 == strcmp(tileset, "ocean") ||
                  0 == strcmp(tileset, "twinkle")) {
         fputc(0x68, stdout);
+      } else if (0 == strcmp(tileset, "forest_map_fence")) {
+        fputc(0xa0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "forest_map_tree")) {
+        fputc(0xb0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "river")) {
-        fputc(0xE0 + tile_index, stdout);
+        fputc(0xe0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "sewer_map_brick")) {
-        fputc(0xD0 + tile_index, stdout);
+        fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "sewer_map_pipe")) {
-        fputc(0xC0 + tile_index, stdout);
+        fputc(0xc0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "shared_map")) {
         fputc(0x80 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "space_map_earth")) {
-        fputc(0xD0 + tile_index, stdout);
+        fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "space_map_stars")) {
-        fputc(0xE0 + tile_index, stdout);
+        fputc(0xe0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "space_map_station")) {
-        fputc(0xC0 + tile_index, stdout);
+        fputc(0xc0 + tile_index, stdout);
       } else {
         fprintf(stderr, "unknown tileset: %s\n", tileset);
         return EXIT_FAILURE;
