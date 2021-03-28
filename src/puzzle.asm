@@ -20,6 +20,7 @@
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/puzzle.inc"
+INCLUDE "src/save.inc"
 INCLUDE "src/tileset.inc"
 INCLUDE "src/vram.inc"
 
@@ -91,6 +92,10 @@ SECTION "PuzzleState", WRAM0, ALIGN[8]
 ;;; mutated from its original state.
 Ram_PuzzleState_puzz:
     DS sizeof_PUZZ
+
+;;; The number of moves the player has made so far.
+Ram_PuzzleNumMoves_bcd16:
+    DW
 
 ;;;=========================================================================;;;
 
@@ -192,6 +197,8 @@ _BeginPuzzle_Init:
     xcall FuncX_DrawWindowFrame
     ;; Initialize state.
     xor a
+    ld [Ram_PuzzleNumMoves_bcd16 + 0], a
+    ld [Ram_PuzzleNumMoves_bcd16 + 1], a
     ld [Ram_PuzzleAnimationClock_u8], a
     ld [Ram_WalkingCountdown_u8], a
     ld [Ram_WalkingAction_u8], a
@@ -956,6 +963,17 @@ Func_UpdatePuzzleTerrain:
 SECTION "MainAnimalMoving", ROM0
 
 Main_AnimalMoving:
+    ;; Increment the number of moves.
+    ld hl, Ram_PuzzleNumMoves_bcd16
+    ld a, [hl]
+    add 1
+    daa
+    ld [hl+], a
+    ld a, [hl]
+    adc 0
+    daa
+    ld [hl], a
+    ;; Hide the arrow objects.
     xor a
     ld [Ram_ArrowN_oama + OAMA_Y], a
     ld [Ram_ArrowS_oama + OAMA_Y], a
@@ -1402,12 +1420,20 @@ SECTION "MainVictory", ROM0
 
 Main_Victory:
     ;; TODO: Play victory music, animate animals.
-    ;; Run outro dialog.
+    ;; Run outro dialog and fade out.
     ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr
     call Func_RunDialog
-    ;; Fade out and return to the area map.
     call Func_FadeOut
-    ld c, 1  ; param: is victory (1=true)
+    ;; Determine if we made par, then return to the area map.
+    ld c, STATF_SOLVED  ; param: puzzle status
+    ld hl, Ram_PuzzleNumMoves_bcd16 + 1
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Par_bcd16 + 1]
+    if_lt [hl], jr, .didNotMakePar
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Par_bcd16 + 0]
+    dec hl
+    if_lt [hl], jr, .didNotMakePar
+    set STATB_MADE_PAR, c
+    .didNotMakePar
     jp Main_AreaMapResume
 
 ;;;=========================================================================;;;

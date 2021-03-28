@@ -31,10 +31,12 @@ MAGIC_FILE_EXISTS EQU $b2
 ;;; Bit indices for FILE_PuzzleStatus_u8_arr:
 STATB_UNLOCKED EQU 0
 STATB_SOLVED   EQU 1
+STATB_MADE_PAR EQU 2
 
 ;;; Flags indices for FILE_PuzzleStatus_u8_arr:
 STATF_UNLOCKED EQU (1 << STATB_UNLOCKED)
 STATF_SOLVED   EQU (1 << STATB_SOLVED)
+STATF_MADE_PAR EQU (1 << STATB_MADE_PAR)
 
 ;;;=========================================================================;;;
 

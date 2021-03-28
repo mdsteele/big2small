@@ -183,7 +183,7 @@ _PauseMenu_QuitPuzzle:
     ld a, IEF_VBLANK
     ldh [rIE], a
     ;; Return to the area map screen.
-    ld c, 0  ; is victory (0=false)
+    ld c, 0  ; param: puzzle status
     jp Main_AreaMapResume
 
 _PauseMenu_ResetPuzzle:

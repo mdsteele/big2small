@@ -128,7 +128,7 @@ _TitleScreen_HandleButtonStart:
 
 _TitleScreen_UpdateCursor:
     ld [Ram_TitleMenuItem_u8], a
-    ld c, ">"  ; cursor tile ID
+    ld c, ">"  ; param: cursor tile ID
     call Func_TitleMenuSetCursorTile
     jr _TitleScreen_RunLoop
 
@@ -140,10 +140,10 @@ _TitleScreen_SelectFile:
 _TitleScreen_LoadFile:
     call Func_FadeOut
     ld a, [Ram_TitleMenuItem_u8]
-    ld b, a  ; save file number
+    ld b, a  ; param: save file number
     call Func_LoadFile
     ;; TODO: Go to world map instead if file is empty.
-    ld c, 0  ; is victory (0=false)
+    ld c, 0  ; param: puzzle status
     jp Main_AreaMapResume
 
 _TitleScreen_EraseFile:
@@ -159,7 +159,7 @@ _TitleScreen_EraseFile:
     COPY_FROM_ROM0 Data_FileEmptyStr_start, Data_FileEmptyStr_end
     ;; Actually erase the file.
     ld a, [Ram_TitleMenuItem_u8]
-    ld b, a  ; save file number
+    ld b, a  ; param: save file number
     call Func_EraseFile
     jp _TitleScreen_RunLoop
 

@@ -160,7 +160,9 @@ _AreaMapEnter_WalkIn:
 
 ;;; Runs the area map screen for the current puzzle's area, with the avatar
 ;;; starting at the node for the current puzzle.
-;;; @param c 1 if the current puzzle was just solved, 0 otherwise.
+;;; @param c Should have STATB_SOLVED set if the current puzzle was just
+;;;   solved, and should have STATB_MADE_PAR set if the puzzle was solved
+;;;   at/under par.
 ;;; @prereq LCD is off.
 Main_AreaMapResume::
     push bc
@@ -184,9 +186,10 @@ Main_AreaMapResume::
     ldh [rLCDC], a
     ;; If the current puzzle wasn't just solved, then we're done.
     pop bc
-    bit 0, c
+    bit STATB_SOLVED, c
     jp z, Main_AreaMapCommand
 _AreaMapResume_SolvedPuzzle:
+    push bc
     ;; If the current puzzle wasn't already solved, then mark it solved and
     ;; increment the number of solved puzzles.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
@@ -209,8 +212,22 @@ _AreaMapResume_SolvedPuzzle:
     ld e, a  ; param: trail node
     if_eq EXIT_NODE, call, Func_DrawTrailAnimated
     .alreadySolved
+    pop bc
 _AreaMapResume_UnlockBonusPuzzle:
-    ;; TODO: Unlock bonus puzzle, if applicable.
+    ;; If the current puzzle was solved at/under par, unlock the bonus puzzle,
+    ;; if any.
+    bit STATB_MADE_PAR, c
+    jr z, .noBonus
+    call Func_GetPointerToCurrentNode_hl
+    ld bc, NODE_Bonus_u8
+    add hl, bc
+    ld a, [hl]
+    or a
+    jr z, .noBonus
+    and $0f
+    ld c, a  ; param: node index to unlock
+    call Func_UnlockNode_b
+    .noBonus
 _AreaMapResume_UnlockNextPuzzle:
     ;; Unlock the next puzzle (if it's not EXIT_NODE).
     call Func_GetPointerToCurrentNode_hl
@@ -743,6 +760,7 @@ Func_PlaceAvatarAtCurrentNode:
     inc de
     dec c
     jr nz, .titleLoop
+    ;; TODO: If this puzzle has STATB_MADE_PAR set, put stars on the title bar.
     ret
 
 ;;; Updates the avatar's row, col, facing direction, and offset to begin
