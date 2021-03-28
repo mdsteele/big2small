@@ -76,12 +76,9 @@ Func_LoadFile::
     jr Func_SramFileTransfer
 
 _LoadFile_NewGame:
-    ;; Mark the first puzzle as unlocked.
-    ld a, STATF_UNLOCKED
-    ld [Ram_Progress_file + FILE_PuzzleStatus_u8_arr + 0], a
-    ;; Mark all other puzzles as locked and unsolved.
-    ld c, NUM_PUZZLES - 1
-    ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr + 1
+    ;; Mark all puzzles as locked and unsolved.
+    ld c, NUM_PUZZLES
+    ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
     xor a
     .loop
     ld [hl+], a

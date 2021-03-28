@@ -142,6 +142,7 @@ _TitleScreen_LoadFile:
     ld a, [Ram_TitleMenuItem_u8]
     ld b, a  ; save file number
     call Func_LoadFile
+    ;; TODO: Go to world map instead if file is empty.
     ld c, 0  ; is victory (0=false)
     jp Main_AreaMapResume
 
