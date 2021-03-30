@@ -20,6 +20,8 @@
 INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
+INCLUDE "src/puzzle.inc"
+INCLUDE "src/save.inc"
 INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
@@ -52,13 +54,20 @@ Ram_PauseMenuItem_u8:
 Ram_PauseWindowVelocity_i8:
     DB
 
+;;; How many rows of the window tile map we've drawn so far.  (We don't draw
+;;; them all at once to avoid running over the VBlank period.)
+Ram_PauseWindowRowsDrawn_u8:
+    DB
+
 ;;;=========================================================================;;;
 
 SECTION "MainPause", ROM0
 
 Main_BeginPause::
-    ;; Initialize window contents.
-    xcall FuncX_DrawPauseMenu
+    ;; Start drawing window contents.
+    xor a
+    ld [Ram_PauseWindowRowsDrawn_u8], a
+    xcall FuncX_DrawPause_DrawNextWindowRow
     ;; Hide arrow objects.
     xor a
     ld [Ram_ArrowN_oama + OAMA_Y], a
@@ -95,6 +104,7 @@ Main_BeginPause::
 Main_PausingGame:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    xcall FuncX_DrawPause_DrawNextWindowRow
 _PausingGame_MoveWindow:
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
@@ -207,7 +217,7 @@ Func_PauseMenuSetCursorTile:
     rlca
     ldb bc, a
     ;; Make hl point to the menu cursor tile in the window map.
-    ld hl, Vram_WindowMap + 2 + 1 * SCRN_VX_B
+    ld hl, Vram_WindowMap + SCRN_VX_B * 1 + 1
     add hl, bc
     ;; Change the tile ID.
     ld [hl], d
@@ -215,50 +225,119 @@ Func_PauseMenuSetCursorTile:
 
 ;;;=========================================================================;;;
 
-SECTION "DrawPauseMenu", ROMX
+SECTION "DrawPause", ROMX
 
-DRAW_MENU_UNROLL EQU 3
-PAUSE_MENU_LINE_TILES EQU (SCRN_X_B - 2)
+;;; The pause menu is laid out like this:
+;;;
+;;;     +========+=========+
+;;;     |>Unpause|Moves 123|
+;;;     | Reset  |Best  057|
+;;;     | Quit   |Par   048|
+;;;     +========+=========+
+DataX_DrawPause_2ndRow_start:
+    DB "|>Unpause|Moves "
+DataX_DrawPause_2ndRow_end:
+DataX_DrawPause_3rdRow_start:
+    DB "| Reset  |Best  "
+DataX_DrawPause_3rdRow_end:
+DataX_DrawPause_4thRow_start:
+    DB "| Quit   |Par   "
+DataX_DrawPause_4thRow_end:
 
-;;; Updates the VRAM window map with the text of the pause menu.
-FuncX_DrawPauseMenu:
-    ld a, " "
-    ld de, SCRN_VX_B - PAUSE_MENU_LINE_TILES
-    ld hl, Vram_WindowMap + SCRN_VX_B * 1 + 1
-    ld b, PAUSE_MENU_NUM_ITEMS
-    .outerLoop
-    ASSERT PAUSE_MENU_LINE_TILES % DRAW_MENU_UNROLL == 0
-    ld c, PAUSE_MENU_LINE_TILES / DRAW_MENU_UNROLL
-    .innerLoop
-    REPT DRAW_MENU_UNROLL
+;;; Draws the next row of the dialog pause tile map, if there are any left to
+;;; be drawn.
+FuncX_DrawPause_DrawNextWindowRow:
+    ld a, [Ram_PauseWindowRowsDrawn_u8]
+    if_ge 5, ret
+    inc a
+    ld [Ram_PauseWindowRowsDrawn_u8], a
+    if_eq 1, jr, _DrawPause_DrawNextWindowRow_FirstRow
+    if_eq 2, jr, _DrawPause_DrawNextWindowRow_SecondRow
+    if_eq 3, jr, _DrawPause_DrawNextWindowRow_ThirdRow
+    if_eq 4, jr, _DrawPause_DrawNextWindowRow_FourthRow
+_DrawPause_DrawNextWindowRow_LastRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 4
+    jr _DrawPause_DrawNextWindowRow_FirstOrLastRow
+_DrawPause_DrawNextWindowRow_FirstRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 0
+_DrawPause_DrawNextWindowRow_FirstOrLastRow:
+    ld a, "+"
     ld [hl+], a
-    ENDR
+    ld a, "="
+    ld c, 8
+    .leftLoop
+    ld [hl+], a
     dec c
-    jr nz, .innerLoop
-    dec b
-    jr z, .strings
-    add hl, de
-    jr .outerLoop
-    .strings
-    ld hl, Vram_WindowMap + SCRN_VX_B * 1 + 2  ; dest
-    COPY_FROM_SAME DataX_ContinueStr_start, DataX_ContinueStr_end
-    ld hl, Vram_WindowMap + SCRN_VX_B * 2 + 3  ; dest
-    COPY_FROM_SAME DataX_ResetStr_start, DataX_ResetStr_end
-    ld hl, Vram_WindowMap + SCRN_VX_B * 3 + 3  ; dest
-    COPY_FROM_SAME DataX_BackToMapStr_start, DataX_BackToMapStr_end
-    ;; TODO: Also draw num moves and par for this puzzle.
+    jr nz, .leftLoop
+    ld a, "+"
+    ld [hl+], a
+    ld a, "="
+    ld c, 9
+    .rightLoop
+    ld [hl+], a
+    dec c
+    jr nz, .rightLoop
+    ld a, "+"
+    ld [hl], a
     ret
-
-DataX_ContinueStr_start:
-    DB ">Continue"
-DataX_ContinueStr_end:
-
-DataX_ResetStr_start:
-    DB "Reset puzzle"
-DataX_ResetStr_end:
-
-DataX_BackToMapStr_start:
-    DB "Back to map"
-DataX_BackToMapStr_end:
+_DrawPause_DrawNextWindowRow_SecondRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 1  ; param: dest
+    COPY_FROM_SAME DataX_DrawPause_2ndRow_start, DataX_DrawPause_2ndRow_end
+    ld de, Ram_PuzzleNumMoves_bcd16
+    jr _DrawPause_DrawNextWindowRow_DrawMoveCount
+_DrawPause_DrawNextWindowRow_ThirdRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 2  ; param: dest
+    COPY_FROM_SAME DataX_DrawPause_3rdRow_start, DataX_DrawPause_3rdRow_end
+    ;; If the current puzzle hasn't been solved, draw dashes for the best move
+    ;; count.
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ld d, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld e, a
+    ld a, [de]
+    bit STATB_SOLVED, a
+    jr z, _DrawPause_DrawNextWindowRow_NullMoveCount
+    ;; Otherwise, make de point to the best move count for the current puzzle.
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ASSERT NUM_PUZZLES * 2 < $100
+    rlca
+    add LOW(Ram_Progress_file + FILE_PuzzleBest_bcd16_arr)
+    ld e, a
+    ld a, HIGH(Ram_Progress_file + FILE_PuzzleBest_bcd16_arr)
+    adc 0
+    ld d, a
+    jr _DrawPause_DrawNextWindowRow_DrawMoveCount
+_DrawPause_DrawNextWindowRow_FourthRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 3  ; param: dest
+    COPY_FROM_SAME DataX_DrawPause_4thRow_start, DataX_DrawPause_4thRow_end
+    ld de, Ram_PuzzleState_puzz + PUZZ_Par_bcd16
+    jr _DrawPause_DrawNextWindowRow_DrawMoveCount
+_DrawPause_DrawNextWindowRow_NullMoveCount:
+    ld a, "-"
+    ld [hl+], a
+    ld [hl+], a
+    ld [hl+], a
+    ld a, "|"
+    ld [hl], a
+    ret
+_DrawPause_DrawNextWindowRow_DrawMoveCount:
+    inc de
+    ld a, [de]
+    and $0f
+    add "0"
+    ld [hl+], a
+    dec de
+    ld a, [de]
+    and $f0
+    swap a
+    add "0"
+    ld [hl+], a
+    ld a, [de]
+    and $0f
+    add "0"
+    ld [hl+], a
+    ld a, "|"
+    ld [hl], a
+    ret
 
 ;;;=========================================================================;;;

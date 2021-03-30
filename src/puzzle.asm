@@ -22,7 +22,6 @@ INCLUDE "src/macros.inc"
 INCLUDE "src/puzzle.inc"
 INCLUDE "src/save.inc"
 INCLUDE "src/tileset.inc"
-INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -90,11 +89,11 @@ SECTION "PuzzleState", WRAM0, ALIGN[8]
 
 ;;; A 256-byte-aligned in-RAM copy of the current puzzle's ROM data, possibly
 ;;; mutated from its original state.
-Ram_PuzzleState_puzz:
+Ram_PuzzleState_puzz::
     DS sizeof_PUZZ
 
 ;;; The number of moves the player has made so far.
-Ram_PuzzleNumMoves_bcd16:
+Ram_PuzzleNumMoves_bcd16::
     DW
 
 ;;;=========================================================================;;;
@@ -159,11 +158,11 @@ Main_ResetPuzzle::
     jr _BeginPuzzle_Init
 
 ;;; @prereq LCD is off.
-;;; @param c Current puzzle number.
 Main_BeginPuzzle::
     ;; Store pointer to current PUZZ struct in de...
-    sla c
-    ld b, 0
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    rlca
+    ldb bc, a
     ld hl, DataX_Puzzles_puzz_ptr_arr
     add hl, bc
     romb BANK(DataX_Puzzles_puzz_ptr_arr)
@@ -193,8 +192,6 @@ _BeginPuzzle_Init:
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
     call Func_LoadPuzzleTerrainIntoVram
-    ;; Initialize window.
-    xcall FuncX_DrawWindowFrame
     ;; Initialize state.
     xor a
     ld [Ram_PuzzleNumMoves_bcd16 + 0], a
@@ -963,7 +960,21 @@ Func_UpdatePuzzleTerrain:
 SECTION "MainAnimalMoving", ROM0
 
 Main_AnimalMoving:
+    ;; Hide the arrow objects.
+    xor a
+    ld [Ram_ArrowN_oama + OAMA_Y], a
+    ld [Ram_ArrowS_oama + OAMA_Y], a
+    ld [Ram_ArrowE_oama + OAMA_Y], a
+    ld [Ram_ArrowW_oama + OAMA_Y], a
+_AnimalMoving_IncrementNumMoves:
+    ;; Don't increment further if we're already at 999 moves.
+    ld hl, Ram_PuzzleNumMoves_bcd16
+    ld a, [hl+]
+    if_ne $99, jr, .increment
+    ld a, [hl]
+    if_eq $09, jr, .doNotIncrement
     ;; Increment the number of moves.
+    .increment
     ld hl, Ram_PuzzleNumMoves_bcd16
     ld a, [hl]
     add 1
@@ -973,12 +984,7 @@ Main_AnimalMoving:
     adc 0
     daa
     ld [hl], a
-    ;; Hide the arrow objects.
-    xor a
-    ld [Ram_ArrowN_oama + OAMA_Y], a
-    ld [Ram_ArrowS_oama + OAMA_Y], a
-    ld [Ram_ArrowE_oama + OAMA_Y], a
-    ld [Ram_ArrowW_oama + OAMA_Y], a
+    .doNotIncrement
 _AnimalMoving_ContinueMoving:
     ;; Store the old position's terrain type in e.
     call Func_GetSelectedAnimalPtr_hl
@@ -1424,6 +1430,49 @@ Main_Victory:
     ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr
     call Func_RunDialog
     call Func_FadeOut
+_Victory_CheckForNewRecord:
+    ;; If we've just solved this puzzle for the first time, record the current
+    ;; move count as the new best record for this puzzle.
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld l, a
+    bit STATB_SOLVED, [hl]
+    jr z, .recordNewRecord
+    ;; Otherwise, we need to compare the current move count to the previous
+    ;; record.  Start by setting bc to the previous record for this puzzle.
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ASSERT NUM_PUZZLES < $100
+    rlca
+    ldb de, a
+    ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
+    add hl, de
+    deref bc, hl
+    ;; If the current move count is strictly less than the previous record,
+    ;; then record it as a new record.
+    ld hl, Ram_PuzzleNumMoves_bcd16 + 1
+    ld a, [hl-]
+    if_lt b, jr, .recordNewRecord
+    if_ne b, jr, .noNewRecord
+    ld a, [hl]
+    if_lt c, jr, .recordNewRecord
+    jr .noNewRecord
+    ;; If we need to record a new record, save it into the current progress
+    ;; file.
+    .recordNewRecord
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ASSERT NUM_PUZZLES < $100
+    rlca
+    ldb bc, a
+    ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
+    add hl, bc
+    ld a, [Ram_PuzzleNumMoves_bcd16 + 0]
+    ld [hl+], a
+    ld a, [Ram_PuzzleNumMoves_bcd16 + 1]
+    ld [hl], a
+    call Func_SaveFile
+    .noNewRecord
+_Victory_ReturnToAreaMap:
     ;; Determine if we made par, then return to the area map.
     ld c, STATF_SOLVED  ; param: puzzle status
     ld hl, Ram_PuzzleNumMoves_bcd16 + 1

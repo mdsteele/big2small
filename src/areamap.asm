@@ -647,12 +647,9 @@ Main_AreaMapStartNextPuzzle:
     ld b, a
     ld a, [Ram_AreaMapCurrentNode_u8]
     add b
-    ;; Save the current puzzle number.
+    ;; Save the current puzzle number, then start that puzzle.
     ld [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8], a
     call Func_SaveFile
-    ;; Start the current puzzle.
-    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ld c, a  ; param: current puzzle number
     jp Main_BeginPuzzle
 
 ;;;=========================================================================;;;

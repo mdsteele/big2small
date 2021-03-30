@@ -49,6 +49,15 @@ Ram_DialogBank_u8:
 Ram_DialogNext_ptr:
     DW
 
+;;; The current portrait number (one of the DIALOG_* constants).
+Ram_DialogPortrait_u8:
+    DB
+
+;;; How many rows of the window tile map we've drawn so far.  (We don't draw
+;;; them all at once to avoid running over the VBlank period.)
+Ram_DialogWindowRowsDrawn_u8:
+    DB
+
 ;;;=========================================================================;;;
 
 SECTION "DialogFunctions", ROM0
@@ -64,15 +73,16 @@ Func_RunDialog::
     romb [Ram_DialogBank_u8]
     ld a, [hl]
     if_eq DIALOG_END, ret
-    ld c, a  ; portrait number for FuncX_SwitchPortrait below
+    ld [Ram_DialogPortrait_u8], a
     ;; Store the DLOG pointer for later.
     ld a, l
     ld [Ram_DialogNext_ptr + 0], a
     ld a, h
     ld [Ram_DialogNext_ptr + 1], a
-    ;; Initialize window contents.
-    xcall FuncX_SwitchPortrait
-    call Func_ClearDialogText
+    ;; Start drawing window contents.
+    xor a
+    ld [Ram_DialogWindowRowsDrawn_u8], a
+    xcall FuncX_DrawDialog_DrawNextWindowRow
     ;; Hide arrow objects.
     xor a
     ld [Ram_ArrowN_oama + OAMA_Y], a
@@ -102,6 +112,7 @@ Func_RunDialog::
 _RunDialog_ShowWindow:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    xcall FuncX_DrawDialog_DrawNextWindowRow
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
@@ -111,7 +122,7 @@ _RunDialog_ShowWindow:
     ldh [rLYC], a
     if_ne (SCRN_Y - DIALOG_WINDOW_HEIGHT), jr, _RunDialog_ShowWindow
 _RunDialog_StartNextText:
-    call Func_ClearDialogText
+    xcall FuncX_DrawDialog_ClearText
     ;; Load the pointer to the next DLOG frame into hl.
     ld hl, Ram_DialogNext_ptr
     deref hl
@@ -120,10 +131,10 @@ _RunDialog_StartNextText:
     romb [Ram_DialogBank_u8]
     ld a, [hl+]
     if_eq DIALOG_END, jr, _RunDialog_HideWindow
-    ld c, a  ; portrait number for FuncX_SwitchPortrait below
+    ld [Ram_DialogPortrait_u8], a
     ;; Set the portrait.
     push hl
-    xcall FuncX_SwitchPortrait
+    xcall FuncX_DrawDialog_SwitchPortrait
     pop de
     ld hl, Vram_WindowMap + SCRN_VX_B * 1 + 4
 _RunDialog_AdvanceText:
@@ -194,11 +205,13 @@ _RunDialog_Finish:
 
 ;;;=========================================================================;;;
 
+SECTION "DrawDialog", ROMX
+
 CLEAR_TEXT_UNROLL EQU 3
 
 ;;; Blanks out all three lines of dialog text in the window map (while leaving
 ;;; the dialog portrait alone).
-Func_ClearDialogText:
+FuncX_DrawDialog_ClearText:
     ld a, " "
     ld de, SCRN_VX_B - DIALOG_TEXT_LINE_TILES
     ld hl, Vram_WindowMap + SCRN_VX_B * 1 + 4
@@ -217,21 +230,70 @@ Func_ClearDialogText:
     add hl, de
     jr .outerLoop
 
-;;;=========================================================================;;;
+;;; Draws the next row of the dialog window tile map, if there are any left to
+;;; be drawn.
+FuncX_DrawDialog_DrawNextWindowRow:
+    ld a, [Ram_DialogWindowRowsDrawn_u8]
+    if_ge 5, ret
+    inc a
+    ld [Ram_DialogWindowRowsDrawn_u8], a
+    if_eq 1, jr, _DrawDialog_DrawNextWindowRow_FirstRow
+    if_eq 2, jr, _DrawDialog_DrawNextWindowRow_SecondRow
+    if_eq 3, jr, _DrawDialog_DrawNextWindowRow_ThirdRow
+    if_eq 4, jr, _DrawDialog_DrawNextWindowRow_FourthRow
+_DrawDialog_DrawNextWindowRow_LastRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 4
+    jr _DrawDialog_DrawNextWindowRow_FirstOrLastRow
+_DrawDialog_DrawNextWindowRow_FirstRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 0
+_DrawDialog_DrawNextWindowRow_FirstOrLastRow:
+    ld d, "="
+    ld e, "+"
+    jp FuncX_DrawDialog_DrawWindowRow
+_DrawDialog_DrawNextWindowRow_SecondRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 1
+    jr _DrawDialog_DrawNextWindowRow_SecondOrThirdRow
+_DrawDialog_DrawNextWindowRow_ThirdRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 2
+_DrawDialog_DrawNextWindowRow_SecondOrThirdRow:
+    ld d, " "
+    ld e, "|"
+    jp FuncX_DrawDialog_DrawWindowRow
+_DrawDialog_DrawNextWindowRow_FourthRow:
+    ld hl, Vram_WindowMap + SCRN_VX_B * 3
+    ld d, " "
+    ld e, "|"
+    call FuncX_DrawDialog_DrawWindowRow
+    jp FuncX_DrawDialog_SwitchPortrait
 
-SECTION "SwitchPortrait", ROMX
+;;; Draws one row of the dialog window frame.
+;;; @param d Middle tile ID.
+;;; @param e Edge tile ID.
+;;; @param hl Pointer to the start of a VRAM map row.
+FuncX_DrawDialog_DrawWindowRow:
+    ld a, e
+    ld [hl+], a
+    ld a, d
+    ld c, SCRN_X_B - 2
+    .loop
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ld a, e
+    ld [hl], a
+    ret
 
-;;; Sets tiles in the window map for the specified dialog portrait.
-;;; @param c The portrait number (one of the DIALOG_* constants).
-FuncX_SwitchPortrait::
-    ;; Set bc to portrait number times 9.
-    ld a, c
+;;; Sets tiles in the window map for the current dialog portrait.
+FuncX_DrawDialog_SwitchPortrait:
+    ;; Set bc to the current portrait number times 9.
+    ld a, [Ram_DialogPortrait_u8]
+    ld c, a
     swap a
     rrca
     add c
     ldb bc, a
     ;; Make hl point to start of portrait table entry.
-    ld hl, DataX_SwitchPortrait_Table
+    ld hl, DataX_DrawDialog_PortraitTable_u8_arr9_arr
     add hl, bc
     ;; Set the window tiles.
 WINDOW_ROW = 1
@@ -249,7 +311,7 @@ WINDOW_ROW = WINDOW_ROW + 1
     ENDR
     ret
 
-DataX_SwitchPortrait_Table:
+DataX_DrawDialog_PortraitTable_u8_arr9_arr:
     .begin
     ASSERT @ - .begin == 9 * DIALOG_ELEPHANT_EYES_OPEN
     DB $4a, $4d, $50, $4b, $4e, $51, $4c, $4f, $52

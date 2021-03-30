@@ -17,7 +17,6 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
 
 ;;;=========================================================================;;;
@@ -210,47 +209,5 @@ Ram_ButtonsHeld_u8::
 ;;;   since the previous call to Func_UpdateButtonState.
 Ram_ButtonsPressed_u8::
     DB
-
-;;;=========================================================================;;;
-
-SECTION "WindowFunctions", ROMX
-
-FuncX_DrawWindowFrame::
-    ld hl, Vram_WindowMap
-    ld e, "+"  ; edge tile ID
-    ld d, "="  ; middle tile ID
-    call FuncX_DrawWindowFrame_HorzBar  ; updates hl
-    ld e, "|"  ; edge tile ID
-    ld d, " "  ; middle tile ID
-    ld b, 3
-    .windowLoop
-    call FuncX_DrawWindowFrame_HorzBar  ; preserves b and de, updates hl
-    dec b
-    jr nz, .windowLoop
-    ld e, "+"  ; edge tile ID
-    ld d, "="  ; middle tile ID
-    jp FuncX_DrawWindowFrame_HorzBar
-
-;;; @param d Middle tile ID.
-;;; @param e Edge tile ID.
-;;; @param hl Pointer to the start of a VRAM map row.
-;;; @return hl Pointer to the start of the next VRAM map row.
-;;; @preserve b, de
-FuncX_DrawWindowFrame_HorzBar:
-    ld a, e
-    ld [hl+], a
-    ld a, d
-    ld c, SCRN_X_B - 2
-    .loop
-    ld [hl+], a
-    dec c
-    jr nz, .loop
-    ld a, e
-    ld [hl], a
-    ld a, l
-    or SCRN_VX_B - 1
-    ld l, a
-    inc hl
-    ret
 
 ;;;=========================================================================;;;

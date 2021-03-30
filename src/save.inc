@@ -46,6 +46,9 @@ RSRESET
 ;;; PuzzleStatus: Status flags for each puzzle.  Each entry in this array uses
 ;;;   the STATB_* constants.
 FILE_PuzzleStatus_u8_arr    RB NUM_PUZZLES
+;;; PuzzleBest: The lowest number of moves achieved for each solved puzzle
+;;;   (entry values for unsolved puzzles should be ignored).
+FILE_PuzzleBest_bcd16_arr   RW NUM_PUZZLES
 ;;; CurrentPuzzleNumber: The index number of the puzzle that's currently
 ;;;   selected on the world map.
 FILE_CurrentPuzzleNumber_u8 RB 1
