@@ -153,3 +153,27 @@ DataX_Forest3Intro_dlog::
     DB DIALOG_END
 
 ;;;=========================================================================;;;
+
+DataX_Forest4Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Huh? All these\n"
+    DB "shrubs are in\n"
+    DB "our way!\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "I can eat them!\n"
+    DB "That will clear\n"
+    DB "away the path.\r"
+    DB DIALOG_MOUSE
+    DB "I thought you\n"
+    DB "ate apples,\n"
+    DB "Gisele.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Oh sure, for\n"
+    DB "dessert.\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "But a girl's\n"
+    DB "gotta eat her\n"
+    DB "vegetables too!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;

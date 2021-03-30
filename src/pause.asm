@@ -161,6 +161,7 @@ _PauseMenu_HandleButtonDown:
     jr _PauseMenu_UpdateCursor
     .noPress
 _PauseMenu_HandleButtonStart:
+    ;; TODO: Also allow A button to confirm (like START), or B to cancel.
     bit PADB_START, b
     jr z, Main_PauseMenu
     ld a, [Ram_PauseMenuItem_u8]
@@ -245,6 +246,7 @@ FuncX_DrawPauseMenu:
     COPY_FROM_SAME DataX_ResetStr_start, DataX_ResetStr_end
     ld hl, Vram_WindowMap + SCRN_VX_B * 3 + 3  ; dest
     COPY_FROM_SAME DataX_BackToMapStr_start, DataX_BackToMapStr_end
+    ;; TODO: Also draw num moves and par for this puzzle.
     ret
 
 DataX_ContinueStr_start:
