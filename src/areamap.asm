@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/areamap.inc"
+INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
@@ -165,6 +166,17 @@ _AreaMapEnter_WalkIn:
 ;;;   at/under par.
 ;;; @prereq LCD is off.
 Main_AreaMapResume::
+    ;; Make hl point to the puzzle status entry for the current puzzle.
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld l, a
+    ;; Store the old status in b, and update the status with c.
+    ld a, [hl]
+    ld b, a
+    or c
+    ld [hl], a
+_AreaMapResume_LoadArea:
     push bc
     ;; Load the area map for the current puzzle.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
@@ -184,26 +196,24 @@ Main_AreaMapResume::
     call Func_FadeIn
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8
     ldh [rLCDC], a
-    ;; If the current puzzle wasn't just solved, then we're done.
     pop bc
+_AreaMapResume_CheckIfSolved:
+    ;; At this point, b stores the old puzzle status, and c stores the update
+    ;; to that status.  If the player didn't just solve the current puzzle,
+    ;; then we're completely done.
     bit STATB_SOLVED, c
     jp z, Main_AreaMapCommand
-_AreaMapResume_SolvedPuzzle:
-    push bc
-    ;; If the current puzzle wasn't already solved, then mark it solved and
-    ;; increment the number of solved puzzles.
-    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
-    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
-    ld l, a
-    bit STATB_SOLVED, [hl]
+    ;; If the current puzzle had previously been solved, skip this section.
+    bit STATB_SOLVED, b
     jr nz, .alreadySolved
-    set STATB_SOLVED, [hl]
+    ;; Otherwise, the player just solved this puzzle for the first time, so
+    ;; increment the number of solved puzzles.
     ld a, [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8]
     add 1
     daa
     ld [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8], a
     ;; If the next node is EXIT_NODE, animate drawing the exit trail.
+    push bc
     call Func_GetPointerToCurrentNode_hl
     ld bc, NODE_Next_u8
     add hl, bc
@@ -211,11 +221,11 @@ _AreaMapResume_SolvedPuzzle:
     and $0f
     ld e, a  ; param: trail node
     if_eq EXIT_NODE, call, Func_DrawTrailAnimated
-    .alreadySolved
     pop bc
+    .alreadySolved
 _AreaMapResume_UnlockBonusPuzzle:
-    ;; If the current puzzle was solved at/under par, unlock the bonus puzzle,
-    ;; if any.
+    ;; If the current puzzle was just solved at/under par, unlock the bonus
+    ;; puzzle (if any).
     bit STATB_MADE_PAR, c
     jr z, .noBonus
     call Func_GetPointerToCurrentNode_hl
@@ -369,6 +379,8 @@ _LoadAreaMap_StoreNodeMetadata:
     ld [Ram_AreaMapNodes_node_arr_ptr + 0], a
     ld a, h
     ld [Ram_AreaMapNodes_node_arr_ptr + 1], a
+    ;; TODO: If all puzzles in the area are solved at/under par, draw stars on
+    ;; the area title bar.
 _LoadAreaMap_DrawExitTrail:
     ;; Set c to the index of the last node.
     ld a, [Ram_AreaMapNumNodes_u8]
@@ -757,7 +769,20 @@ Func_PlaceAvatarAtCurrentNode:
     inc de
     dec c
     jr nz, .titleLoop
-    ;; TODO: If this puzzle has STATB_MADE_PAR set, put stars on the title bar.
+    ;; Check if this puzzle has been solved at/under par.  If not, we're done.
+    ld a, [Ram_AreaMapCurrentNode_u8]
+    ld c, a
+    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    add c
+    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld l, a
+    bit STATB_MADE_PAR, [hl]
+    ret z
+    ;; The puzzle has been solved under par, so put stars on the title bar.
+    ld a, "*"
+    ld [Vram_BgMap + SCRN_VX_B * (SCRN_Y_B - 1) + 1], a
+    ld [Vram_BgMap + SCRN_VX_B * (SCRN_Y_B - 1) + SCRN_X_B - 2], a
     ret
 
 ;;; Updates the avatar's row, col, facing direction, and offset to begin

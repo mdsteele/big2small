@@ -266,7 +266,7 @@ DataX_Farm1_puzz:
     DB W_FNS, W_FNS, M_FNS, W_FNE, O_GRS, W_COW, O_GRS, O_GRS, W_FEW, O_EMP
     D_SETS TILESET_PUZZ_FARM, COLORSET_SPRING
     DB O_EMP, O_EMP, O_EMP, W_FSW, W_FNS, W_FNS, W_FNS, W_FNS, W_FSE, O_GRS
-    D_PAR $0999  ; TODO: choose correct par value
+    D_PAR $0035
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, O_GRS
 ASSERT @ - .begin == sizeof_PUZZ
 
