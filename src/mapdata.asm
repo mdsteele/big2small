@@ -36,6 +36,11 @@ DataX_ForestTileMap_start::
     INCBIN "out/data/maps/forest.map"
 ASSERT @ - DataX_ForestTileMap_start == AREA_MAP_LENGTH
 
+SECTION "MountainTileMap", ROMX
+DataX_MountainTileMap_start::
+    INCBIN "out/data/maps/mountain.map"
+ASSERT @ - DataX_MountainTileMap_start == AREA_MAP_LENGTH
+
 SECTION "SewerTileMap", ROMX
 DataX_SewerTileMap_start::
     INCBIN "out/data/maps/sewer.map"

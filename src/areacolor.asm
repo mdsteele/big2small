@@ -119,7 +119,7 @@ Func_LoadAreaMapColorRow:
 
 ;;; Maps from bits 4-6 of an area map tile ID to a color palette number.
 Data_AreaMapBgPalettes_u8_arr8:
-    DB TRAIL_PALETTE, 1, 1, 3, 7, 6, 4, 1
+    DB TRAIL_PALETTE, 6, 1, 3, 7, 6, 4, 1
 
 ;;;=========================================================================;;;
 

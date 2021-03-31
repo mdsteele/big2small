@@ -58,7 +58,7 @@ _LoadTileset_Puzz:
     push af
     COPY_FROM_ROMX DataX_SharedTerrainTiles_start, DataX_SharedTerrainTiles_end
     pop af
-    if_eq TILESET_PUZZ_CITY, jr, _LoadTileset_PuzzCity
+    if_eq TILESET_PUZZ_CITY, jp, _LoadTileset_PuzzCity
     if_eq TILESET_PUZZ_FARM, jp, _LoadTileset_PuzzFarm
     if_eq TILESET_PUZZ_MOUNTAIN, jp, _LoadTileset_PuzzMountain
     if_eq TILESET_PUZZ_SEASIDE, jp, _LoadTileset_PuzzSeaside
@@ -66,23 +66,23 @@ _LoadTileset_Puzz:
     if_eq TILESET_PUZZ_SPACE, jp, _LoadTileset_PuzzSpace
     ret
 _LoadTileset_MapForest:
-    SKIP_TO_TILE $a0
+    SKIP_TO_TILE $90
     COPY_FROM_ROMX DataX_ForestMapTiles_start, DataX_ForestMapTiles_end
     ret
 _LoadTileset_MapSewer:
     SKIP_TILES $30
     COPY_FROM_ROMX DataX_SewerMapTiles_start, DataX_SewerMapTiles_end
-    ld hl, DataX_OceanTiles_tile_arr
+    xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_MapSpace:
     SKIP_TILES $30
     COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
-    ld hl, DataX_TwinkleTiles_tile_arr
+    xld hl, DataX_TwinkleTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_MapWorld:
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
-    ld hl, DataX_OceanTiles_tile_arr
+    xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzCity:
     SKIP_TILES $20
@@ -94,7 +94,7 @@ _LoadTileset_PuzzFarm:
     COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
     SKIP_TILES $0c
     COPY_FROM_ROMX DataX_BarnTiles_start, DataX_BarnTiles_end
-    ld hl, DataX_CowBlinkTiles_tile_arr
+    xld hl, DataX_CowBlinkTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzMountain:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
@@ -105,7 +105,7 @@ _LoadTileset_PuzzMountain:
 _LoadTileset_PuzzSeaside:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
-    ld hl, DataX_OceanTiles_tile_arr
+    xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzSewer:
     COPY_FROM_ROMX DataX_EdgeTiles_start, DataX_EdgeTiles_end
@@ -113,13 +113,13 @@ _LoadTileset_PuzzSewer:
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
     SKIP_TILES $08
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
-    ld hl, DataX_OceanTiles_tile_arr
+    xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzSpace:
     COPY_FROM_ROMX DataX_GirderTiles_start, DataX_GirderTiles_end
     SKIP_TILES $1f
     COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
-    ld hl, DataX_StarsTiles_tile_arr
+    xld hl, DataX_StarsTiles_tile_arr
     jp Func_SetAnimatedTerrain
 
 ;;; @param b The TILESET_* enum value.
@@ -142,8 +142,7 @@ _AnimateTerrain_Cow:
     ld a, sizeof_TILE
     .blink
     ldb de, a
-    romb BANK(DataX_CowBlinkTiles_tile_arr)
-    ld hl, DataX_CowBlinkTiles_tile_arr
+    xld hl, DataX_CowBlinkTiles_tile_arr
     jr _AnimateTerrain_Copy
 _AnimateTerrain_Ocean:
     ld a, c
@@ -153,8 +152,7 @@ _AnimateTerrain_Ocean:
     and %00010000
     ASSERT sizeof_TILE == 16
     ldb de, a
-    romb BANK(DataX_OceanTiles_tile_arr)
-    ld hl, DataX_OceanTiles_tile_arr
+    xld hl, DataX_OceanTiles_tile_arr
     jr _AnimateTerrain_Copy
 _AnimateTerrain_Stars:
     ld a, c
@@ -162,8 +160,7 @@ _AnimateTerrain_Stars:
     ASSERT sizeof_TILE == 16
     swap a
     ldb de, a
-    romb BANK(DataX_StarsTiles_tile_arr)
-    ld hl, DataX_StarsTiles_tile_arr
+    xld hl, DataX_StarsTiles_tile_arr
     jr _AnimateTerrain_Copy
 _AnimateTerrain_Twinkle:
     ld a, c
@@ -174,12 +171,12 @@ _AnimateTerrain_Twinkle:
     ASSERT sizeof_TILE == 16
     rlca
     ldb de, a
-    romb BANK(DataX_TwinkleTiles_tile_arr)
-    ld hl, DataX_TwinkleTiles_tile_arr
+    xld hl, DataX_TwinkleTiles_tile_arr
 _AnimateTerrain_Copy:
     add hl, de
     ;; fall through to Func_SetAnimatedTerrain
 
+;;; @prereq Correct ROM bank for hl pointer is set.
 ;;; @param hl A pointer to the tile to copy.
 Func_SetAnimatedTerrain:
     ld de, Vram_BgTiles + sizeof_TILE * ANIMATED_TILE_ID

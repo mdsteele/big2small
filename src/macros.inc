@@ -195,6 +195,22 @@ romb: MACRO
     ld [$2000], a
 ENDM
 
+;;; Loads a ROMX address into a 16-bit register after first switching to its
+;;; ROM bank.  This also stores the new ROM bank number in the a register.
+;;;
+;;; Examples:
+;;;     xld hl, DataX_Sb  ; sets hl to DataX_Sb and ROM bank to BANK(DataX_Sb)
+;;;     xld de, DataX_Ag  ; sets de to DataX_Ag and ROM bank to BANK(DataX_Ag)
+xld: MACRO
+    IF _NARG < 2
+    FAIL "Too few arguments to xld macro"
+    ELIF _NARG > 2
+    FAIL "Too many arguments to xld macro"
+    ENDC
+    romb BANK(\2)
+    ld \1, \2
+ENDM
+
 ;;; Calls a function stored in ROMX after first switching to its ROM bank.
 ;;; This also stores the new ROM bank number in the a register (before calling
 ;;; the function).
@@ -203,9 +219,9 @@ ENDM
 ;;;     xcall FuncX_Foo
 xcall: MACRO
     IF _NARG < 1
-    FAIL "Too few arguments to callx macro"
+    FAIL "Too few arguments to xcall macro"
     ELIF _NARG > 1
-    FAIL "Too many arguments to callx macro"
+    FAIL "Too many arguments to xcall macro"
     ENDC
     romb BANK(\1)
     call \1

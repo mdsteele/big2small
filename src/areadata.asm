@@ -30,7 +30,7 @@ INCLUDE "src/tileset.inc"
 ;;; The number of puzzles in each area:
 NUM_FOREST_PUZZLES EQU 8
 NUM_FARM_PUZZLES EQU 7
-NUM_MOUNTAIN_PUZZLES EQU 1
+NUM_MOUNTAIN_PUZZLES EQU 7
 NUM_SEASIDE_PUZZLES EQU 2
 NUM_SEWER_PUZZLES EQU 2
 NUM_CITY_PUZZLES EQU 2
@@ -349,22 +349,76 @@ ASSERT @ - _Farm_Node0 == NUM_FARM_PUZZLES * sizeof_NODE
 DataX_Mountain_area:
     .begin
     D_BPTR DataX_TitleMusic_song
-    DB COLORSET_AUTUMN
-    DB TILESET_MAP_SEWER  ; TODO: use mountain map tileset
-    D_BPTR DataX_SewerTileMap_start  ; TODO: use mountain tile map
+    DB COLORSET_SUMMER
+    DB TILESET_MAP_FOREST
+    D_BPTR DataX_MountainTileMap_start
     D_TITLE 20, "MT. BIGHORN"
-    D_TRAIL TN1, TN1, TN1
+    D_TRAIL TS1, TS2, TS1, US1
     DB FIRST_MOUNTAIN_PUZZLE
     DB NUM_MOUNTAIN_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Mountain_Node0:
     .begin
-    DB 8, 3  ; row/col
-    D_TRAIL TS1, TS1, TS1
+    DB 14, 3  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
     DB PADF_LEFT | EXIT_NODE   ; prev
-    DB PADF_RIGHT | EXIT_NODE  ; next
+    DB PADF_UP | 1             ; next
     DB 0                       ; bonus
     D_TITLE 16, "Rocky Hills"
+    ASSERT @ - .begin == sizeof_NODE
+_Mountain_Node1:
+    .begin
+    DB 10, 5  ; row/col
+    D_TRAIL TW1, TW1, TS1, TS2, TS1
+    DB PADF_LEFT | 0           ; prev
+    DB PADF_UP | 2             ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Mountain1"
+    ASSERT @ - .begin == sizeof_NODE
+_Mountain_Node2:
+    .begin
+    DB 4, 7  ; row/col
+    D_TRAIL TW1, TW1, TS1, TS2, TS2, TS1
+    DB PADF_LEFT | 1           ; prev
+    DB PADF_RIGHT | 3          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Mountain2"
+    ASSERT @ - .begin == sizeof_NODE
+_Mountain_Node3:
+    .begin
+    DB 8, 11  ; row/col
+    D_TRAIL TW1, TW1, TW1, TN1, TN2, TN1, TW1
+    DB PADF_LEFT | 2           ; prev
+    DB PADF_DOWN | 4           ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Mountain3"
+    ASSERT @ - .begin == sizeof_NODE
+_Mountain_Node4:
+    .begin
+    DB 9, 15  ; row/col
+    D_TRAIL TW1, TS1, TS1, TS1, TW1, TW1, TW1, TN1, TN2, TN1
+    DB PADF_LEFT | 3           ; prev
+    DB PADF_RIGHT | 6          ; next
+    DB PADF_UP | 5             ; bonus
+    D_TITLE 16, "Mountain4"
+    ASSERT @ - .begin == sizeof_NODE
+_Mountain_Node5:
+    .begin
+    DB 2, 15  ; row/col
+    D_TRAIL TS2, TS2, TS1, TS1, TS1
+    DB PADF_DOWN | 4           ; prev
+    DB 0                       ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Mountain Bonus"
+    ASSERT @ - .begin == sizeof_NODE
+_Mountain_Node6:
+    .begin
+    DB 11, 17  ; row/col
+    D_TRAIL TN1, TN1, TW1, TW1
+    DB PADF_UP | 4             ; prev
+    DB PADF_DOWN | EXIT_NODE   ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Mountain6"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Mountain_Node0 == NUM_MOUNTAIN_PUZZLES * sizeof_NODE
 

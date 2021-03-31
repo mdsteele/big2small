@@ -282,8 +282,7 @@ Func_LoadWorldMapColor:
     ldh [rVBK], a
     ;; Load the color data into VRAM.
     ld hl, Vram_BgMap
-    romb BANK(DataX_WorldTileMap_start)
-    ld de, DataX_WorldTileMap_start
+    xld de, DataX_WorldTileMap_start
     ASSERT $400 == DataX_WorldTileMap_end - DataX_WorldTileMap_start
     REPT 4
     call Func_LoadWorldMapColorQuarter

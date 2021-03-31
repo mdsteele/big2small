@@ -87,6 +87,12 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_FarmBonus_puzz
     DW DataX_Farm2_puzz  ; TODO
     DW DataX_Mountain1_puzz
+    DW DataX_Mountain1_puzz  ; TODO
+    DW DataX_Mountain1_puzz  ; TODO
+    DW DataX_Mountain1_puzz  ; TODO
+    DW DataX_Mountain1_puzz  ; TODO
+    DW DataX_Mountain1_puzz  ; TODO
+    DW DataX_Mountain1_puzz  ; TODO
     DW DataX_Seaside1_puzz
     DW DataX_Seaside2_puzz
     DW DataX_Sewer1_puzz

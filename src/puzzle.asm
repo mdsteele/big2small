@@ -163,9 +163,8 @@ Main_BeginPuzzle::
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     rlca
     ldb bc, a
-    ld hl, DataX_Puzzles_puzz_ptr_arr
+    xld hl, DataX_Puzzles_puzz_ptr_arr
     add hl, bc
-    romb BANK(DataX_Puzzles_puzz_ptr_arr)
     ld a, [hl+]
     ld d, [hl]
     ld e, a
