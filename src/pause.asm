@@ -144,11 +144,20 @@ Main_PauseMenu:
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
     call Func_UpdateButtonState
+_PauseMenu_HandleButtons:
     ld a, [Ram_ButtonsPressed_u8]
     ld b, a
-_PauseMenu_HandleButtonUp:
+    and PADF_START | PADF_A
+    jr nz, _PauseMenu_Confirm
+    bit PADB_B, b
+    jr nz, _PauseMenu_Unpause
     bit PADB_UP, b
-    jr z, .noPress
+    jr nz, _PauseMenu_Up
+    bit PADB_DOWN, b
+    jr nz, _PauseMenu_Down
+    jr Main_PauseMenu
+
+_PauseMenu_Up:
     ld d, " "  ; cursor tile ID
     call Func_PauseMenuSetCursorTile
     ld a, [Ram_PauseMenuItem_u8]
@@ -157,10 +166,8 @@ _PauseMenu_HandleButtonUp:
     ld a, PAUSE_MENU_NUM_ITEMS - 1
     .noUnderflow
     jr _PauseMenu_UpdateCursor
-    .noPress
-_PauseMenu_HandleButtonDown:
-    bit PADB_DOWN, b
-    jr z, .noPress
+
+_PauseMenu_Down:
     ld d, " "  ; cursor tile ID
     call Func_PauseMenuSetCursorTile
     ld a, [Ram_PauseMenuItem_u8]
@@ -169,11 +176,8 @@ _PauseMenu_HandleButtonDown:
     xor a
     .noOverflow
     jr _PauseMenu_UpdateCursor
-    .noPress
-_PauseMenu_HandleButtonStart:
-    ;; TODO: Also allow A button to confirm (like START), or B to cancel.
-    bit PADB_START, b
-    jr z, Main_PauseMenu
+
+_PauseMenu_Confirm:
     ld a, [Ram_PauseMenuItem_u8]
     if_eq PAUSE_MENU_ITEM_QUIT, jr, _PauseMenu_QuitPuzzle
     if_eq PAUSE_MENU_ITEM_RESET, jr, _PauseMenu_ResetPuzzle
