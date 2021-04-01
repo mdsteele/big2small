@@ -86,8 +86,8 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Farm2_puzz  ; TODO
     DW DataX_FarmBonus_puzz
     DW DataX_Farm2_puzz  ; TODO
+    DW DataX_Mountain0_puzz
     DW DataX_Mountain1_puzz
-    DW DataX_Mountain1_puzz  ; TODO
     DW DataX_Mountain1_puzz  ; TODO
     DW DataX_Mountain1_puzz  ; TODO
     DW DataX_Mountain1_puzz  ; TODO
@@ -338,6 +338,27 @@ DataX_FarmBonus_puzz:
     DB O_GRS, W_FSW, W_FE1, O_EMP, W_COW, W_FSW, M_FNS, W_FE1, O_EMP, W_TTP
     D_PAR $0999  ; TODO: choose correct par value
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Mountain0_puzz:
+    .begin
+    DB O_EMP, O_GRS, W_TST, O_CW3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_ANIM $59, DIRF_SOUTH
+    DB O_GRS, O_EMP, W_TTR, O_CW3, O_EMP, W_TTP, O_EMP, O_EMP, G_PNT, O_EMP
+    D_ANIM $82, DIRF_EAST
+    DB O_EMP, G_APL, O_EMP, W_CSW, O_CW3, W_TTR, O_EMP, O_EMP, O_EMP, S_ARW
+    D_ANIM $50, DIRF_EAST
+    DB O_EMP, W_RCK, O_EMP, W_RCK, O_CW3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_TitleMusic_song
+    DB O_EMP, S_ARE, O_EMP, O_EMP, W_CSW, W_CS3, O_RWL, O_RWR, W_CS3, W_CS3
+    D_BPTR DataX_Mountain0Intro_dlog
+    DB O_EMP, O_EMP, O_GRS, O_EMP, S_ARS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog
+    DB W_TTP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, W_RCK, O_EMP, O_GRS, O_EMP
+    D_SETS TILESET_PUZZ_MOUNTAIN, COLORSET_SUMMER
+    DB W_TST, W_TTP, O_GRS, O_EMP, W_RCK, G_CHS, O_EMP, O_EMP, O_EMP, S_ARW
+    D_PAR $0999  ; TODO: choose correct par value
+    DB W_TTR, W_TST, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, S_ARN, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Mountain1_puzz:

@@ -177,3 +177,28 @@ DataX_Forest4Intro_dlog::
     DB DIALOG_END
 
 ;;;=========================================================================;;;
+
+DataX_Mountain0Intro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Ahh, just smell\n"
+    DB "all that fresh\n"
+    DB "mountain air!\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Hey, what are\n"
+    DB "all these\n"
+    DB "arrows for?\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Trail markers!\n"
+    DB "They tell us\n"
+    DB "where to go.\r"
+    DB DIALOG_MOUSE
+    DB "They...don't\n"
+    DB "seem very\n"
+    DB "helpful.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Oh well, let's\n"
+    DB "just try\n"
+    DB "following them!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
