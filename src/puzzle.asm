@@ -104,6 +104,12 @@ SECTION "PuzzleUiState", WRAM0
 Ram_PuzzleRom_puzz_ptr:
     DW
 
+;;; If 1, intro/outro dialog is skipped; if 0, dialog is played normally.
+Ram_PuzzleSkipIntroDialog_bool:
+    DB
+Ram_PuzzleSkipOutroDialog_bool:
+    DB
+
 ;;; This should be set to one of the ANIMAL_* constants.
 Ram_SelectedAnimal_u8:
     DB
@@ -151,6 +157,10 @@ SECTION "MainPuzzleScreen", ROM0
 
 ;;; @prereq LCD is off.
 Main_ResetPuzzle::
+    ;; Always skip intro dialog when resetting the puzzle.
+    ld a, 1
+    ld [Ram_PuzzleSkipIntroDialog_bool], a
+    ;; Put the saved PUZZ struct pointer into de.
     ld a, [Ram_PuzzleRom_puzz_ptr + 0]
     ld e, a
     ld a, [Ram_PuzzleRom_puzz_ptr + 1]
@@ -158,7 +168,24 @@ Main_ResetPuzzle::
     jr _BeginPuzzle_Init
 
 ;;; @prereq LCD is off.
+;;; @param d If nonzero, don't skip dialog even if puzzle is already solved.
 Main_BeginPuzzle::
+    ;; If d is zero and the puzzle has been solved before, skip dialog.
+    ld a, d
+    or a
+    jr nz, .doNotSkipDialog
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
+    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
+    ld l, a
+    ld a, 1
+    bit STATB_SOLVED, [hl]
+    jr nz, .solved
+    .doNotSkipDialog
+    xor a
+    .solved
+    ld [Ram_PuzzleSkipIntroDialog_bool], a
+    ld [Ram_PuzzleSkipOutroDialog_bool], a
     ;; Store pointer to current PUZZ struct in de...
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     rlca
@@ -248,11 +275,10 @@ _BeginPuzzle_Init:
     ld a, %11010000
     ldh [rOBP1], a
     ;; Run intro dialog.
-    ;; TODO: Skip dialog when resetting the puzzle, or if the puzzle has
-    ;;   already been solved and the player didn't hold SELECT while entering
-    ;;   the puzzle from the area map.
+    ld a, [Ram_PuzzleSkipIntroDialog_bool]
     ld hl, Ram_PuzzleState_puzz + PUZZ_Intro_dlog_bptr
-    call Func_RunDialog
+    or a
+    call z, Func_RunDialog
     ;; fall through to Main_PuzzleCommand
 
 Main_PuzzleCommand::
@@ -1425,8 +1451,10 @@ SECTION "MainVictory", ROM0
 Main_Victory:
     ;; TODO: Play victory music, animate animals.
     ;; Run outro dialog and fade out.
+    ld a, [Ram_PuzzleSkipOutroDialog_bool]
     ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr
-    call Func_RunDialog
+    or a
+    call z, Func_RunDialog
     call Func_FadeOut
 _Victory_CheckForNewRecord:
     ;; If we've just solved this puzzle for the first time, record the current

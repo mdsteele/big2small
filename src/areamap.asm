@@ -651,6 +651,11 @@ Main_AreaMapBackToWorldMap:
 
 ;;; Fades out the LCD and starts the puzzle for the current node.
 Main_AreaMapStartNextPuzzle:
+    ;; Remember for later if SELECT was held.
+    ld a, [Ram_ButtonsHeld_u8]
+    and PADF_SELECT
+    push af
+    ;; Fade out.
     call Func_ClearOam
     call Func_FadeOut
     ;; Set a to the current node's puzzle number.
@@ -658,9 +663,12 @@ Main_AreaMapStartNextPuzzle:
     ld b, a
     ld a, [Ram_AreaMapCurrentNode_u8]
     add b
-    ;; Save the current puzzle number, then start that puzzle.
+    ;; Save the current puzzle number.
     ld [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8], a
     call Func_SaveFile
+    ;; Start the current puzzle, forciing dialog to be unskipped if SELECT was
+    ;; held earlier.
+    pop de  ; param: don't skip dialog
     jp Main_BeginPuzzle
 
 ;;;=========================================================================;;;
