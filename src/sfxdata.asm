@@ -19,6 +19,21 @@
 
 SECTION "SoundData", ROMX
 
+DataX_ArrowTerrain_sfx1::
+    DB 5
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    DB %11110001  ; env
+    DB %01000000  ; low
+    DB %10000110  ; high
+    DB 10
+    DB %00000000  ; sweep
+    DB %01000000  ; len
+    DB %11110001  ; env
+    DB %11011100  ; low
+    DB %10000101  ; high
+    DB 0
+
 DataX_CannotMove_sfx1::
     DB 10
     DB %00101101  ; sweep
@@ -26,6 +41,28 @@ DataX_CannotMove_sfx1::
     DB %11000010  ; env
     DB %11000000  ; low
     DB %10000111  ; high
+    DB 0
+
+DataX_EatBush_sfx4::
+    DB 8
+    DB %00000000  ; len
+    DB %01011010  ; env
+    DB %01000111  ; poly
+    DB %10000000  ; go
+    DB 18
+    DB %00000000  ; len
+    DB %11000010  ; env
+    DB %00000100  ; poly
+    DB %10000000  ; go
+    DB 0
+
+DataX_Leap_sfx1::
+    DB 14
+    DB %01110101  ; sweep
+    DB %01000000  ; len
+    DB %11110010  ; env
+    DB %11001001  ; low
+    DB %10000101  ; high
     DB 0
 
 DataX_Mousetrap_sfx4::

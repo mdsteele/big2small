@@ -258,6 +258,7 @@ _AreaMapResume_Finish:
     bit 0, b
     jp z, Main_AreaMapCommand
     ;; If we did just unlock the next node, then walk to it.
+    ;; TODO: Also, if we just drew the exit trail, we should follow it.
     ld d, c  ; param: destination node
     ld e, d  ; param: trail node
     jp Main_AreaMapFollowTrail
@@ -512,9 +513,7 @@ _AreaMapCommand_HandleDpad:
     and d
     jr nz, _AreaMapCommand_FollowBonusTrail
 _AreaMapCommand_CannotMove:
-    ld c, BANK(DataX_CannotMove_sfx1)
-    ld hl, DataX_CannotMove_sfx1
-    call Func_PlaySfx1
+    PLAY_SFX1 DataX_CannotMove_sfx1
     jr Main_AreaMapCommand
 
 _AreaMapCommand_FollowPrevTrail:
@@ -1021,9 +1020,7 @@ _DrawTrailAnimated_AnimateLoop:
     ld [Ram_AreaMapAnimateTrailTimer_u8], a
     jr nz, .sleepLoop
     ;; Play a sound effect.
-    ld c, BANK(DataX_CannotMove_sfx1)  ; TODO: different sound effect
-    ld hl, DataX_CannotMove_sfx1       ; TODO: different sound effect
-    call Func_PlaySfx1
+    PLAY_SFX1 DataX_CannotMove_sfx1  ; TODO: different sound effect
     ;; Update hl to point to the VRAM tile for the next trail tick.
     pop de
     pop hl

@@ -248,6 +248,9 @@ _BeginPuzzle_Init:
     ld a, %11010000
     ldh [rOBP1], a
     ;; Run intro dialog.
+    ;; TODO: Skip dialog when resetting the puzzle, or if the puzzle has
+    ;;   already been solved and the player didn't hold SELECT while entering
+    ;;   the puzzle from the area map.
     ld hl, Ram_PuzzleState_puzz + PUZZ_Intro_dlog_bptr
     call Func_RunDialog
     ;; fall through to Main_PuzzleCommand
@@ -333,9 +336,7 @@ _PuzzleCommand_TryMove:
     jp Main_AnimalMoving
 
 _PuzzleCommand_CannotMove:
-    ld c, BANK(DataX_CannotMove_sfx1)
-    ld hl, DataX_CannotMove_sfx1
-    call Func_PlaySfx1
+    PLAY_SFX1 DataX_CannotMove_sfx1
     jp Main_PuzzleCommand
 
 ;;;=========================================================================;;;
@@ -1068,9 +1069,7 @@ _AnimalMoving_ContinueMovingElephant:
     ld a, e
     ld [Ram_TerrainCellToUpdate_u8], a
     ;; Play a sound effect.
-    ld c, BANK(DataX_PushPipe_sfx4)
-    ld hl, DataX_PushPipe_sfx4
-    call Func_PlaySfx4
+    PLAY_SFX4 DataX_PushPipe_sfx4
     jr _AnimalMoving_RunLoop
     ;; If we're not pushing a pipe, set Ram_WalkingAction_u8 to zero.
     .notPushingPipe
@@ -1120,6 +1119,7 @@ _AnimalMoving_ContinueMovingGoat:
     ld [Ram_WalkingAction_u8], a
     ld a, 24
     ld [Ram_WalkingCountdown_u8], a
+    PLAY_SFX1 DataX_Leap_sfx1
     jr _AnimalMoving_RunLoop
     ;; Otherwise, the goat hops at a slower pace.
     .notLeaping
@@ -1192,27 +1192,29 @@ _AnimalMoving_AnimalAction:
     ld [Ram_PipeWR_oama + OAMA_Y], a
     ld [Ram_PipeEL_oama + OAMA_Y], a
     ld [Ram_PipeER_oama + OAMA_Y], a
-    jr _AnimalMoving_Update
+    jp _AnimalMoving_Update
     .notPushingWestward
 _AnimalMoving_TerrainAction:
     ;; Store the terrain type the animal is standing on in a.
     ld a, [de]
-    if_lt S_MIN, jr, _AnimalMoving_Update  ; fast path for common case
+    if_lt S_MIN, jp, _AnimalMoving_Update  ; fast path for common case
     ;; If the animal steps on an arrow, change the value of its ANIM_Facing_u8.
     if_ne S_ARN, jr, .notNorthArrow
     ld [hl], DIRF_NORTH
-    jr _AnimalMoving_Update
+    jr .finishArrow
     .notNorthArrow
     if_ne S_ARS, jr, .notSouthArrow
     ld [hl], DIRF_SOUTH
-    jr _AnimalMoving_Update
+    jr .finishArrow
     .notSouthArrow
     if_ne S_ARE, jr, .notEastArrow
     ld [hl], DIRF_EAST
-    jr _AnimalMoving_Update
+    jr .finishArrow
     .notEastArrow
     if_ne S_ARW, jr, .notWestArrow
     ld [hl], DIRF_WEST
+    .finishArrow
+    PLAY_SFX1 DataX_ArrowTerrain_sfx1
     jr _AnimalMoving_Update
     .notWestArrow
     ;; If the animal steps on a matching teleporter, teleport it.
@@ -1220,7 +1222,7 @@ _AnimalMoving_TerrainAction:
     ld a, [Ram_SelectedAnimal_u8]
     if_ne ANIMAL_ELEPHANT, jr, _AnimalMoving_Update
     ld c, $0f
-    jr _AnimalMoving_Teleport
+    jp _AnimalMoving_Teleport
     .notElephantTeleporterF
     if_ne S_TGE, jr, .notGoatTeleporterE
     ld a, [Ram_SelectedAnimal_u8]
@@ -1252,6 +1254,7 @@ _AnimalMoving_TerrainAction:
     ld [de], a
     ld a, e
     ld [Ram_TerrainCellToUpdate_u8], a
+    PLAY_SFX4 DataX_EatBush_sfx4
     .notBush
 _AnimalMoving_Update:
     call Func_UpdateSelectedAnimalObjs
@@ -1328,9 +1331,7 @@ _AnimalMoving_Teleport:
     ld d, TELEPORT_L3_TILEID
     call Func_SetSelectedAnimalTiles
     ;; Play a sound effect.
-    ld c, BANK(DataX_Teleport_sfx4)
-    ld hl, DataX_Teleport_sfx4
-    call Func_PlaySfx4
+    PLAY_SFX4 DataX_Teleport_sfx4
     ;; Make the animal vanish.
     xor a
     ld [Ram_SmokeCounter_u8], a
@@ -1374,9 +1375,7 @@ _AnimalMoving_Mousetrap:
     ld a, e
     ld [Ram_TerrainCellToUpdate_u8], a
     ;; Play a sound effect.
-    ld c, BANK(DataX_Mousetrap_sfx4)
-    ld hl, DataX_Mousetrap_sfx4
-    call Func_PlaySfx4
+    PLAY_SFX4 DataX_Mousetrap_sfx4
     ;; Replace mouse objects with smoke.
     ld d, SMOKE_L1_TILEID
     call Func_SetSelectedAnimalTiles

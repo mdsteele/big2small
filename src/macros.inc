@@ -275,13 +275,37 @@ ENDM
 ;;; changing the current ROM bank).
 COPY_FROM_SAME: MACRO
     IF _NARG < 2
-    FAIL "Too few arguments to COPY_FROM_ROMX macro"
+    FAIL "Too few arguments to COPY_FROM_SAME macro"
     ELIF _NARG > 2
-    FAIL "Too many arguments to COPY_FROM_ROMX macro"
+    FAIL "Too many arguments to COPY_FROM_SAME macro"
     ENDC
     ASSERT BANK(\1) == BANK(@)
     ASSERT BANK(\2) == BANK(@)
     COPY_FROM_CURR \1, \2
+ENDM
+
+;;;=========================================================================;;;
+
+PLAY_SFX1: MACRO
+    IF _NARG < 1
+    FAIL "Too few arguments to PLAY_SFX1 macro"
+    ELIF _NARG > 1
+    FAIL "Too many arguments to PLAY_SFX1 macro"
+    ENDC
+    ld c, BANK(\1)
+    ld hl, \1
+    call Func_PlaySfx1
+ENDM
+
+PLAY_SFX4: MACRO
+    IF _NARG < 1
+    FAIL "Too few arguments to PLAY_SFX4 macro"
+    ELIF _NARG > 1
+    FAIL "Too many arguments to PLAY_SFX4 macro"
+    ENDC
+    ld c, BANK(\1)
+    ld hl, \1
+    call Func_PlaySfx4
 ENDM
 
 ;;;=========================================================================;;;
