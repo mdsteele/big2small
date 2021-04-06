@@ -52,9 +52,6 @@ FILE_PuzzleBest_bcd16_arr   RW NUM_PUZZLES
 ;;; CurrentPuzzleNumber: The index number of the puzzle that's currently
 ;;;   selected on the world map.
 FILE_CurrentPuzzleNumber_u8 RB 1
-;;; NumSolvedPuzzles: The number of solved puzzles, encoded in BCD.
-ASSERT NUM_PUZZLES <= 99
-FILE_NumSolvedPuzzles_bcd8  RB 1
 ;;; Magic: If equal to MAGIC_FILE_EXISTS, then this save file exists.  If equal
 ;;;   to any other value, this save file is considered empty.
 FILE_Magic_u8               RB 1

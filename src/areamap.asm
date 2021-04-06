@@ -206,12 +206,7 @@ _AreaMapResume_CheckIfSolved:
     ;; If the current puzzle had previously been solved, skip this section.
     bit STATB_SOLVED, b
     jr nz, .alreadySolved
-    ;; Otherwise, the player just solved this puzzle for the first time, so
-    ;; increment the number of solved puzzles.
-    ld a, [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8]
-    add 1
-    daa
-    ld [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8], a
+    ;; Otherwise, the player just solved this puzzle for the first time.
     ;; If the next node is EXIT_NODE, animate drawing the exit trail.
     push bc
     call Func_GetPointerToCurrentNode_hl

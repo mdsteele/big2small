@@ -86,8 +86,6 @@ _LoadFile_NewGame:
     jr nz, .loop
     ;; Set the current puzzle to the first one.
     ld [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8], a
-    ;; Set the number of solved puzzles to zero.
-    ld [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8], a
     ;; Mark the file as existent.
     ld a, MAGIC_FILE_EXISTS
     ld [Ram_Progress_file + FILE_Magic_u8], a
@@ -96,11 +94,13 @@ _LoadFile_NewGame:
 ;;; Saves Ram_Progress_file to the current save file in SRAM.
 Func_SaveFile::
     ;; Update the save summary.
+    ld hl, Ram_Progress_file  ; param: FILE ptr
+    call Func_GetFileNumSolvedPuzzlesBcd_c
     ld a, [Ram_SaveFileNumber_u8]
-    ld b, a
+    ld b, a  ; param: save file number
     call Func_GetSaveSummaryPtr_hl  ; preserves b
-    ld a, [Ram_Progress_file + FILE_NumSolvedPuzzles_bcd8]
     ASSERT SAVE_NumSolvedPuzzles_bcd8 == 0
+    ld a, c
     ld [hl+], a
     ASSERT SAVE_Exists_bool == 1
     ld [hl], 1
@@ -142,30 +142,68 @@ Func_EraseFile::
 
 ;;;=========================================================================;;;
 
-init_summary: MACRO
-    ld a, [(\1) + FILE_Magic_u8]
-    if_eq MAGIC_FILE_EXISTS, jr, .exists\@
-    xor a
-    ld [Ram_SaveSummaries_save_arr + sizeof_SAVE * (\2) + SAVE_Exists_bool], a
-    jr .done\@
-    .exists\@
-    ld a, 1
-    ld [Ram_SaveSummaries_save_arr + sizeof_SAVE * (\2) + SAVE_Exists_bool], a
-    ld a, [(\1) + FILE_NumSolvedPuzzles_bcd8]
-    .done\@
-    ld [Ram_SaveSummaries_save_arr + sizeof_SAVE * (\2) \
-        + SAVE_NumSolvedPuzzles_bcd8], a
-ENDM
+;;; @param hl A pointer to a FILE struct.
+;;; @return c The number of solved puzzles in the file, in BCD.
+;;; @preserve b
+Func_GetFileNumSolvedPuzzlesBcd_c:
+    ld c, 0
+    ld e, NUM_PUZZLES
+    ASSERT FILE_PuzzleStatus_u8_arr == 0
+    .loop
+    ld a, [hl+]
+    bit STATB_SOLVED, a
+    jr z, .unsolved
+    ld a, c
+    add 1
+    daa
+    ld c, a
+    .unsolved
+    dec e
+    jr nz, .loop
+    ret
 
+;;;=========================================================================;;;
+
+;;; Populates each summary SAVE struct from the corresponding SRAM FILE struct.
 Func_InitSaveSummaries::
     ld a, CART_SRAM_ENABLE
     ld [rRAMG], a
-    init_summary Sram_Save0_file, 0
-    init_summary Sram_Save1_file, 1
-    init_summary Sram_Save2_file, 2
-    ASSERT NUM_SAVE_FILES == 3
+    ld b, 0
+    .loop
+    call Func_InitSaveSummary  ; preserves b
+    inc b
+    ld a, b
+    if_lt NUM_SAVE_FILES, jr, .loop
     ld a, CART_SRAM_DISABLE
     ld [rRAMG], a
+    ret
+
+;;; Populates the specified summary SAVE struct from the corresponding SRAM
+;;; FILE struct.
+;;; @param b The save file number.
+;;; @preserve b
+Func_InitSaveSummary:
+    call Func_GetSaveFilePtr_hl  ; preserves b
+    ASSERT FILE_Magic_u8 != 0
+    ld de, FILE_Magic_u8
+    add hl, de
+    ld a, [hl]
+    if_eq MAGIC_FILE_EXISTS, jr, _InitSaveSummary_NonEmpty
+_InitSaveSummary_Empty:
+    call Func_GetSaveSummaryPtr_hl  ; preserves b
+    ASSERT SAVE_Exists_bool == 1
+    inc hl
+    ld [hl], 0
+    ret
+_InitSaveSummary_NonEmpty:
+    call Func_GetSaveFilePtr_hl  ; preserves b
+    call Func_GetFileNumSolvedPuzzlesBcd_c  ; preserves b
+    call Func_GetSaveSummaryPtr_hl  ; preserves bc
+    ASSERT SAVE_NumSolvedPuzzles_bcd8 == 0
+    ld a, c
+    ld [hl+], a
+    ASSERT SAVE_Exists_bool == 1
+    ld [hl], 1
     ret
 
 ;;;=========================================================================;;;
