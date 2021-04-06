@@ -276,7 +276,7 @@ DataX_Farm_area:
     DB COLORSET_AUTUMN
     DB TILESET_MAP_FOREST
     D_BPTR DataX_FarmTileMap_start
-    D_TITLE 20, "HUGHSON FARMS"
+    D_TITLE 20, "HUGESON FARMS"
     D_TRAIL TE1, TE1, TE1, TE1
     DB FIRST_FARM_PUZZLE
     DB NUM_FARM_PUZZLES
@@ -333,7 +333,7 @@ _Farm_Node5:
     DB PADF_DOWN | 6           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Farm Bonus"
+    D_TITLE 16, "Don't Have a Cow"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node6:
     .begin
@@ -428,7 +428,7 @@ DataX_Seaside_area:
     DB COLORSET_AUTUMN
     DB TILESET_MAP_WORLD
     D_BPTR DataX_FarmTileMap_start  ; TODO: use seaside tile map
-    D_TITLE 20, "MEDI LAKE"
+    D_TITLE 20, "MIDDLING LAKE"
     D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
     DB FIRST_SEASIDE_PUZZLE
     DB NUM_SEASIDE_PUZZLES
@@ -459,7 +459,7 @@ DataX_Sewer_area:
     DB COLORSET_SEWER
     DB TILESET_MAP_SEWER
     D_BPTR DataX_SewerTileMap_start
-    D_TITLE 20, "DEMI SEWER"
+    D_TITLE 20, "DEMI SEWERS"
     D_TRAIL TN1, TN2, TN1
     DB FIRST_SEWER_PUZZLE
     DB NUM_SEWER_PUZZLES

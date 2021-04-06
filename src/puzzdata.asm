@@ -82,7 +82,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Farm1_puzz
     DW DataX_Farm2_puzz
     DW DataX_Farm3_puzz
-    DW DataX_Farm2_puzz  ; TODO
+    DW DataX_Farm4_puzz
     DW DataX_Farm2_puzz  ; TODO
     DW DataX_FarmBonus_puzz
     DW DataX_Farm2_puzz  ; TODO
@@ -188,7 +188,7 @@ DataX_Forest3_puzz:
     DB W_TST, O_GRS, G_APL, O_EMP, O_EMP, W_FW1, W_FNS, W_FNS, W_FE1, W_TST
     D_SETS TILESET_PUZZ_FARM, COLORSET_AUTUMN
     DB W_TST, O_GRS, O_GRS, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS, W_TST
-    D_PAR $0026
+    D_PAR $0025
     DB W_TST, W_TTP, O_GRS, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -317,6 +317,27 @@ DataX_Farm3_puzz:
     DB O_GRS, O_EMP, O_EMP, W_TTR, W_FW1, W_FNS, W_FNS, W_FNS, M_FNS, W_FNS
     D_PAR $0999  ; TODO: choose correct par value
     DB S_BSH, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_COW
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Farm4_puzz:
+    .begin
+    DB O_GRS, O_EMP, O_EMP, O_EMP, W_FEW, O_GRS, O_GRS, O_EMP, W_COW, O_GRS
+    D_ANIM $03, DIRF_SOUTH
+    DB O_EMP, O_EMP, G_APL, O_EMP, W_FSW, W_FNS, W_FNS, M_FNS, W_FNS, W_FNS
+    D_ANIM $72, DIRF_WEST
+    DB O_EMP, O_EMP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP
+    D_ANIM $29, DIRF_SOUTH
+    DB O_EMP, O_GRS, O_GRS, O_EMP, W_TTR, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_RestYe_song
+    DB O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, G_PNT
+    D_BPTR DataX_Null_dlog
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog
+    DB O_EMP, O_EMP, W_FW1, W_FNS, W_FNS, M_FNS, W_FNS, M_FNS, W_FNS, W_FNS
+    D_SETS TILESET_PUZZ_FARM, COLORSET_SUMMER
+    DB O_EMP, O_EMP, O_EMP, W_HNW, W_HNE, O_EMP, W_COW, O_EMP, O_GRS, O_GRS
+    D_PAR $0040
+    DB O_EMP, O_GRS, O_EMP, W_HSW, W_HSE, G_CHS, W_RCK, O_GRS, O_GRS, O_GRS
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_FarmBonus_puzz:
