@@ -86,10 +86,11 @@ CHARMAP "!", $41
 CHARMAP "?", $42
 CHARMAP "'", $43
 CHARMAP "-", $44
-CHARMAP "*", $45
-CHARMAP ">", $46
-CHARMAP "=", $47
-CHARMAP "|", $48
-CHARMAP "+", $49
+CHARMAP "%", $45
+CHARMAP "*", $46
+CHARMAP ">", $47
+CHARMAP "=", $48
+CHARMAP "|", $49
+CHARMAP "+", $4a
 
 ;;;=========================================================================;;;

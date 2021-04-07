@@ -95,11 +95,11 @@ _LoadFile_NewGame:
 Func_SaveFile::
     ;; Update the save summary.
     ld hl, Ram_Progress_file  ; param: FILE ptr
-    call Func_GetFileNumSolvedPuzzlesBcd_c
+    call Func_GetFilePercentageBcd_c
     ld a, [Ram_SaveFileNumber_u8]
     ld b, a  ; param: save file number
     call Func_GetSaveSummaryPtr_hl  ; preserves b
-    ASSERT SAVE_NumSolvedPuzzles_bcd8 == 0
+    ASSERT SAVE_Percentage_bcd8 == 0
     ld a, c
     ld [hl+], a
     ASSERT SAVE_Exists_bool == 1
@@ -144,22 +144,25 @@ Func_EraseFile::
 
 ;;; @param hl A pointer to a FILE struct.
 ;;; @return c The number of solved puzzles in the file, in BCD.
-;;; @preserve b
-Func_GetFileNumSolvedPuzzlesBcd_c:
-    ld c, 0
-    ld e, NUM_PUZZLES
+;;; @preserve b, de
+Func_GetFilePercentageBcd_c:
+    xor a
+    ld c, NUM_PUZZLES
     ASSERT FILE_PuzzleStatus_u8_arr == 0
     .loop
-    ld a, [hl+]
-    bit STATB_SOLVED, a
-    jr z, .unsolved
-    ld a, c
+    bit STATB_SOLVED, [hl]
+    jr z, .skip
     add 1
     daa
-    ld c, a
-    .unsolved
-    dec e
+    bit STATB_MADE_PAR, [hl]
+    jr z, .skip
+    add 1
+    daa
+    .skip
+    inc hl
+    dec c
     jr nz, .loop
+    ld c, a
     ret
 
 ;;;=========================================================================;;;
@@ -197,9 +200,9 @@ _InitSaveSummary_Empty:
     ret
 _InitSaveSummary_NonEmpty:
     call Func_GetSaveFilePtr_hl  ; preserves b
-    call Func_GetFileNumSolvedPuzzlesBcd_c  ; preserves b
+    call Func_GetFilePercentageBcd_c  ; preserves b
     call Func_GetSaveSummaryPtr_hl  ; preserves bc
-    ASSERT SAVE_NumSolvedPuzzles_bcd8 == 0
+    ASSERT SAVE_Percentage_bcd8 == 0
     ld a, c
     ld [hl+], a
     ASSERT SAVE_Exists_bool == 1

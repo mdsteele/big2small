@@ -234,12 +234,12 @@ SECTION "DrawPause", ROMX
 ;;; The pause menu is laid out like this:
 ;;;
 ;;;     +========+=========+
-;;;     |>Unpause|Moves 123|
+;;;     |>Resume |Moves 123|
 ;;;     | Reset  |Best  057|
 ;;;     | Quit   |Par   048|
 ;;;     +========+=========+
 DataX_DrawPause_2ndRow_start:
-    DB "|>Unpause|Moves "
+    DB "|>Resume |Moves "
 DataX_DrawPause_2ndRow_end:
 DataX_DrawPause_3rdRow_start:
     DB "| Reset  |Best  "

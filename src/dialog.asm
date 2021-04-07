@@ -314,15 +314,15 @@ WINDOW_ROW = WINDOW_ROW + 1
 DataX_DrawDialog_PortraitTable_u8_arr9_arr:
     .begin
     ASSERT @ - .begin == 9 * DIALOG_ELEPHANT_EYES_OPEN
-    DB $4a, $4d, $50, $4b, $4e, $51, $4c, $4f, $52
+    DB $4b, $4e, $51, $4c, $4f, $52, $4d, $50, $53
     ASSERT @ - .begin == 9 * DIALOG_ELEPHANT_EYES_CLOSED
-    DB $4a, $4d, $50, $65, $66, $51, $4c, $4f, $52
+    DB $4b, $4e, $51, $66, $67, $52, $4d, $50, $53
     ASSERT @ - .begin == 9 * DIALOG_GOAT_MOUTH_CLOSED
-    DB $53, $56, $59, $54, $57, $5a, $55, $58, $5b
+    DB $54, $57, $5a, $55, $58, $5b, $56, $59, $5c
     ASSERT @ - .begin == 9 * DIALOG_GOAT_MOUTH_OPEN
-    DB $53, $56, $59, $54, $57, $5a, $55, $58, $67
+    DB $54, $57, $5a, $55, $58, $5b, $56, $59, $63
     ASSERT @ - .begin == 9 * DIALOG_MOUSE
-    DB $5c, $5f, $62, $5d, $60, $63, $5e, $61, $64
+    DB $5d, $60, $00, $5e, $61, $64, $5f, $62, $65
     ASSERT @ - .begin == 9 * DIALOG_END
 
 ;;;=========================================================================;;;

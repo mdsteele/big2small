@@ -263,13 +263,13 @@ Func_TitleMenuDrawFileItem:
     add b
     ld [hl+], a
     ld a, "."
-    REPT 6
+    REPT 5
     ld [hl+], a
     ENDR
     ;; Get the save file's status.
     push hl
     call Func_GetSaveSummaryPtr_hl
-    ASSERT SAVE_NumSolvedPuzzles_bcd8 == 0
+    ASSERT SAVE_Percentage_bcd8 == 0
     ld a, [hl+]
     ASSERT SAVE_Exists_bool == 1
     ld c, [hl]
@@ -279,14 +279,13 @@ Func_TitleMenuDrawFileItem:
     jr nz, .notEmpty
     dec hl
     dec hl
-    dec hl
     COPY_FROM_ROM0 Data_FileEmptyStr_start, Data_FileEmptyStr_end
     ret
     ;; Otherwise, draw the number of completed puzzles (with a star, if it's
     ;; all the puzzles).
     .notEmpty
     dec hl
-    if_ne NUM_PUZZLES_BCD, jr, .noStar
+    if_ne MAX_SAVE_PERCENTAGE_BCD, jr, .noStar
     ld [hl], "*"
     .noStar
     inc hl
@@ -298,7 +297,8 @@ Func_TitleMenuDrawFileItem:
     ld a, c
     and $0f
     add "0"
-    ld [hl], a
+    ld [hl+], a
+    ld [hl], "%"
     ret
 
 ;;;=========================================================================;;;

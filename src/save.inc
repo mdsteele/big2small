@@ -19,8 +19,6 @@
 
 ;;; The number of puzzles in the game:
 NUM_PUZZLES EQU 31
-ASSERT NUM_PUZZLES <= 99
-NUM_PUZZLES_BCD EQU (((NUM_PUZZLES / 10) << 4) | (NUM_PUZZLES % 10))
 
 ;;; The number of save files:
 NUM_SAVE_FILES EQU 3
@@ -37,6 +35,12 @@ STATB_MADE_PAR EQU 2
 STATF_UNLOCKED EQU (1 << STATB_UNLOCKED)
 STATF_SOLVED   EQU (1 << STATB_SOLVED)
 STATF_MADE_PAR EQU (1 << STATB_MADE_PAR)
+
+;;; The maximum value for SAVE_Percentage_bcd8:
+MAX_SAVE_PERCENTAGE EQU 2 * NUM_PUZZLES
+ASSERT MAX_SAVE_PERCENTAGE <= 99
+MAX_SAVE_PERCENTAGE_BCD EQU (((MAX_SAVE_PERCENTAGE / 10) << 4) | \
+                             (MAX_SAVE_PERCENTAGE % 10))
 
 ;;;=========================================================================;;;
 
@@ -61,11 +65,12 @@ sizeof_FILE                 RB 0
 
 ;;; SAVE: Summarizes a save file.
 RSRESET
-;;; NumSolvedPuzzles: The number of solved puzzles, encoded in BCD.
-ASSERT NUM_PUZZLES <= 99
-SAVE_NumSolvedPuzzles_bcd8  RB 1
+;;; Percentage: The number of solved puzzles plus the number of puzzles
+;;;   completed at/under par, encoded in BCD.
+ASSERT 2 * NUM_PUZZLES <= 99
+SAVE_Percentage_bcd8 RB 1
 ;;; Exists: 1 if this save file exists, or 0 if it's empty.
-SAVE_Exists_bool RB 1
-sizeof_SAVE RB 0
+SAVE_Exists_bool     RB 1
+sizeof_SAVE          RB 0
 
 ;;;=========================================================================;;;
