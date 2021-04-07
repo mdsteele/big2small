@@ -97,6 +97,11 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Seaside2_puzz
     DW DataX_Sewer1_puzz
     DW DataX_Sewer2_puzz
+    DW DataX_Sewer2_puzz  ; TODO
+    DW DataX_Sewer2_puzz  ; TODO
+    DW DataX_Sewer2_puzz  ; TODO
+    DW DataX_Sewer2_puzz  ; TODO
+    DW DataX_Sewer2_puzz  ; TODO
     DW DataX_City1_puzz
     DW DataX_City2_puzz
     DW DataX_Space1_puzz

@@ -32,7 +32,7 @@ NUM_FOREST_PUZZLES EQU 8
 NUM_FARM_PUZZLES EQU 7
 NUM_MOUNTAIN_PUZZLES EQU 7
 NUM_SEASIDE_PUZZLES EQU 2
-NUM_SEWER_PUZZLES EQU 2
+NUM_SEWER_PUZZLES EQU 7
 NUM_CITY_PUZZLES EQU 2
 NUM_SPACE_PUZZLES EQU 3
 
@@ -460,7 +460,7 @@ DataX_Sewer_area:
     DB TILESET_MAP_SEWER
     D_BPTR DataX_SewerTileMap_start
     D_TITLE 20, "DEMI SEWERS"
-    D_TRAIL TN1, TN2, TN1
+    D_TRAIL TN1, UN2, TN1
     DB FIRST_SEWER_PUZZLE
     DB NUM_SEWER_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
@@ -478,9 +478,54 @@ _Sewer_Node1:
     DB 13, 5  ; row/col
     D_TRAIL TN1, TN1, TN1, TN1, TN1, TW1, TW1
     DB PADF_UP | 0             ; prev
-    DB PADF_RIGHT | EXIT_NODE  ; next
+    DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Blocked Drain"
+    ASSERT @ - .begin == sizeof_NODE
+_Sewer_Node2:
+    .begin
+    DB 13, 10  ; row/col
+    D_TRAIL TW1, TW1, TW2, TW1
+    DB PADF_LEFT | 1           ; prev
+    DB PADF_RIGHT | 3          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Sewer2"
+    ASSERT @ - .begin == sizeof_NODE
+_Sewer_Node3:
+    .begin
+    DB 13, 16  ; row/col
+    D_TRAIL TW1, TW1, TW2, TW1, TW1
+    DB PADF_LEFT | 2           ; prev
+    DB PADF_RIGHT | 4          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Sewer3"
+    ASSERT @ - .begin == sizeof_NODE
+_Sewer_Node4:
+    .begin
+    DB 8, 17  ; row/col
+    D_TRAIL TS1, TS1, TS1, TS1, TS1, TW1
+    DB PADF_DOWN | 3           ; prev
+    DB PADF_UP | 6             ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Sewer4"
+    ASSERT @ - .begin == sizeof_NODE
+_Sewer_Node5:
+    .begin
+    DB 5, 5  ; row/col
+    D_TRAIL TE1, UE2, TE1, TS1, TE1, TE1
+    DB PADF_RIGHT | 6          ; prev
+    DB 0                       ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Sewer Bonus"
+    ASSERT @ - .begin == sizeof_NODE
+_Sewer_Node6:
+    .begin
+    DB 6, 11  ; row/col
+    D_TRAIL TE1, TE1, TS1, TE1, UE2, TE1, TS1
+    DB PADF_RIGHT | 4          ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_LEFT | 5           ; bonus
+    D_TITLE 16, "Sewer6"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Sewer_Node0 == NUM_SEWER_PUZZLES * sizeof_NODE
 
