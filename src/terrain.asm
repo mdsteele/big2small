@@ -148,7 +148,7 @@ DataX_TerrainTable:
     D_TERR W_BEW, $07, $0b, $07, $0b, BRICK_START + $04
     D_TERR W_BE1, $02, $0f, $03, $05, BRICK_START + $04
     D_TERR W_BE3, $09, $0b, $09, $0b, BRICK_START + $04
-    D_TERR W_BW1, $0d, $02, $01, $03, BRICK_START + $04
+    D_TERR W_BW1, $00, $02, $01, $03, BRICK_START + $04
     D_TERR W_BW3, $07, $09, $07, $09, BRICK_START + $04
     D_TERR W_BC4, $09, $09, $09, $09, BRICK_START + $04
 ASSERT @ - DataX_TerrainTable <= 512
