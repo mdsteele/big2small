@@ -49,10 +49,10 @@ _LoadTileset_Map:
     COPY_FROM_ROMX DataX_SharedMapTiles_start, DataX_SharedMapTiles_end
     SKIP_TILES $0c
     pop af
-    if_eq TILESET_MAP_FOREST, jr, _LoadTileset_MapForest
-    if_eq TILESET_MAP_SEWER, jr, _LoadTileset_MapSewer
-    if_eq TILESET_MAP_SPACE, jr, _LoadTileset_MapSpace
-    if_eq TILESET_MAP_WORLD, jr, _LoadTileset_MapWorld
+    if_eq TILESET_MAP_FOREST, jp, _LoadTileset_MapForest
+    if_eq TILESET_MAP_SEWER, jp, _LoadTileset_MapSewer
+    if_eq TILESET_MAP_SPACE, jp, _LoadTileset_MapSpace
+    if_eq TILESET_MAP_WORLD, jp, _LoadTileset_MapWorld
     ret
 _LoadTileset_Puzz:
     push af
@@ -60,15 +60,20 @@ _LoadTileset_Puzz:
     pop af
     if_eq TILESET_PUZZ_CITY, jp, _LoadTileset_PuzzCity
     if_eq TILESET_PUZZ_FARM, jp, _LoadTileset_PuzzFarm
+    if_eq TILESET_PUZZ_LAKE, jp, _LoadTileset_PuzzLake
     if_eq TILESET_PUZZ_MOUNTAIN, jp, _LoadTileset_PuzzMountain
-    if_eq TILESET_PUZZ_SEASIDE, jp, _LoadTileset_PuzzSeaside
     if_eq TILESET_PUZZ_SEWER, jp, _LoadTileset_PuzzSewer
     if_eq TILESET_PUZZ_SPACE, jp, _LoadTileset_PuzzSpace
     ret
+
 _LoadTileset_MapForest:
     SKIP_TO_TILE $90
     COPY_FROM_ROMX DataX_ForestMapTiles_start, DataX_ForestMapTiles_end
-    ret
+    SKIP_TO_TILE $e0
+    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    COPY_FROM_ROMX DataX_MapRiverTiles_start, DataX_MapRiverTiles_end
+    xld hl, DataX_OceanTiles_tile_arr
+    jp Func_SetAnimatedTerrain
 _LoadTileset_MapSewer:
     SKIP_TILES $30
     COPY_FROM_ROMX DataX_SewerMapTiles_start, DataX_SewerMapTiles_end
@@ -96,17 +101,17 @@ _LoadTileset_PuzzFarm:
     COPY_FROM_ROMX DataX_BarnTiles_start, DataX_BarnTiles_end
     xld hl, DataX_CowBlinkTiles_tile_arr
     jp Func_SetAnimatedTerrain
+_LoadTileset_PuzzLake:
+    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
+    xld hl, DataX_OceanTiles_tile_arr
+    jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzMountain:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
     SKIP_TILES $08
     COPY_FROM_ROMX DataX_MountainTiles_start, DataX_MountainTiles_end
     ret
-_LoadTileset_PuzzSeaside:
-    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
-    COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
-    xld hl, DataX_OceanTiles_tile_arr
-    jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzSewer:
     COPY_FROM_ROMX DataX_EdgeTiles_start, DataX_EdgeTiles_end
     SKIP_TILES $0c
@@ -122,28 +127,17 @@ _LoadTileset_PuzzSpace:
     xld hl, DataX_StarsTiles_tile_arr
     jp Func_SetAnimatedTerrain
 
+;;;=========================================================================;;;
+
 ;;; @param b The TILESET_* enum value.
 ;;; @param c The animation counter (0-255).
 Func_AnimateTerrain::
     ld a, b
-    if_eq TILESET_MAP_SEWER, jr, _AnimateTerrain_Ocean
     if_eq TILESET_MAP_SPACE, jr, _AnimateTerrain_Twinkle
-    if_eq TILESET_MAP_WORLD, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_PUZZ_CITY, ret
     if_eq TILESET_PUZZ_FARM, jr, _AnimateTerrain_Cow
-    if_eq TILESET_PUZZ_SEASIDE, jr, _AnimateTerrain_Ocean
-    if_eq TILESET_PUZZ_SEWER, jr, _AnimateTerrain_Ocean
+    if_eq TILESET_PUZZ_MOUNTAIN, ret
     if_eq TILESET_PUZZ_SPACE, jr, _AnimateTerrain_Stars
-    ret
-_AnimateTerrain_Cow:
-    ld a, c
-    and %01111111
-    jr z, .blink
-    if_ne 10, ret
-    ld a, sizeof_TILE
-    .blink
-    ldb de, a
-    xld hl, DataX_CowBlinkTiles_tile_arr
-    jr _AnimateTerrain_Copy
 _AnimateTerrain_Ocean:
     ld a, c
     and %00001111
@@ -153,6 +147,16 @@ _AnimateTerrain_Ocean:
     ASSERT sizeof_TILE == 16
     ldb de, a
     xld hl, DataX_OceanTiles_tile_arr
+    jr _AnimateTerrain_Copy
+_AnimateTerrain_Cow:
+    ld a, c
+    and %01111111
+    jr z, .blink
+    if_ne 10, ret
+    ld a, sizeof_TILE
+    .blink
+    ldb de, a
+    xld hl, DataX_CowBlinkTiles_tile_arr
     jr _AnimateTerrain_Copy
 _AnimateTerrain_Stars:
     ld a, c

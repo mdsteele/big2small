@@ -93,8 +93,13 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Mountain1_puzz  ; TODO
     DW DataX_Mountain1_puzz  ; TODO
     DW DataX_Mountain1_puzz  ; TODO
-    DW DataX_Seaside1_puzz
-    DW DataX_Seaside2_puzz
+    DW DataX_Lake1_puzz
+    DW DataX_Lake2_puzz
+    DW DataX_Lake2_puzz  ; TODO
+    DW DataX_Lake2_puzz  ; TODO
+    DW DataX_Lake2_puzz  ; TODO
+    DW DataX_Lake2_puzz  ; TODO
+    DW DataX_Lake2_puzz  ; TODO
     DW DataX_Sewer1_puzz
     DW DataX_Sewer2_puzz
     DW DataX_Sewer3_puzz
@@ -408,7 +413,7 @@ DataX_Mountain1_puzz:
     DB O_GRS, O_GRS, O_EMP, O_GRS, S_ARN, O_EMP, S_ARE, O_EMP, O_GRS, O_GRS
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Seaside1_puzz:
+DataX_Lake1_puzz:
     .begin
     DB W_TTP, W_TTR, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
     D_ANIM $11, DIRF_SOUTH
@@ -423,13 +428,13 @@ DataX_Seaside1_puzz:
     DB O_GRS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, R_RSE, R_RNW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_GRS, O_GRS, O_EMP, O_EMP, O_BNS, O_EMP, R_RNS, O_EMP, O_EMP, O_GRS
-    D_SETS TILESET_PUZZ_SEASIDE, COLORSET_AUTUMN
+    D_SETS TILESET_PUZZ_LAKE, COLORSET_AUTUMN
     DB R_SNN, R_SNN, R_SNE, G_CHS, R_RNS, G_APL, R_RNS, G_PNT, R_SNW, R_SNN
     D_PAR $0999  ; TODO: choose correct par value
     DB R_OOP, R_OOP, R_ONE, R_SNN, R_ONN, R_SNN, R_ONN, R_SNN, R_ONW, R_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Seaside2_puzz:
+DataX_Lake2_puzz:
     .begin
     DB W_TST, W_TTR, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, W_TST, W_TST
     D_ANIM $07, DIRF_WEST
@@ -444,7 +449,7 @@ DataX_Seaside2_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, S_BSH, W_TTP
     D_BPTR DataX_Null_dlog
     DB R_RSE, R_REW, R_REW, O_BEW, R_REW, R_REW, R_RNW, W_RCK, O_EMP, W_TTR
-    D_SETS TILESET_PUZZ_SEASIDE, COLORSET_WINTER
+    D_SETS TILESET_PUZZ_LAKE, COLORSET_WINTER
     DB R_RNW, W_TTP, O_EMP, S_BSH, O_EMP, O_EMP, W_FW1, W_FNS, M_FNS, W_FNS
     D_PAR $0999  ; TODO: choose correct par value
     DB W_TTP, W_TST, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_RCK

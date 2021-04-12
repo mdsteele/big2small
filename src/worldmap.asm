@@ -204,7 +204,7 @@ Data_AreaPositions_u8_pair_arr:
     DB 28, 16
     ASSERT @ - .begin == 2 * AREA_MOUNTAIN
     DB 28, 28
-    ASSERT @ - .begin == 2 * AREA_SEASIDE
+    ASSERT @ - .begin == 2 * AREA_LAKE
     DB 16, 28
     ASSERT @ - .begin == 2 * AREA_SEWER
     DB 16, 16
