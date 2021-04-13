@@ -104,6 +104,8 @@ _LoadTileset_PuzzFarm:
 _LoadTileset_PuzzLake:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
+    SKIP_TILES $08
+    COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzMountain:
