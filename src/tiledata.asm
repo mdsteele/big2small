@@ -101,6 +101,11 @@ DataX_BarnTiles_start::
     INCBIN "out/data/tiles/barn.2bpp"
 DataX_BarnTiles_end::
 
+SECTION "BrickTiles", ROMX
+DataX_BrickTiles_start::
+    INCBIN "out/data/tiles/brick.2bpp"
+DataX_BrickTiles_end::
+
 SECTION "BridgeTiles", ROMX
 DataX_BridgeTiles_start::
     INCBIN "out/data/tiles/bridge.2bpp"
@@ -116,10 +121,15 @@ DataX_EdgeTiles_start::
     INCBIN "out/data/tiles/edge.2bpp"
 DataX_EdgeTiles_end::
 
-SECTION "FarmTiles", ROMX
-DataX_FarmTiles_start::
-    INCBIN "out/data/tiles/farm.2bpp"
-DataX_FarmTiles_end::
+SECTION "FenceChainTiles", ROMX
+DataX_FenceChainTiles_start::
+    INCBIN "out/data/tiles/fence_chain.2bpp"
+DataX_FenceChainTiles_end::
+
+SECTION "FenceWoodTiles", ROMX
+DataX_FenceWoodTiles_start::
+    INCBIN "out/data/tiles/fence_wood.2bpp"
+DataX_FenceWoodTiles_end::
 
 SECTION "GirderTiles", ROMX
 DataX_GirderTiles_start::

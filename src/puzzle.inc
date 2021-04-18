@@ -140,7 +140,6 @@ M_MIN RB 0  ; Terrain types from M_MIN to W_MIN are mouseholes.
 M_RNA RB 1  ; Ramp narrow
 M_UNDER_MIN RB 0
 M_FNS RB 1  ; North/south mousehole through fence
-M_BEW RB 1  ; East/west mousehole through brick wall
 M_BNS RB 1  ; North/south mousehole through brick wall
 M_UNDER_END RB 0
 
@@ -148,6 +147,7 @@ M_UNDER_END RB 0
 W_MIN RB 0  ; Terrain types from W_MIN on up are walls.
 W_RCK RB 1  ; Rock
 W_COW RB 1  ; Cow
+W_DMP RB 1  ; Dumpster
 W_FE1 RB 1  ; Fence east end
 W_FE3 RB 1  ; Fence east with westward split
 W_FW1 RB 1  ; Fence west end
@@ -174,19 +174,28 @@ W_CE1 RB 1  ; Cliff east single
 W_CE3 RB 1  ; Cliff east multi
 W_CW1 RB 1  ; Cliff west single
 W_CW3 RB 1  ; Cliff west multi
-W_BN1 RB 1  ; Brick wall north single
-W_BN3 RB 1  ; Brick wall north multi
-W_BNE RB 1  ; Brick wall north/east
-W_BNW RB 1  ; Brick wall north/west
 W_BS1 RB 1  ; Brick wall south single
 W_BS3 RB 1  ; Brick wall south multi
 W_BSE RB 1  ; Brick wall south/east
 W_BSW RB 1  ; Brick wall south/west
-W_BEW RB 1  ; Brick wall east/west
 W_BE1 RB 1  ; Brick wall east single
-W_BE3 RB 1  ; Brick wall east multi
 W_BW1 RB 1  ; Brick wall west single
-W_BW3 RB 1  ; Brick wall west multi
-W_BC4 RB 1  ; Brick wall center
+W_LNS RB 1  ; Brick lip north/south
+W_LN1 RB 1  ; Brick lip north single
+W_LN3 RB 1  ; Brick lip north multi
+W_LNE RB 1  ; Brick lip north/east
+W_LNW RB 1  ; Brick lip north/west
+W_LS1 RB 1  ; Brick lip south single
+W_LS3 RB 1  ; Brick lip south multi
+W_LSE RB 1  ; Brick lip south/east
+W_LSW RB 1  ; Brick lip south/west
+W_LEW RB 1  ; Brick lip east/west
+W_LE1 RB 1  ; Brick lip east single
+W_LE3 RB 1  ; Brick lip east multi
+W_LW1 RB 1  ; Brick lip west single
+W_LW3 RB 1  ; Brick lip west multi
+W_LLE RB 1  ; Brick lip L-shape east
+W_LC4 RB 1  ; Brick lip four sides
+W_ROP RB 1  ; Brick roof open
 
 ;;;=========================================================================;;;

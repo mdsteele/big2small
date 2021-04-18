@@ -24,7 +24,7 @@ INCLUDE "src/tileset.inc"
 
 ;;;=========================================================================;;;
 
-BRICK_START    EQU $d0
+BRICK_START    EQU $e0
 BRIDGE_START   EQU $c0
 FENCE_START    EQU $d0
 GOAL_START     EQU $80
@@ -105,12 +105,12 @@ DataX_TerrainTable:
     D_TERR R_GDR, $00, $00, ANI, ANI, SHORE_START
     ;; Mousehole terrain:
     D_TERR M_RNA, $14, $16, $15, $17, MOUNTAIN_START
-    D_TERR M_FNS, $00, $02, $01, $03, FENCE_START + $00
-    D_TERR M_BEW, $0c, $0e, $0d, $0f, BRICK_START + $04
-    D_TERR M_BNS, $00, $02, $01, $03, BRICK_START + $00
+    D_TERR M_FNS, $00, $02, $01, $03, FENCE_START
+    D_TERR M_BNS, $00, $02, $01, $03, BRICK_START
     ;; Wall terrain:
     D_TERR W_RCK, $0c, $0e, $0d, $0f, TREE_START
     D_TERR W_COW, ANI, $6a, $69, $6b, 0
+    D_TERR W_DMP, $00, $02, $01, $03, BRICK_START
     D_TERR W_FE1, $04, $06, $05, $07, FENCE_START
     D_TERR W_FE3, $09, $0f, $08, $0e, FENCE_START
     D_TERR W_FW1, $04, $04, $13, $05, FENCE_START
@@ -137,20 +137,29 @@ DataX_TerrainTable:
     D_TERR W_CE3, EMP, $0e, EMP, $0f, MOUNTAIN_START
     D_TERR W_CW1, $18, $02, $19, $03, MOUNTAIN_START
     D_TERR W_CW3, $0c, EMP, $0d, EMP, MOUNTAIN_START
-    D_TERR W_BN1, $06, $0a, $07, $0b, BRICK_START + $04
-    D_TERR W_BN3, $08, $08, $09, $09, BRICK_START + $04
-    D_TERR W_BNE, $08, $0a, $09, $0b, BRICK_START + $04
-    D_TERR W_BNW, $06, $08, $07, $09, BRICK_START + $04
     D_TERR W_BS1, $00, $04, $01, $05, BRICK_START + $04
     D_TERR W_BS3, $02, $02, $03, $03, BRICK_START + $04
     D_TERR W_BSE, $02, $04, $03, $05, BRICK_START + $04
     D_TERR W_BSW, $00, $02, $01, $03, BRICK_START + $04
-    D_TERR W_BEW, $07, $0b, $07, $0b, BRICK_START + $04
     D_TERR W_BE1, $02, $0f, $03, $05, BRICK_START + $04
-    D_TERR W_BE3, $09, $0b, $09, $0b, BRICK_START + $04
-    D_TERR W_BW1, $00, $02, $01, $03, BRICK_START + $04
-    D_TERR W_BW3, $07, $09, $07, $09, BRICK_START + $04
-    D_TERR W_BC4, $09, $09, $09, $09, BRICK_START + $04
+    D_TERR W_BW1, $0d, $02, $01, $03, BRICK_START + $04
+    D_TERR W_LNS, $08, $08, $0c, $0c, BRICK_START + $04
+    D_TERR W_LN1, $06, $0a, $07, $0b, BRICK_START + $04
+    D_TERR W_LN3, $08, $08, $09, $09, BRICK_START + $04
+    D_TERR W_LNE, $08, $0a, $09, $0b, BRICK_START + $04
+    D_TERR W_LNW, $06, $08, $07, $09, BRICK_START + $04
+    D_TERR W_LS1, $07, $0b, $0d, $0f, BRICK_START + $04
+    D_TERR W_LS3, $09, $09, $0c, $0c, BRICK_START + $04
+    D_TERR W_LSE, $09, $0b, $0c, $0f, BRICK_START + $04
+    D_TERR W_LSW, $07, $09, $0d, $0c, BRICK_START + $04
+    D_TERR W_LEW, $07, $0b, $07, $0b, BRICK_START + $04
+    D_TERR W_LE1, $08, $0a, $0c, $0f, BRICK_START + $04
+    D_TERR W_LE3, $09, $0b, $09, $0b, BRICK_START + $04
+    D_TERR W_LW1, $06, $08, $0d, $0c, BRICK_START + $04
+    D_TERR W_LW3, $07, $09, $07, $09, BRICK_START + $04
+    D_TERR W_LLE, $10, $0b, $0c, $0f, BRICK_START + $04
+    D_TERR W_LC4, $06, $0a, $0d, $0f, BRICK_START + $04
+    D_TERR W_ROP, $09, $09, $09, $09, BRICK_START + $04
 ASSERT @ - DataX_TerrainTable <= 512
 
 ;;;=========================================================================;;;
@@ -206,11 +215,11 @@ DataX_TerrainPaletteTable:
     ;; Mousehole terrain:
     D_PAL M_RNA, 6
     D_PAL M_FNS, 1
-    D_PAL M_BEW, 6
     D_PAL M_BNS, 6
     ;; Wall terrain:
     D_PAL W_RCK, 7
     D_PAL W_COW, 6
+    D_PAL W_DMP, 6
     D_PAL W_FE1, 1
     D_PAL W_FE3, 1
     D_PAL W_FW1, 1
@@ -237,20 +246,29 @@ DataX_TerrainPaletteTable:
     D_PAL W_CE3, 6
     D_PAL W_CW1, 6
     D_PAL W_CW3, 6
-    D_PAL W_BN1, 6
-    D_PAL W_BN3, 6
-    D_PAL W_BNE, 6
-    D_PAL W_BNW, 6
     D_PAL W_BS1, 6
     D_PAL W_BS3, 6
     D_PAL W_BSE, 6
     D_PAL W_BSW, 6
-    D_PAL W_BEW, 6
     D_PAL W_BE1, 6
-    D_PAL W_BE3, 6
     D_PAL W_BW1, 6
-    D_PAL W_BW3, 6
-    D_PAL W_BC4, 6
+    D_PAL W_LNS, 6
+    D_PAL W_LN1, 6
+    D_PAL W_LN3, 6
+    D_PAL W_LNE, 6
+    D_PAL W_LNW, 6
+    D_PAL W_LS1, 6
+    D_PAL W_LS3, 6
+    D_PAL W_LSE, 6
+    D_PAL W_LSW, 6
+    D_PAL W_LEW, 6
+    D_PAL W_LE1, 6
+    D_PAL W_LE3, 6
+    D_PAL W_LW1, 6
+    D_PAL W_LW3, 6
+    D_PAL W_LLE, 6
+    D_PAL W_LC4, 6
+    D_PAL W_ROP, 6
 ASSERT @ - DataX_TerrainPaletteTable <= 256
 
 ;;;=========================================================================;;;

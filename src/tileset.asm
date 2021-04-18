@@ -23,12 +23,6 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
-SKIP_TILES: MACRO
-    STATIC_ASSERT _NARG == 1
-    ld bc, (\1) * sizeof_TILE
-    add hl, bc
-ENDM
-
 SKIP_TO_TILE: MACRO
     STATIC_ASSERT _NARG == 1
     ld hl, Vram_SharedTiles + ((\1) - $80) * sizeof_TILE
@@ -47,7 +41,6 @@ Func_LoadTileset::
 _LoadTileset_Map:
     push af
     COPY_FROM_ROMX DataX_SharedMapTiles_start, DataX_SharedMapTiles_end
-    SKIP_TILES $0c
     pop af
     if_eq TILESET_MAP_FOREST, jp, _LoadTileset_MapForest
     if_eq TILESET_MAP_SEWER, jp, _LoadTileset_MapSewer
@@ -75,12 +68,12 @@ _LoadTileset_MapForest:
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_MapSewer:
-    SKIP_TILES $30
+    SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SewerMapTiles_start, DataX_SewerMapTiles_end
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_MapSpace:
-    SKIP_TILES $30
+    SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
     xld hl, DataX_TwinkleTiles_tile_arr
     jp Func_SetAnimatedTerrain
@@ -90,41 +83,43 @@ _LoadTileset_MapWorld:
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzCity:
-    SKIP_TILES $20
+    SKIP_TO_TILE $d0
+    COPY_FROM_ROMX DataX_FenceChainTiles_start, DataX_FenceChainTiles_end
+    SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
     ret
 _LoadTileset_PuzzFarm:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
-    SKIP_TILES $10
-    COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
-    SKIP_TILES $0c
+    SKIP_TO_TILE $d0
+    COPY_FROM_ROMX DataX_FenceWoodTiles_start, DataX_FenceWoodTiles_end
+    SKIP_TO_TILE $f0
     COPY_FROM_ROMX DataX_BarnTiles_start, DataX_BarnTiles_end
     xld hl, DataX_CowBlinkTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzLake:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
-    SKIP_TILES $08
-    COPY_FROM_ROMX DataX_FarmTiles_start, DataX_FarmTiles_end
+    SKIP_TO_TILE $d0
+    COPY_FROM_ROMX DataX_FenceWoodTiles_start, DataX_FenceWoodTiles_end
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzMountain:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
-    SKIP_TILES $08
+    SKIP_TO_TILE $d0
     COPY_FROM_ROMX DataX_MountainTiles_start, DataX_MountainTiles_end
     ret
 _LoadTileset_PuzzSewer:
     COPY_FROM_ROMX DataX_EdgeTiles_start, DataX_EdgeTiles_end
-    SKIP_TILES $0c
+    SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
-    SKIP_TILES $08
-    COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
+    SKIP_TO_TILE $e0
+    COPY_FROM_ROMX DataX_BrickTiles_start, DataX_BrickTiles_end
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzSpace:
     COPY_FROM_ROMX DataX_GirderTiles_start, DataX_GirderTiles_end
-    SKIP_TILES $1f
+    SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
     xld hl, DataX_StarsTiles_tile_arr
     jp Func_SetAnimatedTerrain
