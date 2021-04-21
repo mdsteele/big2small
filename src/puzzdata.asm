@@ -364,11 +364,11 @@ DataX_FarmBonus_puzz:
     D_BPTR DataX_Null_dlog
     DB O_GRS, W_FEW, O_EMP, G_CHS, O_EMP, W_FNW, W_FNS, W_FNS, W_FNS, W_FNS
     D_BPTR DataX_Null_dlog
-    DB O_GRS, W_FEW, O_EMP, O_EMP, O_EMP, W_FEW, O_GRS, G_PNT, O_GRS, W_COW
+    DB O_GRS, W_FEW, O_EMP, O_EMP, O_EMP, W_FEW, O_EMP, G_PNT, O_GRS, O_GRS
     D_SETS TILESET_PUZZ_FARM, COLORSET_AUTUMN
-    DB O_GRS, W_FSW, W_FE1, O_EMP, W_COW, W_FSW, M_FNS, W_FE1, O_EMP, W_TTP
+    DB O_GRS, W_FSW, W_FE1, O_EMP, W_COW, W_FSW, M_FNS, W_FNS, W_FE1, O_EMP
     D_PAR $0999  ; TODO: choose correct par value
-    DB O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR
+    DB O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Mountain0_puzz:
