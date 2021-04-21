@@ -60,7 +60,7 @@ _LoadTileset_Puzz:
     ret
 
 _LoadTileset_MapForest:
-    SKIP_TO_TILE $90
+    SKIP_TO_TILE $a0
     COPY_FROM_ROMX DataX_ForestMapTiles_start, DataX_ForestMapTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end

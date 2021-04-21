@@ -577,7 +577,7 @@ DataX_City2_puzz:
     DB W_LNS, W_LLE, O_EMP, O_EMP, W_LC4, O_EMP, O_EMP, O_EMP, W_LNW, W_LNE
     D_SETS TILESET_PUZZ_CITY, COLORSET_SEWER
     DB W_BS3, W_BSE, M_FNS, W_FNS, W_BS1, W_FNS, W_FNS, M_FNS, W_LSW, W_LSE
-    D_PAR $0999  ; TODO: choose correct par value
+    D_PAR $0052
     DB O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, W_BSW, W_BSE
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -598,7 +598,7 @@ DataX_Space1_puzz:
     DB W_BS1, G_PNT, O_EMP, S_TEF, O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, W_BS1
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE, 0, 0, 0, $78
     DB R_GDR, O_EMP, O_EMP, O_EMP, O_EMP, W_BW1, W_BSE, O_EMP, S_TEF, R_GDR
-    D_PAR $0999, 0, 0, 0, $63  ; TODO: choose correct par value
+    D_PAR $0027, 0, 0, 0, $63
     DB R_OOP, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -619,7 +619,7 @@ DataX_Space2_puzz:
     DB R_GDR, O_EMP, W_LEW, O_EMP, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE
     DB O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP, S_ARW
-    D_PAR $0999, 0, 0, 0, $05  ; TODO: choose correct par value
+    D_PAR $0054, 0, 0, 0, $05
     DB O_EMP, O_EMP, O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -640,7 +640,7 @@ DataX_Space3_puzz:
     DB S_ARE, G_PNT, W_BS1, O_EMP, S_ARN, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE
     DB O_EMP, S_MTP, O_EMP, O_EMP, S_ARS, S_TEF, O_EMP, S_ARW, O_EMP, S_TGE
-    D_PAR $0999, 0, 0, $10, $28  ; TODO: choose correct par value
+    D_PAR $0067, 0, 0, $10, $28
     DB R_GDR, R_GDR, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 

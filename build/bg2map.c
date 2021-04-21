@@ -116,15 +116,15 @@ int main(int argc, char **argv) {
                  0 == strcmp(tileset, "twinkle")) {
         fputc(0x68, stdout);
       } else if (0 == strcmp(tileset, "forest_map_fence")) {
-        fputc(0xa0 + tile_index, stdout);
+        fputc(0x90 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "forest_map_tree")) {
         fputc(0xb0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_barn")) {
         fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_bridge")) {
-        fputc(0xa8 + tile_index, stdout);
+        fputc(0x98 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_mountain")) {
-        fputc(0x90 + tile_index, stdout);
+        fputc(0xa0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_river")) {
         fputc(0xf0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_silo")) {
