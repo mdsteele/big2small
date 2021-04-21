@@ -93,6 +93,7 @@ DataX_TerrainTable:
     D_TERR R_RNW, $0c, $06, $01, $0b, SHORE_START
     D_TERR R_RSE, $08, $02, $05, $0f, SHORE_START
     D_TERR R_RSW, $00, $0a, $0d, $07, SHORE_START
+    D_TERR R_RS1, $08, $0a, $05, $07, SHORE_START
     D_TERR R_SNN, $00, $02, ANI, ANI, SHORE_START
     D_TERR R_SNE, $00, $0a, ANI, $07, SHORE_START
     D_TERR R_SNW, $08, $02, $05, ANI, SHORE_START
@@ -202,6 +203,7 @@ DataX_TerrainPaletteTable:
     D_PAL R_RNW, 4
     D_PAL R_RSE, 4
     D_PAL R_RSW, 4
+    D_PAL R_RS1, 4
     D_PAL R_SNN, 4
     D_PAL R_SNE, 4
     D_PAL R_SNW, 4

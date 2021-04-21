@@ -124,6 +124,7 @@ R_RNE RB 1  ; River north/east
 R_RNW RB 1  ; River north/west
 R_RSE RB 1  ; River south/east
 R_RSW RB 1  ; River south/west
+R_RS1 RB 1  ; River south single
 R_SNN RB 1  ; Shoreline on north
 R_SNE RB 1  ; Shoreline on north/east
 R_SNW RB 1  ; Shoreline on north/west

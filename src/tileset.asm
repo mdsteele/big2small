@@ -83,6 +83,7 @@ _LoadTileset_MapWorld:
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzCity:
+    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     SKIP_TO_TILE $d0
     COPY_FROM_ROMX DataX_FenceChainTiles_start, DataX_FenceChainTiles_end
     SKIP_TO_TILE $e0

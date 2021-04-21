@@ -18,7 +18,7 @@
 ;;;=========================================================================;;;
 
 ;;; The number of puzzles in the game:
-NUM_PUZZLES EQU 41
+NUM_PUZZLES EQU 42
 
 ;;; The number of save files:
 NUM_SAVE_FILES EQU 3
