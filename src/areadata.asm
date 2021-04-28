@@ -33,7 +33,7 @@ NUM_FARM_PUZZLES EQU 7
 NUM_MOUNTAIN_PUZZLES EQU 7
 NUM_LAKE_PUZZLES EQU 7
 NUM_SEWER_PUZZLES EQU 7
-NUM_CITY_PUZZLES EQU 3
+NUM_CITY_PUZZLES EQU 4
 NUM_SPACE_PUZZLES EQU 3
 
 ;;; The puzzle number of the first puzzle in each area:
@@ -609,9 +609,18 @@ _City_Node2:
     DB 8, 12  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1
     DB PADF_LEFT | 1           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
     D_TITLE 16, "City2"
+    ASSERT @ - .begin == sizeof_NODE
+_City_Node3:
+    .begin
+    DB 8, 16  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 2           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "City3"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
 
