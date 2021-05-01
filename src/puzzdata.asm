@@ -114,6 +114,10 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Space1_puzz
     DW DataX_Space2_puzz
     DW DataX_Space3_puzz
+    DW DataX_Space3_puzz  ; TODO
+    DW DataX_Space3_puzz  ; TODO
+    DW DataX_Space3_puzz  ; TODO
+    DW DataX_Space3_puzz  ; TODO
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;

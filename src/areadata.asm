@@ -34,7 +34,7 @@ NUM_MOUNTAIN_PUZZLES EQU 7
 NUM_LAKE_PUZZLES EQU 7
 NUM_SEWER_PUZZLES EQU 7
 NUM_CITY_PUZZLES EQU 4
-NUM_SPACE_PUZZLES EQU 3
+NUM_SPACE_PUZZLES EQU 7
 
 ;;; The puzzle number of the first puzzle in each area:
 FIRST_FOREST_PUZZLE EQU 0
@@ -73,33 +73,28 @@ ENDM
 ;;;=========================================================================;;;
 
 ;;; Constants for D_TRAIL arguments:
-TN1 EQU (TRAIL_NORTH | 1)
-TS1 EQU (TRAIL_SOUTH | 1)
 TE1 EQU (TRAIL_EAST  | 1)
-TW1 EQU (TRAIL_WEST  | 1)
-TN2 EQU (TRAIL_NORTH | 2)
-TS2 EQU (TRAIL_SOUTH | 2)
 TE2 EQU (TRAIL_EAST  | 2)
-TW2 EQU (TRAIL_WEST  | 2)
+TE3 EQU (TRAIL_EAST  | 3)
 TE4 EQU (TRAIL_EAST  | 4)
-UN1 EQU (TRAIL_NORTH | 1 | TRAILF_UNDER)
-US1 EQU (TRAIL_SOUTH | 1 | TRAILF_UNDER)
-UE1 EQU (TRAIL_EAST  | 1 | TRAILF_UNDER)
-UW1 EQU (TRAIL_WEST  | 1 | TRAILF_UNDER)
-UN2 EQU (TRAIL_NORTH | 2 | TRAILF_UNDER)
-US2 EQU (TRAIL_SOUTH | 2 | TRAILF_UNDER)
+TN1 EQU (TRAIL_NORTH | 1)
+TN2 EQU (TRAIL_NORTH | 2)
+TS1 EQU (TRAIL_SOUTH | 1)
+TS2 EQU (TRAIL_SOUTH | 2)
+TW1 EQU (TRAIL_WEST  | 1)
+TW2 EQU (TRAIL_WEST  | 2)
+TW3 EQU (TRAIL_WEST  | 3)
 UE2 EQU (TRAIL_EAST  | 2 | TRAILF_UNDER)
-UW2 EQU (TRAIL_WEST  | 2 | TRAILF_UNDER)
-UN3 EQU (TRAIL_NORTH | 3 | TRAILF_UNDER)
-US3 EQU (TRAIL_SOUTH | 3 | TRAILF_UNDER)
 UE3 EQU (TRAIL_EAST  | 3 | TRAILF_UNDER)
+UN2 EQU (TRAIL_NORTH | 2 | TRAILF_UNDER)
+US1 EQU (TRAIL_SOUTH | 1 | TRAILF_UNDER)
 UW3 EQU (TRAIL_WEST  | 3 | TRAILF_UNDER)
 
 ;;; Declares a Trail/ExitTrail field within a NODE/AREA struct.  There should
 ;;; be 1 to MAX_TRAIL_LENGTH arguments (inclusive), with each being one of the
-;;; above T?? constants.  The last entry will automatically be marked with
-;;; TRAILB_END, and the field will automatically be padded to MAX_TRAIL_LENGTH
-;;; bytes.
+;;; above T?? or U?? constants.  The last entry will automatically be marked
+;;; with TRAILB_END, and the field will automatically be padded to
+;;; MAX_TRAIL_LENGTH bytes.
 ;;;
 ;;; Example:
 ;;;     D_TRAIL TS1, TS1, TS1, TE1, TE2, TE1
@@ -631,36 +626,72 @@ DataX_Space_area:
     DB TILESET_MAP_SPACE
     D_BPTR DataX_SpaceTileMap_start
     D_TITLE 20, "NEUTRINO STATION"
-    D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
+    D_TRAIL TN1, TN1, TN1, TN1
     DB FIRST_SPACE_PUZZLE
     DB NUM_SPACE_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Space_Node0:
     .begin
-    DB 8, 4  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1, TW1
+    DB 7, 6  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
     DB PADF_LEFT | EXIT_NODE   ; prev
-    DB PADF_RIGHT | 1          ; next
+    DB PADF_UP | 1             ; next
     DB 0                       ; bonus
     D_TITLE 16, "Warp Speedway"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node1:
     .begin
-    DB 8, 8  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
-    DB PADF_LEFT | 0           ; prev
+    DB 4, 6  ; row/col
+    D_TRAIL TS1, TS1, TS1
+    DB PADF_DOWN | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Space1"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node2:
     .begin
-    DB 8, 12  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
+    DB 4, 11  ; row/col
+    D_TRAIL TW1, TW3, TW1
     DB PADF_LEFT | 1           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_DOWN | 3           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Space2"
+    ASSERT @ - .begin == sizeof_NODE
+_Space_Node3:
+    .begin
+    DB 7, 11  ; row/col
+    D_TRAIL TN1, TN1, TN1
+    DB PADF_UP | 2             ; prev
+    DB PADF_RIGHT | 5          ; next
+    DB PADF_DOWN | 4           ; bonus
+    D_TITLE 16, "Space3"
+    ASSERT @ - .begin == sizeof_NODE
+_Space_Node4:
+    .begin
+    DB 10, 6  ; row/col
+    D_TRAIL TE1, TE3, TE1, TN1, TN1, TN1
+    DB PADF_RIGHT | 3          ; prev
+    DB 0                       ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Space Bonus"
+    ASSERT @ - .begin == sizeof_NODE
+_Space_Node5:
+    .begin
+    DB 9, 13  ; row/col
+    D_TRAIL TN1, TN1, TW1, TW1
+    DB PADF_UP | 3             ; prev
+    DB PADF_RIGHT | 6          ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Space5"
+    ASSERT @ - .begin == sizeof_NODE
+_Space_Node6:
+    .begin
+    DB 8, 15  ; row/col
+    D_TRAIL TS1, TW1, TW1
+    DB PADF_DOWN | 5           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Space6"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Space_Node0 == NUM_SPACE_PUZZLES * sizeof_NODE
 
