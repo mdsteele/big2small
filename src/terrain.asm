@@ -90,6 +90,7 @@ DataX_TerrainTable:
     D_TERR R_SS3, $0a, $0a, $1d, $1f, MOUNTAIN_START
     D_TERR R_SSE, $1c, $22, $1d, $23, MOUNTAIN_START
     D_TERR R_SSW, $20, $1e, $21, $1f, MOUNTAIN_START
+    D_TERR R_SW3, $20, $0a, $20, $0a, MOUNTAIN_START
     D_TERR R_SOP, $0a, $0a, $0a, $0a, MOUNTAIN_START
     D_TERR R_STR, $0a, $0a, $0a, $1c, MOUNTAIN_START
     D_TERR R_RNS, $04, $06, $05, $07, SHORE_START
@@ -205,6 +206,7 @@ DataX_TerrainPaletteTable:
     D_PAL R_SS3, 6
     D_PAL R_SSE, 6
     D_PAL R_SSW, 6
+    D_PAL R_SW3, 6
     D_PAL R_SOP, 6
     D_PAL R_STR, 6
     D_PAL R_RNS, 4

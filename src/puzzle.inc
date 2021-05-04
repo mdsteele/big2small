@@ -121,6 +121,7 @@ R_MIN RB 0  ; Terrain types from R_MIN to M_MIN are water.
 R_SS3 RB 1  ; Sky south multi
 R_SSE RB 1  ; Sky south/east
 R_SSW RB 1  ; Sky south/west
+R_SW3 RB 1  ; Sky west multi
 R_SOP RB 1  ; Open sky
 R_STR RB 1  ; Sky with stars
 R_RNS RB 1  ; River north/south
