@@ -386,7 +386,7 @@ DataX_Mountain0_puzz:
     DB O_EMP, G_APL, O_EMP, W_CSW, O_CW3, W_TTR, O_EMP, O_EMP, O_EMP, S_ARW
     D_ANIM $50, DIRF_EAST
     DB O_EMP, W_RCK, O_EMP, W_RCK, O_CW3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_ComingRound_song
     DB O_EMP, S_ARE, O_EMP, O_EMP, W_CSW, W_CS3, O_RWL, O_RWR, W_CS3, W_CS3
     D_BPTR DataX_Mountain0Intro_dlog
     DB O_EMP, O_EMP, O_GRS, O_EMP, S_ARS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
@@ -407,7 +407,7 @@ DataX_Mountain2_puzz:
     DB R_SS3, R_SSE, O_EMP, O_GRS, O_EMP, S_ARW, R_SSW, R_SSE, O_EMP, O_EMP
     D_ANIM $28, DIRF_SOUTH
     DB O_CW3, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_ComingRound_song
     DB O_CW3, O_EMP, O_EMP, S_ARS, O_EMP, G_APL, O_EMP, O_GRS, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_CW3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
@@ -428,7 +428,7 @@ DataX_Mountain3_puzz:
     DB O_GRS, W_CSW, W_CS3, O_RMD, W_CS3, M_RNA, W_CS3, O_RWL, O_RWR, W_CS3
     D_ANIM $07, DIRF_SOUTH
     DB O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_CE3, W_CS3
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_ComingRound_song
     DB O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, O_EMP, O_CE3, W_CS3, W_CSE, O_GRS
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_CW1, W_CSE, O_GRS, O_EMP, S_ARS
@@ -449,7 +449,7 @@ DataX_MountainBonus_puzz:
     DB R_STR, R_SS3, O_CW3, O_EMP, O_EMP, S_BSH, O_EMP, S_ARN, R_SSW, R_SOP
     D_ANIM $31, DIRF_SOUTH
     DB R_SS3, O_CW3, W_CSW, O_RMD, W_CS3, W_CS3, M_RNA, W_CSE, O_CE3, R_SS3
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_ComingRound_song
     DB W_TTP, O_CW3, O_EMP, O_EMP, O_EMP, S_ARS, O_EMP, G_APL, O_CE3, W_TTP
     D_BPTR DataX_Null_dlog
     DB W_TTR, O_CW3, S_ARE, O_EMP, O_EMP, O_EMP, O_EMP, O_CE3, W_CSE, W_TTR
