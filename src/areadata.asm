@@ -28,13 +28,13 @@ INCLUDE "src/tileset.inc"
 ;;;=========================================================================;;;
 
 ;;; The number of puzzles in each area:
-NUM_FOREST_PUZZLES EQU 8
-NUM_FARM_PUZZLES EQU 7
-NUM_MOUNTAIN_PUZZLES EQU 7
-NUM_LAKE_PUZZLES EQU 7
-NUM_SEWER_PUZZLES EQU 7
+NUM_FOREST_PUZZLES EQU 7
+NUM_FARM_PUZZLES EQU 5
+NUM_MOUNTAIN_PUZZLES EQU 6
+NUM_LAKE_PUZZLES EQU 6
+NUM_SEWER_PUZZLES EQU 6
 NUM_CITY_PUZZLES EQU 4
-NUM_SPACE_PUZZLES EQU 7
+NUM_SPACE_PUZZLES EQU 6
 
 ;;; The puzzle number of the first puzzle in each area:
 FIRST_FOREST_PUZZLE EQU 0
@@ -230,38 +230,29 @@ _Forest_Node3:
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node4:
     .begin
-    DB 6, 15  ; row/col
-    D_TRAIL TE1, TE1, TS1, TS1, TS1, TS1, TS1
+    DB 6, 14  ; row/col
+    D_TRAIL TE1, TE1, TE1, TS1, TS1, TS1, TS1, TS1
     DB PADF_RIGHT | 3          ; prev
-    DB PADF_LEFT | 5           ; next
+    DB PADF_LEFT | 6           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Forest4"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node5:
     .begin
-    DB 8, 12  ; row/col
-    D_TRAIL TN1, TN1, TE1, TE1, TE1
-    DB PADF_UP | 4             ; prev
-    DB PADF_LEFT | 7           ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Forest5"
-    ASSERT @ - .begin == sizeof_NODE
-_Forest_Node6:
-    .begin
     DB 4, 1  ; row/col
     D_TRAIL TE1, UE3, TE1, TE1, TE1, TE1
-    DB PADF_RIGHT | 7          ; prev
+    DB PADF_RIGHT | 6          ; prev
     DB 0                       ; next
     DB 0                       ; bonus
     D_TITLE 16, "Forest Bonus"
     ASSERT @ - .begin == sizeof_NODE
-_Forest_Node7:
+_Forest_Node6:
     .begin
     DB 4, 9  ; row/col
-    D_TRAIL TS1, TS1, TS1, TS1, TE1, TE1, TE1
-    DB PADF_DOWN | 5           ; prev
+    D_TRAIL TS1, TS1, TS1, TS1, TE1, TE1, TE1, TN1, TN1, TE1, TE1
+    DB PADF_DOWN | 4           ; prev
     DB PADF_UP | EXIT_NODE     ; next
-    DB PADF_LEFT | 6           ; bonus
+    DB PADF_LEFT | 5           ; bonus
     D_TITLE 16, "Forest7"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Forest_Node0 == NUM_FOREST_PUZZLES * sizeof_NODE
@@ -279,8 +270,8 @@ DataX_Farm_area:
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Farm_Node0:
     .begin
-    DB 12, 5  ; row/col
-    D_TRAIL TS1, TS1, TS1, US1
+    DB 11, 5  ; row/col
+    D_TRAIL TS1, TS1, TS1, TS1, US1
     DB PADF_DOWN | EXIT_NODE   ; prev
     DB PADF_UP | 1             ; next
     DB 0                       ; bonus
@@ -288,57 +279,39 @@ _Farm_Node0:
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node1:
     .begin
-    DB 7, 5  ; row/col
-    D_TRAIL TS1, TS1, TS1, TS1, TS1
-    DB PADF_DOWN | 0           ; prev
+    DB 5, 10  ; row/col
+    D_TRAIL TW1, TW1, TS1, TS1, TW1, TW1, TW1, TS1, TS1, TS1, TS1
+    DB PADF_LEFT | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Farm1"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node2:
     .begin
-    DB 5, 10  ; row/col
-    D_TRAIL TW1, TW1, TS1, TS1, TW1, TW1, TW1
-    DB PADF_LEFT | 1           ; prev
-    DB PADF_RIGHT | 3          ; next
+    DB 8, 15  ; row/col
+    D_TRAIL TE1, TN1, TN1, TN1, TW1, TW1, TW1, TW1, TW1, TW1
+    DB PADF_RIGHT | 1          ; prev
+    DB PADF_DOWN | 4           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Farm2"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node3:
     .begin
-    DB 4, 17  ; row/col
-    D_TRAIL TW1, TW1, TW1, TS1, TW1, TW1, TW1, TW1
-    DB PADF_LEFT | 2           ; prev
-    DB PADF_DOWN | 4           ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Farm3"
-    ASSERT @ - .begin == sizeof_NODE
-_Farm_Node4:
-    .begin
-    DB 8, 15  ; row/col
-    D_TRAIL TE1, TE1, TN1, TN1, TN1, TN1
-    DB PADF_RIGHT | 3          ; prev
-    DB PADF_DOWN | 6           ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Farm4"
-    ASSERT @ - .begin == sizeof_NODE
-_Farm_Node5:
-    .begin
     DB 12, 11  ; row/col
     D_TRAIL TS1, TS1, TE1, TE1, TE1, TE1, TE1, TN1, TN1
-    DB PADF_DOWN | 6           ; prev
+    DB PADF_DOWN | 4           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
     D_TITLE 16, "Don't Have a Cow"
     ASSERT @ - .begin == sizeof_NODE
-_Farm_Node6:
+_Farm_Node4:
     .begin
     DB 12, 16  ; row/col
     D_TRAIL TW1, TN1, TN1, TN1, TN1
-    DB PADF_LEFT | 4           ; prev
+    DB PADF_LEFT | 2           ; prev
     DB PADF_RIGHT | EXIT_NODE  ; next
-    DB PADF_DOWN | 5           ; bonus
-    D_TITLE 16, "Farm6"
+    DB PADF_DOWN | 3           ; bonus
+    D_TITLE 16, "Farm5"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Farm_Node0 == NUM_FARM_PUZZLES * sizeof_NODE
 
@@ -349,7 +322,7 @@ DataX_Mountain_area:
     DB TILESET_MAP_FOREST
     D_BPTR DataX_MountainTileMap_start
     D_TITLE 20, "MT. BIGHORN"
-    D_TRAIL TS1, TS2, TS1, US1
+    D_TRAIL TE1, TE1, TS1, TS1, TS1, TS2, TS1, US1
     DB FIRST_MOUNTAIN_PUZZLE
     DB NUM_MOUNTAIN_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
@@ -385,36 +358,27 @@ _Mountain_Node3:
     DB 8, 11  ; row/col
     D_TRAIL TW1, TW1, TW1, TN1, TN2, TN1, TW1
     DB PADF_LEFT | 2           ; prev
-    DB PADF_DOWN | 4           ; next
+    DB PADF_DOWN | 5           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Mountain3"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node4:
     .begin
-    DB 9, 15  ; row/col
-    D_TRAIL TW1, TS1, TS1, TS1, TW1, TW1, TW1, TN1, TN2, TN1
-    DB PADF_LEFT | 3           ; prev
-    DB PADF_RIGHT | 6          ; next
-    DB PADF_UP | 5             ; bonus
-    D_TITLE 16, "Mountain4"
-    ASSERT @ - .begin == sizeof_NODE
-_Mountain_Node5:
-    .begin
     DB 2, 15  ; row/col
     D_TRAIL TS2, TS2, TS1, TS1, TS1
-    DB PADF_DOWN | 4           ; prev
+    DB PADF_DOWN | 5           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
     D_TITLE 16, "Mountain Bonus"
     ASSERT @ - .begin == sizeof_NODE
-_Mountain_Node6:
+_Mountain_Node5:
     .begin
-    DB 11, 17  ; row/col
-    D_TRAIL TN1, TN1, TW1, TW1
-    DB PADF_UP | 4             ; prev
-    DB PADF_DOWN | EXIT_NODE   ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Mountain6"
+    DB 9, 15  ; row/col
+    D_TRAIL TW1, TS1, TS1, TS1, TW1, TW1, TW1, TN1, TN2, TN1
+    DB PADF_LEFT | 3           ; prev
+    DB PADF_RIGHT | EXIT_NODE  ; next
+    DB PADF_UP | 4             ; bonus
+    D_TITLE 16, "Mountain5"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Mountain_Node0 == NUM_MOUNTAIN_PUZZLES * sizeof_NODE
 
@@ -424,8 +388,8 @@ DataX_Lake_area:
     DB COLORSET_AUTUMN
     DB TILESET_MAP_FOREST
     D_BPTR DataX_LakeTileMap_start
-    D_TITLE 20, "MIDDLING LAKE"
-    D_TRAIL TE1, TE4, TE1, TE1
+    D_TITLE 20, "MIDDLING MARSH"
+    D_TRAIL TN1, TE1, TE1, TE1, TE4, TE1, TE1
     DB FIRST_LAKE_PUZZLE
     DB NUM_LAKE_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
@@ -467,8 +431,8 @@ _Lake_Node3:
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node4:
     .begin
-    DB 12, 2  ; row/col
-    D_TRAIL TN1, TN2, TN1, TN1, TN1, TE1, TE1
+    DB 13, 2  ; row/col
+    D_TRAIL TN1, TN1, TN2, TN1, TN1, TN1, TE1, TE1
     DB PADF_UP | 2             ; prev
     DB PADF_DOWN | 5           ; next
     DB 0                       ; bonus
@@ -476,21 +440,12 @@ _Lake_Node4:
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node5:
     .begin
-    DB 15, 8  ; row/col
-    D_TRAIL TW1, TW2, TW1, TW1, TW1, TN1, TN1, TN1
+    DB 15, 11  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TW2, TW1, TW1, TW1, TN1, TN1
     DB PADF_LEFT | 4           ; prev
-    DB PADF_RIGHT | 6          ; next
+    DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
     D_TITLE 16, "Lake5"
-    ASSERT @ - .begin == sizeof_NODE
-_Lake_Node6:
-    .begin
-    DB 14, 13  ; row/col
-    D_TRAIL TW1, TW1, TW1, TS1, TW1, TW1
-    DB PADF_LEFT | 5           ; prev
-    DB PADF_RIGHT | EXIT_NODE  ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Lake6"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Lake_Node0 == NUM_LAKE_PUZZLES * sizeof_NODE
 
@@ -507,26 +462,26 @@ DataX_Sewer_area:
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Sewer_Node0:
     .begin
-    DB 8, 3  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
-    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB 13, 5  ; row/col
+    D_TRAIL TN1, TN1, TN1, TN1, TW1, TW1, TW1, TW1, TW1, TW1
+    DB PADF_UP | EXIT_NODE     ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Pipe Playground"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node1:
     .begin
-    DB 13, 5  ; row/col
-    D_TRAIL TN1, TN1, TN1, TN1, TN1, TW1, TW1
-    DB PADF_UP | 0             ; prev
+    DB 13, 10  ; row/col
+    D_TRAIL TW1, TW1, TW2, TW1
+    DB PADF_LEFT | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Blocked Drain"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node2:
     .begin
-    DB 13, 10  ; row/col
-    D_TRAIL TW1, TW1, TW2, TW1
+    DB 13, 16  ; row/col
+    D_TRAIL TW1, TW1, TW2, TW1, TW1
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
@@ -534,39 +489,30 @@ _Sewer_Node2:
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node3:
     .begin
-    DB 13, 16  ; row/col
-    D_TRAIL TW1, TW1, TW2, TW1, TW1
-    DB PADF_LEFT | 2           ; prev
-    DB PADF_RIGHT | 4          ; next
+    DB 8, 17  ; row/col
+    D_TRAIL TS1, TS1, TS1, TS1, TS1, TW1
+    DB PADF_DOWN | 2           ; prev
+    DB PADF_UP | 5             ; next
     DB 0                       ; bonus
     D_TITLE 16, "Sewer3"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node4:
     .begin
-    DB 8, 17  ; row/col
-    D_TRAIL TS1, TS1, TS1, TS1, TS1, TW1
-    DB PADF_DOWN | 3           ; prev
-    DB PADF_UP | 6             ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Sewer4"
-    ASSERT @ - .begin == sizeof_NODE
-_Sewer_Node5:
-    .begin
     DB 5, 5  ; row/col
     D_TRAIL TE1, UE2, TE1, TS1, TE1, TE1
-    DB PADF_RIGHT | 6          ; prev
+    DB PADF_RIGHT | 5          ; prev
     DB 0                       ; next
     DB 0                       ; bonus
     D_TITLE 16, "Sewer Bonus"
     ASSERT @ - .begin == sizeof_NODE
-_Sewer_Node6:
+_Sewer_Node5:
     .begin
     DB 6, 11  ; row/col
     D_TRAIL TE1, TE1, TS1, TE1, UE2, TE1, TS1
-    DB PADF_RIGHT | 4          ; prev
+    DB PADF_RIGHT | 3          ; prev
     DB PADF_UP | EXIT_NODE     ; next
-    DB PADF_LEFT | 5           ; bonus
-    D_TITLE 16, "Sewer6"
+    DB PADF_LEFT | 4           ; bonus
+    D_TITLE 16, "Sewer5"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Sewer_Node0 == NUM_SEWER_PUZZLES * sizeof_NODE
 
@@ -626,7 +572,7 @@ DataX_Space_area:
     DB TILESET_MAP_SPACE
     D_BPTR DataX_SpaceTileMap_start
     D_TITLE 20, "NEUTRINO STATION"
-    D_TRAIL TN1, TN1, TN1, TN1
+    D_TRAIL TN1, TN1, TN1, TN1, TN1
     DB FIRST_SPACE_PUZZLE
     DB NUM_SPACE_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
@@ -677,21 +623,12 @@ _Space_Node4:
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node5:
     .begin
-    DB 9, 13  ; row/col
-    D_TRAIL TN1, TN1, TW1, TW1
-    DB PADF_UP | 3             ; prev
-    DB PADF_RIGHT | 6          ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Space5"
-    ASSERT @ - .begin == sizeof_NODE
-_Space_Node6:
-    .begin
-    DB 8, 15  ; row/col
-    D_TRAIL TS1, TW1, TW1
-    DB PADF_DOWN | 5           ; prev
+    DB 9, 15  ; row/col
+    D_TRAIL TW1, TW1, TN1, TN1, TW1, TW1
+    DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space6"
+    D_TITLE 16, "Space5"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Space_Node0 == NUM_SPACE_PUZZLES * sizeof_NODE
 

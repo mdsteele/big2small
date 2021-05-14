@@ -76,21 +76,17 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Forest2_puzz
     DW DataX_Forest3_puzz
     DW DataX_Forest4_puzz
-    DW DataX_Bush1_puzz
-    DW DataX_Bush2_puzz
-    DW DataX_Bush2_puzz  ; TODO
+    DW DataX_ForestBonus_puzz
+    DW DataX_Forest6_puzz
     DW DataX_Farm1_puzz
     DW DataX_Farm2_puzz
     DW DataX_Farm3_puzz
-    DW DataX_Farm4_puzz
-    DW DataX_Farm2_puzz  ; TODO
     DW DataX_FarmBonus_puzz
-    DW DataX_Farm2_puzz  ; TODO
+    DW DataX_Farm4_puzz
     DW DataX_Mountain0_puzz
     DW DataX_Mountain3_puzz  ; TODO
     DW DataX_Mountain2_puzz
     DW DataX_Mountain3_puzz
-    DW DataX_Mountain3_puzz  ; TODO
     DW DataX_MountainBonus_puzz
     DW DataX_Mountain3_puzz  ; TODO
     DW DataX_Lake1_puzz
@@ -99,11 +95,9 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Lake4_puzz
     DW DataX_Lake2_puzz  ; TODO
     DW DataX_Lake2_puzz  ; TODO
-    DW DataX_Lake2_puzz  ; TODO
     DW DataX_Sewer1_puzz
     DW DataX_Sewer2_puzz
     DW DataX_Sewer3_puzz
-    DW DataX_Sewer2_puzz  ; TODO
     DW DataX_Sewer2_puzz  ; TODO
     DW DataX_Sewer2_puzz  ; TODO
     DW DataX_Sewer2_puzz  ; TODO
@@ -114,7 +108,6 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Space1_puzz
     DW DataX_Space2_puzz
     DW DataX_Space3_puzz
-    DW DataX_Space3_puzz  ; TODO
     DW DataX_Space3_puzz  ; TODO
     DW DataX_Space3_puzz  ; TODO
     DW DataX_Space3_puzz  ; TODO
@@ -229,7 +222,7 @@ DataX_Forest4_puzz:
     DB W_TTR, W_TTP, W_TTP, W_TTP, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Bush1_puzz:
+DataX_ForestBonus_puzz:
     .begin
     DB O_EMP, O_EMP, W_TTR, W_TTR, W_TTR, O_EMP, O_GRS, W_TTR, W_TST, W_TTR
     D_ANIM $13, DIRF_SOUTH
@@ -250,7 +243,7 @@ DataX_Bush1_puzz:
     DB W_TTP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP, W_TST, W_TTP, W_TTP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Bush2_puzz:
+DataX_Forest6_puzz:
     .begin
     DB W_TTP, O_GRS, O_EMP, W_TTR, O_EMP, W_TTR, W_TTR, W_TTP, O_EMP, O_GRS
     D_ANIM $32, DIRF_SOUTH
