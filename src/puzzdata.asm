@@ -218,7 +218,7 @@ DataX_Forest4_puzz:
     DB W_TST, O_EMP, G_APL, O_EMP, O_EMP, S_BSH, W_TTR, W_FW1, W_FNS, W_FNS
     D_SETS TILESET_PUZZ_FARM, COLORSET_SUMMER
     DB W_TST, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP
-    D_PAR $0049
+    D_PAR $0042
     DB W_TTR, W_TTP, W_TTP, W_TTP, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -286,19 +286,18 @@ DataX_Farm1_puzz:
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Farm2_puzz:
-    ;; TODO: This puzzle is currently solvable without eating the bushes.
     .begin
-    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_APL, O_EMP, O_EMP
+    DB W_TTP, O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, O_EMP, G_APL, O_EMP, O_EMP
     D_ANIM $66, DIRF_SOUTH
-    DB W_TTP, O_EMP, O_EMP, W_TTP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP
+    DB W_TST, W_TTP, O_EMP, W_TTP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP
     D_ANIM $19, DIRF_WEST
-    DB W_TTR, O_EMP, S_BSH, W_TST, W_FW1, W_FNS, W_FNS, W_FNS, M_FNS, W_FNS
+    DB W_TTR, W_TTR, O_EMP, W_TST, W_FW1, W_FNS, W_FNS, W_FNS, M_FNS, W_FNS
     D_ANIM $60, DIRF_EAST
-    DB O_EMP, O_GRS, O_EMP, W_TTR, O_EMP, O_EMP, O_GRS, O_EMP, O_EMP, O_GRS
+    DB O_EMP, O_GRS, O_EMP, W_TTR, O_EMP, O_EMP, O_GRS, O_GRS, O_EMP, O_GRS
     D_BPTR DataX_RestYe_song
     DB O_EMP, O_EMP, O_GRS, O_GRS, O_GRS, W_COW, O_EMP, O_GRS, S_BSH, O_GRS
     D_BPTR DataX_Null_dlog
-    DB W_FNS, M_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNE, O_EMP, O_GRS
+    DB W_FNS, M_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNE, O_EMP, W_COW
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, O_EMP, W_HNW, W_HNE, O_EMP, O_GRS, W_FSW, M_FNS, W_FNS
     D_SETS TILESET_PUZZ_FARM, COLORSET_SUMMER
