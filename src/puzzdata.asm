@@ -108,9 +108,9 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Space1_puzz
     DW DataX_Space2_puzz
     DW DataX_Space3_puzz
-    DW DataX_Space3_puzz  ; TODO
-    DW DataX_Space3_puzz  ; TODO
-    DW DataX_Space3_puzz  ; TODO
+    DW DataX_Space4_puzz
+    DW DataX_Space4_puzz  ; TODO
+    DW DataX_Space4_puzz  ; TODO
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;
@@ -766,6 +766,27 @@ DataX_Space3_puzz:
     DB O_EMP, S_MTP, O_EMP, O_EMP, S_ARS, S_TEF, O_EMP, S_ARW, O_EMP, S_TGE
     D_PAR $0067, 0, 0, $10, $28
     DB R_GDR, R_GDR, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Space4_puzz:
+    .begin
+    DB R_OOP, R_OOP, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, O_EMP, W_BSW, W_BS3
+    D_ANIM $79, DIRF_SOUTH
+    DB O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_ANIM $19, DIRF_WEST
+    DB O_EMP, O_EMP, S_TEF, O_EMP, S_BSH, S_ARW, S_BSH, O_EMP, O_EMP, O_EMP
+    D_ANIM $43, DIRF_SOUTH, 0, 0, 0, $59
+    DB O_EMP, O_EMP, O_EMP, S_BSH, S_ARN, S_TGE, O_EMP, S_BSH, O_EMP, S_TMF
+    D_BPTR DataX_LightsOn_song, 0, $53, $41
+    DB O_EMP, S_TMF, S_BSH, O_EMP, S_BSH, O_EMP, S_BSH, S_ARW, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog, 0, 0, $39
+    DB O_EMP, O_EMP, O_EMP, S_TGE, O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, S_TEF
+    D_BPTR DataX_Null_dlog, 0, $35, $22
+    DB O_EMP, O_EMP, S_BSH, O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, G_APL, O_EMP
+    D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE
+    DB W_BE1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP
+    D_PAR $0058
+    DB S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_GDR, R_GDR, R_GDR
 ASSERT @ - .begin == sizeof_PUZZ
 
 ;;;=========================================================================;;;
