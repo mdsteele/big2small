@@ -43,6 +43,14 @@ DataX_ObjTiles_start::
 DataX_ObjTiles_end::
 
 ;;;=========================================================================;;;
+;;; Title screen tiles:
+
+SECTION "UrlTiles", ROMX
+DataX_UrlTiles_start::
+    INCBIN "out/data/tiles/url.2bpp"
+DataX_UrlTiles_end::
+
+;;;=========================================================================;;;
 ;;; Map terrain tiles:
 
 SECTION "SharedMapTiles", ROMX

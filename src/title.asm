@@ -21,14 +21,17 @@ INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
+INCLUDE "src/tileset.inc"
 
 ;;;=========================================================================;;;
 
-TITLE_MENU_ROW EQU (SCRN_Y_B - NUM_SAVE_FILES - 2)
+TITLE_MENU_ROW EQU (SCRN_Y_B - NUM_SAVE_FILES - 3)
 TITLE_MENU_COL EQU 3
 
 TITLE_MENU_ITEM_ERASE EQU NUM_SAVE_FILES
 TITLE_MENU_NUM_ITEMS EQU (TITLE_MENU_ITEM_ERASE + 1)
+
+URL_ROW EQU (SCRN_Y_B - 1)
 
 ;;;=========================================================================;;;
 
@@ -48,6 +51,9 @@ SECTION "TitleFunctions", ROM0
 
 ;;; @prereq LCD is off.
 Main_TitleScreen::
+    ;; Load tileset.
+    ld b, TILESET_TITLE  ; param: tileset
+    call Func_LoadTileset
     ;; Initialize state.
     xor a
     ld [Ram_TitleMenuItem_u8], a
@@ -58,13 +64,20 @@ Main_TitleScreen::
     ld a, " "
     ld hl, Vram_BgMap
     ld c, 141
-    .loop
+    .clearLoop
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     dec c
-    jr nz, .loop
+    jr nz, .clearLoop
+    ;; Draw URL.
+    ld a, $f0
+    ld hl, Vram_BgMap + SCRN_VX_B * URL_ROW + 2
+    .urlLoop
+    ld [hl+], a
+    inc a
+    jr nz, .urlLoop
     ;; Set up menu.
 FILE_NUMBER = 0
     REPT NUM_SAVE_FILES

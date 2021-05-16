@@ -38,6 +38,7 @@ Func_LoadTileset::
     ld hl, Vram_SharedTiles  ; dest
     ld a, b
     if_ge TILESET_PUZZ_MIN, jr, _LoadTileset_Puzz
+    if_lt TILESET_MAP_MIN, jr, _LoadTileset_Title
 _LoadTileset_Map:
     push af
     COPY_FROM_ROMX DataX_SharedMapTiles_start, DataX_SharedMapTiles_end
@@ -59,6 +60,10 @@ _LoadTileset_Puzz:
     if_eq TILESET_PUZZ_SPACE, jp, _LoadTileset_PuzzSpace
     ret
 
+_LoadTileset_Title:
+    SKIP_TO_TILE $f0
+    COPY_FROM_ROMX DataX_UrlTiles_start, DataX_UrlTiles_end
+    ret
 _LoadTileset_MapForest:
     SKIP_TO_TILE $a0
     COPY_FROM_ROMX DataX_ForestMapTiles_start, DataX_ForestMapTiles_end
