@@ -217,7 +217,7 @@ _Forest_Node2:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Forest2"
+    D_TITLE 16, "Trio Thicket"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node3:
     .begin
@@ -226,7 +226,7 @@ _Forest_Node3:
     DB PADF_LEFT | 2           ; prev
     DB PADF_UP | 4             ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Forest3"
+    D_TITLE 16, "Winding Woods"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node4:
     .begin
@@ -235,7 +235,7 @@ _Forest_Node4:
     DB PADF_RIGHT | 3          ; prev
     DB PADF_LEFT | 6           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Forest4"
+    D_TITLE 16, "Shrubbery Snag"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node5:
     .begin
@@ -244,7 +244,7 @@ _Forest_Node5:
     DB PADF_RIGHT | 6          ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Forest Bonus"
+    D_TITLE 16, "Baffling Bushes"
     ASSERT @ - .begin == sizeof_NODE
 _Forest_Node6:
     .begin
@@ -253,7 +253,7 @@ _Forest_Node6:
     DB PADF_DOWN | 4           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB PADF_LEFT | 5           ; bonus
-    D_TITLE 16, "Forest7"
+    D_TITLE 16, "Obstacle Orchard"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Forest_Node0 == NUM_FOREST_PUZZLES * sizeof_NODE
 
@@ -275,7 +275,7 @@ _Farm_Node0:
     DB PADF_DOWN | EXIT_NODE   ; prev
     DB PADF_UP | 1             ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Farm0"
+    D_TITLE 16, "Out to Pasture"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node1:
     .begin
@@ -284,7 +284,7 @@ _Farm_Node1:
     DB PADF_LEFT | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Farm1"
+    D_TITLE 16, "On The Fence"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node2:
     .begin
@@ -293,7 +293,7 @@ _Farm_Node2:
     DB PADF_RIGHT | 1          ; prev
     DB PADF_DOWN | 4           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Farm2"
+    D_TITLE 16, "Plow Ahead"
     ASSERT @ - .begin == sizeof_NODE
 _Farm_Node3:
     .begin
@@ -311,7 +311,7 @@ _Farm_Node4:
     DB PADF_LEFT | 2           ; prev
     DB PADF_RIGHT | EXIT_NODE  ; next
     DB PADF_DOWN | 3           ; bonus
-    D_TITLE 16, "Farm5"
+    D_TITLE 16, "Barnyard Dance"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Farm_Node0 == NUM_FARM_PUZZLES * sizeof_NODE
 
@@ -369,7 +369,7 @@ _Mountain_Node4:
     DB PADF_DOWN | 5           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Mountain Bonus"
+    D_TITLE 16, "Starry Summit"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node5:
     .begin
@@ -467,7 +467,7 @@ _Sewer_Node0:
     DB PADF_UP | EXIT_NODE     ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Pipe Playground"
+    D_TITLE 16, "Sewer0"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node1:
     .begin
@@ -485,7 +485,7 @@ _Sewer_Node2:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Sewer2"
+    D_TITLE 16, "Pipe Playground"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node3:
     .begin
@@ -503,7 +503,7 @@ _Sewer_Node4:
     DB PADF_RIGHT | 5          ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Sewer Bonus"
+    D_TITLE 16, "Rodent-Rooter"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node5:
     .begin
@@ -534,7 +534,7 @@ _City_Node0:
     DB PADF_LEFT | EXIT_NODE   ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "City0"
+    D_TITLE 16, "Mousetrap Mayhem"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node1:
     .begin
@@ -543,7 +543,7 @@ _City_Node1:
     DB PADF_LEFT | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "City1"
+    D_TITLE 16, "Chain-Link Chaos"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node2:
     .begin
@@ -552,7 +552,7 @@ _City_Node2:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "City2"
+    D_TITLE 16, "Back Lot Bedlam"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node3:
     .begin
@@ -561,7 +561,7 @@ _City_Node3:
     DB PADF_LEFT | 2           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "City3"
+    D_TITLE 16, "Traffic Terror"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
 
