@@ -512,7 +512,7 @@ _Sewer_Node5:
     DB PADF_RIGHT | 3          ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB PADF_LEFT | 4           ; bonus
-    D_TITLE 16, "Sewer5"
+    D_TITLE 16, "Combination Lock"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Sewer_Node0 == NUM_SEWER_PUZZLES * sizeof_NODE
 
