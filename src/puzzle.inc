@@ -21,13 +21,13 @@
 TERRAIN_COLS EQU 10
 TERRAIN_ROWS EQU 9
 
-;;; Bit indices for ANIM_MoveDirs_u8:
+;;; Bit indices for Ram_MoveDirs_u8:
 DIRB_NORTH EQU 3
 DIRB_SOUTH EQU 2
 DIRB_EAST  EQU 1
 DIRB_WEST  EQU 0
 
-;;; Flags for ANIM_MoveDirs_u8, and enum values for ANIM_Facing_u8:
+;;; Flags for Ram_MoveDirs_u8, and enum values for ANIM_Facing_u8:
 DIRF_NORTH EQU (1 << DIRB_NORTH)
 DIRF_SOUTH EQU (1 << DIRB_SOUTH)
 DIRF_EAST  EQU (1 << DIRB_EAST)
@@ -37,6 +37,18 @@ DIRF_WEST  EQU (1 << DIRB_WEST)
 ANIMAL_ELEPHANT EQU 0
 ANIMAL_GOAT     EQU 1
 ANIMAL_MOUSE    EQU 2
+
+;;; Bit indices for Ram_WalkingAction_u8:
+ACTB_LEAP  EQU 0  ; leap over river
+ACTB_PUSHW EQU 1  ; push pipe westward
+ACTB_PUSHE EQU 2  ; push pipe eastward
+ACTB_UNDER EQU 3  ; go under a mouse hole
+
+;;; Flags for Ram_WalkingAction_u8:
+ACTF_LEAP  EQU (1 << ACTB_LEAP)
+ACTF_PUSHW EQU (1 << ACTB_PUSHW)
+ACTF_PUSHE EQU (1 << ACTB_PUSHE)
+ACTF_UNDER EQU (1 << ACTB_UNDER)
 
 ;;;=========================================================================;;;
 
