@@ -199,6 +199,89 @@ _UpdateArrowObjs_West:
 
 ;;;=========================================================================;;;
 
+;;; Updates the TILEID and FLAGS fields for the objects for each animal that's
+;;; at its goal, based on Ram_PuzzleAnimationClock_u8.
+Func_UpdateAllHappyAnimalObjs::
+    ld d, $ff  ; param: except
+    jr Func_UpdateHappyAnimalObjs
+
+;;; Updates the TILEID and FLAGS fields for the objects for each animal that's
+;;; at its goal, based on Ram_PuzzleAnimationClock_u8, except for the
+;;; currently-selected animal.
+Func_UpdateUnselectedHappyAnimalObjs::
+    ld a, [Ram_SelectedAnimal_u8]
+    ld d, a  ; param: except
+    ;; fall through to Func_UpdateHappyAnimalObjs
+
+;;; Helper function for the above Func_Update*HappyAnimalObjs functions.
+;;; Updates the TILEID and FLAGS fields for the objects for each animal that's
+;;; at its goal, based on Ram_PuzzleAnimationClock_u8, except for the specified
+;;; animal.
+;;; @param d Don't update objects for this animal (one of the ANIMAL_*
+;;;     constants, or $ff to not skip any animals).
+Func_UpdateHappyAnimalObjs:
+    ;; Store (clock % 16 >= 8 ? 4 : 0) in e.
+    ld a, [Ram_PuzzleAnimationClock_u8]
+    and %00001000
+    rrca
+    ld e, a
+_UpdateHappyAnimalObjs_Elephant:
+    ld a, d
+    if_eq ANIMAL_ELEPHANT, jr, .skipElephant
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld h, HIGH(Ram_PuzzleState_puzz)
+    ld l, a
+    ld a, [hl]
+    if_ne G_PNT, jr, .skipElephant
+    ld a, ELEPHANT_SL1_TILEID
+    add e
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_ElephantR_oama + OAMA_TILEID], a
+    ld a, ELEPHANT_PALETTE
+    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_ElephantR_oama + OAMA_FLAGS], a
+    .skipElephant
+_UpdateHappyAnimalObjs_Goat:
+    ld a, d
+    if_eq ANIMAL_GOAT, jr, .skipGoat
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Position_u8]
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld h, HIGH(Ram_PuzzleState_puzz)
+    ld l, a
+    ld a, [hl]
+    if_ne G_APL, jr, .skipGoat
+    ld a, GOAT_SL1_TILEID
+    add e
+    ld [Ram_GoatL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_GoatR_oama + OAMA_TILEID], a
+    ld a, GOAT_PALETTE
+    ld [Ram_GoatL_oama + OAMA_FLAGS], a
+    ld [Ram_GoatR_oama + OAMA_FLAGS], a
+    .skipGoat
+_UpdateHappyAnimalObjs_Mouse:
+    ld a, d
+    if_eq ANIMAL_MOUSE, ret
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
+    ASSERT LOW(Ram_PuzzleState_puzz) == 0
+    ld h, HIGH(Ram_PuzzleState_puzz)
+    ld l, a
+    ld a, [hl]
+    if_ne G_CHS, ret
+    ld a, MOUSE_SL1_TILEID
+    add e
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    ld a, MOUSE_PALETTE
+    ld [Ram_MouseL_oama + OAMA_FLAGS], a
+    ld [Ram_MouseR_oama + OAMA_FLAGS], a
+    ret
+
+;;;=========================================================================;;;
+
 ;;; Updates the shadow OAMA struct for the currently selected animal.
 Func_UpdateSelectedAnimalObjs::
     ld a, [Ram_SelectedAnimal_u8]

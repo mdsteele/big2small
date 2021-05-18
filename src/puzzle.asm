@@ -167,6 +167,7 @@ _BeginPuzzle_Init:
 
 Main_PuzzleCommand::
     call Func_UpdateArrowObjs
+    call Func_UpdateAllHappyAnimalObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_UpdatePuzzleTerrain
@@ -443,6 +444,7 @@ _AnimalMoving_ContinueMovingGoat:
     ld a, 12
     ld [Ram_WalkingCountdown_u8], a
 _AnimalMoving_RunLoop:
+    call Func_UpdateUnselectedHappyAnimalObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_UpdatePuzzleTerrain
@@ -648,6 +650,7 @@ _AnimalMoving_Teleport:
     xor a
     ld [Ram_SmokeCounter_u8], a
 _AnimalMoving_TeleportLoop:
+    call Func_UpdateUnselectedHappyAnimalObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_UpdatePuzzleTerrain
@@ -694,6 +697,7 @@ _AnimalMoving_Mousetrap:
     xor a
     ld [Ram_SmokeCounter_u8], a
 _AnimalMoving_SmokeLoop:
+    call Func_UpdateUnselectedHappyAnimalObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_UpdatePuzzleTerrain
