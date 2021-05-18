@@ -121,9 +121,6 @@ _BeginPuzzle_Init:
     xor a
     ld [Ram_PuzzleNumMoves_bcd16 + 0], a
     ld [Ram_PuzzleNumMoves_bcd16 + 1], a
-    ld [Ram_PuzzleAnimationClock_u8], a
-    ld [Ram_WalkingCountdown_u8], a
-    ld [Ram_WalkingAction_u8], a
     ld a, NO_CELL_TO_UPDATE
     ld [Ram_TerrainCellToUpdate_u8], a
     ;; Set up objects.
@@ -236,24 +233,20 @@ _PuzzleCommand_CannotMove:
 
 ;;;=========================================================================;;;
 
+;;; If Ram_TerrainCellToUpdate_u8 is not NO_CELL_TO_UPDATE, updates VRAM with
+;;; the terrain type for that position.  Either way, also calls
+;;; Func_AnimatePuzzleTerrain.
 Func_UpdatePuzzleTerrain:
     ;; Update terrain cell if needed:
     ld a, [Ram_TerrainCellToUpdate_u8]
-    if_eq NO_CELL_TO_UPDATE, jr, .doneUpdateCell
+    if_eq NO_CELL_TO_UPDATE, jp, Func_AnimatePuzzleTerrain
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
     ld e, a
     call Func_LoadTerrainCellIntoVram
     ld a, NO_CELL_TO_UPDATE
     ld [Ram_TerrainCellToUpdate_u8], a
-    .doneUpdateCell
-    ;; Animate terrain:
-    ld hl, Ram_PuzzleAnimationClock_u8
-    inc [hl]
-    ld c, [hl]  ; animation clock
-    ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
-    ld b, a  ; tileset
-    jp Func_AnimateTerrain
+    jp Func_AnimatePuzzleTerrain
 
 ;;;=========================================================================;;;
 

@@ -112,6 +112,7 @@ Func_RunDialog::
 _RunDialog_ShowWindow:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimatePuzzleTerrain
     xcall FuncX_DrawDialog_DrawNextWindowRow
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
@@ -144,6 +145,7 @@ _RunDialog_AdvanceText:
     push hl
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimatePuzzleTerrain
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
@@ -174,6 +176,7 @@ _RunDialog_AdvanceText:
 _RunDialog_WaitForButton:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimatePuzzleTerrain
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
@@ -186,6 +189,7 @@ _RunDialog_WaitForButton:
 _RunDialog_HideWindow:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
+    call Func_AnimatePuzzleTerrain
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a

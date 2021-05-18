@@ -56,7 +56,7 @@ SECTION "PuzzleObjState", WRAM0
 
 ;;; A counter that is incremented once per frame and that can be used to drive
 ;;; looping animations.
-Ram_PuzzleAnimationClock_u8::
+Ram_PuzzleAnimationClock_u8:
     DB
 
 ;;; The number of frames left until the currently-moving animal reaches the
@@ -73,6 +73,10 @@ Ram_WalkingAction_u8::
 SECTION "PuzzleObjFunctions", ROM0
 
 Func_PuzzleInitObjs::
+    xor a
+    ld [Ram_PuzzleAnimationClock_u8], a
+    ld [Ram_WalkingCountdown_u8], a
+    ld [Ram_WalkingAction_u8], a
     ;; Set up animal objects.
     ld a, ANIMAL_MOUSE
     ld [Ram_SelectedAnimal_u8], a
@@ -607,6 +611,18 @@ _SetSelectedAnimalTiles_Mouse:
     ld [Ram_MouseL_oama + OAMA_FLAGS], a
     ld [Ram_MouseR_oama + OAMA_FLAGS], a
     ret
+
+;;;=========================================================================;;;
+
+;;; Increments Ram_PuzzleAnimationClock_u8 and animates any animated terrain
+;;; tiles for the current puzzle's tileset.
+Func_AnimatePuzzleTerrain::
+    ld hl, Ram_PuzzleAnimationClock_u8
+    inc [hl]
+    ld c, [hl]  ; animation clock
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
+    ld b, a  ; tileset
+    jp Func_AnimateTerrain
 
 ;;;=========================================================================;;;
 
