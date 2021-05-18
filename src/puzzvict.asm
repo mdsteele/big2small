@@ -26,8 +26,24 @@ INCLUDE "src/save.inc"
 SECTION "MainVictory", ROM0
 
 Main_Victory::
-    ;; TODO: Play victory music, animate animals.
-    ;; Run outro dialog and fade out.
+    ;; TODO: Play some kind of victory jingle.
+_Victory_AnimateJumping:
+    ;; Animate the animals jumping up and down four times.
+    ld b, 4 * 16
+    .jumpLoop
+    push bc
+    call Func_VictoryHopAnimalObjs
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
+    call Func_AnimatePuzzleTerrain
+    pop bc
+    xor a
+    or b
+    jr z, .doneJumping
+    dec b
+    jr .jumpLoop
+    .doneJumping
+_Victory_OutroDialog:
     ld a, [Ram_PuzzleSkipOutroDialog_bool]
     ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr
     or a

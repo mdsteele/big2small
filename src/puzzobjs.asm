@@ -286,6 +286,71 @@ _UpdateHappyAnimalObjs_Mouse:
 
 ;;;=========================================================================;;;
 
+;;; Animate all live animals jumping up and down.
+;;; @param b The progress counter.
+Func_VictoryHopAnimalObjs::
+    ld a, b
+    and $0f
+    add LOW(Data_GoatLeapTable)
+    ld l, a
+    ld h, HIGH(Data_GoatLeapTable)
+    ld c, [hl]
+_VictoryHopAnimalObjs_Mouse:
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8]
+    ld e, a
+    and $0f
+    if_ge TERRAIN_COLS, jr, .skipMouse
+    ld a, e
+    and $f0
+    add 16
+    sub c
+    ld [Ram_MouseL_oama + OAMA_Y], a
+    ld [Ram_MouseR_oama + OAMA_Y], a
+    ld a, MOUSE_SL1_TILEID
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    ld a, MOUSE_PALETTE
+    ld [Ram_MouseL_oama + OAMA_FLAGS], a
+    ld [Ram_MouseR_oama + OAMA_FLAGS], a
+    .skipMouse
+_VictoryHopAnimalObjs_Goat:
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Position_u8]
+    ld e, a
+    and $0f
+    if_ge TERRAIN_COLS, jr, .skipGoat
+    ld a, e
+    and $f0
+    add 16
+    sub c
+    ld [Ram_GoatL_oama + OAMA_Y], a
+    ld [Ram_GoatR_oama + OAMA_Y], a
+    ld a, GOAT_SL1_TILEID
+    ld [Ram_GoatL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_GoatR_oama + OAMA_TILEID], a
+    ld a, GOAT_PALETTE
+    ld [Ram_GoatL_oama + OAMA_FLAGS], a
+    ld [Ram_GoatR_oama + OAMA_FLAGS], a
+    .skipGoat
+_VictoryHopAnimalObjs_Elephant:
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Elephant_anim + ANIM_Position_u8]
+    and $f0
+    add 16
+    sub c
+    ld [Ram_ElephantL_oama + OAMA_Y], a
+    ld [Ram_ElephantR_oama + OAMA_Y], a
+    ld a, ELEPHANT_SL1_TILEID
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_ElephantR_oama + OAMA_TILEID], a
+    ld a, ELEPHANT_PALETTE
+    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_ElephantR_oama + OAMA_FLAGS], a
+    ret
+
+;;;=========================================================================;;;
+
 ;;; Updates the shadow OAMA struct for the currently selected animal.
 Func_UpdateSelectedAnimalObjs::
     ld a, [Ram_SelectedAnimal_u8]
