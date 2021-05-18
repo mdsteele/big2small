@@ -46,14 +46,10 @@ NO_CELL_TO_UPDATE EQU $ff
 
 SECTION "PuzzleUiState", WRAM0
 
-;;; A pointer to the original PUZZ struct ROM for the current puzzle.
-Ram_PuzzleRom_puzz_ptr:
-    DW
-
 ;;; If 1, intro/outro dialog is skipped; if 0, dialog is played normally.
 Ram_PuzzleSkipIntroDialog_bool:
     DB
-Ram_PuzzleSkipOutroDialog_bool:
+Ram_PuzzleSkipOutroDialog_bool::
     DB
 
 ;;; Frame counter for the smoke animation.
@@ -75,11 +71,6 @@ Main_ResetPuzzle::
     ;; Always skip intro dialog when resetting the puzzle.
     ld a, 1
     ld [Ram_PuzzleSkipIntroDialog_bool], a
-    ;; Put the saved PUZZ struct pointer into de.
-    ld a, [Ram_PuzzleRom_puzz_ptr + 0]
-    ld e, a
-    ld a, [Ram_PuzzleRom_puzz_ptr + 1]
-    ld d, a
     jr _BeginPuzzle_Init
 
 ;;; @prereq LCD is off.
@@ -101,21 +92,14 @@ Main_BeginPuzzle::
     .solved
     ld [Ram_PuzzleSkipIntroDialog_bool], a
     ld [Ram_PuzzleSkipOutroDialog_bool], a
-    ;; Store pointer to current PUZZ struct in de...
+_BeginPuzzle_Init:
+    ;; Store pointer to current PUZZ struct in de.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     rlca
     ldb bc, a
     xld hl, DataX_Puzzles_puzz_ptr_arr
     add hl, bc
-    ld a, [hl+]
-    ld d, [hl]
-    ld e, a
-    ;; ... and also in Ram_PuzzleRom_puzz_ptr.
-    ld [Ram_PuzzleRom_puzz_ptr + 0], a
-    ld a, d
-    ld [Ram_PuzzleRom_puzz_ptr + 1], a
-_BeginPuzzle_Init:
-    ;; At this point, de points to a PUZZ struct in banked ROM.
+    deref de, hl
     romb BANK("PuzzleData")
     ;; Copy current puzzle into RAM.
     ld hl, Ram_PuzzleState_puzz  ; dest
@@ -733,72 +717,5 @@ _AnimalMoving_MouseDead:
     ld a, PUZZ_Mouse_anim + ANIM_Facing_u8
     ld [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Position_u8], a
     jp Main_PuzzleCommand
-
-;;;=========================================================================;;;
-
-SECTION "MainVictory", ROM0
-
-Main_Victory:
-    ;; TODO: Play victory music, animate animals.
-    ;; Run outro dialog and fade out.
-    ld a, [Ram_PuzzleSkipOutroDialog_bool]
-    ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr
-    or a
-    call z, Func_RunDialog
-    call Func_FadeOut
-_Victory_CheckForNewRecord:
-    ;; If we've just solved this puzzle for the first time, record the current
-    ;; move count as the new best record for this puzzle.
-    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
-    ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
-    ld l, a
-    bit STATB_SOLVED, [hl]
-    jr z, .recordNewRecord
-    ;; Otherwise, we need to compare the current move count to the previous
-    ;; record.  Start by setting bc to the previous record for this puzzle.
-    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ASSERT NUM_PUZZLES < $100
-    rlca
-    ldb de, a
-    ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
-    add hl, de
-    deref bc, hl
-    ;; If the current move count is strictly less than the previous record,
-    ;; then record it as a new record.
-    ld hl, Ram_PuzzleNumMoves_bcd16 + 1
-    ld a, [hl-]
-    if_lt b, jr, .recordNewRecord
-    if_ne b, jr, .noNewRecord
-    ld a, [hl]
-    if_lt c, jr, .recordNewRecord
-    jr .noNewRecord
-    ;; If we need to record a new record, save it into the current progress
-    ;; file.
-    .recordNewRecord
-    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ASSERT NUM_PUZZLES < $100
-    rlca
-    ldb bc, a
-    ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
-    add hl, bc
-    ld a, [Ram_PuzzleNumMoves_bcd16 + 0]
-    ld [hl+], a
-    ld a, [Ram_PuzzleNumMoves_bcd16 + 1]
-    ld [hl], a
-    call Func_SaveFile
-    .noNewRecord
-_Victory_ReturnToAreaMap:
-    ;; Determine if we made par, then return to the area map.
-    ld c, STATF_SOLVED  ; param: puzzle status
-    ld hl, Ram_PuzzleNumMoves_bcd16 + 1
-    ld a, [Ram_PuzzleState_puzz + PUZZ_Par_bcd16 + 1]
-    if_lt [hl], jr, .didNotMakePar
-    ld a, [Ram_PuzzleState_puzz + PUZZ_Par_bcd16 + 0]
-    dec hl
-    if_lt [hl], jr, .didNotMakePar
-    set STATB_MADE_PAR, c
-    .didNotMakePar
-    jp Main_AreaMapResume
 
 ;;;=========================================================================;;;
