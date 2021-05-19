@@ -75,7 +75,6 @@ ENDM
 ;;; Constants for D_TRAIL arguments:
 TE1 EQU (TRAIL_EAST  | 1)
 TE2 EQU (TRAIL_EAST  | 2)
-TE3 EQU (TRAIL_EAST  | 3)
 TE4 EQU (TRAIL_EAST  | 4)
 TN1 EQU (TRAIL_NORTH | 1)
 TN2 EQU (TRAIL_NORTH | 2)
@@ -83,7 +82,6 @@ TS1 EQU (TRAIL_SOUTH | 1)
 TS2 EQU (TRAIL_SOUTH | 2)
 TW1 EQU (TRAIL_WEST  | 1)
 TW2 EQU (TRAIL_WEST  | 2)
-TW3 EQU (TRAIL_WEST  | 3)
 UE2 EQU (TRAIL_EAST  | 2 | TRAILF_UNDER)
 UE3 EQU (TRAIL_EAST  | 3 | TRAILF_UNDER)
 UN2 EQU (TRAIL_NORTH | 2 | TRAILF_UNDER)
@@ -572,59 +570,59 @@ DataX_Space_area:
     DB TILESET_MAP_SPACE
     D_BPTR DataX_SpaceTileMap_start
     D_TITLE 20, "NEUTRINO STATION"
-    D_TRAIL TN1, TN1, TN1, TN1, TN1
+    D_TRAIL TN1, TN1, TN1, TN1
     DB FIRST_SPACE_PUZZLE
     DB NUM_SPACE_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Space_Node0:
     .begin
-    DB 7, 6  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
+    DB 7, 5  ; row/col
+    D_TRAIL TW1, TW1, TW1
     DB PADF_LEFT | EXIT_NODE   ; prev
-    DB PADF_UP | 1             ; next
+    DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Warp Speedway"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node1:
     .begin
-    DB 4, 6  ; row/col
-    D_TRAIL TS1, TS1, TS1
-    DB PADF_DOWN | 0           ; prev
-    DB PADF_RIGHT | 2          ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Space1"
+    DB 7, 8  ; row/col
+    D_TRAIL TW1, TW1, TW1
+    DB PADF_LEFT | 0           ; prev
+    DB PADF_RIGHT | 3          ; next
+    DB PADF_DOWN | 2           ; bonus
+    D_TITLE 16, "Hydroponics Lab"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node2:
     .begin
-    DB 4, 11  ; row/col
-    D_TRAIL TW1, TW3, TW1
-    DB PADF_LEFT | 1           ; prev
-    DB PADF_DOWN | 3           ; next
+    DB 10, 8  ; row/col
+    D_TRAIL TN1, TN1, TN1
+    DB PADF_UP | 1             ; prev
+    DB 0                       ; next
     DB 0                       ; bonus
     D_TITLE 16, "Space2"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node3:
     .begin
-    DB 7, 11  ; row/col
-    D_TRAIL TN1, TN1, TN1
-    DB PADF_UP | 2             ; prev
+    DB 7, 12  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1
+    DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 5          ; next
-    DB PADF_DOWN | 4           ; bonus
+    DB PADF_UP | 4             ; bonus
     D_TITLE 16, "Space3"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node4:
     .begin
-    DB 10, 6  ; row/col
-    D_TRAIL TE1, TE3, TE1, TN1, TN1, TN1
-    DB PADF_RIGHT | 3          ; prev
+    DB 3, 12  ; row/col
+    D_TRAIL TS1, TS1, TS1, TS1
+    DB PADF_DOWN | 3           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
     D_TITLE 16, "Space Bonus"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node5:
     .begin
-    DB 9, 15  ; row/col
-    D_TRAIL TW1, TW1, TN1, TN1, TW1, TW1
+    DB 8, 16  ; row/col
+    D_TRAIL TW1, TW1, TN1, TW1, TW1
     DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus

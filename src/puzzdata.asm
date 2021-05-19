@@ -106,9 +106,9 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_City2_puzz
     DW DataX_City3_puzz
     DW DataX_Space0_puzz
-    DW DataX_Space1_puzz
-    DW DataX_Space2_puzz
     DW DataX_Space3_puzz
+    DW DataX_Space2_puzz
+    DW DataX_Space1_puzz
     DW DataX_Space3_puzz  ; TODO
     DW DataX_Space3_puzz  ; TODO
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
@@ -218,7 +218,7 @@ DataX_Forest4_puzz:
     DB W_TST, O_EMP, G_APL, O_EMP, O_EMP, S_BSH, W_TTR, W_FW1, W_FNS, W_FNS
     D_SETS TILESET_PUZZ_FARM, COLORSET_SUMMER
     DB W_TST, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP
-    D_PAR $0042
+    D_PAR $0041
     DB W_TTR, W_TTP, W_TTP, W_TTP, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 

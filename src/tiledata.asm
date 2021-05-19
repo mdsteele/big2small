@@ -87,9 +87,11 @@ DataX_SewerMapTiles_end::
 SECTION "SpaceMapTiles", ROMX
 DataX_SpaceMapTiles_start::
     INCBIN "out/data/tiles/space_map_station.2bpp"
-    DS 4 * sizeof_TILE
+    DS 2 * sizeof_TILE
     INCBIN "out/data/tiles/space_map_earth.2bpp"
-    DS 11 * sizeof_TILE
+    DS 3 * sizeof_TILE
+    INCBIN "out/data/tiles/map_ship.2bpp"
+    DS 2 * sizeof_TILE
     INCBIN "out/data/tiles/space_map_stars.2bpp"
 DataX_SpaceMapTiles_end::
 
