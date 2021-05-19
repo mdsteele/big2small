@@ -31,9 +31,9 @@ INCLUDE "src/tileset.inc"
 NUM_FOREST_PUZZLES EQU 7
 NUM_FARM_PUZZLES EQU 5
 NUM_MOUNTAIN_PUZZLES EQU 6
-NUM_LAKE_PUZZLES EQU 6
+NUM_LAKE_PUZZLES EQU 5
 NUM_SEWER_PUZZLES EQU 6
-NUM_CITY_PUZZLES EQU 4
+NUM_CITY_PUZZLES EQU 5
 NUM_SPACE_PUZZLES EQU 6
 
 ;;; The puzzle number of the first puzzle in each area:
@@ -393,57 +393,48 @@ DataX_Lake_area:
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _Lake_Node0:
     .begin
-    DB 5, 17  ; row/col
-    D_TRAIL TN1, TN1, TN1, TN1
-    DB PADF_UP | EXIT_NODE     ; prev
+    DB 5, 12  ; row/col
+    D_TRAIL TE1, TE2, TE1, TE1, TN1, TN1, TN1, TN1
+    DB PADF_RIGHT | EXIT_NODE  ; prev
     DB PADF_LEFT | 1           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Lake0"
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node1:
     .begin
-    DB 5, 11  ; row/col
-    D_TRAIL TE1, TE1, TE2, TE1, TE1
+    DB 6, 4  ; row/col
+    D_TRAIL TE1, TE1, TN1, TE1, TE2, TE1, TE1, TE1
     DB PADF_RIGHT | 0          ; prev
-    DB PADF_LEFT | 2           ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Lake1"
+    DB PADF_LEFT | 3           ; next
+    DB PADF_UP | 2             ; bonus
+    D_TITLE 16, "Up a Creek"
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node2:
     .begin
-    DB 6, 4  ; row/col
-    D_TRAIL TE1, TE1, TN1, TE1, TE2, TE1, TE1
+    DB 2, 1  ; row/col
+    D_TRAIL TE1, TE2, TS1, TS1, TS1, TS1
     DB PADF_RIGHT | 1          ; prev
-    DB PADF_LEFT | 4           ; next
-    DB PADF_UP | 3             ; bonus
-    D_TITLE 16, "Lake2"
+    DB 0                       ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Without a Paddle"
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node3:
     .begin
-    DB 2, 1  ; row/col
-    D_TRAIL TE1, TE2, TS1, TS1, TS1, TS1
-    DB PADF_RIGHT | 2          ; prev
-    DB 0                       ; next
+    DB 13, 2  ; row/col
+    D_TRAIL TN1, TN1, TN2, TN1, TN1, TN1, TE1, TE1
+    DB PADF_UP | 1             ; prev
+    DB PADF_DOWN | 4           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Lake Bonus"
+    D_TITLE 16, "Lake3"
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node4:
     .begin
-    DB 13, 2  ; row/col
-    D_TRAIL TN1, TN1, TN2, TN1, TN1, TN1, TE1, TE1
-    DB PADF_UP | 2             ; prev
-    DB PADF_DOWN | 5           ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Lake4"
-    ASSERT @ - .begin == sizeof_NODE
-_Lake_Node5:
-    .begin
     DB 15, 11  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1, TW2, TW1, TW1, TW1, TN1, TN1
-    DB PADF_LEFT | 4           ; prev
+    DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Lake5"
+    D_TITLE 16, "Lake4"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Lake_Node0 == NUM_LAKE_PUZZLES * sizeof_NODE
 
@@ -557,9 +548,18 @@ _City_Node3:
     DB 8, 16  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1
     DB PADF_LEFT | 2           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_RIGHT | 4          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Traffic Terror"
+    ASSERT @ - .begin == sizeof_NODE
+_City_Node4:
+    .begin
+    DB 8, 18  ; row/col
+    D_TRAIL TW1, TW1
+    DB PADF_LEFT | 3           ; prev
+    DB PADF_UP | EXIT_NODE     ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "City4"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
 

@@ -94,7 +94,6 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Lake2_puzz
     DW DataX_Lake3_puzz
     DW DataX_Lake3_puzz  ; TODO
-    DW DataX_Lake3_puzz  ; TODO
     DW DataX_Sewer0_puzz
     DW DataX_Sewer1_puzz
     DW DataX_Sewer2_puzz
@@ -105,6 +104,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_City1_puzz
     DW DataX_City2_puzz
     DW DataX_City3_puzz
+    DW DataX_City3_puzz  ; TODO
     DW DataX_Space0_puzz
     DW DataX_Space3_puzz
     DW DataX_Space2_puzz
