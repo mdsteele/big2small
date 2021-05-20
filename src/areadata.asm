@@ -483,7 +483,7 @@ _Sewer_Node3:
     DB PADF_DOWN | 2           ; prev
     DB PADF_UP | 5             ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Sewer3"
+    D_TITLE 16, "Mind the Gap"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node4:
     .begin
