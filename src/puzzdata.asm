@@ -126,7 +126,7 @@ DataX_Forest0_puzz:
     DB W_TST, W_TST, W_TST, W_TST, W_TST, W_TTR, W_TTR, W_TTR, W_TTR, W_TST
     D_ANIM $2b, G_CHS
     DB W_TST, W_TTR, W_TTR, W_TTR, W_TTR, O_EMP, O_EMP, O_EMP, G_PNT, W_TST
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_Cutest_song
     DB W_TST, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP, W_TTP, W_TTP, W_TST
     D_BPTR DataX_Forest0Intro_dlog
     DB W_TST, W_TTP, W_TTP, O_EMP, W_TTP, W_TTP, W_TST, W_TST, W_TST, W_TST
@@ -147,7 +147,7 @@ DataX_Forest1_puzz:
     DB W_TST, O_GRS, O_EMP, O_EMP, O_EMP, O_GRS, O_EMP, O_EMP, G_PNT, W_TST
     D_ANIM $2b, G_CHS
     DB W_TST, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_APL, W_TST
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_Cutest_song
     DB W_TST, O_EMP, O_EMP, O_EMP, W_FW1, W_FNS, W_FNS, W_FE1, W_TTP, W_TST
     D_BPTR DataX_Forest1Intro_dlog
     DB W_TST, O_EMP, O_EMP, O_EMP, O_GRS, O_GRS, O_GRS, W_TTP, W_TST, W_TST
@@ -189,7 +189,7 @@ DataX_Forest3_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, W_TST
     D_ANIM $31, DIRF_EAST
     DB W_TTP, O_GRS, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, W_RCK, W_TST
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_RestYe_song
     DB W_TTR, W_TTP, W_FW1, W_FNS, W_FE1, W_TTR, W_RCK, O_EMP, O_GRS, W_TST
     D_BPTR DataX_Forest3Intro_dlog
     DB W_TTP, W_TTR, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
@@ -210,7 +210,7 @@ DataX_Forest4_puzz:
     DB W_FNS, W_FNS, W_FNS, W_FNS, W_FE1, O_EMP, W_TTR, O_EMP, O_EMP, W_TST
     D_ANIM $57, DIRF_WEST
     DB W_TTP, O_EMP, O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, G_CHS, O_EMP, W_TST
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_RestYe_song
     DB W_TST, O_EMP, G_PNT, W_RCK, O_EMP, O_GRS, W_TTP, W_RCK, S_BSH, W_TST
     D_BPTR DataX_Forest4Intro_dlog
     DB W_TST, O_EMP, O_EMP, O_EMP, W_FW1, W_FE1, W_TST, O_EMP, O_EMP, W_TTR
@@ -218,7 +218,7 @@ DataX_Forest4_puzz:
     DB W_TST, O_EMP, G_APL, O_EMP, O_EMP, S_BSH, W_TTR, W_FW1, W_FNS, W_FNS
     D_SETS TILESET_PUZZ_FARM, COLORSET_SUMMER
     DB W_TST, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTP
-    D_PAR $0041
+    D_PAR $0037
     DB W_TTR, W_TTP, W_TTP, W_TTP, W_TST, W_TTP, W_TTP, W_TTP, W_TTP, W_TST
 ASSERT @ - .begin == sizeof_PUZZ
 

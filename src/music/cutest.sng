@@ -1,0 +1,61 @@
+!SONG "Cutest" "S|AABBAABBCD"
+=tempo q36
+=key 0N  % C major
+
+!DRUM H { E(10, -7) P(0, 0, 0) }  % hi-hat
+!DRUM S { E(10, -7) P(2, 0, 1) }  % snare
+
+!PART S
+
+1 { E(14, -7) D(1/8) }
+2 { E(10, -4) D(1/2) }
+3 { W(8765678998765432102468acefedcba9) }
+4 { E(15, -7) }
+
+!PART A
+
+1| c4e e4 ' ge. gs ' cs ee gs+ ' +e. gs |
+2| c4e e ' ge. gs ' cs ee gs+ ' +e. gs |
+3| c3q   ' g2q    ' c3q       ' g2q    |
+4| xSs xH xSe ' xSe xS ' xSs xH xSe ' xSe xS |
+
+1| c4e e ' ge gs e ' a#s ae gs+ ' +q |
+2| c4e e ' ge gs e ' a#s ae gs+ ' +q    |
+3| c3q   ' g2q     ' c3e g2     ' a2e b |
+4| xSs xH xSe ' xSe xS ' xSs xH xSe ' xSs xH xS xH |
+
+!PART B
+
+1| c5q ' g4q ' c5q ' g4e. gs |
+2| c5q ' g4q ' c5q ' g4e. gs |
+3| c3e g2 ' a2e g ' c3e g2 ' a2e g |
+4| xSs xH xS xH ' xSq ' xSs xH xS xH ' xSq |
+
+1| e4e e ' gs ge cs+ ' +h |
+2| e4e e ' gs ge cs+ ' +h |
+3| e2e g ' d e ' c2q. re |
+4| xSs xH xSe ' xSe xS ' xSe xH ' xSs xH xS xH |
+
+!PART C
+
+1| a#4s a#e as+ ' +e ae ' gs ge fs+ ' +e fe |
+2| a#4s a#e as+ ' +e ae ' gs ge fs+ ' +e fe |
+3| a#2e g2 ' a2e g ' a#2e g2 ' a2e g |
+4| xSs xH xSe ' xSe xS ' xSs xH xSe ' xSe xS |
+
+1| e4e e ' es ge. ' cq ' cq |
+2| e4e e ' es ge. ' cq ' cq |
+3| e2e g ' d e ' c2q. re |
+4| xSs xH xSe ' xSe xS ' xSe xH ' xSs xH xS xH |
+
+!PART D
+
+1| a#4s a#e as+ ' +e a#e ' gs ge fs+ ' +e ge |
+2| a#4s a#e as+ ' +e a#e ' gs ge fs+ ' +e ge |
+3| a#2e g2 ' a2e g ' a#2e g2 ' a2e g |
+4| xSs xH xSe ' xSe xS ' xSs xH xSe ' xSe xS |
+
+1| e4e e ' es de. ' c4q ' g3e. gs |
+2| e4e e ' es de. ' c4q ' g3e. gs |
+3| e2e g ' d e ' c2q. re |
+4| xSs xH xSe ' xSe xS ' xSe xH ' xSe xH |
