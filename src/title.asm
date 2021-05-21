@@ -276,9 +276,9 @@ Func_TitleMenuDrawFileItem:
     add b
     ld [hl+], a
     ld a, "."
-    REPT 5
     ld [hl+], a
-    ENDR
+    ld [hl+], a
+    ld [hl+], a
     ;; Get the save file's status.
     push hl
     call Func_GetSaveSummaryPtr_hl
@@ -290,19 +290,26 @@ Func_TitleMenuDrawFileItem:
     ;; If the file is empty, draw the word "Empty".
     bit 0, c
     jr nz, .notEmpty
-    dec hl
-    dec hl
     COPY_FROM_ROM0 Data_FileEmptyStr_start, Data_FileEmptyStr_end
     ret
-    ;; Otherwise, draw the number of completed puzzles (with a star, if it's
-    ;; all the puzzles).
     .notEmpty
-    dec hl
-    if_ne MAX_SAVE_PERCENTAGE_BCD, jr, .noStar
-    ld [hl], "*"
-    .noStar
-    inc hl
+    ;; If the file is at 100%, draw "*100%".
+    if_ne HUNDRED_PERCENT_BCD8, jr, .not100Percent
+    ld a, "*"
+    ld [hl+], a
+    ld a, "1"
+    ld [hl+], a
+    ld a, "0"
+    ld [hl+], a
+    ld [hl+], a
+    jr .percent
+    .not100Percent
+    ;; Otherwise, draw "..XX%", where XX is the two-digit percentage.
     ld c, a
+    ld a, "."
+    ld [hl+], a
+    ld [hl+], a
+    ld a, c
     swap a
     and $0f
     add "0"
@@ -311,6 +318,7 @@ Func_TitleMenuDrawFileItem:
     and $0f
     add "0"
     ld [hl+], a
+    .percent
     ld [hl], "%"
     ret
 

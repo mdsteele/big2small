@@ -36,11 +36,9 @@ STATF_UNLOCKED EQU (1 << STATB_UNLOCKED)
 STATF_SOLVED   EQU (1 << STATB_SOLVED)
 STATF_MADE_PAR EQU (1 << STATB_MADE_PAR)
 
-;;; The maximum value for SAVE_Percentage_bcd8:
-MAX_SAVE_PERCENTAGE EQU 2 * NUM_PUZZLES
-ASSERT MAX_SAVE_PERCENTAGE <= 99
-MAX_SAVE_PERCENTAGE_BCD EQU (((MAX_SAVE_PERCENTAGE / 10) << 4) | \
-                             (MAX_SAVE_PERCENTAGE % 10))
+;;; Special value for representing 100% in SAVE_Percentage_bcd8 (since 100 is
+;;; three BCD digits and so doesn't fit in a bcd8):
+HUNDRED_PERCENT_BCD8 EQU $ff
 
 ;;;=========================================================================;;;
 
@@ -65,8 +63,8 @@ sizeof_FILE                 RB 0
 
 ;;; SAVE: Summarizes a save file.
 RSRESET
-;;; Percentage: The number of solved puzzles plus the number of puzzles
-;;;   completed at/under par, encoded in BCD.
+;;; Percentage: The progress percentage for the file (0-100), encoded in BCD
+;;;     for 0-99, or the special value HUNDRED_PERCENT_BCD8 for 100.
 ASSERT 2 * NUM_PUZZLES <= 99
 SAVE_Percentage_bcd8 RB 1
 ;;; Exists: 1 if this save file exists, or 0 if it's empty.

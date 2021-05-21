@@ -23,7 +23,7 @@ INCLUDE "src/save.inc"
 
 ;;;=========================================================================;;;
 
-SECTION "Sram", SRAM, BANK[0]
+SECTION "Sram", SRAM[$A000], BANK[0]
 
 Sram_Save0_file:
     DS sizeof_FILE
@@ -98,7 +98,7 @@ Func_SaveFile::
     call Func_GetFilePercentageBcd_c
     ld a, [Ram_SaveFileNumber_u8]
     ld b, a  ; param: save file number
-    call Func_GetSaveSummaryPtr_hl  ; preserves b
+    call Func_GetSaveSummaryPtr_hl  ; preserves bc
     ASSERT SAVE_Percentage_bcd8 == 0
     ld a, c
     ld [hl+], a
@@ -143,26 +143,55 @@ Func_EraseFile::
 ;;;=========================================================================;;;
 
 ;;; @param hl A pointer to a FILE struct.
-;;; @return c The number of solved puzzles in the file, in BCD.
-;;; @preserve b, de
+;;; @return c The progress percentage for the file (0-100), encoded in BCD for
+;;;     0-99, or the special value HUNDRED_PERCENT_BCD8 for 100.
+;;; @preserve b
 Func_GetFilePercentageBcd_c:
+    ;; Set a and d to zero.  These will store BCD numbers.
     xor a
+    ld d, a
+    ;; Loop over the FILE_PuzzleStatus_u8_arr for the FILE that hl points to.
     ld c, NUM_PUZZLES
     ASSERT FILE_PuzzleStatus_u8_arr == 0
     .loop
+    ;; Increment a once if the puzzle is solved, twice if solved within par.
     bit STATB_SOLVED, [hl]
-    jr z, .skip
-    add 1
-    daa
+    jr z, .continue
+    inc a
     bit STATB_MADE_PAR, [hl]
-    jr z, .skip
-    add 1
+    jr z, .notWithinPar
+    inc a
+    .notWithinPar
+    ;; If all puzzles were solved within par, that would add up to 80, but we
+    ;; want it to add up to 100, so we need to multiply the count by 5/4.  To
+    ;; do this, every time a reaches 4 or more, we increment it an additional
+    ;; time, add it to d (in BCD), then reset a to zero.
+    ASSERT 2 * NUM_PUZZLES == 80
+    if_lt 4, jr, .continue
+    inc a
+    add d
     daa
-    .skip
+    ;; If adding a to d causes an overflow, that means we hit 100%, so jump to
+    ;; the special case below.
+    jr c, .hundredPercent
+    ld d, a
+    xor a
+    ;; Advance to the next entry in FILE_PuzzleStatus_u8_arr and continue the
+    ;; loop.
+    .continue
     inc hl
     dec c
     jr nz, .loop
+    ;; When the loop completes, there may be some leftover percentage points in
+    ;; a, so add those into d (in BCD), then put the final return value into c.
+    add d
+    daa
     ld c, a
+    ret
+    ;; Special case for 100%: since 100 doesn't fit in a one-byte BCD value, we
+    ;; use a special return value to signify 100%.
+    .hundredPercent
+    ld c, HUNDRED_PERCENT_BCD8
     ret
 
 ;;;=========================================================================;;;
