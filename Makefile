@@ -50,6 +50,10 @@ rom: $(ROMFILE)
 run: $(ROMFILE)
 	open -a SameBoy $<
 
+.PHONY: test
+test:
+	python tests/solutions.py
+
 .PHONY: clean
 clean:
 	rm -rf $(OUTDIR)
