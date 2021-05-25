@@ -29,14 +29,24 @@ SOLUTIONS = {
     'Forest2': 'GnwMseEwneGswMnwswGnenws',
     'Forest3': 'GenEeMneEseGwswsMseswGnEwsenMesese',
     'Forest4': 'GeswnesnMenGwswMwswGsewEwnwsGeMnEwMsGwMnEneMenws',
+    'ForestBonus': ('GesnMsEwGsesEeGnenEsMneEnesMsGswsenenwseMneswseGswswMnGe'
+                    'MswnwseEw'),
+    'Forest6': 'EnMeneswswnwseGeswsMwsenGnenwEwsGeseMesenEesenGwsMeswsGwnwswn',
     'Farm0': 'MenwsEenMwEsMenwEnwMseswnenGnwsMeGnMwsGeMnGwsMeswn',
     'Farm1': 'GnweMeEswnMwnenwGwseneswnwswneneMeGswneMswneEsenw',
+    'Farm2': ('MeswsenGswnwMswneEneGnenMswEwsGswswswnMenwswswneGeneneEnene'
+              'Gwsen'),
+    'FarmBonus': ('MesEneseswseGwseMwneswneEnenwMnwsEenwswsMwnwnwsenwEnwsenw'
+                  'MswnesGswnese'),
     'Farm4': 'EseneMswnEwsMwswnEwneGwneEsenMeseneEesenMws',
     'Mountain0': 'GeMeeseeEweseeMsswGesswwnesMenes',
     'Lake0': 'GsenwMsGeEsenwMnwneEsMwEneswGwsMeswswnGwnwsMsesGesEs',
     'Sewer0': ('GnEwsesenGesesenEenwGswEeMsEwswnGenEeneMnGwEwsesGesMwseEwsen'
                'Mnw'),
     'Sewer1': 'MnEessGsEnwGsweEeswswewnGwwwEsensweMsenwse',
+    'SewerBonus': ('EwGwsesEeneGnewnEsGeEnewnwnGwEseneseeMnwneseGneseeneses'
+                   'EswGnwnwseEenesesweswMwnwswsEnwswswnwnGwswnwEseGnMnwne'
+                   'EwneMswsesGseswMnwneseenese'),
     'City0': ('EwsGesenMenEnGeneMeneGsEeswMseGwEnwsGeneEnGwEwnwseGnEwGseEnGwEs'
               'GeEeswMs'),
     'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
@@ -156,7 +166,7 @@ def test_solution(puzzle, solution):
                (row, tiles) in enumerate(puzzle['terrain']) for
                (col, tile) in enumerate(tiles)}
     teleport = puzzle['teleport']
-    current_animal = 0
+    current_animal = ELEPHANT
     num_moves = 0
     for char in solution:
         if char == ' ': pass
