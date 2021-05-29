@@ -181,7 +181,7 @@ SECTION "AreaData", ROMX
 
 DataX_Forest_area:
     .begin
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_ForestMap_song
     DB COLORSET_SUMMER
     DB TILESET_MAP_FOREST
     D_BPTR DataX_ForestTileMap_start

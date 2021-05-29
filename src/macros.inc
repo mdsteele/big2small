@@ -308,4 +308,15 @@ PLAY_SFX4: MACRO
     call Func_PlaySfx4
 ENDM
 
+PLAY_SONG: MACRO
+    IF _NARG < 1
+    FAIL "Too few arguments to PLAY_SONG macro"
+    ELIF _NARG > 1
+    FAIL "Too many arguments to PLAY_SONG macro"
+    ENDC
+    ld c, BANK(\1)
+    ld hl, \1
+    call Func_MusicStart
+ENDM
+
 ;;;=========================================================================;;;

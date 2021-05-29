@@ -90,14 +90,8 @@ FILE_NUMBER = FILE_NUMBER + 1
     COPY_FROM_ROM0 Data_StartEraseStr_start, Data_StartEraseStr_end
     ld c, ">"  ; cursor tile ID
     call Func_TitleMenuSetCursorTile
-    ;; Set up objects.
     call Func_ClearOam
-    ;; Initialize music.
-    ld c, BANK(DataX_TitleMusic_song)
-    ld hl, DataX_TitleMusic_song
-    call Func_MusicStart
-    ;; Turn on the LCD and fade in.
-    call Func_PerformDma
+    PLAY_SONG DataX_TitleMusic_song
     call Func_FadeIn
 _TitleScreen_RunLoop:
     call Func_UpdateAudio
