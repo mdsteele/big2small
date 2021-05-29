@@ -695,7 +695,7 @@ DataX_City0_puzz:
     DB W_LE3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, W_LW3
     D_ANIM $70, DIRF_EAST
     DB W_LE3, O_EMP, G_APL, W_LC4, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_LW3
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_MarchingHome_song
     DB W_LSE, O_EMP, O_EMP, W_BS1, G_PNT, O_EMP, O_EMP, O_EMP, S_MTP, W_LSW
     D_BPTR DataX_City0Intro_dlog
     DB W_BSE, O_EMP, O_EMP, S_MTP, O_EMP, W_LW1, W_LE1, O_EMP, O_EMP, W_BSW
@@ -716,7 +716,7 @@ DataX_City1_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_ANIM $50, DIRF_SOUTH
     DB G_CHS, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, W_LC4, O_EMP
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_MarchingHome_song
     DB O_EMP, O_EMP, G_APL, O_EMP, W_DMP, O_EMP, G_PNT, O_EMP, W_BS1, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, W_LN1, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, O_EMP
@@ -737,7 +737,7 @@ DataX_City2_puzz:
     DB O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, S_PPW, W_LEW, O_EMP, O_EMP, O_EMP
     D_ANIM $20, DIRF_EAST
     DB S_ARE, O_EMP, W_LN1, O_EMP, O_EMP, O_EMP, W_LS1, O_EMP, O_EMP, O_EMP
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_MarchingHome_song
     DB O_EMP, O_EMP, W_LEW, O_EMP, G_APL, O_EMP, W_BS1, O_EMP, O_EMP, G_CHS
     D_BPTR DataX_Null_dlog
     DB G_PNT, O_EMP, W_LEW, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP
@@ -758,7 +758,7 @@ DataX_City3_puzz:
     DB O_EMP, O_EMP, O_EMP, W_LC4, O_EMP, O_EMP, W_BSW, W_BSE, O_EMP, W_LNW
     D_ANIM $01, DIRF_SOUTH
     DB O_EMP, O_EMP, O_EMP, W_BS1, S_ARS, O_EMP, S_ARW, O_EMP, O_EMP, W_LW3
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_MarchingHome_song
     DB O_EMP, G_PNT, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, S_ARW, O_EMP, W_LSW
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, O_EMP, W_LC4, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW

@@ -1,0 +1,76 @@
+!SONG "MarchingHome" "S|ABC"
+=tempo q24
+=key 2b  % G minor
+
+!DRUM H { E(10, -7) P(0, 0, 0) }  % hi-hat
+!DRUM S { E(10, -7) P(2, 0, 1) }  % snare
+
+!PART S
+
+1 { E(4, -2) D(1/2) }
+2 { E(10, -4) D(1/4) }
+3 { W(86532235689a989a989a989aabcdddba) }
+
+2' g4e |
+
+!PART A
+
+2| d4e g g gq ae | b4q ae bq ge |
+3| g3q de gq de | g3q de c d e |
+4| xSq. xS | xSq. xSs xH xH xH xH xH |
+
+2| f4h+e de | f4h+e ge |
+3| f3q b2e d3q b2e | f3q a2e c3q b2e |
+4| xSq. xS | xSq. xS |
+
+2| d4e g g gq ae | b4q ae bq c5e |
+3| g3q de gq de | g3q de c d e |
+4| xSq. xS | xSe xH xH ' xSs xH xH xH xH xH |
+
+2| d5h+e b4e | d5h+e b4s c5 |
+3| f3q b2e d3q b2e | f#3q a2e d3q a2e |
+4| xSq. xS | xSq. xS |
+
+2| d5q de d c b4e | c5q ce cq a4e |
+3| d3q f3e b3q f3e | c3q a3e f3q a3e |
+4| xSq. ' xSs xH xH xH xH xH | xSq. xS |
+
+2| b4q be b a ge | a4q ae ae b c5 |
+3| g3q d3e b2q g3e | f#3q d3e a2q d3e |
+4| xSe xH xH ' xSs xH xH xH xH xH | xSq. xS |
+
+!PART B
+
+2| d5q. c | b4q. a |
+3| b3q fe aq fe | g3q de f#q de |
+4| xSq. xS | xSq. ' xSe xH xH |
+
+2| d4e g g gq f#e | g4h b4e c5 |
+3| g3q d3e b2q d3e | g2h d3e a |
+4| xSq. xS | xSq. xS |
+
+2| d5q. c | b4q. a |
+3| b3q fe aq fe | g3q de f#q de |
+4| xSq. xS | xSq. ' xSs xH xH xH xH xH |
+
+2| d4e g g gq f#e | g4h+e d3e |
+3| g3q d3e b2q g3e | g2h. |
+4| xSq. xS | xSq. xS |
+
+!PART C
+
+1| d6e b5 g d6e b5 g | b5q d6e b5q d6e |
+2| g3q ae bq c4e | d4e b3 g d4e b3 g |
+4| xSq. xS | xSq. xS |
+
+1| c6e a5 f c6e a5 f | a5q c6e a5q c6e |
+2| f3q ge aq be | c4e f d c a3 f |
+4| xSq. ' xSe xH xH | xSq. xS |
+
+1| b5e g d be g d | g5q be fq ae |
+2| g3q ae bq c4e | d4e b3 g a b c4 |
+4| xSq. xS | xSq. xS |
+
+1| b5q fe dq f#e | g5q de gq. |
+2| d4e e d c b3 a | g3q g4e g3q g4e |
+4| xSq. ' xSe xH xH | xSq. ' xSs xH xH xH xH xH |
