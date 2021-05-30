@@ -49,6 +49,10 @@ SOLUTIONS = {
                    'EwneMswsesGseswMnwneseenese'),
     'City0': ('EwsGesenMenEnGeneMeneGsEeswMseGwEnwsGeneEnGwEwnwseGnEwGseEnGwEs'
               'GeEeswMs'),
+    'City2': ('GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEe'
+              'MesEwnwssw'),
+    'City4': ('EeGneMnwsenesenwnEwnesenwMswswEnwswnewseseGwMnGeseMeEswGnwsEs'
+              'GeEnwn'),
     'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
 }
 

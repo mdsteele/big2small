@@ -104,7 +104,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_City1_puzz
     DW DataX_City2_puzz
     DW DataX_City3_puzz
-    DW DataX_City3_puzz  ; TODO
+    DW DataX_City4_puzz
     DW DataX_Space0_puzz
     DW DataX_Space1_puzz
     DW DataX_Space2_puzz
@@ -745,7 +745,7 @@ DataX_City2_puzz:
     DB O_EMP, S_PPW, W_LS1, O_EMP, O_EMP, O_EMP, R_RS1, O_EMP, O_EMP, S_MTP
     D_SETS TILESET_PUZZ_CITY, COLORSET_SEWER
     DB W_LE1, M_FNS, W_BS1, M_FNS, W_FNS, W_FE1, R_RNS, W_LW1, W_LNS, W_LE1
-    D_PAR $0999  ; TODO: choose correct par value
+    D_PAR $0055
     DB W_BSE, O_EMP, O_EMP, O_EMP, R_RSE, R_REW, R_RNW, W_BSW, W_BS3, W_BSE
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -768,6 +768,27 @@ DataX_City3_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_PAR $0999  ; TODO: choose correct par value
     DB O_EMP, S_ARE, O_EMP, O_EMP, S_ARN, O_EMP, O_EMP, W_LNW, W_LN3, W_LNE
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_City4_puzz:
+    .begin
+    DB S_MTP, O_EMP, O_EMP, W_LN1, G_PNT, W_LN1, W_DMP, O_EMP, O_EMP, W_DMP
+    D_ANIM $16, DIRF_EAST
+    DB O_EMP, O_EMP, G_CHS, W_LEW, O_EMP, W_LS1, O_EMP, O_EMP, O_EMP, O_EMP
+    D_ANIM $11, DIRF_NORTH
+    DB M_FNS, W_FE1, O_EMP, W_LS1, O_EMP, W_BS1, M_FNS, W_FE1, S_ARS, W_LW1
+    D_ANIM $22, DIRF_SOUTH
+    DB O_EMP, O_EMP, S_PPW, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW
+    D_BPTR DataX_MarchingHome_song
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog
+    DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog
+    DB O_EMP, O_EMP, O_EMP, O_EMP, W_LC4, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_SETS TILESET_PUZZ_CITY, COLORSET_SEWER
+    DB O_EMP, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_PAR $0052
+    DB O_EMP, O_EMP, O_EMP, S_BSH, G_APL, S_MTP, O_EMP, O_EMP, S_MTP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Space0_puzz:
