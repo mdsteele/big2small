@@ -41,6 +41,7 @@ SOLUTIONS = {
     'Farm4': 'EseneMswnEwsMwswnEwneGwneEsenMeseneEesenMws',
     'Mountain0': 'GeMeeseeEweseeMsswGesswwnesMenes',
     'Lake0': 'GsenwMsGeEsenwMnwneEsMwEneswGwsMeswswnGwnwsMsesGesEs',
+    'Lake4': 'EneGnwswnMwneEswnGesMwnesGwseneswnwMwseneswsw',
     'Sewer0': ('GnEwsesenGesesenEenwGswEeMsEwswnGenEeneMnGwEwsesGesMwseEwsen'
                'Mnw'),
     'Sewer1': 'MnEessGsEnwGsweEeswswewnGwwwEsensweMsenwse',

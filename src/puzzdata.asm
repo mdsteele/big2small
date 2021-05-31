@@ -93,7 +93,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Lake1_puzz
     DW DataX_Lake2_puzz
     DW DataX_Lake3_puzz
-    DW DataX_Lake3_puzz  ; TODO
+    DW DataX_Lake4_puzz
     DW DataX_Sewer0_puzz
     DW DataX_Sewer1_puzz
     DW DataX_Sewer2_puzz
@@ -558,6 +558,27 @@ DataX_Lake3_puzz:
     DB O_EMP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_PAR $0999  ; TODO: choose correct par value
     DB O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, S_ARN, O_EMP, O_EMP, O_EMP, O_EMP
+ASSERT @ - .begin == sizeof_PUZZ
+
+DataX_Lake4_puzz:
+    .begin
+    DB O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_GRS, O_EMP
+    D_ANIM $75, DIRF_SOUTH
+    DB O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_BNS, O_EMP, O_EMP, O_GRS
+    D_ANIM $59, DIRF_WEST
+    DB O_EMP, O_EMP, R_RSE, R_REW, R_RSW, O_EMP, R_RNS, O_EMP, G_PNT, O_EMP
+    D_ANIM $21, DIRF_EAST
+    DB O_EMP, S_BSH, R_RNS, G_APL, R_RNS, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_TitleMusic_song
+    DB O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP, R_RNS, O_EMP, O_GRS, O_EMP
+    D_BPTR DataX_Null_dlog
+    DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog
+    DB G_CHS, O_EMP, O_EMP, S_ARW, O_EMP, O_EMP, O_EMP, O_BNS, O_GRS, R_SNW
+    D_SETS TILESET_PUZZ_LAKE, COLORSET_AUTUMN
+    DB O_GRS, S_BSH, O_GRS, O_GRS, O_EMP, O_EMP, R_SNW, R_ONN, R_SNN, R_ONW
+    D_PAR $0037
+    DB R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_SNN, R_ONW, R_OOP, R_OOP, R_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Sewer0_puzz:
