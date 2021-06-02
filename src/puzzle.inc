@@ -130,12 +130,12 @@ S_TMF RB 1  ; Teleporter for mouse (index F)
 
 ;;; Water terrain:
 R_MIN RB 0  ; Terrain types from R_MIN to M_MIN are water.
-R_SS3 RB 1  ; Sky south multi
-R_SSE RB 1  ; Sky south/east
-R_SSW RB 1  ; Sky south/west
-R_SW3 RB 1  ; Sky west multi
-R_SOP RB 1  ; Open sky
-R_STR RB 1  ; Sky with stars
+R_KS3 RB 1  ; Sky south multi
+R_KSE RB 1  ; Sky south/east
+R_KSW RB 1  ; Sky south/west
+R_KW3 RB 1  ; Sky west multi
+R_KOP RB 1  ; Open sky
+R_KST RB 1  ; Sky with stars
 R_RNS RB 1  ; River north/south
 R_REW RB 1  ; River east/west
 R_RNE RB 1  ; River north/east
@@ -143,10 +143,14 @@ R_RNW RB 1  ; River north/west
 R_RSE RB 1  ; River south/east
 R_RSW RB 1  ; River south/west
 R_RS1 RB 1  ; River south single
-R_SNN RB 1  ; Shoreline on north
+R_SN3 RB 1  ; Shoreline on north
 R_SNE RB 1  ; Shoreline on north/east
 R_SNW RB 1  ; Shoreline on north/west
+R_SS3 RB 1  ; Shoreline on south
+R_SSE RB 1  ; Shoreline on south/east
+R_SSW RB 1  ; Shoreline on south/west
 R_ONN RB 1  ; Ocean with shore in northern corners
+R_OSS RB 1  ; Ocean with shore in southern corners
 R_ONE RB 1  ; Ocean with shore in northeast corner
 R_ONW RB 1  ; Ocean with shore in northwest corner
 R_OOP RB 1  ; Open ocean

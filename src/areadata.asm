@@ -331,7 +331,7 @@ _Mountain_Node0:
     DB PADF_LEFT | EXIT_NODE   ; prev
     DB PADF_UP | 1             ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Rocky Hills"
+    D_TITLE 16, "Arrow Ascent"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node1:
     .begin
@@ -349,7 +349,7 @@ _Mountain_Node2:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Mountain2"
+    D_TITLE 16, "Rocky Ridge"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node3:
     .begin
@@ -398,7 +398,7 @@ _Lake_Node0:
     DB PADF_RIGHT | EXIT_NODE  ; prev
     DB PADF_LEFT | 1           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Lake0"
+    D_TITLE 16, "Down the River"
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node1:
     .begin
@@ -425,7 +425,7 @@ _Lake_Node3:
     DB PADF_UP | 1             ; prev
     DB PADF_DOWN | 4           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Lake3"
+    D_TITLE 16, "Around the Bend"
     ASSERT @ - .begin == sizeof_NODE
 _Lake_Node4:
     .begin
@@ -434,7 +434,7 @@ _Lake_Node4:
     DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Lake4"
+    D_TITLE 16, "Across the Pond"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Lake_Node0 == NUM_LAKE_PUZZLES * sizeof_NODE
 
@@ -456,7 +456,7 @@ _Sewer_Node0:
     DB PADF_UP | EXIT_NODE     ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Sewer0"
+    D_TITLE 16, "Pipe Playground"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node1:
     .begin
@@ -474,7 +474,7 @@ _Sewer_Node2:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 3          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Pipe Playground"
+    D_TITLE 16, "Royal Flush"
     ASSERT @ - .begin == sizeof_NODE
 _Sewer_Node3:
     .begin
@@ -559,7 +559,7 @@ _City_Node4:
     DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "City4"
+    D_TITLE 16, "Dumpster Diving"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
 

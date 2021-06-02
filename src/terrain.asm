@@ -87,12 +87,12 @@ DataX_TerrainTable:
     D_TERR S_TME, $00, $02, $01, $03, TELEPORT_START + $08
     D_TERR S_TMF, $00, $02, $01, $03, TELEPORT_START + $08
     ;; River terrain:
-    D_TERR R_SS3, $0a, $0a, $1d, $1f, MOUNTAIN_START
-    D_TERR R_SSE, $1c, $22, $1d, $23, MOUNTAIN_START
-    D_TERR R_SSW, $20, $1e, $21, $1f, MOUNTAIN_START
-    D_TERR R_SW3, $20, $0a, $20, $0a, MOUNTAIN_START
-    D_TERR R_SOP, $0a, $0a, $0a, $0a, MOUNTAIN_START
-    D_TERR R_STR, $0a, $0a, $0a, $1c, MOUNTAIN_START
+    D_TERR R_KS3, $0a, $0a, $1d, $1f, MOUNTAIN_START
+    D_TERR R_KSE, $1c, $22, $1d, $23, MOUNTAIN_START
+    D_TERR R_KSW, $20, $1e, $21, $1f, MOUNTAIN_START
+    D_TERR R_KW3, $20, $0a, $20, $0a, MOUNTAIN_START
+    D_TERR R_KOP, $0a, $0a, $0a, $0a, MOUNTAIN_START
+    D_TERR R_KST, $0a, $0a, $0a, $1c, MOUNTAIN_START
     D_TERR R_RNS, $04, $06, $05, $07, SHORE_START
     D_TERR R_REW, $00, $02, $01, $03, SHORE_START
     D_TERR R_RNE, $04, $0e, $09, $03, SHORE_START
@@ -100,10 +100,14 @@ DataX_TerrainTable:
     D_TERR R_RSE, $08, $02, $05, $0f, SHORE_START
     D_TERR R_RSW, $00, $0a, $0d, $07, SHORE_START
     D_TERR R_RS1, $08, $0a, $05, $07, SHORE_START
-    D_TERR R_SNN, $00, $02, ANI, ANI, SHORE_START
+    D_TERR R_SN3, $00, $02, ANI, ANI, SHORE_START
     D_TERR R_SNE, $00, $0a, ANI, $07, SHORE_START
     D_TERR R_SNW, $08, $02, $05, ANI, SHORE_START
+    D_TERR R_SS3, ANI, ANI, $01, $03, SHORE_START
+    D_TERR R_SSE, ANI, $06, $01, $0b, SHORE_START
+    D_TERR R_SSW, $04, ANI, $09, $03, SHORE_START
     D_TERR R_ONN, $0c, $0e, ANI, ANI, SHORE_START
+    D_TERR R_OSS, ANI, ANI, $0d, $0f, SHORE_START
     D_TERR R_ONE, ANI, $0e, ANI, ANI, SHORE_START
     D_TERR R_ONW, $0c, ANI, ANI, ANI, SHORE_START
     D_TERR R_OOP, ANI, ANI, ANI, ANI, SHORE_START
@@ -203,12 +207,12 @@ DataX_TerrainPaletteTable:
     D_PAL S_TME, 7
     D_PAL S_TMF, 7
     ;; River terrain:
-    D_PAL R_SS3, 6
-    D_PAL R_SSE, 6
-    D_PAL R_SSW, 6
-    D_PAL R_SW3, 6
-    D_PAL R_SOP, 6
-    D_PAL R_STR, 6
+    D_PAL R_KS3, 6
+    D_PAL R_KSE, 6
+    D_PAL R_KSW, 6
+    D_PAL R_KW3, 6
+    D_PAL R_KOP, 6
+    D_PAL R_KST, 6
     D_PAL R_RNS, 4
     D_PAL R_REW, 4
     D_PAL R_RNE, 4
@@ -216,10 +220,14 @@ DataX_TerrainPaletteTable:
     D_PAL R_RSE, 4
     D_PAL R_RSW, 4
     D_PAL R_RS1, 4
-    D_PAL R_SNN, 4
+    D_PAL R_SN3, 4
     D_PAL R_SNE, 4
     D_PAL R_SNW, 4
+    D_PAL R_SS3, 4
+    D_PAL R_SSE, 4
+    D_PAL R_SSW, 4
     D_PAL R_ONN, 4
+    D_PAL R_OSS, 4
     D_PAL R_ONE, 4
     D_PAL R_ONW, 4
     D_PAL R_OOP, 4
