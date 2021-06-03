@@ -287,7 +287,7 @@ _LoadAreaMap_InitColorset:
     ld a, [hl+]
     push hl
     ld c, a  ; param: colorset
-    xcall FuncX_SetBgColorPalettes
+    xcall FuncX_Colorset_Load
     romb BANK("AreaData")
     pop hl
 _LoadAreaMap_InitTileset:

@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/charmap.inc"
+INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
@@ -54,6 +55,9 @@ Main_TitleScreen::
     ;; Load tileset.
     ld b, TILESET_TITLE  ; param: tileset
     call Func_LoadTileset
+    ;; Load colorset.
+    ld c, COLORSET_SUMMER  ; param: colorset
+    xcall FuncX_Colorset_Load
     ;; Initialize state.
     xor a
     ld [Ram_TitleMenuItem_u8], a

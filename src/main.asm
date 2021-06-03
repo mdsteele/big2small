@@ -17,7 +17,6 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 
@@ -52,21 +51,13 @@ Main::
     ld a, LCDCF_OFF
     ldh [rLCDC], a
     ;; Copy tiles to VRAM.
-    ld hl, Vram_BgTiles  ; dest
+    ld hl, Vram_BgTiles  ; param: dest
     COPY_FROM_ROMX DataX_BgTiles_start, DataX_BgTiles_end
-    ld hl, Vram_ObjTiles  ; dest
+    ld hl, Vram_ObjTiles  ; param: dest
     COPY_FROM_ROMX DataX_ObjTiles_start, DataX_ObjTiles_end
-    ;; Initialize palettes.
-    ld a, %11100100
-    ldh [rBGP], a
-    ldh [rOBP0], a
-    ldh [rOBP1], a
+    ;; Initialize global state.
     xcall FuncX_InitObjColorPalettes
-    ld c, COLORSET_SUMMER
-    xcall FuncX_SetBgColorPalettes
-    ;; Read summary data from SRAM.
     call Func_InitSaveSummaries
-    ;; Turn on audio.
     call Func_InitAudio
     ;; Go to title screen.
     jp Main_TitleScreen

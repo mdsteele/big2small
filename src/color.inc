@@ -17,13 +17,12 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-;;; The number of BG/obj color palettes.
-NUM_BG_CPAL  EQU 8
-NUM_OBJ_CPAL EQU 8
+NUM_COLORS_PER_CPAL EQU 4
+NUM_CPALS_PER_CSET EQU 8
 
 ;;;=========================================================================;;;
 
-;; Enum values for FuncX_SetBgColorPalettes:
+;; Enum values for FuncX_Colorset_Load:
 RSRESET
 COLORSET_SPRING RB 1
 COLORSET_SUMMER RB 1
@@ -36,10 +35,16 @@ COLORSET_SPACE  RB 1
 
 ;;; CPAL: Data for a single color palette.
 RSRESET
-CPAL_Color0_u16 RW 1
-CPAL_Color1_u16 RW 1
-CPAL_Color2_u16 RW 1
-CPAL_Color3_u16 RW 1
+STATIC_ASSERT NUM_COLORS_PER_CPAL == 4
+CPAL_Colors_u16_arr4 RW 4
 sizeof_CPAL RB 0
+
+;;;=========================================================================;;;
+
+;;; CSET: Data for a full colorset.
+RSRESET
+STATIC_ASSERT NUM_CPALS_PER_CSET == 8
+CSET_Palettes_cpal_arr8 RB 8 * sizeof_CPAL
+sizeof_CSET RB 0
 
 ;;;=========================================================================;;;

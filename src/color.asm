@@ -36,7 +36,15 @@ ENDM
 ;;;=========================================================================;;;
 
 SECTION "ColorState", HRAM
+
 Hram_ColorEnabled_bool::
+    DB
+
+;;;=========================================================================;;;
+
+SECTION "ColorsetState", WRAM0
+
+Ram_LastBgColorset_u8:
     DB
 
 ;;;=========================================================================;;;
@@ -91,32 +99,65 @@ DataX_ObjColorPalettes_end:
 
 ;;;=========================================================================;;;
 
-SECTION "BgColorPalettes", ROMX
+SECTION "Colorset", ROMX
 
-;;; If color is enabled, transfers the specified BG color palette data.
-;;; @param c The chosen colorset.
-FuncX_SetBgColorPalettes::
+;;; Returns a pointer to the CSET struct for the most recently loaded colorset.
+;;; @prereq Color is enabled, and a colorset has been loaded.
+;;; @return hl A pointer to a CSET struct in BANK("Colorset").
+FuncX_Colorset_GetCurrentCsetPtr_hl::
+    ld a, [Ram_LastBgColorset_u8]
+    rlca
+    ldb bc, a
+    ld hl, DataX_Colorset_Table_cset_ptr_arr
+    add hl, bc
+    deref hl
+    ret
+
+;;; If color is enabled, reloads the most recently set colorset into hardware.
+;;; This takes a little while, and should not be performed while drawing the
+;;; screen.
+;;; @prereq LCD is off, or VBlank has recently started.
+FuncX_Colorset_Reload::
     ;; If color is disabled, we're done.
     ldh a, [Hram_ColorEnabled_bool]
     or a
     ret z
+    ;; Use the most recently set colorset enum value.
+    ld a, [Ram_LastBgColorset_u8]
+    ld c, a
+    jr _Colorset_Load_GetPointer
+
+;;; If color is enabled, sets the current colorset and loads the color palette
+;;; data into hardware.  This takes a little while, and should not be performed
+;;; while drawing the screen.
+;;; @prereq LCD is off, or VBlank has recently started.
+;;; @param c The chosen colorset.
+FuncX_Colorset_Load::
+    ;; If color is disabled, we're done.
+    ldh a, [Hram_ColorEnabled_bool]
+    or a
+    ret z
+    ;; Store the chosen colorset enum value in Ram_LastBgColorset_u8.
+    ld a, c
+    ld [Ram_LastBgColorset_u8], a
+_Colorset_Load_GetPointer:
     ;; Store a pointer to the chosen colorset in hl.
     sla c
     ld b, 0
-    ld hl, DataX_BgColorPalettes_Colorsets_ptr_arr
+    ld hl, DataX_Colorset_Table_cset_ptr_arr
     add hl, bc
     deref hl
-_SetBgColorPalettes_BgPalettes:
+_Colorset_Load_BgPalettes:
     ;; Transfer BG color palette data.
     ld a, BCPSF_AUTOINC
     ldh [rBCPS], a
-    ld c, NUM_BG_CPAL * sizeof_CPAL
+    ld c, sizeof_CSET
     .loop
     ld a, [hl+]
     ldh [rBCPD], a
     dec c
     jr nz, .loop
-_SetBgColorPalettes_PipeObjPalette:
+_Colorset_Load_PipeObjPalette:
     ;; Copy the last BG palette to object palette 7 (for pipe terrain).
     ld bc, -sizeof_CPAL
     add hl, bc
@@ -130,22 +171,22 @@ _SetBgColorPalettes_PipeObjPalette:
     jr nz, .loop
     ret
 
-DataX_BgColorPalettes_Colorsets_ptr_arr:
+DataX_Colorset_Table_cset_ptr_arr:
     .begin
     ASSERT @ - .begin == 2 * COLORSET_SPRING
-    DW DataX_BgColorPalettes_Spring_cpal_arr
+    DW DataX_Colorset_Spring_cset
     ASSERT @ - .begin == 2 * COLORSET_SUMMER
-    DW DataX_BgColorPalettes_Summer_cpal_arr
+    DW DataX_Colorset_Summer_cset
     ASSERT @ - .begin == 2 * COLORSET_AUTUMN
-    DW DataX_BgColorPalettes_Autumn_cpal_arr
+    DW DataX_Colorset_Autumn_cset
     ASSERT @ - .begin == 2 * COLORSET_WINTER
-    DW DataX_BgColorPalettes_Winter_cpal_arr
+    DW DataX_Colorset_Winter_cset
     ASSERT @ - .begin == 2 * COLORSET_SEWER
-    DW DataX_BgColorPalettes_Sewer_cpal_arr
+    DW DataX_Colorset_Sewer_cset
     ASSERT @ - .begin == 2 * COLORSET_SPACE
-    DW DataX_BgColorPalettes_Space_cpal_arr
+    DW DataX_Colorset_Space_cset
 
-DataX_BgColorPalettes_Spring_cpal_arr:
+DataX_Colorset_Spring_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 255, 232
@@ -187,9 +228,9 @@ DataX_BgColorPalettes_Spring_cpal_arr:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
-ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
+ASSERT @ - .begin == sizeof_CSET
 
-DataX_BgColorPalettes_Summer_cpal_arr:
+DataX_Colorset_Summer_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 232, 216
@@ -231,9 +272,9 @@ DataX_BgColorPalettes_Summer_cpal_arr:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
-ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
+ASSERT @ - .begin == sizeof_CSET
 
-DataX_BgColorPalettes_Autumn_cpal_arr:
+DataX_Colorset_Autumn_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 255, 255
@@ -275,9 +316,9 @@ DataX_BgColorPalettes_Autumn_cpal_arr:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
-ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
+ASSERT @ - .begin == sizeof_CSET
 
-DataX_BgColorPalettes_Winter_cpal_arr:
+DataX_Colorset_Winter_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 232, 232
@@ -319,9 +360,9 @@ DataX_BgColorPalettes_Winter_cpal_arr:
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 0, 0, 0
-ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
+ASSERT @ - .begin == sizeof_CSET
 
-DataX_BgColorPalettes_Sewer_cpal_arr:
+DataX_Colorset_Sewer_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 224, 255
@@ -363,9 +404,9 @@ DataX_BgColorPalettes_Sewer_cpal_arr:
     D_COLOR 224, 192, 192
     D_COLOR 128, 96, 96
     D_COLOR 0, 0, 0
-ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
+ASSERT @ - .begin == sizeof_CSET
 
-DataX_BgColorPalettes_Space_cpal_arr:
+DataX_Colorset_Space_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 224, 255
@@ -407,6 +448,6 @@ DataX_BgColorPalettes_Space_cpal_arr:
     D_COLOR 192, 224, 192
     D_COLOR 96, 128, 96
     D_COLOR 0, 0, 0
-ASSERT @ - .begin == NUM_BG_CPAL * sizeof_CPAL
+ASSERT @ - .begin == sizeof_CSET
 
 ;;;=========================================================================;;;

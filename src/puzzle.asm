@@ -105,14 +105,14 @@ _BeginPuzzle_Init:
     ld hl, Ram_PuzzleState_puzz  ; dest
     ld bc, sizeof_PUZZ           ; count
     call Func_MemCopy
-    ;; Copy tiles to VRAM.
+    ;; Load tileset.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
-    ld b, a  ; tileset
+    ld b, a  ; param: tileset
     call Func_LoadTileset
-    ;; Transfer background color palettes.
+    ;; Load colorset.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Colorset_u8]
-    ld c, a  ; colorset
-    xcall FuncX_SetBgColorPalettes
+    ld c, a  ; param: colorset
+    xcall FuncX_Colorset_Load
     ;; Load terrain map.
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
@@ -137,8 +137,6 @@ _BeginPuzzle_Init:
     ldh [rSCX], a
     ldh [rSCY], a
     call Func_FadeIn
-    ld a, %11010000
-    ldh [rOBP1], a
     ;; Run intro dialog.
     ld a, [Ram_PuzzleSkipIntroDialog_bool]
     ld hl, Ram_PuzzleState_puzz + PUZZ_Intro_dlog_bptr

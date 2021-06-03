@@ -17,6 +17,18 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+;;; The grayscale palette used for rOBP0 and rBGP.
+GRAYSCALE_PALETTE_0 EQU %11100100
+;;; The grayscale palette used for rOBP1.
+GRAYSCALE_PALETTE_1 EQU %11010000
+
+;;; The grayscale palette at 2/3 and 1/3 saturation (used for rBGP, rOBP0, and
+;;; rOBP1 while fading the screen).
+GRAYSCALE_PALETTE_23 EQU %10010000
+GRAYSCALE_PALETTE_13 EQU %01000000
+
+;;;=========================================================================;;;
+
 ;;; The width and height of a VRAM tile, in pixels.
 TILE_WIDTH  EQU 8
 TILE_HEIGHT EQU 8
