@@ -340,7 +340,7 @@ _Mountain_Node1:
     DB PADF_LEFT | 0           ; prev
     DB PADF_UP | 2             ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Mountain1"
+    D_TITLE 16, "Mountain1 TODO"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node2:
     .begin
@@ -358,7 +358,7 @@ _Mountain_Node3:
     DB PADF_LEFT | 2           ; prev
     DB PADF_DOWN | 5           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Mountain3"
+    D_TITLE 16, "Mountain3 TODO"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node4:
     .begin
@@ -376,7 +376,7 @@ _Mountain_Node5:
     DB PADF_LEFT | 3           ; prev
     DB PADF_RIGHT | EXIT_NODE  ; next
     DB PADF_UP | 4             ; bonus
-    D_TITLE 16, "Mountain5"
+    D_TITLE 16, "Mountain5 TODO"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Mountain_Node0 == NUM_MOUNTAIN_PUZZLES * sizeof_NODE
 
@@ -532,34 +532,34 @@ _City_Node1:
     DB PADF_LEFT | 0           ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Chain-Link Chaos"
+    D_TITLE 16, "Traffic Terror"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node2:
     .begin
     DB 8, 12  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1
     DB PADF_LEFT | 1           ; prev
-    DB PADF_RIGHT | 3          ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Back Lot Bedlam"
+    DB PADF_RIGHT | 4          ; next
+    DB PADF_UP | 3             ; bonus
+    D_TITLE 16, "Dumpster Diving"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node3:
+    .begin
+    DB 4, 12  ; row/col
+    D_TRAIL TS1, TS1, TS1, TS1
+    DB PADF_DOWN | 2           ; prev
+    DB 0                       ; next
+    DB 0                       ; bonus
+    D_TITLE 16, "Chain-Link Chaos"
+    ASSERT @ - .begin == sizeof_NODE
+_City_Node4:
     .begin
     DB 8, 16  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1
     DB PADF_LEFT | 2           ; prev
-    DB PADF_RIGHT | 4          ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Traffic Terror"
-    ASSERT @ - .begin == sizeof_NODE
-_City_Node4:
-    .begin
-    DB 8, 18  ; row/col
-    D_TRAIL TW1, TW1
-    DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Dumpster Diving"
+    D_TITLE 16, "Back Lot Bedlam"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
 
@@ -599,7 +599,7 @@ _Space_Node2:
     DB PADF_UP | 1             ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space2"
+    D_TITLE 16, "Space B1 TODO"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node3:
     .begin
@@ -608,7 +608,7 @@ _Space_Node3:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 5          ; next
     DB PADF_UP | 4             ; bonus
-    D_TITLE 16, "Space3"
+    D_TITLE 16, "Space3 TODO"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node4:
     .begin
@@ -617,7 +617,7 @@ _Space_Node4:
     DB PADF_DOWN | 3           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space Bonus"
+    D_TITLE 16, "Space B2 TODO"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node5:
     .begin
@@ -626,7 +626,7 @@ _Space_Node5:
     DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space5"
+    D_TITLE 16, "Space5 TODO"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Space_Node0 == NUM_SPACE_PUZZLES * sizeof_NODE
 

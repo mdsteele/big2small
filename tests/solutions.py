@@ -42,7 +42,7 @@ SOLUTIONS = {
     'Mountain0': 'GeMeeseeEweseeMsswGesswwnesMenes',
     'Lake0': 'GsenwMsGeEsenwMnwneEsMwEneswGwsMeswswnGwnwsMsesGesEs',
     'Lake1': 'EneGnwswnMwneEswnGesMwnesGwseneswnwMwseneswsw',
-    'Lake2': 'MseswnGnenwEwswGseswnwseMsGwMneseswsenGenMswnEws',
+    'LakeBonus': 'MseswnGnenwEwswGseswnwseMsGwMneseswsenGenMswnEws',
     'Lake3': 'GwsEsMwnwswwsGwwswnesMnGewwMsGsMnEwnwesGeMwne',
     'Lake4': ('GneMswnwEswGwsesMeswEnGeMseGwnwMnwnEwsGeMsGwneEneMsenenEwse'
               'MnwswseEe'),
@@ -54,10 +54,12 @@ SOLUTIONS = {
                    'EwneMswsesGseswMnwneseenese'),
     'City0': ('EwsGesenMenEnGeneMeneGsEeswMseGwEnwsGeneEnGwEwnwseGnEwGseEnGwEs'
               'GeEeswMs'),
-    'City2': ('GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEe'
-              'MesEwnwssw'),
-    'City4': ('EeGneMnwsenesenwnEwnesenwMswswEnwswnewseseGwMnGeseMeEswGnwsEs'
+    'City1': 'GwenwseMwseEwsGneEesenMsGwEwMenwGnesenwsMeGnMwGsenw',
+    'City2': ('EeGneMnwsenesenwnEwnesenwMswswEnwswnewseseGwMnGeseMeEswGnwsEs'
               'GeEnwn'),
+    'CityBonus': 'GeswneMneGswnEeMnesGeMnwEnwGnMneseGeswMnwsesGnMwnGeswnMw',
+    'City4': ('GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEe'
+              'MesEwnwssw'),
     'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
 }
 
