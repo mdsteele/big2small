@@ -1,0 +1,44 @@
+!SONG "MountainMap" "|ABACABDCEEEF"
+=tempo q32
+=key 5#  % B major
+
+!DRUM H { E(7, -7) }
+
+!PART A
+
+2 { E(6, -4) D(1/8) }
+
+1| { E(0, +1) D(1/4) } b2q { E(5, -2) D(1/2) } bq '
+ ' { E(0, +1) D(1/4) } f2q { E(5, -2) D(1/2) } fq |
+2| b4e bq fe ' gq fq |
+4| xHq xH ' xH xH |
+
+!PART B
+
+1| { E(0, +1) D(1/4) } b2q { E(5, -2) D(1/2) } bq '
+ ' { E(0, +1) D(1/4) } f2q { E(5, -2) D(1/2) } fq |
+2| b4e bs be bs fe ' gq fq |
+4| xHq xH ' xH xH |
+
+!PART C
+
+1| { E(7, -2) D(1/2) } b1w |
+2| b4w |
+4| xHe xHs xHe xHs xHe ' xHe xHs xHe xHs xHe |
+
+!PART D
+
+1| { E(0, +1) D(1/4) } b2q. { E(7, -2) D(1/2) } be '
+ ' { E(0, +1) D(1/4) } f2q. { E(7, -2) D(1/2) } fe |
+2| b4e bs be. fe ' ge gs fe fs fe |
+4| xHq xH ' xH xH |
+
+!PART E
+
+1| { E(5, -2) D(1/2) } b2h f2h |
+4| xHe xHq xHe ' xHq xH |
+
+!PART F
+
+1| { E(7, -2) D(1/2) } b1w |
+4| xHe xHs xHe xHs xHe ' xHe xHs xHe xHs xHe |

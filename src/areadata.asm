@@ -315,7 +315,7 @@ ASSERT @ - _Farm_Node0 == NUM_FARM_PUZZLES * sizeof_NODE
 
 DataX_Mountain_area:
     .begin
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_MountainMap_song
     DB COLORSET_SUMMER
     DB TILESET_MAP_FOREST
     D_BPTR DataX_MountainTileMap_start
