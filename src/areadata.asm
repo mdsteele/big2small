@@ -599,7 +599,7 @@ _Space_Node2:
     DB PADF_UP | 1             ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space B1 TODO"
+    D_TITLE 16, "Plasma Relay"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node3:
     .begin
@@ -608,7 +608,7 @@ _Space_Node3:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 5          ; next
     DB PADF_UP | 4             ; bonus
-    D_TITLE 16, "Space3 TODO"
+    D_TITLE 16, "Vacuum Pressure"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node4:
     .begin
@@ -626,7 +626,7 @@ _Space_Node5:
     DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space5 TODO"
+    D_TITLE 16, "Toggle Switch"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Space_Node0 == NUM_SPACE_PUZZLES * sizeof_NODE
 

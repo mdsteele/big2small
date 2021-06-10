@@ -110,7 +110,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Space2_puzz
     DW DataX_Space3_puzz
     DW DataX_Space4_puzz
-    DW DataX_Space4_puzz  ; TODO
+    DW DataX_Space5_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
 ;;;=========================================================================;;;
@@ -915,6 +915,28 @@ DataX_Space4_puzz:
     DB O_EMP, O_EMP, S_MTP, O_EMP, S_ARE, O_EMP, S_TMF, S_BSH, G_CHS, O_EMP
     D_PAR $0999, 0, 0, 0, $11  ; TODO: choose correct par value
     DB R_GDR, O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, W_LN1, O_EMP, R_GDR
+ASSERT @ - .begin == sizeof_PUZZ
+
+;;; TODO: It's possible to get stuck in this puzzle.
+DataX_Space5_puzz:
+    .begin
+    DB S_MTP, G_CHS, O_EMP, S_BSH, W_LN1, O_EMP, O_EMP, S_TMF, O_EMP, S_MTP
+    D_ANIM $89, DIRF_SOUTH, 0, 0, 0, $61
+    DB S_ARE, O_EMP, S_TEF, G_PNT, W_LEW, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    D_ANIM $15, DIRF_EAST, 0, 0, 0, $76
+    DB S_MTP, O_EMP, O_EMP, O_EMP, W_LEW, M_BNS, W_BS3, W_BE1, R_GDR, W_BW1
+    D_ANIM $21, DIRF_NORTH
+    DB O_EMP, W_BW1, W_BE1, O_EMP, W_LEW, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP
+    D_BPTR DataX_LightsOn_song
+    DB O_EMP, O_EMP, S_MTP, S_PPW, W_LEW, O_EMP, S_BSH, W_LN1, O_EMP, O_EMP
+    D_BPTR DataX_Null_dlog
+    DB S_TGE, O_EMP, O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP
+    D_BPTR DataX_Null_dlog, 0, $69, 0
+    DB O_EMP, S_TMF, O_EMP, O_EMP, W_LEW, O_EMP, S_ARS, O_EMP, G_APL, S_TGE
+    D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE, 0, 0, $50, $07
+    DB O_EMP, S_ARS, O_EMP, O_EMP, W_BS1, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP
+    D_PAR $0102, 0, 0, 0, $12
+    DB R_GDR, O_EMP, S_ARN, O_EMP, R_GDR, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
 ;;;=========================================================================;;;

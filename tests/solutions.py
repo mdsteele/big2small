@@ -61,13 +61,16 @@ SOLUTIONS = {
     'City4': ('GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEe'
               'MesEwnwssw'),
     'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
+    'Space5': ('GneMesEnwseswseeeswMswEwsMwseseGwseseEnnwMws'
+               'GnwsEneGnesennswwEwsweneMseEsGsEwwnMnGnws'
+               'EesMswEnwsewseeMnEeMsEwnnwsMnenEwneswnwMwEsnwse'),
 }
 
 #=============================================================================#
 
 RE_PUZZ_LABEL = re.compile(r'^DataX_([a-zA-Z0-9_]+)_puzz:$', re.MULTILINE)
 RE_TERRAIN_ROW = re.compile(
-    r'^ *DB (.*)(?:\n.*(?:0|\$([0-9])([0-9])), (?:0|\$([0-9])([0-9])))?$',
+    r'^ *DB (.*)(?:\n.* (?:0|\$([0-9])([0-9])), (?:0|\$([0-9])([0-9])))?$',
     re.MULTILINE)
 RE_ANIM = re.compile('D_ANIM \$([0-9a-f])([0-9a-f]),')
 RE_PAR = re.compile('D_PAR \$([0-9]{4})')
@@ -125,7 +128,7 @@ def is_blocked(position, direction, current_animal, animals, terrain,
     if (position[0] < 0 or position[0] > 8 or
         position[1] < 0 or position[1] > 9):
         return True
-    if any(pos == position for pos in animals): return True
+    if position in animals: return True
     tile = terrain[position]
     if tile.startswith('W_'): return True
     if tile.startswith('M_') and current_animal != MOUSE: return True
@@ -166,10 +169,12 @@ def make_move(direction, current_animal, animals, terrain, teleport):
             raise RuntimeError('mouse hit mousetrap at {}'.format(position))
         elif (tile == 'S_TGE' and current_animal == GOAT or
               tile == 'S_TME' and current_animal == MOUSE):
-            animals[current_animal] = teleport[(position[0], 'E')]
+            dest = teleport[(position[0], 'E')]
+            if dest not in animals: animals[current_animal] = dest
         elif (tile == 'S_TEF' and current_animal == ELEPHANT or
               tile == 'S_TMF' and current_animal == MOUSE):
-            animals[current_animal] = teleport[(position[0], 'F')]
+            dest = teleport[(position[0], 'F')]
+            if dest not in animals: animals[current_animal] = dest
 
 def test_solution(puzzle, solution):
     animals = list(puzzle['animals'])
