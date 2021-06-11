@@ -27,7 +27,7 @@ SOLUTIONS = {
     'Forest0': 'Eene',
     'Forest1': 'EnGnwneEe',
     'Forest2': 'GnwMseEwneGswMnwswGnenws',
-    'Forest3': 'GenEeMneEseGwswsMseswGnEwsenMesese',
+    'Forest3': 'GenEeMneEseGwswMseswEwGsMwGnMesese',
     'Forest4': 'GeswnesnMenGwswMwswGsewEwnwsGeMnEwMsGwMnEneMenws',
     'ForestBonus': ('GesnMsEwGsesEeGnenEsMneEnesMsGswsenenwseMneswseGswswMnGe'
                     'MswnwseEw'),
