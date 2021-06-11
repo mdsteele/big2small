@@ -871,7 +871,7 @@ DataX_Space2_puzz:
     DB S_ARE, G_PNT, W_BS1, O_EMP, S_ARN, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE
     DB O_EMP, S_MTP, O_EMP, O_EMP, S_ARS, S_TEF, O_EMP, S_ARW, O_EMP, S_TGE
-    D_PAR $0067, 0, 0, $10, $28
+    D_PAR $0066, 0, 0, $10, $28
     DB R_GDR, R_GDR, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -917,10 +917,9 @@ DataX_Space4_puzz:
     DB R_GDR, O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, W_LN1, O_EMP, R_GDR
 ASSERT @ - .begin == sizeof_PUZZ
 
-;;; TODO: It's possible to get stuck in this puzzle.
 DataX_Space5_puzz:
     .begin
-    DB S_MTP, G_CHS, O_EMP, S_BSH, W_LN1, O_EMP, O_EMP, S_TMF, O_EMP, S_MTP
+    DB S_MTP, G_CHS, O_EMP, O_EMP, W_LN1, O_EMP, O_EMP, S_TMF, O_EMP, S_MTP
     D_ANIM $89, DIRF_SOUTH, 0, 0, 0, $61
     DB S_ARE, O_EMP, S_TEF, G_PNT, W_LEW, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_ANIM $15, DIRF_EAST, 0, 0, 0, $76
@@ -932,10 +931,10 @@ DataX_Space5_puzz:
     D_BPTR DataX_Null_dlog
     DB S_TGE, O_EMP, O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP
     D_BPTR DataX_Null_dlog, 0, $69, 0
-    DB O_EMP, S_TMF, O_EMP, O_EMP, W_LEW, O_EMP, S_ARS, O_EMP, G_APL, S_TGE
+    DB O_EMP, S_TMF, O_EMP, S_BSH, W_LEW, O_EMP, S_ARS, O_EMP, G_APL, S_TGE
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE, 0, 0, $50, $07
-    DB O_EMP, S_ARS, O_EMP, O_EMP, W_BS1, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP
-    D_PAR $0102, 0, 0, 0, $12
+    DB O_EMP, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP
+    D_PAR $0099, 0, 0, 0, $12
     DB R_GDR, O_EMP, S_ARN, O_EMP, R_GDR, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 

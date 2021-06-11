@@ -599,7 +599,7 @@ _Space_Node2:
     DB PADF_UP | 1             ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Plasma Relay"
+    D_TITLE 16, "Phase Relay"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node3:
     .begin

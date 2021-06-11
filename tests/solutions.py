@@ -61,9 +61,13 @@ SOLUTIONS = {
     'City4': ('GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEe'
               'MesEwnwssw'),
     'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
-    'Space5': ('GneMesEnwseswseeeswMswEwsMwseseGwseseEnnwMws'
-               'GnwsEneGnesennswwEwsweneMseEsGsEwwnMnGnws'
-               'EesMswEnwsewseeMnEeMsEwnnwsMnenEwneswnwMwEsnwse'),
+    'Space2': ('GesenesMnwesEenesGeMsenEesGwMseGeneEneswneMwneEnwnwGswnwsEsGw'
+               'EnenenwsesMeEnMwsEwswnMnen'),
+    'Space3': ('EsGnenwnEenwnenGeEsenMwGssMswnGnenEwnsenMswswnenwnGnwsw'
+               'MenwsesGeMnwGsMe'),
+    'Space5': ('GneMesEwneswseswewsMswseseGwseseEnnwMws'
+               'GnwsEneGnesenswwEwsweneMseEsGsEwwnMnGnws'
+               'EesMswEnwsewseswMnEeMsEwnnwsMnenEwneswnwMwEsnwse'),
 }
 
 #=============================================================================#
