@@ -49,9 +49,15 @@ SOLUTIONS = {
     'Sewer0': ('GnEwsesenGesesenEenwGswEeMsEwswnGenEeneMnGwEwsesGesMwseEwsen'
                'Mnw'),
     'Sewer1': 'MnEessGsEnwGsweEeswswewnGwwwEsensweMsenwse',
+    'Sewer2': ('MnwGnEwneMeGnMwEneseswnMeseseGesesMwEwsGwnwseEnGwEseGesEsw'
+               'Gnesenes'),
+    'Sewer3': ('EsGwwseEnGwEsewGenEenneGsenEsenMsEwGsEeswMesEnMwEsGnMeGsw'
+               'MswwEseswwMnsene'),
     'SewerBonus': ('EwGwsesEeneGnewnEsGeEnewnwnGwEseneseeMnwneseGneseeneses'
                    'EswGnwnwseEenesesweswMwnwswsEnwswswnwnGwswnwEseGnMnwne'
                    'EwneMswsesGseswMnwneseenese'),
+    'Sewer5': ('EwnMeGswnenswnwnMswEswnewsGseEnGwEseGsEwseGnEwGseEenenMene'
+               'EswsMnEeMswEwnenGnMn'),
     'City0': ('EwsGesenMenEnGeneMeneGsEeswMseGwEnwsGeneEnGwEwnwseGnEwGseEnGwEs'
               'GeEeswMs'),
     'City1': 'GwenwseMwseEwsGneEesenMsGwEwMenwGnesenwsMeGnMwGsenw',
