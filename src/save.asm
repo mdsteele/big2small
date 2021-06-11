@@ -76,16 +76,26 @@ Func_LoadFile::
     jr Func_SramFileTransfer
 
 _LoadFile_NewGame:
+    ;; Set the current puzzle to the first one.
+    xor a
+    ld [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8], a
     ;; Mark all puzzles as locked and unsolved.
     ld c, NUM_PUZZLES
     ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
-    xor a
-    .loop
+    .statusLoop
     ld [hl+], a
     dec c
-    jr nz, .loop
-    ;; Set the current puzzle to the first one.
-    ld [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8], a
+    jr nz, .statusLoop
+    ;; Set all puzzle best scores to 999.
+    ld c, NUM_PUZZLES
+    ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
+    ld a, $99
+    .bestLoop
+    ld [hl+], a
+    ld [hl], $09
+    inc hl
+    dec c
+    jr nz, .bestLoop
     ;; Mark the file as existent.
     ld a, MAGIC_FILE_EXISTS
     ld [Ram_Progress_file + FILE_Magic_u8], a
