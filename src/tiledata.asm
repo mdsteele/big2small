@@ -62,6 +62,14 @@ DataX_SharedMapTiles_start::
     INCBIN "out/data/tiles/map_bridge.2bpp"
 DataX_SharedMapTiles_end::
 
+SECTION "CityMapTiles", ROMX
+DataX_CityMapTiles_start::
+    INCBIN "out/data/tiles/map_launch.2bpp"
+    INCBIN "out/data/tiles/map_office.2bpp"
+    DS 1 * sizeof_TILE
+    INCBIN "out/data/tiles/map_skyline.2bpp"
+DataX_CityMapTiles_end::
+
 SECTION "ForestMapTiles", ROMX
 DataX_ForestMapTiles_start::
     INCBIN "out/data/tiles/map_mountain.2bpp"
@@ -155,6 +163,7 @@ SECTION "RiverTiles", ROMX
 DataX_RiverTiles_start::
     INCBIN "out/data/tiles/river.2bpp"
 DataX_RiverTiles_end::
+
 
 SECTION "SpaceTiles", ROMX
 DataX_SpaceTiles_start::

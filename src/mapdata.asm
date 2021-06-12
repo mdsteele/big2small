@@ -26,6 +26,11 @@ WORLD_MAP_LENGTH EQU SCRN_VX_B * SCRN_VY_B
 
 ;;;=========================================================================;;;
 
+SECTION "CityTileMap", ROMX
+DataX_CityTileMap_start::
+    INCBIN "out/data/maps/city.map"
+ASSERT @ - DataX_CityTileMap_start == AREA_MAP_LENGTH
+
 SECTION "FarmTileMap", ROMX
 DataX_FarmTileMap_start::
     INCBIN "out/data/maps/farm.map"

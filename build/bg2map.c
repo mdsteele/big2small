@@ -123,12 +123,18 @@ int main(int argc, char **argv) {
         fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_bridge")) {
         fputc(0x98 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "map_launch")) {
+        fputc(0xc0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_mountain")) {
         fputc(0xa0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "map_office")) {
+        fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_river")) {
         fputc(0xf0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_ship")) {
         fputc(0xd8 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "map_skyline")) {
+        fputc(0xe0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_silo")) {
         fputc(0xc0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "river")) {

@@ -43,6 +43,7 @@ _LoadTileset_Map:
     push af
     COPY_FROM_ROMX DataX_SharedMapTiles_start, DataX_SharedMapTiles_end
     pop af
+    if_eq TILESET_MAP_CITY, jp, _LoadTileset_MapCity
     if_eq TILESET_MAP_FOREST, jp, _LoadTileset_MapForest
     if_eq TILESET_MAP_SEWER, jp, _LoadTileset_MapSewer
     if_eq TILESET_MAP_SPACE, jp, _LoadTileset_MapSpace
@@ -63,6 +64,10 @@ _LoadTileset_Puzz:
 _LoadTileset_Title:
     SKIP_TO_TILE $f0
     COPY_FROM_ROMX DataX_UrlTiles_start, DataX_UrlTiles_end
+    ret
+_LoadTileset_MapCity:
+    SKIP_TO_TILE $c0
+    COPY_FROM_ROMX DataX_CityMapTiles_start, DataX_CityMapTiles_end
     ret
 _LoadTileset_MapForest:
     SKIP_TO_TILE $a0
@@ -136,6 +141,7 @@ _LoadTileset_PuzzSpace:
 ;;; @param c The animation counter (0-255).
 Func_AnimateTerrain::
     ld a, b
+    if_eq TILESET_MAP_CITY, ret
     if_eq TILESET_MAP_SPACE, jr, _AnimateTerrain_Twinkle
     if_eq TILESET_PUZZ_CITY, ret
     if_eq TILESET_PUZZ_FARM, jr, _AnimateTerrain_Cow

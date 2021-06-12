@@ -508,36 +508,36 @@ ASSERT @ - _Sewer_Node0 == NUM_SEWER_PUZZLES * sizeof_NODE
 DataX_City_area:
     .begin
     D_BPTR DataX_RestYe_song
-    DB COLORSET_AUTUMN
-    DB TILESET_MAP_WORLD
-    D_BPTR DataX_FarmTileMap_start  ; TODO: use city tile map
+    DB COLORSET_SEWER
+    DB TILESET_MAP_CITY
+    D_BPTR DataX_CityTileMap_start
     D_TITLE 20, "MICROVILLE"
-    D_TRAIL TN1, TN1, TN1, TN1, TN1, TN1, TN1, TN1
+    D_TRAIL TN1, TN2
     DB FIRST_CITY_PUZZLE
     DB NUM_CITY_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
 _City_Node0:
     .begin
-    DB 8, 4  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1, TW1
+    DB 12, 4  ; row/col
+    D_TRAIL TW1, TW1, TW1
     DB PADF_LEFT | EXIT_NODE   ; prev
-    DB PADF_RIGHT | 1          ; next
+    DB PADF_DOWN | 1           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Mousetrap Mayhem"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node1:
     .begin
-    DB 8, 8  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
-    DB PADF_LEFT | 0           ; prev
+    DB 15, 4  ; row/col
+    D_TRAIL TN1, TN1, TN1
+    DB PADF_UP | 0             ; prev
     DB PADF_RIGHT | 2          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Traffic Terror"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node2:
     .begin
-    DB 8, 12  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
+    DB 15, 12  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TW1, TW1, TW1, TW1
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 4          ; next
     DB PADF_UP | 3             ; bonus
@@ -545,21 +545,21 @@ _City_Node2:
     ASSERT @ - .begin == sizeof_NODE
 _City_Node3:
     .begin
-    DB 4, 12  ; row/col
+    DB 11, 12  ; row/col
     D_TRAIL TS1, TS1, TS1, TS1
     DB PADF_DOWN | 2           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Chain-Link Chaos"
+    D_TITLE 16, "Back Lot Bedlam"
     ASSERT @ - .begin == sizeof_NODE
 _City_Node4:
     .begin
-    DB 8, 16  ; row/col
-    D_TRAIL TW1, TW1, TW1, TW1
+    DB 15, 17  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TW1
     DB PADF_LEFT | 2           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Back Lot Bedlam"
+    D_TITLE 16, "Launch Pad Peril"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
 
