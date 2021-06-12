@@ -428,7 +428,7 @@ DataX_MountainBonusA_puzz:
     DB W_CS3, W_CS3, O_RWL, O_RWR, W_CS3, W_CW3, W_RCK, O_EMP, S_BSH, W_CSW
     D_SETS TILESET_PUZZ_MOUNTAIN, COLORSET_SUMMER
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_CW3, W_TTP, O_EMP, O_EMP, O_EMP
-    D_PAR $0067
+    D_PAR $0062
     DB O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_CW3, W_TTR, O_EMP, S_ARN, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -449,7 +449,7 @@ DataX_Mountain3_puzz:
     DB W_CSW, O_RMD, W_CS3, O_CW3, O_GRS, O_CE3, W_CS3, O_RMD, W_CS3, M_RNA
     D_SETS TILESET_PUZZ_MOUNTAIN, COLORSET_SUMMER
     DB O_EMP, S_BSH, O_EMP, W_CSW, W_CS3, W_CSE, O_EMP, O_EMP, O_EMP, O_EMP
-    D_PAR $0999  ; TODO: choose correct par value
+    D_PAR $0056
     DB O_EMP, O_EMP, W_TTP, W_TTP, O_EMP, O_EMP, O_GRS, O_EMP, G_PNT, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -470,7 +470,7 @@ DataX_Mountain5_puzz:
     DB O_RMD, W_CE1, O_EMP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP
     D_SETS TILESET_PUZZ_MOUNTAIN, COLORSET_SUMMER
     DB O_EMP, G_PNT, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS
-    D_PAR $0999  ; TODO: choose correct par value
+    D_PAR $0049
     DB O_GRS, O_GRS, O_EMP, O_GRS, S_ARN, O_EMP, S_ARE, O_EMP, O_GRS, O_GRS
 ASSERT @ - .begin == sizeof_PUZZ
 
@@ -491,7 +491,7 @@ DataX_MountainBonusB_puzz:
     DB O_EMP, W_CSW, W_CS3, W_CS3, O_RWL, O_RWR, W_CS3, W_CSE, G_PNT, O_EMP
     D_SETS TILESET_PUZZ_MOUNTAIN, COLORSET_SUMMER
     DB O_EMP, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, S_ARS, O_EMP, O_EMP, O_EMP
-    D_PAR $0999  ; TODO: choose correct par value
+    D_PAR $0057
     DB O_EMP, O_GRS, W_RCK, O_EMP, S_ARN, O_EMP, O_EMP, O_EMP, S_ARW, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 

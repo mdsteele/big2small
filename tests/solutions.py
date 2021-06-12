@@ -41,6 +41,14 @@ SOLUTIONS = {
     'Farm4': 'EseneMswnEwsMwswnEwneGwneEsenMeseneEesenMws',
     'Mountain0': 'GeMeeseeEweseeMsswGesswwnesMenes',
     'Mountain1': 'EwMwGswMneEeneswGnneswEnesMwEnMesEseGeMeeGnwEwnwGsenwsMsn',
+    'MountainBonusA': ('MnEwneswwMsesGwsenEeMnwsGwseseMeneseEwGnEeseMwnGswnEwn'
+                       'MesGnMwwGsEsewMnesEwnesMwneses'),
+    'Mountain3': ('GeMeswseGnwsenMenwswGeswsnGenwsMenEsenesMwEnGwnMeGeenEeMe'
+                  'EswnesMesEeMnwswne'),
+    'MountainBonusB': ('EwMsenGsenewwMwwGenesewswseEewMwsenwEswsMewswneGnwe'
+                       'EenweenwMwwGwMenGwsen'),
+    'Mountain5': ('GnesMswGwseMwseGnwseeEnwGwnenMnwEnenenMenseGeswEseswswGses'
+                  'EsenGn'),
     'Lake0': 'GsenwMsGeEsenwMnwneEsMwEneswGwsMeswswnGwnwsMsesGesEs',
     'Lake1': 'EneGnwswnMwneEswnGesMwnesGwseneswnwMwseneswsw',
     'LakeBonus': 'MseswnGnenwEwswGseswnwseMsGwMneseswsenGenMswnEws',
