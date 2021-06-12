@@ -109,7 +109,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Space1_puzz
     DW DataX_Space2_puzz
     DW DataX_Space3_puzz
-    DW DataX_Space4_puzz
+    DW DataX_SpaceBonusB_puzz
     DW DataX_Space5_puzz
 ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
 
@@ -915,25 +915,25 @@ DataX_Space1_puzz:
     DB S_MTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, R_GDR, R_GDR, R_GDR
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Space4_puzz:
+DataX_SpaceBonusB_puzz:
     .begin
-    DB O_EMP, R_OOP, O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, R_OOP
-    D_ANIM $29, DIRF_SOUTH
-    DB O_EMP, S_TME, O_EMP, O_EMP, S_TEF, O_EMP, O_EMP, S_ARN, O_EMP, O_EMP
-    D_ANIM $03, DIRF_SOUTH, 0, 0, $76, $55
-    DB O_EMP, O_EMP, S_ARS, O_EMP, S_MTP, O_EMP, W_RCK, O_EMP, S_TGE, O_EMP
-    D_ANIM $70, DIRF_EAST, 0, 0, $31, 0
-    DB O_EMP, S_TGE, O_EMP, O_EMP, O_EMP, R_GDR, O_EMP, G_PNT, O_EMP, W_BW1
-    D_BPTR DataX_LightsOn_song, 0, $28, 0
-    DB S_MTP, O_EMP, O_EMP, R_GDR, O_EMP, O_EMP, S_BSH, O_EMP, S_ARW, O_EMP
+    DB R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP, R_OOP
+    D_ANIM $73, DIRF_SOUTH
+    DB R_OOP, S_TME, S_MTP, S_ARW, W_LN1, O_EMP, O_EMP, S_TMF, O_EMP, R_OOP
+    D_ANIM $87, DIRF_NORTH, 0, 0, $17, $11
+    DB O_EMP, O_EMP, W_BW1, W_BS3, W_BS3, W_BS3, W_BS3, W_BE1, O_EMP, S_ARW
+    D_ANIM $15, DIRF_EAST
+    DB O_EMP, O_EMP, O_EMP, O_EMP, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP, S_TEF
+    D_BPTR DataX_LightsOn_song, 0, 0, $70
+    DB R_GDR, R_GDR, O_EMP, O_EMP, R_OOP, O_EMP, G_CHS, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
-    DB O_EMP, O_EMP, W_LN1, S_PPE, S_BSH, S_TEF, O_EMP, W_LN1, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog, 0, 0, $14
-    DB O_EMP, W_BW1, W_BSE, O_EMP, O_EMP, W_BW1, M_BNS, W_BSE, O_EMP, O_EMP
+    DB O_EMP, O_EMP, O_EMP, O_EMP, R_OOP, O_EMP, O_EMP, S_ARE, S_TGE, O_EMP
+    D_BPTR DataX_Null_dlog, 0, $75, 0
+    DB O_EMP, S_ARN, W_BW1, W_BS3, W_LN1, W_BS3, M_BNS, W_BE1, R_GDR, R_GDR
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE
-    DB O_EMP, O_EMP, S_MTP, O_EMP, S_ARE, O_EMP, S_TMF, S_BSH, G_CHS, O_EMP
-    D_PAR $0999, 0, 0, 0, $11  ; TODO: choose correct par value
-    DB R_GDR, O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, W_LN1, O_EMP, R_GDR
+    DB S_TEF, O_EMP, G_PNT, O_EMP, W_LEW, S_TGE, O_EMP, O_EMP, O_EMP, R_OOP
+    D_PAR $0066, 0, 0, $58, $39
+    DB O_EMP, G_APL, O_EMP, W_BW1, W_BS3, W_BE1, O_EMP, O_EMP, O_EMP, R_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Space5_puzz:

@@ -617,7 +617,7 @@ _Space_Node4:
     DB PADF_DOWN | 3           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Space B2 TODO"
+    D_TITLE 16, "Navigation Array"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node5:
     .begin
