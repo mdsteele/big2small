@@ -590,7 +590,7 @@ _Space_Node1:
     DB PADF_LEFT | 0           ; prev
     DB PADF_RIGHT | 3          ; next
     DB PADF_DOWN | 2           ; bonus
-    D_TITLE 16, "Hydroponics Lab"
+    D_TITLE 16, "Vacuum Pressure"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node2:
     .begin
@@ -599,7 +599,7 @@ _Space_Node2:
     DB PADF_UP | 1             ; prev
     DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Phase Relay"
+    D_TITLE 16, "Hydroponics Lab"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node3:
     .begin
@@ -608,7 +608,7 @@ _Space_Node3:
     DB PADF_LEFT | 1           ; prev
     DB PADF_RIGHT | 5          ; next
     DB PADF_UP | 4             ; bonus
-    D_TITLE 16, "Vacuum Pressure"
+    D_TITLE 16, "Phase Relay"
     ASSERT @ - .begin == sizeof_NODE
 _Space_Node4:
     .begin

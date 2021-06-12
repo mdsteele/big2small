@@ -76,10 +76,10 @@ SOLUTIONS = {
     'City4': ('GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEe'
               'MesEwnwssw'),
     'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
-    'Space2': ('GesenesMnwesEenesGeMsenEesGwMseGeneEneswneMwneEnwnwGswnwsEsGw'
-               'EnenenwsesMeEnMwsEwswnMnen'),
-    'Space3': ('EsGnenwnEenwnenGeEsenMwGssMswnGnenEwnsenMswswnenwnGnwsw'
+    'Space1': ('EsGnenwnEenwnenGeEsenMwGssMswnGnenEwnsenMswswnenwnGnwsw'
                'MenwsesGeMnwGsMe'),
+    'Space3': ('GesenesMnwesEenesGeMsenEesGwMseGeneEneswneMwneEnwnwGswnwsEsGw'
+               'EnenenwsesMeEnMwsEwswnMnen'),
     'SpaceBonusB': ('GeEwsenenwnenMeseEseswswsenMnsEsMensEwnMwsenwGnEse'
                     'MeswnwseGswneEnwMenwGwEsenGeEseGwseEn'),
     'Space5': ('GneMesEwneswseswewsMswseseGwseseEnnwMws'

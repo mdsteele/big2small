@@ -107,7 +107,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_City4_puzz
     DW DataX_Space0_puzz
     DW DataX_Space1_puzz
-    DW DataX_Space2_puzz
+    DW DataX_SpaceBonusA_puzz
     DW DataX_Space3_puzz
     DW DataX_SpaceBonusB_puzz
     DW DataX_Space5_puzz
@@ -852,7 +852,7 @@ DataX_Space0_puzz:
     DB R_OOP, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_OOP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Space3_puzz:
+DataX_Space1_puzz:
     .begin
     DB O_EMP, S_TME, O_EMP, S_MTP, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP, S_MTP
     D_ANIM $00, DIRF_SOUTH, 0, 0, $36, $75
@@ -873,7 +873,7 @@ DataX_Space3_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Space2_puzz:
+DataX_Space3_puzz:
     .begin
     DB O_EMP, W_BSW, W_BS3, W_BSE, O_EMP, O_EMP, W_LEW, R_OOP, R_OOP, R_OOP
     D_ANIM $40, DIRF_EAST
@@ -894,7 +894,7 @@ DataX_Space2_puzz:
     DB R_GDR, R_GDR, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Space1_puzz:
+DataX_SpaceBonusA_puzz:
     .begin
     DB R_OOP, R_OOP, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, O_EMP, W_BSW, W_BS3
     D_ANIM $79, DIRF_SOUTH
