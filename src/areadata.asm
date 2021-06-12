@@ -320,7 +320,7 @@ DataX_Mountain_area:
     DB TILESET_MAP_FOREST
     D_BPTR DataX_MountainTileMap_start
     D_TITLE 20, "MT. BIGHORN"
-    D_TRAIL TE1, TE1, TS1, TS1, TS1, TS2, TS1, US1
+    D_TRAIL TE1, TE1, TS1, TS2, TS1, US1
     DB FIRST_MOUNTAIN_PUZZLE
     DB NUM_MOUNTAIN_PUZZLES
     ASSERT @ - .begin == AREA_Nodes_node_arr
@@ -338,32 +338,32 @@ _Mountain_Node1:
     DB 10, 5  ; row/col
     D_TRAIL TW1, TW1, TS1, TS2, TS1
     DB PADF_LEFT | 0           ; prev
-    DB PADF_UP | 2             ; next
-    DB 0                       ; bonus
-    D_TITLE 16, "Mountain1 TODO"
+    DB PADF_UP | 3             ; next
+    DB PADF_RIGHT | 2          ; bonus
+    D_TITLE 16, "Tranquil Trail"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node2:
     .begin
-    DB 4, 7  ; row/col
-    D_TRAIL TW1, TW1, TS1, TS2, TS2, TS1
+    DB 13, 8  ; row/col
+    D_TRAIL TW1, TW1, TN1, TN1, TN1, TW1
     DB PADF_LEFT | 1           ; prev
-    DB PADF_RIGHT | 3          ; next
+    DB 0                       ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Rocky Ridge"
+    D_TITLE 16, "Hectic Hillside"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node3:
     .begin
-    DB 8, 11  ; row/col
-    D_TRAIL TW1, TW1, TW1, TN1, TN2, TN1, TW1
-    DB PADF_LEFT | 2           ; prev
+    DB 4, 9  ; row/col
+    D_TRAIL TW1, TW1, TW1, TW1, TS1, TS2, TS2, TS1
+    DB PADF_LEFT | 1           ; prev
     DB PADF_DOWN | 5           ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Mountain3 TODO"
+    D_TITLE 16, "Rocky Ridge"
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node4:
     .begin
     DB 2, 15  ; row/col
-    D_TRAIL TS2, TS2, TS1, TS1, TS1
+    D_TRAIL TS1, TS2, TS2, TS1, TS2, TS1
     DB PADF_DOWN | 5           ; prev
     DB 0                       ; next
     DB 0                       ; bonus
@@ -371,12 +371,12 @@ _Mountain_Node4:
     ASSERT @ - .begin == sizeof_NODE
 _Mountain_Node5:
     .begin
-    DB 9, 15  ; row/col
-    D_TRAIL TW1, TS1, TS1, TS1, TW1, TW1, TW1, TN1, TN2, TN1
+    DB 11, 15  ; row/col
+    D_TRAIL TW1, TW1, TN1, TN2, TW1, TW1, TW1, TW1, TN2, TN1, TN1
     DB PADF_LEFT | 3           ; prev
     DB PADF_RIGHT | EXIT_NODE  ; next
     DB PADF_UP | 4             ; bonus
-    D_TITLE 16, "Mountain5 TODO"
+    D_TITLE 16, "Grassy Grade"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Mountain_Node0 == NUM_MOUNTAIN_PUZZLES * sizeof_NODE
 
@@ -626,7 +626,7 @@ _Space_Node5:
     DB PADF_LEFT | 3           ; prev
     DB PADF_UP | EXIT_NODE     ; next
     DB 0                       ; bonus
-    D_TITLE 16, "Toggle Switch"
+    D_TITLE 16, "Final Countdown"
     ASSERT @ - .begin == sizeof_NODE
 ASSERT @ - _Space_Node0 == NUM_SPACE_PUZZLES * sizeof_NODE
 

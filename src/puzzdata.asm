@@ -85,10 +85,10 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Farm4_puzz
     DW DataX_Mountain0_puzz
     DW DataX_Mountain1_puzz
-    DW DataX_Mountain2_puzz
+    DW DataX_MountainBonusA_puzz
     DW DataX_Mountain3_puzz
-    DW DataX_MountainBonus_puzz
-    DW DataX_Mountain4_puzz
+    DW DataX_MountainBonusB_puzz
+    DW DataX_Mountain5_puzz
     DW DataX_Lake0_puzz
     DW DataX_Lake1_puzz
     DW DataX_LakeBonus_puzz
@@ -390,7 +390,7 @@ DataX_Mountain0_puzz:
     DB W_TTR, W_TST, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, S_ARN, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Mountain4_puzz:
+DataX_Mountain1_puzz:
     .begin
     DB O_EMP, O_GRS, O_EMP, O_EMP, W_TTP, O_CW3, G_PNT, O_EMP, G_CHS, O_EMP
     D_ANIM $87, DIRF_SOUTH
@@ -411,9 +411,7 @@ DataX_Mountain4_puzz:
     DB O_EMP, O_GRS, O_EMP, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Mountain1_puzz:
-    ;; TODO: This puzzle is solvable, but it's too hard for this part of the
-    ;; game.  Maybe make it a bonus puzzle?
+DataX_MountainBonusA_puzz:
     .begin
     DB O_EMP, O_EMP, W_RCK, W_TTP, O_CW3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_ANIM $79, DIRF_SOUTH
@@ -434,7 +432,7 @@ DataX_Mountain1_puzz:
     DB O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_CW3, W_TTR, O_EMP, S_ARN, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Mountain2_puzz:
+DataX_Mountain3_puzz:
     .begin
     DB R_KST, R_KOP, R_KST, R_KOP, R_KOP, R_KST, R_KOP, R_KOP, R_KOP, R_KST
     D_ANIM $70, DIRF_SOUTH
@@ -455,7 +453,7 @@ DataX_Mountain2_puzz:
     DB O_EMP, O_EMP, W_TTP, W_TTP, O_EMP, O_EMP, O_GRS, O_EMP, G_PNT, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_Mountain3_puzz:
+DataX_Mountain5_puzz:
     .begin
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_TTR, S_ARS, O_EMP, O_EMP, S_ARW, W_TTR
     D_ANIM $89, DIRF_SOUTH
@@ -476,7 +474,7 @@ DataX_Mountain3_puzz:
     DB O_GRS, O_GRS, O_EMP, O_GRS, S_ARN, O_EMP, S_ARE, O_EMP, O_GRS, O_GRS
 ASSERT @ - .begin == sizeof_PUZZ
 
-DataX_MountainBonus_puzz:
+DataX_MountainBonusB_puzz:
     .begin
     DB R_KOP, R_KST, R_KS3, R_KS3, R_KS3, R_KS3, R_KS3, R_KS3, R_KST, R_KOP
     D_ANIM $24, DIRF_SOUTH
