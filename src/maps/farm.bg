@@ -1,9 +1,9 @@
 @BG 255 255 255 20x16
->forest_map_fence
->forest_map_tree
+>map_fence
+>map_tree
 >map_barn
 >map_silo
->shared_map
+>map_trail
 
 BFBEBBBJBJ  BCBD            BJBJBJBJBJBJ
 BEBFBD            BJDA  DABJ  BJCACECBBJ

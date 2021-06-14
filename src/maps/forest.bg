@@ -1,7 +1,6 @@
 @BG 255 255 255 20x16
->forest_map_fence
->forest_map_tree
->shared_map
+>map_fence
+>map_tree
 
 BEBFBEBFBEBBBCBEBFBDBGBHBABFBEBBBABFBEBB
 BFBEBFBEBFBEBBBCBDBJBCBEBFBEBFBEBFBEBFBD

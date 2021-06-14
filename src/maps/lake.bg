@@ -1,8 +1,8 @@
 @BG 255 255 255 20x16
 >map_bridge
 >map_river
->shared_map
->forest_map_tree
+>map_trail
+>map_tree
 >ocean
 >river
 

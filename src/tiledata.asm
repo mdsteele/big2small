@@ -55,9 +55,9 @@ DataX_UrlTiles_end::
 
 SECTION "SharedMapTiles", ROMX
 DataX_SharedMapTiles_start::
-    INCBIN "out/data/tiles/shared_map.2bpp"
+    INCBIN "out/data/tiles/map_trail.2bpp"
     DS 12 * sizeof_TILE
-    INCBIN "out/data/tiles/forest_map_fence.2bpp"
+    INCBIN "out/data/tiles/map_fence.2bpp"
     DS 1 * sizeof_TILE
     INCBIN "out/data/tiles/map_bridge.2bpp"
 DataX_SharedMapTiles_end::
@@ -74,7 +74,7 @@ SECTION "ForestMapTiles", ROMX
 DataX_ForestMapTiles_start::
     INCBIN "out/data/tiles/map_mountain.2bpp"
     DS 1 * sizeof_TILE
-    INCBIN "out/data/tiles/forest_map_tree.2bpp"
+    INCBIN "out/data/tiles/map_tree.2bpp"
     DS 6 * sizeof_TILE
     INCBIN "out/data/tiles/map_silo.2bpp"
     DS 13 * sizeof_TILE
@@ -88,19 +88,19 @@ DataX_MapRiverTiles_end::
 
 SECTION "SewerMapTiles", ROMX
 DataX_SewerMapTiles_start::
-    INCBIN "out/data/tiles/sewer_map_pipe.2bpp"
-    INCBIN "out/data/tiles/sewer_map_brick.2bpp"
+    INCBIN "out/data/tiles/map_pipe.2bpp"
+    INCBIN "out/data/tiles/map_brick.2bpp"
 DataX_SewerMapTiles_end::
 
 SECTION "SpaceMapTiles", ROMX
 DataX_SpaceMapTiles_start::
-    INCBIN "out/data/tiles/space_map_station.2bpp"
+    INCBIN "out/data/tiles/map_station.2bpp"
     DS 2 * sizeof_TILE
-    INCBIN "out/data/tiles/space_map_earth.2bpp"
+    INCBIN "out/data/tiles/map_earth.2bpp"
     DS 3 * sizeof_TILE
     INCBIN "out/data/tiles/map_ship.2bpp"
     DS 2 * sizeof_TILE
-    INCBIN "out/data/tiles/space_map_stars.2bpp"
+    INCBIN "out/data/tiles/map_stars.2bpp"
 DataX_SpaceMapTiles_end::
 
 ;;;=========================================================================;;;
