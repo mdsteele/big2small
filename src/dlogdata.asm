@@ -27,12 +27,14 @@ CHARMAP "\r", DIALOG_TEXT_EOF
 
 ;;;=========================================================================;;;
 
-SECTION "DialogData", ROMX
+SECTION "NullDialog", ROMX
 
 DataX_Null_dlog::
     DB DIALOG_END
 
 ;;;=========================================================================;;;
+
+SECTION "Forest0Dialog", ROMX
 
 DataX_Forest0Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_OPEN
@@ -61,6 +63,8 @@ DataX_Forest0Outro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Forest1Dialog", ROMX
+
 DataX_Forest1Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "Hi there, my\n"
@@ -71,9 +75,9 @@ DataX_Forest1Intro_dlog::
     DB "you looking for\n"
     DB "peanuts too?\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
-    DB "I think I'd\n"
-    DB "rather have an\n"
-    DB "apple.\r"
+    DB "Actually, I'm\n"
+    DB "looking for a\n"
+    DB "tasty apple.\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "Okay! Let's eat\n"
     DB "once we've both\n"
@@ -98,6 +102,8 @@ DataX_Forest1Outro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Forest2Dialog", ROMX
+
 DataX_Forest2Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "A new friend!\n"
@@ -105,7 +111,8 @@ DataX_Forest2Intro_dlog::
     DB "and Gisele.\r"
     DB DIALOG_MOUSE
     DB "Hello. My name\n"
-    DB "is Mel.\r"
+    DB "is Melanie. Or\n"
+    DB "Mel for short.\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "We're looking\n"
     DB "for some food.\n"
@@ -137,6 +144,8 @@ DataX_Forest2Outro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Forest3Dialog", ROMX
+
 DataX_Forest3Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "The game might\n"
@@ -153,6 +162,8 @@ DataX_Forest3Intro_dlog::
     DB DIALOG_END
 
 ;;;=========================================================================;;;
+
+SECTION "Forest4Dialog", ROMX
 
 DataX_Forest4Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_OPEN
@@ -178,19 +189,48 @@ DataX_Forest4Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Forest6Dialog", ROMX
+
+DataX_Forest6Intro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Did you notice\n"
+    DB "the 'Par' in\n"
+    DB "the START menu?\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Yeah, what is\n"
+    DB "that number\n"
+    DB "for, anyway?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Winning in that\n"
+    DB "many moves gets\n"
+    DB "us *stars*!\r"
+    DB DIALOG_MOUSE
+    DB "Sometimes it\n"
+    DB "also unlocks\n"
+    DB "bonus puzzles.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Fun! Let's use\n"
+    DB "as few moves as\n"
+    DB "we can, then!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Farm0Dialog", ROMX
+
 DataX_Farm0Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "A farm! There's\n"
     DB "bound to be\n"
     DB "good food here.\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
-    DB "Looks like some\n"
-    DB "of it is fenced\n"
-    DB "in, though.\r"
+    DB "But there's all\n"
+    DB "these fences in\n"
+    DB "our way!\r"
     DB DIALOG_MOUSE
     DB "I could get in\n"
     DB "through those\n"
-    DB "mouseholes.\r"
+    DB "mouse holes...\r"
     DB DIALOG_GOAT_MOUTH_OPEN
     DB "Perfect, Mel,\n"
     DB "that would help\n"
@@ -198,6 +238,8 @@ DataX_Farm0Intro_dlog::
     DB DIALOG_END
 
 ;;;=========================================================================;;;
+
+SECTION "Mountain0Dialog", ROMX
 
 DataX_Mountain0Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
@@ -224,18 +266,80 @@ DataX_Mountain0Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Mountain3Dialog", ROMX
+
+DataX_Mountain3Intro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "We're so high\n"
+    DB "up! What a\n"
+    DB "great view!\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "It almost feels\n"
+    DB "like we could\n"
+    DB "touch the moon!\r"
+    DB DIALOG_MOUSE
+    DB "Nope. We need a\n"
+    DB "spaceship to do\n"
+    DB "that.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Right, weren't\n"
+    DB "you looking for\n"
+    DB "one of those?\r"
+    DB DIALOG_MOUSE
+    DB "Yes. I want to\n"
+    DB "be the first\n"
+    DB "mouse-tronaut.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Lake0Dialog", ROMX
+
+DataX_Lake0Intro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "I guess we've\n"
+    DB "got some rivers\n"
+    DB "to cross!\r"
+    DB DIALOG_MOUSE
+    DB "I don't really\n"
+    DB "want to get my\n"
+    DB "feet wet.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "No need to\n"
+    DB "swim. Just jump\n"
+    DB "over instead.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "I don't think\n"
+    DB "Mel and I can't\n"
+    DB "jump that far!\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Oh. Well I can!\n"
+    DB "You two can use\n"
+    DB "the bridges.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Sewer0Dialog", ROMX
+
 DataX_Sewer0Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "These giant\n"
     DB "pipes look\n"
     DB "really heavy.\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
-    DB "I can push them\n"
-    DB "through! I'm\n"
+    DB "Ha! I bet I can\n"
+    DB "push them. I'm\n"
     DB "VERY strong.\r"
+    DB DIALOG_MOUSE
+    DB "Good, because\n"
+    DB "I'm kinda stuck\n"
+    DB "in here...\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
+
+SECTION "City0Dialog", ROMX
 
 DataX_City0Intro_dlog::
     DB DIALOG_MOUSE
@@ -261,6 +365,8 @@ DataX_City0Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Space0Dialog", ROMX
+
 DataX_Space0Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_CLOSED
     DB "Well, Mel, you\n"
@@ -275,7 +381,7 @@ DataX_Space0Intro_dlog::
     DB "only in low\n"
     DB "Earth orbit.\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
-    DB "Maybe another\n"
+    DB "Maybe a bigger\n"
     DB "spaceship can\n"
     DB "take us there?\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
@@ -283,8 +389,28 @@ DataX_Space0Intro_dlog::
     DB "the other end\n"
     DB "of the station!\r"
     DB DIALOG_MOUSE
-    DB "Sounds like a\n"
-    DB "plan.\r"
+    DB "Sounds like we\n"
+    DB "have a plan,\n"
+    DB "then.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Space5Dialog", ROMX
+
+DataX_Space5Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "At last, we've\n"
+    DB "reached the\n"
+    DB "final puzzle.\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "And it uses\n"
+    DB "every mechanic\n"
+    DB "in the game!\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "We can do it,\n"
+    DB "gals! Best of\n"
+    DB "luck to us!\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;

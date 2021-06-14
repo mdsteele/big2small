@@ -178,6 +178,7 @@ Func_WorldMapSetCurrentArea:
     ld [Ram_WorldMapCurrentArea_u8], a
     ;; Make hl point to the title of area c.
     call Func_GetAreaData_hl
+    romb BANK("AreaData")
     ld bc, AREA_Title_u8_arr20
     add hl, bc
     ;; Draw the area title to the window map in VRAM.
