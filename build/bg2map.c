@@ -142,7 +142,7 @@ int main(int argc, char **argv) {
       } else if (0 == strcmp(tileset, "map_skyline")) {
         fputc(0xe0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_stars")) {
-        fputc(0xe0 + tile_index, stdout);
+        fputc(0xfc + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_station")) {
         fputc(0xc0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_trail")) {

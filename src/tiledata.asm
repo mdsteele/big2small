@@ -70,21 +70,32 @@ DataX_CityMapTiles_start::
     INCBIN "out/data/tiles/map_skyline.2bpp"
 DataX_CityMapTiles_end::
 
-SECTION "ForestMapTiles", ROMX
-DataX_ForestMapTiles_start::
-    INCBIN "out/data/tiles/map_mountain.2bpp"
-    DS 1 * sizeof_TILE
-    INCBIN "out/data/tiles/map_tree.2bpp"
-    DS 6 * sizeof_TILE
+SECTION "FarmMapTiles", ROMX
+DataX_FarmMapTiles_start::
     INCBIN "out/data/tiles/map_silo.2bpp"
     DS 13 * sizeof_TILE
     INCBIN "out/data/tiles/map_barn.2bpp"
-DataX_ForestMapTiles_end::
+DataX_FarmMapTiles_end::
+
+SECTION "MapMountainTiles", ROMX
+DataX_MapMountainTiles_start::
+    INCBIN "out/data/tiles/map_mountain.2bpp"
+DataX_MapMountainTiles_end::
 
 SECTION "MapRiverTiles", ROMX
 DataX_MapRiverTiles_start::
     INCBIN "out/data/tiles/map_river.2bpp"
 DataX_MapRiverTiles_end::
+
+SECTION "MapStarsTiles", ROMX
+DataX_MapStarsTiles_start::
+    INCBIN "out/data/tiles/map_stars.2bpp"
+DataX_MapStarsTiles_end::
+
+SECTION "MapTreeTiles", ROMX
+DataX_MapTreeTiles_start::
+    INCBIN "out/data/tiles/map_tree.2bpp"
+DataX_MapTreeTiles_end::
 
 SECTION "SewerMapTiles", ROMX
 DataX_SewerMapTiles_start::
@@ -99,8 +110,6 @@ DataX_SpaceMapTiles_start::
     INCBIN "out/data/tiles/map_earth.2bpp"
     DS 3 * sizeof_TILE
     INCBIN "out/data/tiles/map_ship.2bpp"
-    DS 2 * sizeof_TILE
-    INCBIN "out/data/tiles/map_stars.2bpp"
 DataX_SpaceMapTiles_end::
 
 ;;;=========================================================================;;;

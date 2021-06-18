@@ -71,7 +71,11 @@ _LoadTileset_MapCity:
     ret
 _LoadTileset_MapForest:
     SKIP_TO_TILE $a0
-    COPY_FROM_ROMX DataX_ForestMapTiles_start, DataX_ForestMapTiles_end
+    COPY_FROM_ROMX DataX_MapMountainTiles_start, DataX_MapMountainTiles_end
+    SKIP_TO_TILE $b0
+    COPY_FROM_ROMX DataX_MapTreeTiles_start, DataX_MapTreeTiles_end
+    SKIP_TO_TILE $c0
+    COPY_FROM_ROMX DataX_FarmMapTiles_start, DataX_FarmMapTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_MapRiverTiles_start, DataX_MapRiverTiles_end
@@ -85,11 +89,22 @@ _LoadTileset_MapSewer:
 _LoadTileset_MapSpace:
     SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
+    SKIP_TO_TILE $fc
+    COPY_FROM_ROMX DataX_MapStarsTiles_start, DataX_MapStarsTiles_end
     xld hl, DataX_TwinkleTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_MapWorld:
+    SKIP_TO_TILE $a0
+    COPY_FROM_ROMX DataX_MapMountainTiles_start, DataX_MapMountainTiles_end
+    SKIP_TO_TILE $b0
+    COPY_FROM_ROMX DataX_MapTreeTiles_start, DataX_MapTreeTiles_end
+    SKIP_TO_TILE $c0
+    COPY_FROM_ROMX DataX_FarmMapTiles_start, DataX_FarmMapTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    COPY_FROM_ROMX DataX_MapRiverTiles_start, DataX_MapRiverTiles_end
+    SKIP_TO_TILE $fc
+    COPY_FROM_ROMX DataX_MapStarsTiles_start, DataX_MapStarsTiles_end
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTerrain
 _LoadTileset_PuzzCity:

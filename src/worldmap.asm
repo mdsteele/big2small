@@ -18,11 +18,31 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/areamap.inc"
+INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
 INCLUDE "src/tileset.inc"
+INCLUDE "src/worldmap.inc"
 INCLUDE "src/vram.inc"
+
+;;;=========================================================================;;;
+
+AVATAR_PALETTE EQU (OAMF_PAL0 | 1)
+
+AVATAR_INITIAL_TILEID EQU $68
+
+RSRESET
+PSFX_Channel_u8 RB 1
+PSFX_RomBank_u8 RB 1
+PSFX_SfxPtr_ptr RW 1
+sizeof_PSFX     RB 0
+
+D_PSFX: MACRO
+    STATIC_ASSERT _NARG == 2
+    STATIC_ASSERT (\2) == 1 || (\2) == 4
+    DB (\2), BANK(\1), LOW(\1), HIGH(\1)
+ENDM
 
 ;;;=========================================================================;;;
 
@@ -41,6 +61,33 @@ Ram_WorldMapCurrentArea_u8:
 Ram_WorldMapLastUnlockedArea_u8:
     DB
 
+;;; The pixel X and Y coordinates for the avatar on the 256x256 world tile map.
+Ram_WorldMapAvatarX_u8:
+    DB
+Ram_WorldMapAvatarY_u8:
+    DB
+
+;;; The X and Y background scroll coordinates to be copied into rSCX and rSCY
+;;; during the next VBlank period.
+Ram_WorldMapNextScrollX_u8:
+    DB
+Ram_WorldMapNextScrollY_u8:
+    DB
+
+;;; The area we're currently walking towards (one of the AREA_* enum values).
+Ram_WorldMapDestinationArea_u8:
+    DB
+
+;;; The avatar's signed X and Y speed (in pixels per frame) while walking.
+Ram_WorldMapWalkSpeedX_i8:
+    DB
+Ram_WorldMapWalkSpeedY_i8:
+    DB
+
+;;; The number of steps to take before reading the next path opcode.
+Ram_WorldMapWalkStepCounter_u8:
+    DB
+
 ;;;=========================================================================;;;
 
 SECTION "WorldMapFunctions", ROM0
@@ -48,10 +95,22 @@ SECTION "WorldMapFunctions", ROM0
 ;;; @prereq LCD is off.
 ;;; @param c The current area (one of the AREA_* enum values).
 Main_WorldMapScreen::
+    ;; Set up avatar obj.
+    push bc
+    call Func_ClearOam
+    ld a, AVATAR_INITIAL_TILEID
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    ld a, AVATAR_PALETTE
+    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    pop bc
+    ;; Initialize state.
     call Func_WorldMapSetCurrentArea
     xor a
     ld [Ram_WorldMapAnimationClock_u8], a
 _WorldMapScreen_LoadTileMap:
+    ;; Load the colorset.
+    ld c, COLORSET_SPRING  ; param: colorset
+    xcall FuncX_Colorset_Load
     ;; Copy the tile data to VRAM.
     ld b, TILESET_MAP_WORLD  ; param: tileset
     call Func_LoadTileset
@@ -97,60 +156,77 @@ _WorldMapScreen_SetUnlockedAreas:
     ld a, e
     ld [Ram_WorldMapLastUnlockedArea_u8], a
 _WorldMapScreen_SetUpObjects:
-    ;; Set up objects.
-    call Func_ClearOam
-    ;; TODO: Set up objects for walking around the map.
     ;; Initialize music.
     PLAY_SONG DataX_RestYe_song
-    ;; Turn on the LCD and fade in.
-    call Func_ScrollMapToCurrentArea
-    call Func_FadeIn
     ;; Set up window.
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
     ld a, 7
     ldh [rWX], a
     ld a, SCRN_Y - 8
     ldh [rWY], a
+    ;; Turn on the LCD and fade in.
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8 | LCDCF_WINON | LCDCF_WIN9C00
+    call Func_FadeIn
     ;; fall through to Main_WorldMapCommand
 
 ;;; Animates the map while waiting for the player to press a button, then takes
 ;;; appropriate action.
 Main_WorldMapCommand:
     call Func_UpdateAudio
+    call Func_WorldMapAnimateAvatar
     call Func_WaitForVBlankAndPerformDma
     call Func_WorldMapAnimateTiles
     call Func_UpdateButtonState
-_AreaMapCommand_HandleButtons:
+_WorldMapCommand_HandleButtons:
     ld a, [Ram_ButtonsPressed_u8]
     ld d, a
     and PADF_START | PADF_A
     jr nz, _WorldMapCommand_EnterArea
-    bit PADB_LEFT, d
-    jr nz, _WorldMapCommand_PrevArea
-    bit PADB_RIGHT, d
-    jr nz, _WorldMapCommand_NextArea
-    jr Main_WorldMapCommand
-
-_WorldMapCommand_PrevArea:
-    ld a, [Ram_WorldMapCurrentArea_u8]
-    or a
+_WorldMapCommand_HandleDpad:
+    ;; Check if the D-pad was pressed.
+    ld a, d
+    and PADF_UP | PADF_DOWN | PADF_LEFT | PADF_RIGHT
     jr z, Main_WorldMapCommand
-    dec a
+    ;; Get location data for the current area.
+    ld d, a
+    ld a, [Ram_WorldMapCurrentArea_u8]
     ld c, a  ; param: area number
-    call Func_WorldMapSetCurrentArea
-    jr Main_WorldMapCommand
-
-_WorldMapCommand_NextArea:
+    xcall FuncX_LocationData_Get_hl  ; preserves d
+    ;; If the player pressed the D-pad direction for the previous location,
+    ;; follow the path to go there.
+    ld bc, LOCA_PrevDir_u8
+    add hl, bc
+    ld a, [hl+]
+    if_ne d, jr, .notPrev
+    ASSERT LOCA_PrevPath_path_ptr == 1 + 1 + LOCA_PrevDir_u8
+    inc hl
+    ld e, -1
+    jr _WorldMapCommand_FollowPath
+    .notPrev
+    ;; Check if we're able to go to the next area.
     ld a, [Ram_WorldMapLastUnlockedArea_u8]
     ld c, a
     ld a, [Ram_WorldMapCurrentArea_u8]
-    if_eq c, jr, Main_WorldMapCommand
-    inc a
-    ld c, a  ; param: area number
-    call Func_WorldMapSetCurrentArea
+    if_eq c, jr, .notNext
+    ;; If the player pressed the D-pad direction for the next location,
+    ;; follow the path to go there.
+    ASSERT LOCA_NextDir_u8 == 1 + LOCA_PrevDir_u8
+    ld a, [hl+]
+    if_ne d, jr, .notNext
+    ASSERT LOCA_NextPath_path_ptr == 1 + 2 + LOCA_NextDir_u8
+    inc hl
+    inc hl
+    ld e, 1
+    jr _WorldMapCommand_FollowPath
+    .notNext
+_WorldMapCommand_CannotMove:
+    PLAY_SFX1 DataX_CannotMove_sfx1
     jr Main_WorldMapCommand
+
+_WorldMapCommand_FollowPath:
+    ;; At this point, e is the area number offset (-1 for prev or 1 for next),
+    ;; and hl points to the path pointer.
+    deref hl  ; param: pointer to path
+    jp Main_WorldMapWalk
 
 _WorldMapCommand_EnterArea:
     call Func_FadeOut
@@ -160,8 +236,228 @@ _WorldMapCommand_EnterArea:
 
 ;;;=========================================================================;;;
 
+
+;;; Mode for making the avatar follow a path between locations on the world
+;;; map.
+;;; @param e Area number delta (-1 for prev or 1 for next).
+;;; @param hl Pointer to a PATH struct in BANK("LocationData").
+Main_WorldMapWalk:
+    ;; Store the destination area number for later.
+    ld a, [Ram_WorldMapCurrentArea_u8]
+    add e
+    ld [Ram_WorldMapDestinationArea_u8], a
+    ;; Initialize state.
+    xor a
+    ld [Ram_WorldMapWalkSpeedX_i8], a
+    ld [Ram_WorldMapWalkSpeedY_i8], a
+    inc a
+    ld [Ram_WorldMapWalkStepCounter_u8], a
+_WorldMapWalk_Frame:
+    push hl
+    call Func_UpdateAudio
+    call Func_WorldMapUpdateAvatarAndNextScroll
+    call Func_WaitForVBlankAndPerformDma
+    call Func_WorldMapAnimateTiles
+    ;; Update screen scroll position.
+    ld a, [Ram_WorldMapNextScrollX_u8]
+    ldh [rSCX], a
+    ld a, [Ram_WorldMapNextScrollY_u8]
+    ldh [rSCY], a
+    ;; Check if there are more steps to take before reading the next opcode.
+    ld hl, Ram_WorldMapWalkStepCounter_u8
+    dec [hl]
+    pop hl
+    jr nz, _WorldMapWalk_TakeStep
+_WorldMapWalk_Read:
+    romb BANK("LocationData")
+    ld a, [hl+]
+    bit 7, a
+    jr nz, _WorldMapWalk_ObjOrSound
+    bit 6, a
+    jr z, _WorldMapWalk_RepeatOrHalt
+_WorldMapWalk_SetSpeed:
+    ;; At this point, a holds %01xxxyyy.  We need to decode xxx and yyy as
+    ;; signed 3-bit numbers.
+    ld b, a
+    and %00000111
+    bit 2, a
+    jr z, .nonnegY
+    or %11111000
+    .nonnegY
+    ld [Ram_WorldMapWalkSpeedY_i8], a
+    ld a, b
+    and %00111000
+    rlca
+    swap a
+    bit 2, a
+    jr z, .nonnegX
+    or %11111000
+    .nonnegX
+    ld [Ram_WorldMapWalkSpeedX_i8], a
+    ;; Take a single step.
+    ld a, 1
+    ld [Ram_WorldMapWalkStepCounter_u8], a
+_WorldMapWalk_TakeStep:
+    ;; Update X position.
+    ld a, [Ram_WorldMapWalkSpeedX_i8]
+    ld b, a
+    ld a, [Ram_WorldMapAvatarX_u8]
+    add b
+    ld [Ram_WorldMapAvatarX_u8], a
+    ;; Update Y position.
+    ld a, [Ram_WorldMapWalkSpeedY_i8]
+    ld b, a
+    ld a, [Ram_WorldMapAvatarY_u8]
+    add b
+    ld [Ram_WorldMapAvatarY_u8], a
+    jr _WorldMapWalk_Frame
+
+_WorldMapWalk_ObjOrSound:
+    bit 6, a
+    jr nz, _WorldMapWalk_Sound
+_WorldMapWalk_Obj:
+    ;; At this point, a holds %10uftttt.  We need to use %u and %f to set the
+    ;; avatar's obj flags, and use %tttt to pick a tile ID.
+    ld b, a
+    ld a, AVATAR_PALETTE
+    bit POBJB_UNDER, b
+    jr z, .notUnder
+    set OAMB_PRI, a
+    .notUnder
+    bit POBJB_FLIP, b
+    jr z, .notFlipped
+    set OAMB_XFLIP, a
+    .notFlipped
+    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld a, b
+    and %00001111
+    rlca
+    add AVATAR_INITIAL_TILEID
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    jr _WorldMapWalk_Read
+_WorldMapWalk_Sound:
+    ;; At this point, a holds %11ssssss.
+    push hl
+    ;; Make hl point to entry number %ssssss in Data_WorldMapSounds_psfx_arr.
+    and %00111111
+    ASSERT sizeof_PSFX == 4
+    rlca
+    rlca
+    ldb bc, a
+    ld hl, Data_WorldMapSounds_psfx_arr
+    add hl, bc
+    ;; Store the channel number in e.
+    ASSERT PSFX_Channel_u8 == 0
+    ld a, [hl+]
+    ld e, a
+    ;; Read the ROM bank into c.
+    ASSERT PSFX_RomBank_u8 == 1
+    ld a, [hl+]
+    ld c, a
+    ;; Read the pointer into hl.
+    ASSERT PSFX_SfxPtr_ptr == 2
+    deref hl
+    ;; Play the sound on the correct channel.
+    bit 2, e
+    jr nz, .channel4
+    .channel1
+    call Func_PlaySfx1
+    jr .done
+    .channel4
+    call Func_PlaySfx4
+    ;; Proceed to the next opcode.
+    .done
+    pop hl
+    jp _WorldMapWalk_Read
+
+_WorldMapWalk_RepeatOrHalt:
+    or a
+    jr z, _WorldMapWalk_Halt
+    ld [Ram_WorldMapWalkStepCounter_u8], a
+    jr _WorldMapWalk_TakeStep
+
+_WorldMapWalk_Halt:
+    ld a, [Ram_WorldMapDestinationArea_u8]
+    ld c, a  ; param: area number
+    call Func_WorldMapSetCurrentArea
+    jp Main_WorldMapCommand
+
+;;;=========================================================================;;;
+
+Data_WorldMapSounds_psfx_arr:
+    .begin
+    ASSERT @ - .begin == sizeof_PSFX * PSFX_JUMP
+    D_PSFX DataX_Leap_sfx1, 1
+    ASSERT @ - .begin == sizeof_PSFX * PSFX_LAUNCH
+    D_PSFX DataX_PushPipe_sfx4, 4  ; TODO
+    ASSERT @ - .begin == sizeof_PSFX * NUM_PSFXS
+
+;;;=========================================================================;;;
+
+;;; Reads Ram_WorldMapAvatar?_u8 and uses it to update the avatar object as
+;;; well as Ram_WorldMapNextScroll?_u8.
+Func_WorldMapUpdateAvatarAndNextScroll:
+    call Func_WorldMapAnimateAvatar
+_WorldMapUpdateAvatarAndNextScroll_X:
+    ld a, [Ram_WorldMapAvatarX_u8]
+    ld b, a
+    ;; Compute next value for rSCX.
+    if_ge SCRN_X / 2, jr, .notLow
+    xor a
+    jr .setPos
+    .notLow
+    if_lt SCRN_VX - SCRN_X / 2, jr, .notHigh
+    ld a, SCRN_VX - SCRN_X
+    jr .setPos
+    .notHigh
+    sub SCRN_X / 2
+    .setPos
+    ld [Ram_WorldMapNextScrollX_u8], a
+    ;; Set X-position for avatar obj.
+    ld c, a
+    ld a, b
+    sub c
+    sub 4
+    ld [Ram_ElephantL_oama + OAMA_X], a
+_WorldMapUpdateAvatarAndNextScroll_Y:
+    ld a, [Ram_WorldMapAvatarY_u8]
+    ld b, a
+    ;; Compute next value for rSCY.
+    if_ge SCRN_Y / 2, jr, .notLow
+    xor a
+    jr .setPos
+    .notLow
+    if_lt SCRN_VY - SCRN_Y / 2, jr, .notHigh
+    ld a, SCRN_VY - SCRN_Y
+    jr .setPos
+    .notHigh
+    sub SCRN_Y / 2
+    .setPos
+    ld [Ram_WorldMapNextScrollY_u8], a
+    ;; Set Y-position for avatar obj.
+    ld c, a
+    ld a, b
+    sub c
+    sub 8
+    ld [Ram_ElephantL_oama + OAMA_Y], a
+    ret
+
+;;; Switches the parity of the avatar object's tile ID every few frames
+;;; (alternating between 2n and 2n+1).
+Func_WorldMapAnimateAvatar:
+    ld a, [Ram_WorldMapAnimationClock_u8]
+    and %00010000
+    swap a
+    ld b, a
+    ld a, [Ram_ElephantL_oama + OAMA_TILEID]
+    and %11111110
+    or b
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    ret
+
 ;;; Increments Ram_WorldMapAnimationClock_u8 and updates animated terrain in
 ;;; VRAM as needed.
+;;; @prereq LCD is off, or VBlank has recently started.
 Func_WorldMapAnimateTiles:
     ld hl, Ram_WorldMapAnimationClock_u8
     inc [hl]
@@ -171,6 +467,7 @@ Func_WorldMapAnimateTiles:
 
 ;;; Makes the specified area the currently selected area for the world map, and
 ;;; puts that area's title on the screen.
+;;; @prereq LCD is off, or VBlank has recently started.
 ;;; @param c The area to make current (one of the AREA_* enum values).
 Func_WorldMapSetCurrentArea:
     ;; Set the current area.
@@ -190,80 +487,29 @@ Func_WorldMapSetCurrentArea:
     inc de
     dec c
     jr nz, .titleLoop
-    ;; Scroll the map.
-    jp Func_ScrollMapToCurrentArea
-
-;;;=========================================================================;;;
-
-Data_AreaPositions_u8_pair_arr:
-    .begin
-    ASSERT @ - .begin == 2 * AREA_FOREST
-    DB 28, 6
-    ASSERT @ - .begin == 2 * AREA_FARM
-    DB 28, 16
-    ASSERT @ - .begin == 2 * AREA_MOUNTAIN
-    DB 28, 28
-    ASSERT @ - .begin == 2 * AREA_LAKE
-    DB 16, 28
-    ASSERT @ - .begin == 2 * AREA_SEWER
-    DB 16, 16
-    ASSERT @ - .begin == 2 * AREA_CITY
-    DB 16, 6
-    ASSERT @ - .begin == 2 * AREA_SPACE
-    DB 6, 6
-ASSERT @ - .begin == 2 * NUM_AREAS
-
-;;; Set rSCX and rSCY to try to center the current area node on the screen,
-;;; while clamping the camera position.
-Func_ScrollMapToCurrentArea:
-    ;; Make hl point to the current puzzle's position entry.
+    ;; TODO: If the area is 100% completed, draw stars around its title.
+    ;; Set avatar position.
     ld a, [Ram_WorldMapCurrentArea_u8]
-    ASSERT NUM_AREAS * 2 < $100
-    rlca
-    add LOW(Data_AreaPositions_u8_pair_arr)
-    ld l, a
-    ld a, HIGH(Data_AreaPositions_u8_pair_arr)
-    adc 0
-    ld h, a
-_ScrollMapToCurrentArea_ScrollY:
-    ;; Store row * 8 + 4 into a.
+    ld c, a
+    xcall FuncX_LocationData_Get_hl
+    ASSERT LOCA_PixelX_u8 == 0
     ld a, [hl+]
-    swap a
-    rrca
-    add 4
-    ;; Clamp the camera Y position.
-    if_ge SCRN_Y / 2, jr, .notLow
-    xor a
-    jr .setPos
-    .notLow
-    if_lt SCRN_VY - SCRN_Y / 2, jr, .notHigh
-    ld a, SCRN_VY - SCRN_Y
-    jr .setPos
-    .notHigh
-    sub SCRN_Y / 2
-    .setPos
-    ldh [rSCY], a
-_ScrollMapToCurrentArea_ScrollX:
-    ;; Store col * 8 + 4 into a.
+    ld [Ram_WorldMapAvatarX_u8], a
+    ASSERT LOCA_PixelY_u8 == 1
     ld a, [hl]
-    swap a
-    rrca
-    add 4
-    ;; Clamp the camera X position.
-    if_ge SCRN_X / 2, jr, .notLow
-    xor a
-    jr .setPos
-    .notLow
-    if_lt SCRN_VX - SCRN_X / 2, jr, .notHigh
-    ld a, SCRN_VX - SCRN_X
-    jr .setPos
-    .notHigh
-    sub SCRN_X / 2
-    .setPos
+    ld [Ram_WorldMapAvatarY_u8], a
+    call Func_WorldMapUpdateAvatarAndNextScroll
+    ;; Scroll the map.
+    ld a, [Ram_WorldMapNextScrollX_u8]
     ldh [rSCX], a
+    ld a, [Ram_WorldMapNextScrollY_u8]
+    ldh [rSCY], a
     ret
 
 ;;;=========================================================================;;;
+
+;;; TODO: Rename areacolor.asm to mapcolor.asm, move this stuff into there, and
+;;;   refactor to deduplicate.
 
 Func_LoadWorldMapColor:
     ;; Copy the palette table into HRAM for later.
@@ -319,7 +565,7 @@ Func_LoadWorldMapColorQuarter:
 
 ;;; Maps from bits 4-6 of a world map tile ID to a color palette number.
 Data_WorldMapBgPalettes_u8_arr8:
-    DB 5, 1, 1, 1, 1, 1, 4, 1
+    DB 5, 1, 6, 3, 7, 6, 4, 4
 
 ;;;=========================================================================;;;
 

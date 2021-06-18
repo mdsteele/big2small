@@ -136,6 +136,7 @@ _BeginPuzzle_Init:
     xor a
     ldh [rSCX], a
     ldh [rSCY], a
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
     ;; Run intro dialog.
     ld a, [Ram_PuzzleSkipIntroDialog_bool]

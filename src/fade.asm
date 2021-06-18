@@ -106,7 +106,11 @@ Func_FadeBgColorToQuarterSaturation:
 ;;; frames.  Music will continue to play during the fade.  When this function
 ;;; returns, the VBlank period will have just started.
 ;;; @prereq LCD is off.
+;;; @param d Display flags to use (combination of LCDCF_* values).
 Func_FadeIn::
+    ld a, d
+    or LCDCF_ON
+    push af
     ;; Check if color is enabled.
     ldh a, [Hram_ColorEnabled_bool]
     or a
@@ -119,7 +123,8 @@ _FadeIn_Grayscale:
     ldh [rOBP1], a
     ;; Sync OAM and turn on the LCD, then wait for a few frames.
     call Func_PerformDma
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16
+    pop af
+    or LCDCF_ON
     ldh [rLCDC], a
     call Func_FadeWait
     ;; Set grayscale palettes to 2/3 saturation, then wait for a few frames.
@@ -141,13 +146,15 @@ _FadeIn_Color:
     ;; Sync OAM and turn on the LCD, but with objects disabled, then wait for a
     ;; few frames.
     call Func_PerformDma
-    ld a, LCDCF_ON | LCDCF_BGON
+    pop af
+    push af
+    and ~LCDCF_OBJON
     ldh [rLCDC], a
     call Func_FadeWait
     ;; Set BG color palettes to 1/2 saturation.
     call Func_FadeBgColorToHalfSaturation
     ;; Enable drawing objects, then wait for a few frames.
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16
+    pop af
     ldh [rLCDC], a
     call Func_FadeWait
     ;; Set all color palettes to full saturation, then wait one more frame so
@@ -198,7 +205,8 @@ _FadeOut_Color:
     ;; Set BG color palettes to 1/4 saturation, then disable objects and wait
 	;; for a few frames.
     call Func_FadeBgColorToQuarterSaturation
-    ld a, LCDCF_ON | LCDCF_BGON
+    ldh a, [rLCDC]
+    and ~LCDCF_OBJON
     ldh [rLCDC], a
     call Func_FadeWait
     ;; Turn off the LCD.

@@ -96,6 +96,7 @@ FILE_NUMBER = FILE_NUMBER + 1
     call Func_TitleMenuSetCursorTile
     call Func_ClearOam
     PLAY_SONG DataX_TitleMusic_song
+    ld d, LCDCF_BGON  ; param: display flags
     call Func_FadeIn
 _TitleScreen_RunLoop:
     call Func_UpdateAudio

@@ -125,9 +125,8 @@ SECTION "MainAreaMap", ROM0
 Main_AreaMapEnter::
     call Func_LoadAreaMap
     ;; Turn on the LCD and fade in.
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8  ; param: display flags
     call Func_FadeIn
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8
-    ldh [rLCDC], a
     ;; Unlock the first node if needed.
     ld c, 0  ; param: node index
     call Func_UnlockNode_b
@@ -193,9 +192,8 @@ _AreaMapResume_LoadArea:
     ld a, TRAIL_SOUTH
     ld [Ram_AreaMapAvatarFacing_u8], a
     ;; Turn on the LCD and fade in.
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8  ; param: display flags
     call Func_FadeIn
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8
-    ldh [rLCDC], a
     pop bc
 _AreaMapResume_CheckIfSolved:
     ;; At this point, b stores the old puzzle status, and c stores the update
@@ -638,7 +636,6 @@ _AreaMapFollowTrail_FinishFollowing:
 
 ;;; Fades out the LCD and returns to the world map screen.
 Main_AreaMapBackToWorldMap:
-    call Func_ClearOam
     call Func_FadeOut
     ld a, [Ram_AreaMapCurrentArea_u8]
     ld c, a  ; param: area number
@@ -651,7 +648,6 @@ Main_AreaMapStartNextPuzzle:
     and PADF_SELECT
     push af
     ;; Fade out.
-    call Func_ClearOam
     call Func_FadeOut
     ;; Set a to the current node's puzzle number.
     ld a, [Ram_AreaMapFirstPuzzle_u8]
