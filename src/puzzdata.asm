@@ -953,7 +953,7 @@ DataX_Space5_puzz:
     DB O_EMP, S_TMF, O_EMP, S_BSH, W_LEW, O_EMP, S_ARS, O_EMP, G_APL, S_TGE
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE, 0, 0, $50, $07
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP
-    D_PAR $0099, 0, 0, 0, $12
+    D_PAR $0095, 0, 0, 0, $12
     DB R_GDR, O_EMP, S_ARN, O_EMP, R_GDR, R_GDR, O_EMP, O_EMP, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 

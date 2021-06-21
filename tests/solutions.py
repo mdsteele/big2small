@@ -82,9 +82,8 @@ SOLUTIONS = {
                'EnenenwsesMeEnMwsEwswnMnen'),
     'SpaceBonusB': ('GeEwsenenwnenMeseEseswswsenMnsEsMensEwnMwsenwGnEse'
                     'MeswnwseGswneEnwMenwGwEsenGeEseGwseEn'),
-    'Space5': ('GneMesEwneswseswewsMswseseGwseseEnnwMws'
-               'GnwsEneGnesenswwEwsweneMseEsGsEwwnMnGnws'
-               'EesMswEnwsewseswMnEeMsEwnnwsMnenEwneswnwMwEsnwse'),
+    'Space5': ('GneMesEwneswseswewsMswseseGwseseEnnMwsGnwsenswwEwnwsweneMseEs'
+               'GsEwwnMnGnwsEesMswEnwsewseswMnEeMsEwnnwsMnenEwneswnwMwEsnwse'),
 }
 
 #=============================================================================#
