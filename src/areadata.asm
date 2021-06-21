@@ -236,7 +236,7 @@ ASSERT @ - _Forest_Node0 == NUM_FOREST_PUZZLES * sizeof_NODE
 
 DataX_Farm_area:
     .begin
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_Circus_song
     DB COLORSET_AUTUMN
     DB TILESET_MAP_FOREST
     D_BPTR DataX_FarmTileMap_start

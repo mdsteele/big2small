@@ -35,10 +35,10 @@
 
 !PART E
 
-1| { E(5, -2) D(1/2) } b2h f2h |
+2| { E(4, -2) D(1/4) } b5h f5h |
 4| xHe xHq xHe ' xHq xH |
 
 !PART F
 
-1| { E(7, -2) D(1/2) } b1w |
+2| { E(6, -2) D(1/4) } b4w |
 4| xHe xHs xHe xHs xHe ' xHe xHs xHe xHs xHe |
