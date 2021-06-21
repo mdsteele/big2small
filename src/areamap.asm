@@ -177,6 +177,7 @@ Main_AreaMapResume::
     ld [hl], a
 _AreaMapResume_LoadArea:
     push bc
+    call Func_UpdateProgressAreas
     ;; Load the area map for the current puzzle.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     ld c, a  ; param: puzzle number
@@ -373,8 +374,21 @@ _LoadAreaMap_StoreNodeMetadata:
     ld [Ram_AreaMapNodes_node_arr_ptr + 0], a
     ld a, h
     ld [Ram_AreaMapNodes_node_arr_ptr + 1], a
-    ;; TODO: If all puzzles in the area are solved at/under par, draw stars on
-    ;; the area title bar.
+_LoadAreaMap_DrawAreaStars:
+    ;; Make hl point to the ProgressAreas entry for this area.
+    ld a, [Ram_AreaMapCurrentArea_u8]
+    ASSERT LOW(Ram_ProgressAreas_u8_arr) + NUM_AREAS < $100
+    add LOW(Ram_ProgressAreas_u8_arr)
+    ld l, a
+    ld h, HIGH(Ram_ProgressAreas_u8_arr)
+    ;; If all puzzles in the area are solved within par, draw stars on the area
+    ;; title bar.
+    bit STATB_MADE_PAR, [hl]
+    jr z, .noStars
+    ld a, "*"
+    ld [Vram_BgMap + 1], a
+    ld [Vram_BgMap + SCRN_X_B - 2], a
+    .noStars
 _LoadAreaMap_DrawExitTrail:
     ;; Set c to the index of the last node.
     ld a, [Ram_AreaMapNumNodes_u8]

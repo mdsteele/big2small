@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/areamap.inc"
+INCLUDE "src/charmap.inc"
 INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
@@ -473,6 +474,7 @@ Func_WorldMapSetCurrentArea:
     ;; Set the current area.
     ld a, c
     ld [Ram_WorldMapCurrentArea_u8], a
+_WorldMapSetCurrentArea_DrawTitle:
     ;; Make hl point to the title of area c.
     call Func_GetAreaData_hl
     romb BANK("AreaData")
@@ -487,8 +489,20 @@ Func_WorldMapSetCurrentArea:
     inc de
     dec c
     jr nz, .titleLoop
-    ;; TODO: If the area is 100% completed, draw stars around its title.
-    ;; Set avatar position.
+_WorldMapSetCurrentArea_DrawStars:
+    ;; If the area is 100% completed, draw stars around its title.
+    ld a, [Ram_WorldMapCurrentArea_u8]
+    ASSERT LOW(Ram_ProgressAreas_u8_arr) + NUM_AREAS < $100
+    add LOW(Ram_ProgressAreas_u8_arr)
+    ld l, a
+    ld h, HIGH(Ram_ProgressAreas_u8_arr)
+    bit STATB_MADE_PAR, [hl]
+    jr z, .noStars
+    ld a, "*"
+    ld [Vram_WindowMap + 1], a
+    ld [Vram_WindowMap + SCRN_X_B - 2], a
+    .noStars
+_WorldMapSetCurrentArea_SetAvatarPosition:
     ld a, [Ram_WorldMapCurrentArea_u8]
     ld c, a
     xcall FuncX_LocationData_Get_hl
@@ -499,7 +513,7 @@ Func_WorldMapSetCurrentArea:
     ld a, [hl]
     ld [Ram_WorldMapAvatarY_u8], a
     call Func_WorldMapUpdateAvatarAndNextScroll
-    ;; Scroll the map.
+_WorldMapSetCurrentArea_ScrollMap:
     ld a, [Ram_WorldMapNextScrollX_u8]
     ldh [rSCX], a
     ld a, [Ram_WorldMapNextScrollY_u8]

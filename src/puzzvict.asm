@@ -80,7 +80,7 @@ _Victory_CheckForNewRecord:
     ;; file.
     .recordNewRecord
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ASSERT NUM_PUZZLES < $100
+    ASSERT 2 * NUM_PUZZLES < $100
     rlca
     ldb bc, a
     ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr

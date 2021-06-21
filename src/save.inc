@@ -20,6 +20,27 @@
 ;;; The number of puzzles in the game:
 NUM_PUZZLES EQU 40
 
+;;; The number of puzzles in each area:
+NUM_FOREST_PUZZLES EQU 7
+NUM_FARM_PUZZLES EQU 5
+NUM_MOUNTAIN_PUZZLES EQU 6
+NUM_LAKE_PUZZLES EQU 5
+NUM_SEWER_PUZZLES EQU 6
+NUM_CITY_PUZZLES EQU 5
+NUM_SPACE_PUZZLES EQU 6
+
+;;; The puzzle number of the first puzzle in each area:
+FIRST_FOREST_PUZZLE EQU 0
+FIRST_FARM_PUZZLE EQU (FIRST_FOREST_PUZZLE + NUM_FOREST_PUZZLES)
+FIRST_MOUNTAIN_PUZZLE EQU (FIRST_FARM_PUZZLE + NUM_FARM_PUZZLES)
+FIRST_LAKE_PUZZLE EQU (FIRST_MOUNTAIN_PUZZLE + NUM_MOUNTAIN_PUZZLES)
+FIRST_SEWER_PUZZLE EQU (FIRST_LAKE_PUZZLE + NUM_LAKE_PUZZLES)
+FIRST_CITY_PUZZLE EQU (FIRST_SEWER_PUZZLE + NUM_SEWER_PUZZLES)
+FIRST_SPACE_PUZZLE EQU (FIRST_CITY_PUZZLE + NUM_CITY_PUZZLES)
+STATIC_ASSERT FIRST_SPACE_PUZZLE + NUM_SPACE_PUZZLES == NUM_PUZZLES
+
+;;;=========================================================================;;;
+
 ;;; The number of save files:
 NUM_SAVE_FILES EQU 3
 
@@ -65,7 +86,6 @@ sizeof_FILE                 RB 0
 RSRESET
 ;;; Percentage: The progress percentage for the file (0-100), encoded in BCD
 ;;;     for 0-99, or the special value HUNDRED_PERCENT_BCD8 for 100.
-ASSERT 2 * NUM_PUZZLES <= 99
 SAVE_Percentage_bcd8 RB 1
 ;;; Exists: 1 if this save file exists, or 0 if it's empty.
 SAVE_Exists_bool     RB 1

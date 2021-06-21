@@ -17,6 +17,7 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/areamap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
@@ -37,8 +38,15 @@ ASSERT NUM_SAVE_FILES == 3
 
 SECTION "Progress", WRAM0, ALIGN[8]
 
+;;; The active game progress file.
 Ram_Progress_file::
     DS sizeof_FILE
+
+;;; Status flags for each area, calculated from Ram_Progress_file.  Each entry
+;;; in this array uses the STATB_* constants, and is the bitwise AND of the
+;;; statuses (from FILE_PuzzleStatus_u8_arr) of all puzzles in that area.
+Ram_ProgressAreas_u8_arr::
+    DS NUM_AREAS
 
 ;;;=========================================================================;;;
 
@@ -69,11 +77,13 @@ Func_LoadFile::
     inc hl
     bit 0, [hl]
     jr z, _LoadFile_NewGame
-    ;; Otherwise, load the save file in Ram_Progress_file.
+    ;; Otherwise, load the save file into Ram_Progress_file.
     call Func_GetSaveFilePtr_hl
-    ldw de, hl
-    ld hl, Ram_Progress_file
-    jr Func_SramFileTransfer
+    ldw de, hl  ; param: source
+    ld hl, Ram_Progress_file  ; param: destintation
+    call Func_SramFileTransfer
+    ;; Finish by updating Ram_ProgressAreas_u8_arr.
+    jp Func_UpdateProgressAreas
 
 _LoadFile_NewGame:
     ;; Set the current puzzle to the first one.
@@ -86,6 +96,13 @@ _LoadFile_NewGame:
     ld [hl+], a
     dec c
     jr nz, .statusLoop
+    ;; Mark all areas as unfinished.
+    ld c, NUM_AREAS
+    ld hl, Ram_ProgressAreas_u8_arr
+    .areaLoop
+    ld [hl+], a
+    dec c
+    jr nz, .areaLoop
     ;; Set all puzzle best scores to 999.
     ld c, NUM_PUZZLES
     ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
@@ -115,8 +132,8 @@ Func_SaveFile::
     ASSERT SAVE_Exists_bool == 1
     ld [hl], 1
     ;; Save the file to SRAM.
-    call Func_GetSaveFilePtr_hl
-    ld de, Ram_Progress_file
+    call Func_GetSaveFilePtr_hl  ; param: dest
+    ld de, Ram_Progress_file  ; param: source
     ;; fall through to Func_SramFileTransfer
 
 ;;; Copies a FILE struct to/from SRAM.
@@ -281,6 +298,32 @@ Func_GetSaveSummaryPtr_hl::
     ldb de, a
     ld hl, Ram_SaveSummaries_save_arr
     add hl, de
+    ret
+
+;;;=========================================================================;;;
+
+UPDATE_AREA: MACRO
+    STATIC_ASSERT _NARG == 2
+    ld c, (\2)
+    ld a, $ff
+    .loop\@
+    and [hl]
+    inc hl
+    dec c
+    jr nz, .loop\@
+    ld [Ram_ProgressAreas_u8_arr + (\1)], a
+ENDM
+
+;;; Regenerates Ram_ProgressAreas_u8_arr from Ram_Progress_file.
+Func_UpdateProgressAreas::
+    ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr
+    UPDATE_AREA AREA_FOREST, NUM_FOREST_PUZZLES
+    UPDATE_AREA AREA_FARM, NUM_FARM_PUZZLES
+    UPDATE_AREA AREA_MOUNTAIN, NUM_MOUNTAIN_PUZZLES
+    UPDATE_AREA AREA_LAKE, NUM_LAKE_PUZZLES
+    UPDATE_AREA AREA_SEWER, NUM_SEWER_PUZZLES
+    UPDATE_AREA AREA_CITY, NUM_CITY_PUZZLES
+    UPDATE_AREA AREA_SPACE, NUM_SPACE_PUZZLES
     ret
 
 ;;;=========================================================================;;;

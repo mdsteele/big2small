@@ -27,27 +27,6 @@ INCLUDE "src/tileset.inc"
 
 ;;;=========================================================================;;;
 
-;;; The number of puzzles in each area:
-NUM_FOREST_PUZZLES EQU 7
-NUM_FARM_PUZZLES EQU 5
-NUM_MOUNTAIN_PUZZLES EQU 6
-NUM_LAKE_PUZZLES EQU 5
-NUM_SEWER_PUZZLES EQU 6
-NUM_CITY_PUZZLES EQU 5
-NUM_SPACE_PUZZLES EQU 6
-
-;;; The puzzle number of the first puzzle in each area:
-FIRST_FOREST_PUZZLE EQU 0
-FIRST_FARM_PUZZLE EQU (FIRST_FOREST_PUZZLE + NUM_FOREST_PUZZLES)
-FIRST_MOUNTAIN_PUZZLE EQU (FIRST_FARM_PUZZLE + NUM_FARM_PUZZLES)
-FIRST_LAKE_PUZZLE EQU (FIRST_MOUNTAIN_PUZZLE + NUM_MOUNTAIN_PUZZLES)
-FIRST_SEWER_PUZZLE EQU (FIRST_LAKE_PUZZLE + NUM_LAKE_PUZZLES)
-FIRST_CITY_PUZZLE EQU (FIRST_SEWER_PUZZLE + NUM_SEWER_PUZZLES)
-FIRST_SPACE_PUZZLE EQU (FIRST_CITY_PUZZLE + NUM_CITY_PUZZLES)
-ASSERT FIRST_SPACE_PUZZLE + NUM_SPACE_PUZZLES == NUM_PUZZLES
-
-;;;=========================================================================;;;
-
 ;;; Declares a 3-byte banked pointer to the given label.
 ;;;
 ;;; Example:
