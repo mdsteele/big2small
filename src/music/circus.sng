@@ -1,4 +1,4 @@
-!SONG "Circus" "A|BCDE"
+!SONG "Circus" "A|B"
 =tempo q30
 =key 4#  % E major
 
@@ -13,33 +13,16 @@
 
 !PART B
 
-1| e3q3 b2e3 ' e3q3 b2e3 ' e3q3 b2e3 ' e3q3 b2e3 |
- | d3q3 b2e3 ' d3q3 b2e3 ' d3q3 b2e3 ' d3q3 b2e3 |
+1|: e3q3 b2e3 :4|: d3q3 b2e3 :4|
 2| e4q ' b3q ' gq3 ee3+ ' +q3 b3e3+ | +h+ ' +q3 c4e3 ' dq3 ee3 |
-4| xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |
- | xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |
+4|: xHq ' xHq3 xHe3 :16|
 
-!PART C
-
-1| f3q3 b2e3 ' f3q3 b2e3 ' f3q3 b2e3 ' f3q3 b2e3 |
- | e3q3 b2e3 ' e3q3 b2e3 ' e3q3 b2e3 ' e3q3 b2e3 |
+1|: f3q3 b2e3 :4|: e3q3 b2e3 :4|
 2| f4q ' dq ' b3q3 f4e3+ ' +q3 e4e3+ | +h+ ' +q3 a4e3 ' aq3 ae3 |
-4| xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |
- | xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |
 
-!PART D
-
-1| a3q3 e3e3 ' a3q3 e3e3 ' a3q3 e3e3 ' a3q3 ' e3e3 |
- | g3q3 e3e3 ' g3q3 e3e3 ' g3q3 e3e3 ' g3q3 ' e3e3 |
+1|: a3q3 e3e3 :4|: g3q3 e3e3 :4|
 2| a4q3 a3e3 ' aq3 ae3 ' aq3 a4e3 ' aq3 ae3 |
  | g4q3 g3e3 ' gq3 ge3 ' gq3 g4e3 ' gq3 ge3 |
-4| xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |
- | xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |
 
-!PART E
-
-1| f3q3 b2e3 f3q3 b2e3 f3q3 b2e3 f3q3 b2e3 |
- | e3q3 b2e3 c3q3 d3e3 e3q3 '
+1|: f3q3 b2e3 :4| e3q3 b2e3 c3q3 d3e3 e3q3 '
 2| f4q ' dq ' b3q3 f4e3+ ' +q3 e4e3+ | +h+ ' +q3 b3e3 ' c4q3 de3 |
-4| xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |
- | xHq ' xHq3 xHe3 ' xHq ' xHq3 xHe3 |

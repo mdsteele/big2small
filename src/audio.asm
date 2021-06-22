@@ -46,6 +46,8 @@ CHAN_NextSfx_ptr     RW 1
 ;;; NextNote: A pointer to the *next* note to be played on this channel (not
 ;;;   the note currently playing).
 CHAN_NextNote_ptr    RW 1
+;;; ReptCount: How many times in a row we have jumped back for a REPT note.
+CHAN_ReptCount_u8    RB 1
 ;;; NoteFrames: The number of frames remaining for the note that's currently
 ;;;   playing (if any).
 CHAN_NoteFrames_u8   RB 1
@@ -157,6 +159,10 @@ Func_MusicStart::
     xor a
     ld [Ram_MusicActiveChannels_u8], a
     ld [Ram_MusicFlag_bool], a
+    ld [Ram_AudioCh1_chan + CHAN_ReptCount_u8], a
+    ld [Ram_AudioCh2_chan + CHAN_ReptCount_u8], a
+    ld [Ram_AudioCh3_chan + CHAN_ReptCount_u8], a
+    ld [Ram_AudioCh4_chan + CHAN_ReptCount_u8], a
     ret
 
 ;;;=========================================================================;;;
@@ -436,6 +442,8 @@ _MusicStartNoteCh1_Decode:
     jr z, _MusicStartNoteCh1_NoteRestOrHalt
     bit 6, a
     jr z, _MusicStartNoteCh1_NoteInst
+    bit 4, a
+    jr nz, _MusicStartNoteCh1_NoteRept
     ;; Play note (if the channel is not busy with a sound effect):
     ld b, a
     ld a, [Ram_AudioCh1_chan + CHAN_SfxFrames_u8]
@@ -491,6 +499,26 @@ _MusicStartNoteCh1_NoteInst:
     ;; Begin the next note immediately.
     pop hl
     jr _MusicStartNoteCh1_Decode
+_MusicStartNoteCh1_NoteRept:
+    ;; Store the signed byte offset in bc (n.b. the offset is BIG-endian).
+    ld b, a
+    ld a, [hl+]
+    ld c, a
+    ;; Store the repeat count for this REPT in d.
+    ld a, [hl+]
+    ld d, a
+    ;; If we haven't repeated enough times yet, jump back.
+    ld a, [Ram_AudioCh1_chan + CHAN_ReptCount_u8]
+    if_ge d, jr, .noJump
+    inc a
+    ld [Ram_AudioCh1_chan + CHAN_ReptCount_u8], a
+    add hl, bc
+    jr _MusicStartNoteCh1_Decode
+    ;; Otherwise, reset ReptCount and proceed without jumping.
+    .noJump
+    xor a
+    ld [Ram_AudioCh1_chan + CHAN_ReptCount_u8], a
+    jr _MusicStartNoteCh1_Decode
 _MusicStartNoteCh1_NoteRestOrHalt:
     ;; Store the rest duration in d.
     ld d, a
@@ -541,6 +569,8 @@ _MusicStartNoteCh2_Decode:
     jr z, _MusicStartNoteCh2_NoteRestOrHalt
     bit 6, a
     jr z, _MusicStartNoteCh2_NoteInst
+    bit 4, a
+    jr nz, _MusicStartNoteCh2_NoteRept
     ;; Play note:
     ld b, a
     ld a, [Ram_AudioCh2_chan + CHAN_Instrument_inst + INST_Envelope_u8]
@@ -585,6 +615,26 @@ _MusicStartNoteCh2_NoteInst:
     ld [Ram_AudioCh2_chan + CHAN_Instrument_inst + INST_Shape + 0], a
     ;; Begin the next note immediately.
     pop hl
+    jr _MusicStartNoteCh2_Decode
+_MusicStartNoteCh2_NoteRept:
+    ;; Store the signed byte offset in bc (n.b. the offset is BIG-endian).
+    ld b, a
+    ld a, [hl+]
+    ld c, a
+    ;; Store the repeat count for this REPT in d.
+    ld a, [hl+]
+    ld d, a
+    ;; If we haven't repeated enough times yet, jump back.
+    ld a, [Ram_AudioCh2_chan + CHAN_ReptCount_u8]
+    if_ge d, jr, .noJump
+    inc a
+    ld [Ram_AudioCh2_chan + CHAN_ReptCount_u8], a
+    add hl, bc
+    jr _MusicStartNoteCh2_Decode
+    ;; Otherwise, reset ReptCount and proceed without jumping.
+    .noJump
+    xor a
+    ld [Ram_AudioCh2_chan + CHAN_ReptCount_u8], a
     jr _MusicStartNoteCh2_Decode
 _MusicStartNoteCh2_NoteRestOrHalt:
     ;; Store the rest duration in d.
@@ -631,6 +681,8 @@ _MusicStartNoteCh3_Decode:
     jr z, _MusicStartNoteCh3_NoteRestOrHalt
     bit 6, a
     jr z, _MusicStartNoteCh3_NoteInst
+    bit 4, a
+    jr nz, _MusicStartNoteCh3_NoteRept
     ;; Play note:
     ld b, a
     xor a
@@ -691,6 +743,26 @@ _MusicStartNoteCh3_NoteInst:
     ;; Begin the next note immediately.
     pop hl
     jr _MusicStartNoteCh3_Decode
+_MusicStartNoteCh3_NoteRept:
+    ;; Store the signed byte offset in bc (n.b. the offset is BIG-endian).
+    ld b, a
+    ld a, [hl+]
+    ld c, a
+    ;; Store the repeat count for this REPT in d.
+    ld a, [hl+]
+    ld d, a
+    ;; If we haven't repeated enough times yet, jump back.
+    ld a, [Ram_AudioCh3_chan + CHAN_ReptCount_u8]
+    if_ge d, jr, .noJump
+    inc a
+    ld [Ram_AudioCh3_chan + CHAN_ReptCount_u8], a
+    add hl, bc
+    jr _MusicStartNoteCh3_Decode
+    ;; Otherwise, reset ReptCount and proceed without jumping.
+    .noJump
+    xor a
+    ld [Ram_AudioCh3_chan + CHAN_ReptCount_u8], a
+    jr _MusicStartNoteCh3_Decode
 _MusicStartNoteCh3_NoteRestOrHalt:
     ;; Store the rest duration in d.
     ld d, a
@@ -736,6 +808,8 @@ _MusicStartNoteCh4_Decode:
     jr z, _MusicStartNoteCh4_NoteRestOrHalt
     bit 6, a
     jr z, _MusicStartNoteCh4_NoteInst
+    bit 4, a
+    jr nz, _MusicStartNoteCh4_NoteRept
     ;; Play note (if the channel is not busy with a sound effect):
     ld b, a
     ld a, [Ram_AudioCh4_chan + CHAN_SfxFrames_u8]
@@ -779,6 +853,26 @@ _MusicStartNoteCh4_NoteInst:
     ld [Ram_AudioCh4_chan + CHAN_Instrument_inst + INST_Effect_u8], a
     ;; Begin the next note immediately.
     pop hl
+    jr _MusicStartNoteCh4_Decode
+_MusicStartNoteCh4_NoteRept:
+    ;; Store the signed byte offset in bc (n.b. the offset is BIG-endian).
+    ld b, a
+    ld a, [hl+]
+    ld c, a
+    ;; Store the repeat count for this REPT in d.
+    ld a, [hl+]
+    ld d, a
+    ;; If we haven't repeated enough times yet, jump back.
+    ld a, [Ram_AudioCh4_chan + CHAN_ReptCount_u8]
+    if_ge d, jr, .noJump
+    inc a
+    ld [Ram_AudioCh4_chan + CHAN_ReptCount_u8], a
+    add hl, bc
+    jr _MusicStartNoteCh4_Decode
+    ;; Otherwise, reset ReptCount and proceed without jumping.
+    .noJump
+    xor a
+    ld [Ram_AudioCh4_chan + CHAN_ReptCount_u8], a
     jr _MusicStartNoteCh4_Decode
 _MusicStartNoteCh4_NoteRestOrHalt:
     ;; Store the rest duration in d.

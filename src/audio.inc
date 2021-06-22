@@ -95,6 +95,10 @@ RSRESET
 ;;;     - SAME (2 bytes) [%11100xxx %yyyyyyyy].  Plays a tone with frequency
 ;;;       value %xxxyyyyyyyy (0-2047) for the same number of frames as the most
 ;;;       recent TONE note.
+;;;     - REPT (3 bytes) [%1111xxxx %yyyyyyyy %zzzzzzzz].  Jumps the channel's
+;;;       next-note pointer by %1111xxxxyyyyyyyy bytes (a negative signed
+;;;       big-endian value) from the end of this note, and do so %zzzzzzzz
+;;;       times before proceeding (thus playing that section Z+1 times).
 SECT_Notes1_ptr RW 1
 ;;; Notes2: Stores a pointer to the note sequence for ch2 (using the same note
 ;;;   decoding scheme as ch1).
@@ -104,7 +108,7 @@ SECT_Notes2_ptr RW 1
 SECT_Notes3_ptr RW 1
 ;;; Notes4: Stores a pointer to the note sequence for ch4.  The note decoding
 ;;;   scheme is as follows:
-;;;     - HALT/REST/INST: Same as for ch1, ch2, and ch3.
+;;;     - HALT/REST/INST/REPT: Same as for ch1, ch2, and ch3.
 ;;;     - TONE (2 bytes) [%11000000 %zzzzzzzz].  Plays a sound for %zzzzzzzz
 ;;;       frames (1-255).
 ;;;     - SAME (1 byte) [%11100000].  Plays a sound for the same number of

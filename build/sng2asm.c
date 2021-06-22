@@ -61,6 +61,7 @@ typedef struct {
     NOTE_REST = 0,
     NOTE_INST,
     NOTE_TONE,
+    NOTE_REPT,
   } kind;
   unsigned char frames;
   unsigned short value;
@@ -71,6 +72,8 @@ typedef struct {
   sng_note_t *notes;
   int num_bytes;
   unsigned char *bytes;
+  int in_repeat_loop; // 0 or 1
+  int repeat_start_index;
 } sng_channel_t;
 
 typedef struct {
@@ -225,8 +228,10 @@ static void finish_current_song(void) {
       channel->bytes = calloc((channel->num_notes + 1), MAX_BYTES_PER_NOTE);
       int byte_index = 0;
       int last_duration = -1;
+      int *note_index_to_byte_index = calloc(channel->num_notes, sizeof(int));
       for (int n = 0; n < channel->num_notes; ++n) {
-        sng_note_t *note = &channel->notes[n];
+        note_index_to_byte_index[n] = byte_index;
+        const sng_note_t *note = &channel->notes[n];
         switch (note->kind) {
           case NOTE_REST: {
             int remaining_frames = note->frames;
@@ -240,8 +245,8 @@ static void finish_current_song(void) {
             channel->bytes[byte_index++] = 0x80 | note->value;
             break;
           case NOTE_TONE: {
-            int same = note->frames == last_duration;
-            int bits = same ? 0xe0 : 0xc0;
+            const int same = note->frames == last_duration;
+            const int bits = same ? 0xe0 : 0xc0;
             last_duration = note->frames;
             if (c == 3) {
               channel->bytes[byte_index++] = bits;
@@ -253,8 +258,23 @@ static void finish_current_song(void) {
               channel->bytes[byte_index++] = note->frames;
             }
           } break;
+          case NOTE_REPT: {
+            const int dest_note_index = n - note->value;
+            assert(dest_note_index >= 0);
+            assert(dest_note_index < n);
+            const int dest_byte_index =
+              note_index_to_byte_index[dest_note_index];
+            const int origin_byte_index = byte_index + 3;
+            const int byte_offset = dest_byte_index - origin_byte_index;
+            assert(byte_offset < 0);
+            assert(byte_offset >= -origin_byte_index);
+            channel->bytes[byte_index++] = (byte_offset & 0xff00) >> 8;
+            channel->bytes[byte_index++] = (byte_offset & 0x00ff);
+            channel->bytes[byte_index++] = note->frames;
+          } break;
         }
       }
+      free(note_index_to_byte_index);
       channel->bytes[byte_index++] = 0;
       channel->num_bytes = byte_index;
     }
@@ -268,6 +288,7 @@ static sng_note_t *next_note(void) {
   sng_song_t *song = &parser.songs[parser.num_songs - 1];
   assert(parser.current_part >= 0);
   sng_part_t *part = &song->parts[parser.current_part];
+  assert(part->channels != NULL);
   assert(parser.current_channel >= 0);
   sng_channel_t *channel = &part->channels[parser.current_channel];
   if (channel->notes == NULL) {
@@ -414,6 +435,31 @@ static int read_signed_int(void) {
       PARSE_ERROR("invalid sign char: '%c'\n", parser.current_char);
   }
   return sign * read_unsigned_int();
+}
+
+/*===========================================================================*/
+
+static void toggle_repeat(void) {
+  if (parser.current_channel < 0) {
+    PARSE_ERROR("can't perform a repeat before setting the channel\n");
+  }
+  assert(parser.num_songs > 0);
+  sng_song_t *song = &parser.songs[parser.num_songs - 1];
+  assert(parser.current_part >= 0);
+  sng_part_t *part = &song->parts[parser.current_part];
+  sng_channel_t *channel = &part->channels[parser.current_channel];
+  if (!channel->in_repeat_loop) {
+    channel->repeat_start_index = channel->num_notes;
+    channel->in_repeat_loop = 1;
+  } else {
+    const int repeat_count = read_unsigned_int() - 1;
+    const int note_index = channel->num_notes;
+    sng_note_t *note = next_note();
+    note->kind = NOTE_REPT;
+    note->frames = repeat_count;
+    note->value = note_index - channel->repeat_start_index;
+    channel->in_repeat_loop = 0;
+  }
 }
 
 /*===========================================================================*/
@@ -707,6 +753,19 @@ static void parse_part_declaration(void) {
     PARSE_ERROR("can't declare a part outside of a song\n");
   }
   sng_song_t *song = &parser.songs[parser.num_songs - 1];
+  // Make sure there aren't any unterminated repeat loops in the part we just
+  // finished.
+  if (parser.current_part >= 0) {
+    sng_part_t *part = &song->parts[parser.current_part];
+    assert(part->channels != NULL);
+    for (int c = 0; c < NUM_CHANNELS; ++c) {
+      sng_channel_t *channel = &part->channels[c];
+      if (channel->in_repeat_loop) {
+        PARSE_ERROR("unterminated repeat loop for channel %d\n", c + 1);
+      }
+    }
+  }
+  // Read the name of the new part.
   while (next_char() == ' ') {}
   const char letter = parser.current_char;
   if (letter < 'A' || letter > 'Z') {
@@ -717,6 +776,7 @@ static void parse_part_declaration(void) {
   if (part->channels != NULL) {
     PARSE_ERROR("reused part name: '%c'\n", letter);
   }
+  // Initialize the new part.
   part->channels = calloc(NUM_CHANNELS, sizeof(sng_channel_t));
   part->index = -1;
   parser.current_part = part_number;
@@ -805,6 +865,7 @@ static void parse_input(void) {
           case 'r': start_tone(-1, -9, 9); break;
           case 'x': start_drum(); break;
           case '{': start_instrument(); break;
+          case ':': toggle_repeat(); break;
           case ' ': case '|': case '\'': break;
           case '\n': begin_line(); break;
           case EOF: goto eof;
