@@ -1,0 +1,52 @@
+!SONG "ForestGreen" "|AABC"
+=tempo q24
+=key 1b  % F major
+
+!DRUM H { E(13, -7) }
+
+!PART A
+
+1 { E(8, -4) D(3/4) }
+2 { E(10, -4) D(1/8) }
+
+1' rq |
+ | a2q3 f2e3 ' b2q ' c3q3 a2e3 ' g2q3 b2e3 |
+ | c3q ' f2q ' g2q ' f2q |
+ | b2q ' c3q ' d3q ' c3q3 b2e3 |
+ | f2q ' a2q ' f2q '
+2' rq3 c3e3 |
+ | f3q ' f ' f ' g |
+ | a3q3 ge3 ' aq3 be3 ' c4q ' a3 |
+ | b3q ' aq3 fe3 ' gq ' g |
+ | f3h. '
+4': xHq3 xHe3 ' xHq :8'
+
+!PART B
+
+2 { E(10, -6) D(1/2) }
+
+1' d3q |
+ | a2q ' b2q ' c3q ' d3q3 e3e3 |
+ | a3q ' f3q ' g3q ' e3q |
+ | a3q ' f3q ' d3q3 e3e3 ' d3q3 f3e3 |
+ | c3q ' e3q ' c3q '
+2' f4q3 ae3 |
+ | c5q+ ' +q3 de3 ' cq3 b4e3 ' aq3 ge3 |
+ | f4q3 ge3 ' aq3 be3 ' c5q ' c4 |
+ | f4q ' a ' g ' f |
+ | c4h. '
+4': xHq3 xHe3 ' xHq :8'
+
+!PART C
+
+1' rq |
+ | a2q3 f2e3 ' b2q ' c3q3 a2e3 ' g2q3 b2e3 |
+ | c3q ' f2q ' g2q ' f2q |
+ | b2q ' c3q ' d3q ' c3q3 b2e3 |
+ | f2q ' a2q ' f2q '
+2' rq3 c4e3 |
+ | f4q ' f ' f ' g |
+ | a4q3 ge3 ' aq3 be3 ' c5q ' a4 |
+ | b4q ' aq3 fe3 ' gq ' g |
+ | f4h. '
+4': xHq3 xHe3 ' xHq :8'

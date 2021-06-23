@@ -168,7 +168,7 @@ DataX_Forest2_puzz:
     DB W_TST, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_PNT, O_EMP, W_TST
     D_ANIM $11, DIRF_EAST
     DB W_TST, W_TTP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_ForestGreen_song
     DB W_TST, W_TTR, O_EMP, O_GRS, W_TST, W_TTP, O_EMP, W_FW1, W_FNS, W_FNS
     D_BPTR DataX_Forest2Intro_dlog
     DB W_TST, O_EMP, O_EMP, O_EMP, W_TTR, W_TTR, O_EMP, O_EMP, O_EMP, W_TTP
@@ -210,7 +210,7 @@ DataX_Forest4_puzz:
     DB W_FNS, W_FNS, W_FNS, W_FNS, W_FE1, O_EMP, W_TTR, O_EMP, O_EMP, W_TST
     D_ANIM $57, DIRF_WEST
     DB W_TTP, O_EMP, O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, G_CHS, O_EMP, W_TST
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_ForestGreen_song
     DB W_TST, O_EMP, G_PNT, W_RCK, O_EMP, O_GRS, W_TTP, W_RCK, S_BSH, W_TST
     D_BPTR DataX_Forest4Intro_dlog
     DB W_TST, O_EMP, O_EMP, O_EMP, W_FW1, W_FE1, W_TST, O_EMP, O_EMP, W_TTR
