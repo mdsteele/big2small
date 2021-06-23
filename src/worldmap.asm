@@ -225,7 +225,11 @@ _WorldMapCommand_CannotMove:
 
 _WorldMapCommand_FollowPath:
     ;; At this point, e is the area number offset (-1 for prev or 1 for next),
-    ;; and hl points to the path pointer.
+    ;; and hl points to the path pointer.  Hide the area title, then start the
+    ;; walking animation.
+    ldh a, [rLCDC]
+    and ~LCDCF_WINON
+    ldh [rLCDC], a
     deref hl  ; param: pointer to path
     jp Main_WorldMapWalk
 
@@ -381,6 +385,10 @@ _WorldMapWalk_Halt:
     ld a, [Ram_WorldMapDestinationArea_u8]
     ld c, a  ; param: area number
     call Func_WorldMapSetCurrentArea
+    ;; Show the area title.
+    ldh a, [rLCDC]
+    or LCDCF_WINON
+    ldh [rLCDC], a
     jp Main_WorldMapCommand
 
 ;;;=========================================================================;;;
