@@ -98,7 +98,7 @@ SECTION "WorldMapFunctions", ROM0
 
 ;;; @prereq LCD is off.
 ;;; @param c The current area (one of the AREA_* enum values).
-Main_WorldMapScreen::
+Func_WorldMapLoad:
     push bc
     ;; Set up avatar object.
     call Func_ClearOam
@@ -125,7 +125,7 @@ Main_WorldMapScreen::
     call Func_WorldMapSetCurrentArea
     xor a
     ld [Ram_WorldMapAnimationClock_u8], a
-_WorldMapScreen_LoadTileMap:
+_WorldMapLoad_LoadTileMap:
     ;; Load the colorset.
     ld c, COLORSET_SPRING  ; param: colorset
     xcall FuncX_Colorset_Load
@@ -139,7 +139,7 @@ _WorldMapScreen_LoadTileMap:
     ldh a, [Hram_ColorEnabled_bool]
     or a
     call nz, Func_LoadWorldMapColor
-_WorldMapScreen_SetUnlockedAreas:
+_WorldMapLoad_SetUnlockedAreas:
     ;; Determine which areas are unlocked.  We start by assuming that all areas
     ;; up to and including the current area are unlocked.  We'll use e to store
     ;; the furthest unlocked area so far.
@@ -173,7 +173,7 @@ _WorldMapScreen_SetUnlockedAreas:
     .areaDone
     ld a, e
     ld [Ram_WorldMapLastUnlockedArea_u8], a
-_WorldMapScreen_SetUpObjects:
+_WorldMapLoad_Finish:
     ;; Initialize music.
     PLAY_SONG DataX_RestYe_song
     ;; Set up window.
@@ -181,6 +181,12 @@ _WorldMapScreen_SetUpObjects:
     ldh [rWX], a
     ld a, SCRN_Y - 8
     ldh [rWY], a
+    ret
+
+;;; @prereq LCD is off.
+;;; @param c The current area (one of the AREA_* enum values).
+Main_WorldMapResume::
+    call Func_WorldMapLoad
     ;; Turn on the LCD and fade in.
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00
     call Func_FadeIn
@@ -243,18 +249,18 @@ _WorldMapCommand_CannotMove:
 
 _WorldMapCommand_FollowPath:
     ;; At this point, e is the area number offset (-1 for prev or 1 for next),
-    ;; and hl points to the path pointer.  First, hide the arrow objects.
+    ;; and hl points to the path pointer.  First, hide the area title.
+    ldh a, [rLCDC]
+    and ~LCDCF_WINON
+    ldh [rLCDC], a
+    ;; Hide the arrow objects.
     xor a
     ld [Ram_ArrowN_oama + OAMA_Y], a
     ld [Ram_ArrowS_oama + OAMA_Y], a
     ld [Ram_ArrowE_oama + OAMA_Y], a
     ld [Ram_ArrowW_oama + OAMA_Y], a
-    ;; Hide the area title.
-    ldh a, [rLCDC]
-    and ~LCDCF_WINON
-    ldh [rLCDC], a
     ;; Start the walking animation.
-    deref hl  ; param: pointer to path
+    deref hl  ; param: pointer to PATH struct
     jp Main_WorldMapWalk
 
 _WorldMapCommand_EnterArea:
@@ -265,6 +271,26 @@ _WorldMapCommand_EnterArea:
 
 ;;;=========================================================================;;;
 
+;;; @prereq LCD is off.
+Main_WorldMapNewGame::
+    ld c, AREA_FOREST  ; param: current area
+    call Func_WorldMapLoad
+    ;; Position the avatar.
+    ld a, 52
+    ld [Ram_WorldMapAvatarX_u8], a
+    ld a, 239
+    ld [Ram_WorldMapAvatarY_u8], a
+    call Func_WorldMapUpdateAvatarAndNextScroll
+    ld a, [Ram_WorldMapNextScrollX_u8]
+    ldh [rSCX], a
+    ld a, [Ram_WorldMapNextScrollY_u8]
+    ldh [rSCY], a
+    ;; Fade in and follow the initial path.
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WIN9C00
+    call Func_FadeIn
+    ld e, 0  ; param: area number delta
+    ld hl, DataX_LocationData_NewGame_path  ; param: pointer to PATH struct
+    ;; fall through to Main_WorldMapWalk
 
 ;;; Mode for making the avatar follow a path between locations on the world
 ;;; map.
@@ -451,7 +477,7 @@ _WorldMapUpdateAvatarAndNextScroll_X:
     ld c, a
     ld a, b
     sub c
-    sub 4
+    add 4
     ld [Ram_ElephantL_oama + OAMA_X], a
 _WorldMapUpdateAvatarAndNextScroll_Y:
     ld a, [Ram_WorldMapAvatarY_u8]
@@ -472,7 +498,6 @@ _WorldMapUpdateAvatarAndNextScroll_Y:
     ld c, a
     ld a, b
     sub c
-    sub 16
     ld [Ram_ElephantL_oama + OAMA_Y], a
     ret
 

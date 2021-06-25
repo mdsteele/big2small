@@ -74,6 +74,31 @@ PATH_WALK: MACRO
     ENDC
 ENDM
 
+;;; Emits path opcodes to jump with a given ground speed, staying airborne for
+;;; a given number of frames.
+;;;
+;;; Example:
+;;;     PATH_JUMP -1, 1, 30  ; Jumps with ground speed x=-1 y=1 for 30 frames.
+PATH_JUMP: MACRO
+    STATIC_ASSERT _NARG == 3
+    STATIC_ASSERT (\3) >= 1
+JUMP_D = 6  ; Smaller number means higher jumps
+JUMP_H = ((\3) / 2)
+JUMP_N = 0
+    REPT JUMP_H
+    PATH_STEP (\1), (\2) - (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+JUMP_N = (JUMP_N + 1)
+    ENDR
+    IF (\3) % 2 == 1
+    PATH_STEP (\1), (\2)
+    ENDC
+JUMP_N = (JUMP_H - 1)
+    REPT JUMP_H
+    PATH_STEP (\1), (\2) + (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+JUMP_N = (JUMP_N - 1)
+    ENDR
+ENDM
+
 ;;; Emits a HALT path opcode to mark the end of the path.
 ;;;
 ;;; Example:
@@ -103,43 +128,43 @@ FuncX_LocationData_Get_hl::
 DataX_LocationData_loca_arr:
     .begin
     ASSERT @ - .begin == sizeof_LOCA * AREA_FOREST
-    DB 80, 233     ; X, Y
+    DB 72, 217     ; X, Y
     DB 0           ; prev dir
     DB PADF_UP     ; next dir
     DW DataX_LocationData_Null_path
     DW DataX_LocationData_ForestToFarm_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_FARM
-    DB 67, 172     ; X, Y
+    DB 59, 156     ; X, Y
     DB PADF_DOWN   ; prev dir
     DB PADF_RIGHT  ; next dir
     DW DataX_LocationData_FarmToForest_path
     DW DataX_LocationData_FarmToMountain_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_MOUNTAIN
-    DB 128, 128    ; X, Y
+    DB 120, 112    ; X, Y
     DB PADF_LEFT   ; prev dir
     DB PADF_DOWN   ; next dir
     DW DataX_LocationData_MountainToFarm_path
     DW DataX_LocationData_MountainToLake_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_LAKE
-    DB 158, 207    ; X, Y
+    DB 150, 191    ; X, Y
     DB PADF_UP     ; prev dir
     DB PADF_RIGHT  ; next dir
     DW DataX_LocationData_LakeToMountain_path
     DW DataX_LocationData_LakeToSewer_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_SEWER
-    DB 224, 224    ; X, Y
+    DB 216, 208    ; X, Y
     DB PADF_LEFT   ; prev dir
     DB PADF_UP     ; next dir
     DW DataX_LocationData_SewerToLake_path
     DW DataX_LocationData_SewerToCity_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_CITY
-    DB 224, 128    ; X, Y
+    DB 216, 112    ; X, Y
     DB PADF_DOWN   ; prev dir
     DB PADF_UP     ; next dir
     DW DataX_LocationData_CityToSewer_path
     DW DataX_LocationData_CityToSpace_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_SPACE
-    DB 224, 48     ; X, Y
+    DB 216, 32     ; X, Y
     DB PADF_DOWN   ; prev dir
     DB 0           ; next dir
     DW DataX_LocationData_SpaceToCity_path
@@ -147,6 +172,27 @@ DataX_LocationData_loca_arr:
     ASSERT @ - .begin == sizeof_LOCA * NUM_AREAS
 
 DataX_LocationData_Null_path:
+    PATH_HALT
+
+DataX_LocationData_NewGame_path::
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 0, 0, 20
+    PATH_PSFX PSFX_JUMP
+    PATH_JUMP 0, 0, 30
+    PATH_PSFX PSFX_JUMP
+    PATH_JUMP 0, 0, 30
+    PATH_WALK 0, 0, 20
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 0, 4
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK 0, -1, 4
+    PATH_POBJ POBJ_NORTH | POBJF_UNDER
+    PATH_WALK 0, -1, 18
+    PATH_POBJ POBJ_EAST | POBJF_UNDER
+    PATH_WALK 1, 0, 8
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 0, 8
+    PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_ForestToFarm_path:
@@ -175,7 +221,6 @@ DataX_LocationData_FarmToMountain_path:
     PATH_HALT
 
 DataX_LocationData_MountainToFarm_path:
-    PATH_PSFX PSFX_JUMP
     ;; TODO
     PATH_HALT
 

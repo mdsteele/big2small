@@ -653,7 +653,7 @@ Main_AreaMapBackToWorldMap:
     call Func_FadeOut
     ld a, [Ram_AreaMapCurrentArea_u8]
     ld c, a  ; param: area number
-    jp Main_WorldMapScreen
+    jp Main_WorldMapResume
 
 ;;; Fades out the LCD and starts the puzzle for the current node.
 Main_AreaMapStartNextPuzzle:

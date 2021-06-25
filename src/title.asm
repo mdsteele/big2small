@@ -154,7 +154,12 @@ _TitleScreen_LoadFile:
     ld a, [Ram_TitleMenuItem_u8]
     ld b, a  ; param: save file number
     call Func_LoadFile
-    ;; TODO: Go to world map instead if file is empty.
+    ;; If the first puzzle is still locked, this was an empty file, so we
+    ;; should start on the world map.
+    ld hl, Ram_Progress_file + FILE_PuzzleStatus_u8_arr + 0
+    bit STATB_UNLOCKED, [hl]
+    jp z, Main_WorldMapNewGame
+    ;; Otherwise, start on the current area map.
     ld c, 0  ; param: puzzle status
     jp Main_AreaMapResume
 

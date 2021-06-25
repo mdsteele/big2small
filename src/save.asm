@@ -116,7 +116,7 @@ _LoadFile_NewGame:
     ;; Mark the file as existent.
     ld a, MAGIC_FILE_EXISTS
     ld [Ram_Progress_file + FILE_Magic_u8], a
-    ;; fall through to Func_SaveFile
+    ret
 
 ;;; Saves Ram_Progress_file to the current save file in SRAM.
 Func_SaveFile::
