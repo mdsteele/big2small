@@ -32,8 +32,8 @@ TRAIL_TILEID EQU $83
 AVATAR_PALETTE EQU (OAMF_PAL0 | 1)
 
 AVATAR_S1_TILEID EQU $68
-AVATAR_N1_TILEID EQU $6a
-AVATAR_W1_TILEID EQU $6c
+AVATAR_N1_TILEID EQU $6c
+AVATAR_W1_TILEID EQU $70
 
 ;;; The number of delay frames between each trail tick when animating drawing
 ;;; a trail.
@@ -125,7 +125,7 @@ SECTION "MainAreaMap", ROM0
 Main_AreaMapEnter::
     call Func_LoadAreaMap
     ;; Turn on the LCD and fade in.
-    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8  ; param: display flags
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
     ;; Unlock the first node if needed.
     ld c, 0  ; param: node index
@@ -193,7 +193,7 @@ _AreaMapResume_LoadArea:
     ld a, TRAIL_SOUTH
     ld [Ram_AreaMapAvatarFacing_u8], a
     ;; Turn on the LCD and fade in.
-    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8  ; param: display flags
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
     pop bc
 _AreaMapResume_CheckIfSolved:
@@ -885,7 +885,7 @@ Func_UpdateAreaMapAvatarObj:
     ld a, [Ram_AreaMapAvatarRow_u8]
     swap a
     rrca
-    add 13
+    add 5
     sub d
     ld [Ram_ElephantL_oama + OAMA_Y], a
     ;; Set X position:
@@ -900,6 +900,7 @@ Func_UpdateAreaMapAvatarObj:
     ld a, [Ram_AreaMapAnimationClock_u8]
     and %00010000
     swap a
+    rlca
     add c
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
     ;; Set flags:

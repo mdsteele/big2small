@@ -29,8 +29,11 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
+ARROW_PALETTE  EQU (OAMF_PAL1 | 0)
 AVATAR_PALETTE EQU (OAMF_PAL0 | 1)
 
+ARROW_NS_TILEID EQU $48
+ARROW_EW_TILEID EQU $4c
 AVATAR_INITIAL_TILEID EQU $68
 
 RSRESET
@@ -96,15 +99,29 @@ SECTION "WorldMapFunctions", ROM0
 ;;; @prereq LCD is off.
 ;;; @param c The current area (one of the AREA_* enum values).
 Main_WorldMapScreen::
-    ;; Set up avatar obj.
     push bc
+    ;; Set up avatar object.
     call Func_ClearOam
     ld a, AVATAR_INITIAL_TILEID
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
     ld a, AVATAR_PALETTE
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
-    pop bc
+    ;; Set up arrow objects.
+    ld a, ARROW_PALETTE
+    ld [Ram_ArrowN_oama + OAMA_FLAGS], a
+    ld [Ram_ArrowE_oama + OAMA_FLAGS], a
+    ld a, ARROW_PALETTE | OAMF_XFLIP
+    ld [Ram_ArrowW_oama + OAMA_FLAGS], a
+    ld a, ARROW_PALETTE | OAMF_YFLIP
+    ld [Ram_ArrowS_oama + OAMA_FLAGS], a
+    ld a, ARROW_NS_TILEID
+    ld [Ram_ArrowN_oama + OAMA_TILEID], a
+    ld [Ram_ArrowS_oama + OAMA_TILEID], a
+    ld a, ARROW_EW_TILEID
+    ld [Ram_ArrowE_oama + OAMA_TILEID], a
+    ld [Ram_ArrowW_oama + OAMA_TILEID], a
     ;; Initialize state.
+    pop bc
     call Func_WorldMapSetCurrentArea
     xor a
     ld [Ram_WorldMapAnimationClock_u8], a
@@ -165,15 +182,16 @@ _WorldMapScreen_SetUpObjects:
     ld a, SCRN_Y - 8
     ldh [rWY], a
     ;; Turn on the LCD and fade in.
-    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8 | LCDCF_WINON | LCDCF_WIN9C00
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00
     call Func_FadeIn
     ;; fall through to Main_WorldMapCommand
 
 ;;; Animates the map while waiting for the player to press a button, then takes
 ;;; appropriate action.
 Main_WorldMapCommand:
-    call Func_UpdateAudio
+    call Func_WorldMapUpdateArrowObjects
     call Func_WorldMapAnimateAvatar
+    call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_WorldMapAnimateTiles
     call Func_UpdateButtonState
@@ -225,11 +243,17 @@ _WorldMapCommand_CannotMove:
 
 _WorldMapCommand_FollowPath:
     ;; At this point, e is the area number offset (-1 for prev or 1 for next),
-    ;; and hl points to the path pointer.  Hide the area title, then start the
-    ;; walking animation.
+    ;; and hl points to the path pointer.  First, hide the arrow objects.
+    xor a
+    ld [Ram_ArrowN_oama + OAMA_Y], a
+    ld [Ram_ArrowS_oama + OAMA_Y], a
+    ld [Ram_ArrowE_oama + OAMA_Y], a
+    ld [Ram_ArrowW_oama + OAMA_Y], a
+    ;; Hide the area title.
     ldh a, [rLCDC]
     and ~LCDCF_WINON
     ldh [rLCDC], a
+    ;; Start the walking animation.
     deref hl  ; param: pointer to path
     jp Main_WorldMapWalk
 
@@ -322,7 +346,7 @@ _WorldMapWalk_ObjOrSound:
     jr nz, _WorldMapWalk_Sound
 _WorldMapWalk_Obj:
     ;; At this point, a holds %10uftttt.  We need to use %u and %f to set the
-    ;; avatar's obj flags, and use %tttt to pick a tile ID.
+    ;; avatar's object flags, and use %tttt to pick a tile ID.
     ld b, a
     ld a, AVATAR_PALETTE
     bit POBJB_UNDER, b
@@ -336,6 +360,7 @@ _WorldMapWalk_Obj:
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
     ld a, b
     and %00001111
+    rlca
     rlca
     add AVATAR_INITIAL_TILEID
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
@@ -422,7 +447,7 @@ _WorldMapUpdateAvatarAndNextScroll_X:
     sub SCRN_X / 2
     .setPos
     ld [Ram_WorldMapNextScrollX_u8], a
-    ;; Set X-position for avatar obj.
+    ;; Set X-position for avatar object.
     ld c, a
     ld a, b
     sub c
@@ -443,11 +468,11 @@ _WorldMapUpdateAvatarAndNextScroll_Y:
     sub SCRN_Y / 2
     .setPos
     ld [Ram_WorldMapNextScrollY_u8], a
-    ;; Set Y-position for avatar obj.
+    ;; Set Y-position for avatar object.
     ld c, a
     ld a, b
     sub c
-    sub 8
+    sub 16
     ld [Ram_ElephantL_oama + OAMA_Y], a
     ret
 
@@ -457,11 +482,92 @@ Func_WorldMapAnimateAvatar:
     ld a, [Ram_WorldMapAnimationClock_u8]
     and %00010000
     swap a
+    rlca
     ld b, a
     ld a, [Ram_ElephantL_oama + OAMA_TILEID]
-    and %11111110
+    and %11111100
     or b
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    ret
+
+;;; Updates the X/Y positions of the arrow objects.
+Func_WorldMapUpdateArrowObjects:
+    ;; Blink the arrows by forcing d (the set of arrows to display) to zero
+    ;; for half of all frames.
+    ld d, 0
+    ld a, [Ram_WorldMapAnimationClock_u8]
+    and %00010000
+    jr z, .updateArrows
+    ;; Set c to the current area number (it will be used as a parameter for
+    ;; FuncX_LocationData_Get_hl below).
+    ld a, [Ram_WorldMapCurrentArea_u8]
+    ld c, a
+    ;; Set b to 1 if we're able to go to the next area, 0 otherwise.
+    ld b, 0
+    ld a, [Ram_WorldMapLastUnlockedArea_u8]
+    if_eq c, jr, .cannotNext
+    ld b, 1
+    .cannotNext
+    ;; Store the D-pad directions that the avatar can move in d.
+    push bc
+    xcall FuncX_LocationData_Get_hl
+    pop bc
+    inc hl
+    inc hl
+    ASSERT LOCA_PrevDir_u8 == 2
+    ld a, [hl+]
+    bit 0, b
+    jr z, .skipNextDir
+    ASSERT LOCA_NextDir_u8 == 3
+    or [hl]
+    .skipNextDir
+    ld d, a
+    ;; Store the avatar object's left in c and top in b.
+    ld a, [Ram_ElephantL_oama + OAMA_X]
+    ld [Ram_ArrowN_oama + OAMA_X], a
+    ld [Ram_ArrowS_oama + OAMA_X], a
+    ld c, a
+    ld a, [Ram_ElephantL_oama + OAMA_Y]
+    ld b, a
+    .updateArrows
+_WorldMapUpdateArrowObjects_North:
+    xor a
+    bit PADB_UP, d
+    jr z, .noMove
+    ld a, b
+    sub 12
+    .noMove
+    ld [Ram_ArrowN_oama + OAMA_Y], a
+_WorldMapUpdateArrowObjects_South:
+    xor a
+    bit PADB_DOWN, d
+    jr z, .noMove
+    ld a, b
+    add 20
+    .noMove
+    ld [Ram_ArrowS_oama + OAMA_Y], a
+_WorldMapUpdateArrowObjects_East:
+    xor a
+    bit PADB_RIGHT, d
+    jr z, .noMove
+    ld a, c
+    add 12
+    ld [Ram_ArrowE_oama + OAMA_X], a
+    ld a, b
+    add 4
+    .noMove
+    ld [Ram_ArrowE_oama + OAMA_Y], a
+_WorldMapUpdateArrowObjects_West:
+    xor a
+    bit PADB_LEFT, d
+    jr z, .noMove
+    ld a, c
+    sub 12
+    ld [Ram_ArrowW_oama + OAMA_X], a
+    ld a, b
+    add 4
+    .noMove
+    ld [Ram_ArrowW_oama + OAMA_Y], a
     ret
 
 ;;; Increments Ram_WorldMapAnimationClock_u8 and updates animated terrain in

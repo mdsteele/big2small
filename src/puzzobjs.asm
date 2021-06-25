@@ -692,9 +692,15 @@ Func_AnimatePuzzleTerrain::
 ;;;=========================================================================;;;
 
 SECTION "GoatLeapTable", ROM0, ALIGN[5]
+
 Data_GoatHopTable:
+    .begin
     DB 0, 2, 3, 4, 4, 4, 3, 2, 0
+    ASSERT HIGH(@) == HIGH(.begin)
+
 Data_GoatLeapTable:
+    .begin
     DB 0, 2, 4, 5, 6, 7, 8, 8, 8, 8, 8, 7, 6, 5, 4, 2, 0
+    ASSERT HIGH(@) == HIGH(.begin)
 
 ;;;=========================================================================;;;
