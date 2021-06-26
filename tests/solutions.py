@@ -78,6 +78,7 @@ SOLUTIONS = {
     'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
     'Space1': ('EsGnenwnEenwnenGeEsenMwGssMswnGnenEwnsenMswswnenwnGnwsw'
                'MenwsesGeMnwGsMe'),
+    'SpaceBonusA': 'MsEneseswGwseEeGsEwGneMnwGseEsGwseEneMsGwnesMenwEwMsen',
     'Space3': ('GesenesMnwesEenesGeMsenEesGwMseGeneEneswneMwneEnwnwGswnwsEsGw'
                'EnenenwsesMeEnMwsEwswnMnen'),
     'SpaceBonusB': ('GeEwsenenwnenMeseEseswswsenMnsEsMensEwnMwsenwGnEse'
