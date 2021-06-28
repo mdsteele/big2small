@@ -234,18 +234,18 @@ _PuzzleCommand_CannotMove:
 
 ;;; If Ram_TerrainCellToUpdate_u8 is not NO_CELL_TO_UPDATE, updates VRAM with
 ;;; the terrain type for that position.  Either way, also calls
-;;; Func_AnimatePuzzleTerrain.
+;;; Func_AnimateTiles.
 Func_UpdatePuzzleTerrain:
     ;; Update terrain cell if needed:
     ld a, [Ram_TerrainCellToUpdate_u8]
-    if_eq NO_CELL_TO_UPDATE, jp, Func_AnimatePuzzleTerrain
+    if_eq NO_CELL_TO_UPDATE, jp, Func_AnimateTiles
     ASSERT LOW(Ram_PuzzleState_puzz) == 0
     ld d, HIGH(Ram_PuzzleState_puzz)
     ld e, a
     call Func_LoadTerrainCellIntoVram
     ld a, NO_CELL_TO_UPDATE
     ld [Ram_TerrainCellToUpdate_u8], a
-    jp Func_AnimatePuzzleTerrain
+    jp Func_AnimateTiles
 
 ;;;=========================================================================;;;
 

@@ -52,11 +52,6 @@ ENDM
 
 SECTION "WorldMapState", WRAM0
 
-;;; A counter that is incremented once per frame and that can be used to drive
-;;; looping animations.
-Ram_WorldMapAnimationClock_u8:
-    DB
-
 ;;; The currently selected area (one of the AREA_* enum values).
 Ram_WorldMapCurrentArea_u8:
     DB
@@ -124,7 +119,7 @@ Func_WorldMapLoad:
     pop bc
     call Func_WorldMapSetCurrentArea
     xor a
-    ld [Ram_WorldMapAnimationClock_u8], a
+    ld [Ram_AnimationClock_u8], a
 _WorldMapLoad_LoadTileMap:
     ;; Load the colorset.
     ld c, COLORSET_SPRING  ; param: colorset
@@ -199,7 +194,7 @@ Main_WorldMapCommand:
     call Func_WorldMapAnimateAvatar
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_WorldMapAnimateTiles
+    call Func_AnimateTiles
     call Func_UpdateButtonState
 _WorldMapCommand_HandleButtons:
     ld a, [Ram_ButtonsPressed_u8]
@@ -312,7 +307,7 @@ _WorldMapWalk_Frame:
     call Func_UpdateAudio
     call Func_WorldMapUpdateAvatarAndNextScroll
     call Func_WaitForVBlankAndPerformDma
-    call Func_WorldMapAnimateTiles
+    call Func_AnimateTiles
     ;; Update screen scroll position.
     ld a, [Ram_WorldMapNextScrollX_u8]
     ldh [rSCX], a
@@ -504,7 +499,7 @@ _WorldMapUpdateAvatarAndNextScroll_Y:
 ;;; Switches the parity of the avatar object's tile ID every few frames
 ;;; (alternating between 2n and 2n+1).
 Func_WorldMapAnimateAvatar:
-    ld a, [Ram_WorldMapAnimationClock_u8]
+    ld a, [Ram_AnimationClock_u8]
     and %00010000
     swap a
     rlca
@@ -520,7 +515,7 @@ Func_WorldMapUpdateArrowObjects:
     ;; Blink the arrows by forcing d (the set of arrows to display) to zero
     ;; for half of all frames.
     ld d, 0
-    ld a, [Ram_WorldMapAnimationClock_u8]
+    ld a, [Ram_AnimationClock_u8]
     and %00010000
     jr z, .updateArrows
     ;; Set c to the current area number (it will be used as a parameter for
@@ -595,16 +590,6 @@ _WorldMapUpdateArrowObjects_West:
     ld [Ram_ArrowW_oama + OAMA_Y], a
     ret
 
-;;; Increments Ram_WorldMapAnimationClock_u8 and updates animated terrain in
-;;; VRAM as needed.
-;;; @prereq LCD is off, or VBlank has recently started.
-Func_WorldMapAnimateTiles:
-    ld hl, Ram_WorldMapAnimationClock_u8
-    inc [hl]
-    ld c, [hl]              ; param: animation clock
-    ld b, TILESET_MAP_WORLD ; param: tileset
-    jp Func_AnimateTerrain
-
 ;;; Makes the specified area the currently selected area for the world map, and
 ;;; puts that area's title on the screen.
 ;;; @prereq LCD is off, or VBlank has recently started.
@@ -671,7 +656,7 @@ Func_LoadWorldMapColor:
     ld b, 8
     .hramLoop
     ld a, [hl+]
-    ld [c], a
+    ldh [c], a
     inc c
     dec b
     jr nz, .hramLoop
@@ -709,7 +694,7 @@ Func_LoadWorldMapColorQuarter:
     swap a
     add LOW(Hram_WorldMapBgPalettes_u8_arr8)
     ld c, a
-    ld a, [c]
+    ldh a, [c]
     ;; Write the palette from the table into VRAM.
     ld [hl+], a
     dec b

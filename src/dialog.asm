@@ -112,7 +112,7 @@ Func_RunDialog::
 _RunDialog_ShowWindow:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_AnimateTiles
     xcall FuncX_DrawDialog_DrawNextWindowRow
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
@@ -145,7 +145,7 @@ _RunDialog_AdvanceText:
     push hl
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_AnimateTiles
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
@@ -176,7 +176,7 @@ _RunDialog_AdvanceText:
 _RunDialog_WaitForButton:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_AnimateTiles
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
@@ -189,7 +189,7 @@ _RunDialog_WaitForButton:
 _RunDialog_HideWindow:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_AnimateTiles
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
@@ -327,6 +327,8 @@ DataX_DrawDialog_PortraitTable_u8_arr9_arr:
     DB $54, $57, $5a, $55, $58, $5b, $56, $59, $63
     ASSERT @ - .begin == 9 * DIALOG_MOUSE
     DB $5d, $60, $00, $5e, $61, $64, $5f, $62, $65
+    ASSERT @ - .begin == 9 * DIALOG_BLANK
+    DB $00, $00, $00, $00, $00, $00, $00, $00, $00
     ASSERT @ - .begin == 9 * DIALOG_END
 
 ;;;=========================================================================;;;

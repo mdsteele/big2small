@@ -54,11 +54,6 @@ PIPE_EL_TILEID EQU $90
 
 SECTION "PuzzleObjState", WRAM0
 
-;;; A counter that is incremented once per frame and that can be used to drive
-;;; looping animations.
-Ram_PuzzleAnimationClock_u8:
-    DB
-
 ;;; The number of frames left until the currently-moving animal reaches the
 ;;; next position.
 Ram_WalkingCountdown_u8::
@@ -74,7 +69,7 @@ SECTION "PuzzleObjFunctions", ROM0
 
 Func_PuzzleInitObjs::
     xor a
-    ld [Ram_PuzzleAnimationClock_u8], a
+    ld [Ram_AnimationClock_u8], a
     ld [Ram_WalkingCountdown_u8], a
     ld [Ram_WalkingAction_u8], a
     ;; Set up animal objects.
@@ -143,7 +138,7 @@ Func_UpdateArrowObjs::
     ld [Ram_ArrowE_oama + OAMA_Y], a
     ld [Ram_ArrowW_oama + OAMA_Y], a
     ;; Store (clock % 32 >= 16 ? 1 : 0) in e.
-    ld a, [Ram_PuzzleAnimationClock_u8]
+    ld a, [Ram_AnimationClock_u8]
     and %00010000
     swap a
     ld e, a
@@ -204,13 +199,13 @@ _UpdateArrowObjs_West:
 ;;;=========================================================================;;;
 
 ;;; Updates the TILEID and FLAGS fields for the objects for each animal that's
-;;; at its goal, based on Ram_PuzzleAnimationClock_u8.
+;;; at its goal, based on Ram_AnimationClock_u8.
 Func_UpdateAllHappyAnimalObjs::
     ld d, $ff  ; param: except
     jr Func_UpdateHappyAnimalObjs
 
 ;;; Updates the TILEID and FLAGS fields for the objects for each animal that's
-;;; at its goal, based on Ram_PuzzleAnimationClock_u8, except for the
+;;; at its goal, based on Ram_AnimationClock_u8, except for the
 ;;; currently-selected animal.
 Func_UpdateUnselectedHappyAnimalObjs::
     ld a, [Ram_SelectedAnimal_u8]
@@ -219,13 +214,13 @@ Func_UpdateUnselectedHappyAnimalObjs::
 
 ;;; Helper function for the above Func_Update*HappyAnimalObjs functions.
 ;;; Updates the TILEID and FLAGS fields for the objects for each animal that's
-;;; at its goal, based on Ram_PuzzleAnimationClock_u8, except for the specified
+;;; at its goal, based on Ram_AnimationClock_u8, except for the specified
 ;;; animal.
 ;;; @param d Don't update objects for this animal (one of the ANIMAL_*
 ;;;     constants, or $ff to not skip any animals).
 Func_UpdateHappyAnimalObjs:
     ;; Store (clock % 16 >= 8 ? 4 : 0) in e.
-    ld a, [Ram_PuzzleAnimationClock_u8]
+    ld a, [Ram_AnimationClock_u8]
     and %00001000
     rrca
     ld e, a
@@ -676,18 +671,6 @@ _SetSelectedAnimalTiles_Mouse:
     ld [Ram_MouseL_oama + OAMA_FLAGS], a
     ld [Ram_MouseR_oama + OAMA_FLAGS], a
     ret
-
-;;;=========================================================================;;;
-
-;;; Increments Ram_PuzzleAnimationClock_u8 and animates any animated terrain
-;;; tiles for the current puzzle's tileset.
-Func_AnimatePuzzleTerrain::
-    ld hl, Ram_PuzzleAnimationClock_u8
-    inc [hl]
-    ld c, [hl]  ; animation clock
-    ld a, [Ram_PuzzleState_puzz + PUZZ_Tileset_u8]
-    ld b, a  ; tileset
-    jp Func_AnimateTerrain
 
 ;;;=========================================================================;;;
 

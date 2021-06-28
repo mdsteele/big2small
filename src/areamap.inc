@@ -51,9 +51,11 @@ TRAILF_UNDER EQU (1 << TRAILB_UNDER)
 ;;; This bit is set for the last entry in NODE_Trail_u8_arr entry.
 TRAILB_END EQU 7
 
-;;; Special value used in place of a node index in NODE_Prev_u8 or NODE_Next_u8
-;;; to indicate an exit from the area.
-EXIT_NODE EQU $0f
+;;; Special values used in place of a node index in NODE_Prev_u8 or
+;;; NODE_Next_u8 to indicate an exit from the area.
+EXIT_MIN     EQU $0e  ; Anything >= this is an EXIT node.
+EXIT_MAP     EQU $0e  ; An exit back to the world map.
+EXIT_CREDITS EQU $0f  ; An exit to the credits screen.
 
 ;;;=========================================================================;;;
 
@@ -87,9 +89,9 @@ AREA_FirstPuzzle_u8   RB 1
 ;;;   inclusive).
 AREA_NumNodes_u8      RB 1
 ;;; Nodes: An array of NODE structs, one for each puzzle in this area.  The
-;;;   Prev field of the first NODE in the array must connect to EXIT_NODE (for
+;;;   Prev field of the first NODE in the array must connect to an EXIT_* (for
 ;;;   the area entrance), and the Next field of the last NODE in the area must
-;;;   also connect to EXIT_NODE (for the area exit).
+;;;   also connect to an EXIT_* (for the area exit).
 AREA_Nodes_node_arr   RB 0
 
 ;;;=========================================================================;;;
@@ -112,15 +114,15 @@ NODE_Trail_u8_arr   RB MAX_TRAIL_LENGTH
 ;;; Prev: Describes how to reach the previous node.  The high nibble indicates
 ;;;   the direction to press on the D-pad (one of the PADF_* values).  The low
 ;;;   nibble gives the index of the previous node (from 0 to 14 inclusive), or
-;;;   the special EXIT_NODE value if following this link should exit the area.
+;;;   a special EXIT_* value if following this link should exit the area.
 NODE_Prev_u8        RB 1
 ;;; Next: Describes how to reach the next node.  This is encoded exactly as
 ;;;   for the Prev field, except that the whole field may be zero if there is
 ;;;   no next node.
 NODE_Next_u8        RB 1
 ;;; Bonus: Describes how to reach this node's bonus node, if any.  This is
-;;;   encoded exactly as for the Next field, except that the special EXIT_NODE
-;;;   value may not be used for the node index.
+;;;   encoded exactly as for the Next field, except that the special EXIT_*
+;;;   values may not be used for the node index.
 NODE_Bonus_u8       RB 1
 ;;; Title: An 16-character string containing the puzzle title, padded with
 ;;;   spaces on either side so that the title is centered.

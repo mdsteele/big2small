@@ -57,7 +57,7 @@ Func_LoadAreaMapColor::
     ld b, 8
     .hramLoop
     ld a, [hl+]
-    ld [c], a
+    ldh [c], a
     inc c
     dec b
     jr nz, .hramLoop
@@ -107,7 +107,7 @@ Func_LoadAreaMapColorRow:
     swap a
     add LOW(Hram_AreaMapBgPalettes_u8_arr8)
     ld c, a
-    ld a, [c]
+    ldh a, [c]
     ;; Write the palette from the table into VRAM.
     ld [hl+], a
     dec b

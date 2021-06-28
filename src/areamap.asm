@@ -43,16 +43,8 @@ ANIMATE_TRAIL_FRAMES_PER_TICK EQU 15
 
 SECTION "AreaMapState", WRAM0
 
-;;; A counter that is incremented once per frame and that can be used to drive
-;;; looping animations.
-Ram_AreaMapAnimationClock_u8:
-    DB
-
 ;;; The current area number (one of the AREA_* enum values).
 Ram_AreaMapCurrentArea_u8:
-    DB
-;;; The tileset for the current area map (using the TILESET_* enum values).
-Ram_AreaMapTileset_u8:
     DB
 ;;; The puzzle number for node zero of this area.  Each node in the area has a
 ;;; puzzle number equal to the node index plus this number.
@@ -102,10 +94,10 @@ Ram_AreaMapActiveTrail_u8_arr:
 ;;; currently traversing, if we are in Main_AreaMapFollowTrail.
 Ram_AreaMapTrailIndex_u8:
     DB
-;;; The node index that the avatar is walking on a trail towards (or EXIT_NODE
-;;; if the avatar is leaving the area map), if we are in
+;;; The node index that the avatar is walking on a trail towards (or an EXIT_*
+;;; value if the avatar is leaving the area map), if we are in
 ;;; Main_AreaMapFollowTrail, or the node index of the trail we're drawing (or
-;;; EXIT_NODE for the exit trail), if we are in Func_DrawTrailAnimated.
+;;; an EXIT_* value for the exit trail), if we are in Func_DrawTrailAnimated.
 Ram_AreaMapDestinationNode_u8:
     DB
 
@@ -206,7 +198,7 @@ _AreaMapResume_CheckIfSolved:
     bit STATB_SOLVED, b
     jr nz, .alreadySolved
     ;; Otherwise, the player just solved this puzzle for the first time.
-    ;; If the next node is EXIT_NODE, animate drawing the exit trail.
+    ;; If the next node is an EXIT_* value, animate drawing the exit trail.
     push bc
     call Func_GetPointerToCurrentNode_hl
     ld bc, NODE_Next_u8
@@ -214,7 +206,7 @@ _AreaMapResume_CheckIfSolved:
     ld a, [hl]
     and $0f
     ld e, a  ; param: trail node
-    if_eq EXIT_NODE, call, Func_DrawTrailAnimated
+    if_ge EXIT_MIN, call, Func_DrawTrailAnimated
     pop bc
     .alreadySolved
 _AreaMapResume_UnlockBonusPuzzle:
@@ -233,7 +225,7 @@ _AreaMapResume_UnlockBonusPuzzle:
     call Func_UnlockNode_b
     .noBonus
 _AreaMapResume_UnlockNextPuzzle:
-    ;; Unlock the next puzzle (if it's not EXIT_NODE).
+    ;; Unlock the puzzle for the next node (if it's not an EXIT_* node).
     call Func_GetPointerToCurrentNode_hl
     ld bc, NODE_Next_u8
     add hl, bc
@@ -294,7 +286,6 @@ _LoadAreaMap_InitTileset:
     ;; corresponding tile data into VRAM.
     ASSERT AREA_Tileset_u8 == 4
     ld a, [hl+]
-    ld [Ram_AreaMapTileset_u8], a
     push hl
     ld b, a  ; param: tileset
     call Func_LoadTileset
@@ -439,7 +430,7 @@ _LoadAreaMap_DrawUnlockedNodes:
     jr nz, .loop
 _LoadAreaMap_InitState:
     xor a
-    ld [Ram_AreaMapAnimationClock_u8], a
+    ld [Ram_AnimationClock_u8], a
     ldh [rSCX], a
     ldh [rSCY], a
     call Func_ClearOam
@@ -455,7 +446,7 @@ _LoadAreaMap_InitState:
 Func_UnlockNode_b:
     ;; Do nothing for the exit node.
     ld a, c
-    if_eq EXIT_NODE, jr, .doNothing
+    if_ge EXIT_MIN, jr, .doNothing
     ;; Make hl point to the progress status entry for the puzzle of the node to
     ;; unlock.
     ld a, [Ram_AreaMapFirstPuzzle_u8]
@@ -488,7 +479,7 @@ Main_AreaMapCommand:
     call Func_UpdateAudio
     call Func_UpdateAreaMapAvatarObj
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateAreaMapTiles
+    call Func_AnimateTiles
     call Func_UpdateButtonState
 _AreaMapCommand_HandleButtons:
     ld a, [Ram_ButtonsPressed_u8]
@@ -575,16 +566,16 @@ _AreaMapCommand_FollowBonusTrail:
 
 ;;; Animates the area map avatar walking from node to node, then switches modes
 ;;; appropariately depending on whether the destination is an exit node.
-;;; @param d The destination node index (or EXIT_NODE if leaving the area).
-;;; @param e The node index of the trail to use (or EXIT_NODE for exit trail).
+;;; @param d The destination node index (or EXIT_* if leaving the area).
+;;; @param e The node index of the trail to use (or EXIT_* for the exit trail).
 Main_AreaMapFollowTrail:
     ;; Store the destination node index for later.
     ld a, d
     ld [Ram_AreaMapDestinationNode_u8], a
-    ;; If the trail node index is EXIT_NODE, then we're following the area's
+    ;; If the trail node index is an EXIT_* value, then we're following the
     ;; exit trail (forwards, since we never follow the exit trail backwards).
     ld a, e
-    if_eq EXIT_NODE, jr, .copyExitTrail
+    if_ge EXIT_MIN, jr, .copyExitTrail
     ;; Otherwise, make hl point to the trail node's trail array.
     ld c, e  ; param: node index
     call Func_GetPointerToNode_hl  ; preserves de
@@ -618,7 +609,7 @@ _AreaMapFollowTrail_RunLoop:
     call Func_UpdateAreaMapAvatarObj
     call Func_WaitForVBlankAndPerformDma
     call Func_ClearAreaMapNodeTitle
-    call Func_AnimateAreaMapTiles
+    call Func_AnimateTiles
     ld a, [Ram_AreaMapAvatarOffset_u8]
     dec a
     ld [Ram_AreaMapAvatarOffset_u8], a
@@ -641,10 +632,14 @@ _AreaMapFollowTrail_EndTrailTick:
     jr z, _AreaMapFollowTrail_StartTrailTick
 _AreaMapFollowTrail_FinishFollowing:
     ld a, [Ram_AreaMapDestinationNode_u8]
-    if_eq EXIT_NODE, jp, Main_AreaMapBackToWorldMap
+    if_eq EXIT_MAP, jp, Main_AreaMapBackToWorldMap
+    if_eq EXIT_CREDITS, jr, _AreaMapFollowTrail_GoToCredits
     ld [Ram_AreaMapCurrentNode_u8], a
     call Func_PlaceAvatarAtCurrentNode
     jp Main_AreaMapCommand
+_AreaMapFollowTrail_GoToCredits:
+    call Func_FadeOut
+    jp Main_CreditsScreen
 
 ;;;=========================================================================;;;
 
@@ -742,16 +737,6 @@ Func_ClearAreaMapNodeTitle:
     dec c
     jr nz, .loop
     ret
-
-;;; Increments Ram_AreaMapAnimationClock_u8 and updates animated terrain in
-;;; VRAM as needed.
-Func_AnimateAreaMapTiles:
-    ld hl, Ram_AreaMapAnimationClock_u8
-    inc [hl]
-    ld c, [hl]  ; param: animation clock
-    ld a, [Ram_AreaMapTileset_u8]
-    ld b, a     ; param: tileset
-    jp Func_AnimateTerrain
 
 ;;;=========================================================================;;;
 
@@ -897,7 +882,7 @@ Func_UpdateAreaMapAvatarObj:
     sub e
     ld [Ram_ElephantL_oama + OAMA_X], a
     ;; Set tile ID:
-    ld a, [Ram_AreaMapAnimationClock_u8]
+    ld a, [Ram_AnimationClock_u8]
     and %00010000
     swap a
     rlca
@@ -979,11 +964,11 @@ Func_DrawTrail:
 
 ;;; Animates drawing a trail (and the node at the end) for a newly-unlocked
 ;;; node or exit trail.
-;;; @param e The node index of the trail to use (or EXIT_NODE for exit trail).
+;;; @param e The node index of the trail to use (or EXIT_* for exit trail).
 Func_DrawTrailAnimated:
     ld a, e
     ld [Ram_AreaMapDestinationNode_u8], a
-    if_eq EXIT_NODE, jr, _DrawTrailAnimated_ExitTrail
+    if_ge EXIT_MIN, jr, _DrawTrailAnimated_ExitTrail
 _DrawTrailAnimated_NodeTrail:
     ;; Make hl point the node's trail array, and save it for later..
     ld c, e  ; param: node index
@@ -1028,7 +1013,7 @@ _DrawTrailAnimated_AnimateLoop:
     .sleepLoop
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateAreaMapTiles
+    call Func_AnimateTiles
     ld a, [Ram_AreaMapAnimateTrailTimer_u8]
     dec a
     ld [Ram_AreaMapAnimateTrailTimer_u8], a
@@ -1050,9 +1035,9 @@ _DrawTrailAnimated_AnimateLoop:
     jr _DrawTrailAnimated_AnimateLoop
 _DrawTrailAnimated_DrawNode:
     ;; At this point, hl points to the VRAM tile where we should draw the node.
-    ;; If the destination node is EXIT_NODE, then we're done.
+    ;; If the destination node is an EXIT_*, then we're done.
     ld a, [Ram_AreaMapDestinationNode_u8]
-    if_eq EXIT_NODE, ret
+    if_ge EXIT_MIN, ret
     ;; Set a to the NODE_Bonus_u8 field for the destination node.
     push hl
     ld c, a  ; param: node index

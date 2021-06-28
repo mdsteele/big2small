@@ -307,11 +307,11 @@ DataX_Lake0Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "No need to\n"
     DB "swim. Just jump\n"
-    DB "over instead.\r"
+    DB "over instead!\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "I don't think\n"
     DB "Mel and I can't\n"
-    DB "jump that far!\r"
+    DB "jump that far.\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "Oh. Well I can!\n"
     DB "You two can use\n"
@@ -411,6 +411,58 @@ DataX_Space5Intro_dlog::
     DB "We can do it,\n"
     DB "gals! Best of\n"
     DB "luck to us!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "CreditsDialog", ROMX
+
+DataX_Credits1_dlog::
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Wheeeeeeeeeee!\n"
+    DB "Here we go!\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "You know, Mel,\n"
+    DB "you never did\n"
+    DB "tell us...\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Why are you\n"
+    DB "trying to get\n"
+    DB "to the moon?\r"
+    DB DIALOG_MOUSE
+    DB "Oh, sorry. I\n"
+    DB "thought it was\n"
+    DB "obvious.\r"
+    DB DIALOG_END
+
+DataX_Credits2_dlog::
+    DB DIALOG_MOUSE
+    DB "Everyone knows\n"
+    DB "the moon is\n"
+    DB "made of cheese!\r"
+    DB DIALOG_BLANK
+    DB "\n* BIG2SMALL *\r"
+    DB DIALOG_BLANK
+    DB " a game by\n"
+    DB " Matthew D.\n"
+    DB "   Steele\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB " * STARRING *\n"
+    DB "   Elle the\n"
+    DB "   Elephant\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB " * STARRING *\n"
+    DB "  Gisele the\n"
+    DB "     Goat\r"
+    DB DIALOG_MOUSE
+    DB " * STARRING *\n"
+    DB "   Mel the\n"
+    DB "    Mouse\r"
+    DB DIALOG_BLANK
+    DB "\n Thanks for\n"
+    DB "  playing!\r"
+    DB DIALOG_BLANK
+    DB "\n  THE END\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;

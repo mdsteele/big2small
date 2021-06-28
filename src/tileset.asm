@@ -30,13 +30,26 @@ ENDM
 
 ;;;=========================================================================;;;
 
+SECTION "TilesetState", WRAM0
+
+Ram_LastTileset_u8:
+    DB
+
+;;; The global animation clock, used to drive looping animations.
+Ram_AnimationClock_u8::
+    DB
+
+;;;=========================================================================;;;
+
 SECTION "TilesetFunctions", ROM0
 
 ;;; Populates Vram_SharedTiles with tile data for the specified tileset.
+;;; @prereq LCD is off.
 ;;; @param b The TILESET_* enum value.
 Func_LoadTileset::
     ld hl, Vram_SharedTiles  ; dest
     ld a, b
+    ld [Ram_LastTileset_u8], a
     if_ge TILESET_PUZZ_MIN, jr, _LoadTileset_Puzz
     if_lt TILESET_MAP_MIN, jr, _LoadTileset_Title
 _LoadTileset_Map:
@@ -80,19 +93,19 @@ _LoadTileset_MapForest:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_MapRiverTiles_start, DataX_MapRiverTiles_end
     xld hl, DataX_OceanTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 _LoadTileset_MapSewer:
     SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SewerMapTiles_start, DataX_SewerMapTiles_end
     xld hl, DataX_OceanTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 _LoadTileset_MapSpace:
     SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
     SKIP_TO_TILE $fc
     COPY_FROM_ROMX DataX_MapStarsTiles_start, DataX_MapStarsTiles_end
     xld hl, DataX_TwinkleTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 _LoadTileset_MapWorld:
     SKIP_TO_TILE $a0
     COPY_FROM_ROMX DataX_MapMountainTiles_start, DataX_MapMountainTiles_end
@@ -106,7 +119,7 @@ _LoadTileset_MapWorld:
     SKIP_TO_TILE $fc
     COPY_FROM_ROMX DataX_MapStarsTiles_start, DataX_MapStarsTiles_end
     xld hl, DataX_OceanTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 _LoadTileset_PuzzCity:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     SKIP_TO_TILE $d0
@@ -121,14 +134,14 @@ _LoadTileset_PuzzFarm:
     SKIP_TO_TILE $f0
     COPY_FROM_ROMX DataX_BarnTiles_start, DataX_BarnTiles_end
     xld hl, DataX_CowBlinkTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 _LoadTileset_PuzzLake:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
     SKIP_TO_TILE $d0
     COPY_FROM_ROMX DataX_FenceWoodTiles_start, DataX_FenceWoodTiles_end
     xld hl, DataX_OceanTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 _LoadTileset_PuzzMountain:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
@@ -142,27 +155,34 @@ _LoadTileset_PuzzSewer:
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_BrickTiles_start, DataX_BrickTiles_end
     xld hl, DataX_OceanTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 _LoadTileset_PuzzSpace:
     COPY_FROM_ROMX DataX_GirderTiles_start, DataX_GirderTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_SpaceTiles_start, DataX_SpaceTiles_end
     xld hl, DataX_StarsTiles_tile_arr
-    jp Func_SetAnimatedTerrain
+    jp Func_SetAnimatedTile
 
 ;;;=========================================================================;;;
 
-;;; @param b The TILESET_* enum value.
-;;; @param c The animation counter (0-255).
-Func_AnimateTerrain::
-    ld a, b
+;;; Increments the global animation clock, and updates the animated tile for
+;;; the most recently loaded tileset.
+;;; @prereq A tileset has been loaded.
+;;; @prereq LCD is off, or VBlank has recently started.
+Func_AnimateTiles::
+    ;; Increment the animation clock, and store the new value in c.
+    ld hl, Ram_AnimationClock_u8
+    inc [hl]
+    ld c, [hl]
+    ;; Choose the correct animation (if any) for the current tileset.
+    ld a, [Ram_LastTileset_u8]
     if_eq TILESET_MAP_CITY, ret
-    if_eq TILESET_MAP_SPACE, jr, _AnimateTerrain_Twinkle
+    if_eq TILESET_MAP_SPACE, jr, _AnimateTiles_Twinkle
     if_eq TILESET_PUZZ_CITY, ret
-    if_eq TILESET_PUZZ_FARM, jr, _AnimateTerrain_Cow
+    if_eq TILESET_PUZZ_FARM, jr, _AnimateTiles_Cow
     if_eq TILESET_PUZZ_MOUNTAIN, ret
-    if_eq TILESET_PUZZ_SPACE, jr, _AnimateTerrain_Stars
-_AnimateTerrain_Ocean:
+    if_eq TILESET_PUZZ_SPACE, jr, _AnimateTiles_Stars
+_AnimateTiles_Ocean:
     ld a, c
     and %00001111
     ret nz
@@ -171,8 +191,8 @@ _AnimateTerrain_Ocean:
     ASSERT sizeof_TILE == 16
     ldb de, a
     xld hl, DataX_OceanTiles_tile_arr
-    jr _AnimateTerrain_Copy
-_AnimateTerrain_Cow:
+    jr _AnimateTiles_Copy
+_AnimateTiles_Cow:
     ld a, c
     and %01111111
     jr z, .blink
@@ -181,16 +201,16 @@ _AnimateTerrain_Cow:
     .blink
     ldb de, a
     xld hl, DataX_CowBlinkTiles_tile_arr
-    jr _AnimateTerrain_Copy
-_AnimateTerrain_Stars:
+    jr _AnimateTiles_Copy
+_AnimateTiles_Stars:
     ld a, c
     and %00000111
     ASSERT sizeof_TILE == 16
     swap a
     ldb de, a
     xld hl, DataX_StarsTiles_tile_arr
-    jr _AnimateTerrain_Copy
-_AnimateTerrain_Twinkle:
+    jr _AnimateTiles_Copy
+_AnimateTiles_Twinkle:
     ld a, c
     and %00000111
     ret nz
@@ -200,13 +220,14 @@ _AnimateTerrain_Twinkle:
     rlca
     ldb de, a
     xld hl, DataX_TwinkleTiles_tile_arr
-_AnimateTerrain_Copy:
+_AnimateTiles_Copy:
     add hl, de
-    ;; fall through to Func_SetAnimatedTerrain
+    ;; fall through to Func_SetAnimatedTile
 
+;;; @prereq LCD is off, or VBlank has recently started.
 ;;; @prereq Correct ROM bank for hl pointer is set.
 ;;; @param hl A pointer to the tile to copy.
-Func_SetAnimatedTerrain:
+Func_SetAnimatedTile:
     ld de, Vram_BgTiles + sizeof_TILE * ANIMATED_TILE_ID
     REPT sizeof_TILE - 1
     ld a, [hl+]

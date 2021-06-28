@@ -35,7 +35,7 @@ _Victory_AnimateJumping:
     call Func_VictoryHopAnimalObjs
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    call Func_AnimatePuzzleTerrain
+    call Func_AnimateTiles
     pop bc
     xor a
     or b

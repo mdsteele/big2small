@@ -32,6 +32,7 @@ INCLUDE "src/tileset.inc"
 ;;; Example:
 ;;;     D_BPTR DataX_Foo
 D_BPTR: MACRO
+    STATIC_ASSERT _NARG == 1
     DB BANK(\1), LOW(\1), HIGH(\1)
 ENDM
 
@@ -173,7 +174,7 @@ _Forest_Node0:
     .begin
     DB 9, 3  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1
-    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_LEFT | EXIT_MAP    ; prev
     DB PADF_DOWN | 1           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Peanut Pathway"
@@ -228,7 +229,7 @@ _Forest_Node6:
     DB 4, 9  ; row/col
     D_TRAIL TS1, TS1, TS1, TS1, TE1, TE1, TE1, TN1, TN1, TE1, TE1
     DB PADF_DOWN | 4           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_UP | EXIT_MAP      ; next
     DB PADF_LEFT | 5           ; bonus
     D_TITLE 16, "Obstacle Orchard"
     ASSERT @ - .begin == sizeof_NODE
@@ -249,7 +250,7 @@ _Farm_Node0:
     .begin
     DB 11, 5  ; row/col
     D_TRAIL TS1, TS1, TS1, TS1, US1
-    DB PADF_DOWN | EXIT_NODE   ; prev
+    DB PADF_DOWN | EXIT_MAP    ; prev
     DB PADF_UP | 1             ; next
     DB 0                       ; bonus
     D_TITLE 16, "Out to Pasture"
@@ -286,7 +287,7 @@ _Farm_Node4:
     DB 12, 16  ; row/col
     D_TRAIL TW1, TN1, TN1, TN1, TN1
     DB PADF_LEFT | 2           ; prev
-    DB PADF_RIGHT | EXIT_NODE  ; next
+    DB PADF_RIGHT | EXIT_MAP   ; next
     DB PADF_DOWN | 3           ; bonus
     D_TITLE 16, "Barnyard Dance"
     ASSERT @ - .begin == sizeof_NODE
@@ -307,7 +308,7 @@ _Mountain_Node0:
     .begin
     DB 14, 3  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1
-    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_LEFT | EXIT_MAP    ; prev
     DB PADF_UP | 1             ; next
     DB 0                       ; bonus
     D_TITLE 16, "Arrow Ascent"
@@ -353,7 +354,7 @@ _Mountain_Node5:
     DB 11, 15  ; row/col
     D_TRAIL TW1, TW1, TN1, TN2, TW1, TW1, TW1, TW1, TN2, TN1, TN1
     DB PADF_LEFT | 3           ; prev
-    DB PADF_RIGHT | EXIT_NODE  ; next
+    DB PADF_RIGHT | EXIT_MAP   ; next
     DB PADF_UP | 4             ; bonus
     D_TITLE 16, "Grassy Grade"
     ASSERT @ - .begin == sizeof_NODE
@@ -374,7 +375,7 @@ _Lake_Node0:
     .begin
     DB 5, 12  ; row/col
     D_TRAIL TE1, TE2, TE1, TE1, TN1, TN1, TN1, TN1
-    DB PADF_RIGHT | EXIT_NODE  ; prev
+    DB PADF_RIGHT | EXIT_MAP   ; prev
     DB PADF_LEFT | 1           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Down the River"
@@ -411,7 +412,7 @@ _Lake_Node4:
     DB 15, 11  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1, TW2, TW1, TW1, TW1, TN1, TN1
     DB PADF_LEFT | 3           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_UP | EXIT_MAP      ; next
     DB 0                       ; bonus
     D_TITLE 16, "Across the Pond"
     ASSERT @ - .begin == sizeof_NODE
@@ -432,7 +433,7 @@ _Sewer_Node0:
     .begin
     DB 13, 5  ; row/col
     D_TRAIL TN1, TN1, TN1, TN1, TW1, TW1, TW1, TW1, TW1, TW1
-    DB PADF_UP | EXIT_NODE     ; prev
+    DB PADF_UP | EXIT_MAP      ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Pipe Playground"
@@ -478,7 +479,7 @@ _Sewer_Node5:
     DB 6, 11  ; row/col
     D_TRAIL TE1, TE1, TS1, TE1, UE2, TE1, TS1
     DB PADF_RIGHT | 3          ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_UP | EXIT_MAP      ; next
     DB PADF_LEFT | 4           ; bonus
     D_TITLE 16, "Combination Lock"
     ASSERT @ - .begin == sizeof_NODE
@@ -499,7 +500,7 @@ _City_Node0:
     .begin
     DB 12, 4  ; row/col
     D_TRAIL TW1, TW1, TW1
-    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_LEFT | EXIT_MAP    ; prev
     DB PADF_DOWN | 1           ; next
     DB 0                       ; bonus
     D_TITLE 16, "Mousetrap Mayhem"
@@ -536,7 +537,7 @@ _City_Node4:
     DB 15, 17  ; row/col
     D_TRAIL TW1, TW1, TW1, TW1, TW1
     DB PADF_LEFT | 2           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_UP | EXIT_MAP      ; next
     DB 0                       ; bonus
     D_TITLE 16, "Launch Pad Peril"
     ASSERT @ - .begin == sizeof_NODE
@@ -557,7 +558,7 @@ _Space_Node0:
     .begin
     DB 7, 5  ; row/col
     D_TRAIL TW1, TW1, TW1
-    DB PADF_LEFT | EXIT_NODE   ; prev
+    DB PADF_LEFT | EXIT_MAP    ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus
     D_TITLE 16, "Warp Speedway"
@@ -603,7 +604,7 @@ _Space_Node5:
     DB 8, 16  ; row/col
     D_TRAIL TW1, TW1, TN1, TW1, TW1
     DB PADF_LEFT | 3           ; prev
-    DB PADF_UP | EXIT_NODE     ; next
+    DB PADF_UP | EXIT_CREDITS  ; next
     DB 0                       ; bonus
     D_TITLE 16, "Final Countdown"
     ASSERT @ - .begin == sizeof_NODE
