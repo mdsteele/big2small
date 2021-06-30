@@ -29,6 +29,7 @@ RSRESET
 ;;; Enum values to use in PSFX path opcodes.
 PSFX_JUMP   RB 1
 PSFX_LAUNCH RB 1
+PSFX_PIPE   RB 1
 ;;; The number of path sound effects.
 NUM_PSFXS   RB 0
 

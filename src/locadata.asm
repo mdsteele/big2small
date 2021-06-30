@@ -83,19 +83,25 @@ ENDM
 PATH_JUMP: MACRO
     STATIC_ASSERT _NARG == 3
     STATIC_ASSERT (\3) >= 1
+    STATIC_ASSERT (\3) % 2 == 0
 JUMP_D = 6  ; Smaller number means higher jumps
 JUMP_H = ((\3) / 2)
 JUMP_N = 0
     REPT JUMP_H
+    IF JUMP_N % 3 == 1
     PATH_STEP (\1), (\2) - (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+    ELSE
+    PATH_STEP 0, -(JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+    ENDC
 JUMP_N = (JUMP_N + 1)
     ENDR
-    IF (\3) % 2 == 1
-    PATH_STEP (\1), (\2)
-    ENDC
 JUMP_N = (JUMP_H - 1)
     REPT JUMP_H
+    IF JUMP_N % 3 == 1
     PATH_STEP (\1), (\2) + (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+    ELSE
+    PATH_STEP 0, (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+    ENDC
 JUMP_N = (JUMP_N - 1)
     ENDR
 ENDM
@@ -218,20 +224,67 @@ DataX_LocationData_FarmToForest_path:
     PATH_HALT
 
 DataX_LocationData_FarmToMountain_path:
-    ;; TODO
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 1, 1, 3
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 1, 3
+    PATH_WALK 1, 0, 29
+    PATH_WALK 1, -1, 3
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK 1, -1, 3
+    PATH_WALK 0, -1, 28
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 0, 8
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK 0, -1, 16
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 0, 22
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 0, 1, 4
     PATH_HALT
 
 DataX_LocationData_MountainToFarm_path:
-    ;; TODO
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, 0, 3
+    PATH_PSFX PSFX_JUMP
+    PATH_JUMP -2, 1, 30
+    PATH_WALK -1, 0, 5
+    PATH_PSFX PSFX_JUMP
+    PATH_JUMP -2, 1, 30
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 0, 1, 26
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, 0, 17
+    PATH_WALK -1, -1, 3
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK -1, -1, 3
+    PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_MountainToLake_path:
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 0, 1, 4
     PATH_PSFX PSFX_JUMP
-    ;; TODO
+    PATH_JUMP 1, 1, 30
+    PATH_WALK 0, 1, 8
+    PATH_PSFX PSFX_JUMP
+    PATH_JUMP 1, 1, 30
+    PATH_WALK 0, 1, 44
     PATH_HALT
 
 DataX_LocationData_LakeToMountain_path:
-    ;; TODO
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK 1, -1, 4
+    PATH_WALK 0, -1, 24
+    PATH_WALK -1, -1, 7
+    PATH_WALK 0, -1, 21
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, 0, 8
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK 0, -1, 19
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, 0, 9
+    PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_LakeToSewer_path:
@@ -269,6 +322,7 @@ DataX_LocationData_SewerToLake_path:
 DataX_LocationData_SewerToCity_path:
     PATH_POBJ POBJ_NORTH
     PATH_WALK 0, -1, 6
+    PATH_PSFX PSFX_PIPE
     PATH_POBJ POBJ_INVIS
     PATH_WALK 0, -2, 13
     PATH_WALK -2, 0, 4
@@ -298,6 +352,7 @@ DataX_LocationData_CityToSewer_path:
     PATH_WALK 0, -1, 8
     PATH_POBJ POBJ_WEST
     PATH_WALK -1, 0, 8
+    PATH_PSFX PSFX_PIPE
     PATH_POBJ POBJ_INVIS
     PATH_WALK -1, 0, 6
     PATH_WALK 0, 1, 24
@@ -314,14 +369,16 @@ DataX_LocationData_CityToSewer_path:
 DataX_LocationData_CityToSpace_path:
     PATH_PSFX PSFX_LAUNCH
     PATH_POBJ POBJ_SPACESHIP
-    PATH_WALK 0, -2, 50
+    PATH_WALK 0, -1, 12
+    PATH_WALK 0, -2, 44
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_SpaceToCity_path:
     PATH_PSFX PSFX_LAUNCH
     PATH_POBJ POBJ_SPACESHIP
-    PATH_WALK 0, 2, 50
+    PATH_WALK 0, 2, 44
+    PATH_WALK 0, 1, 12
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 

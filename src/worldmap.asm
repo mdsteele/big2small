@@ -273,7 +273,7 @@ Main_WorldMapNewGame::
     ;; Position the avatar.
     ld a, 52
     ld [Ram_WorldMapAvatarX_u8], a
-    ld a, 239
+    ld a, 231
     ld [Ram_WorldMapAvatarY_u8], a
     call Func_WorldMapUpdateAvatarAndNextScroll
     ld a, [Ram_WorldMapNextScrollX_u8]
@@ -445,6 +445,8 @@ Data_WorldMapSounds_psfx_arr:
     D_PSFX DataX_Leap_sfx1, 1
     ASSERT @ - .begin == sizeof_PSFX * PSFX_LAUNCH
     D_PSFX DataX_PushPipe_sfx4, 4  ; TODO
+    ASSERT @ - .begin == sizeof_PSFX * PSFX_PIPE
+    D_PSFX DataX_EnterPipe_sfx1, 1
     ASSERT @ - .begin == sizeof_PSFX * NUM_PSFXS
 
 ;;;=========================================================================;;;
