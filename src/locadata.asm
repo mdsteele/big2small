@@ -28,6 +28,7 @@ POBJ_NORTH EQU 1
 POBJ_WEST EQU 2
 POBJ_EAST EQU (POBJ_WEST | POBJF_FLIP)
 POBJ_SPACESHIP EQU 3
+POBJ_INVIS EQU 4
 
 ;;;=========================================================================;;;
 
@@ -128,43 +129,43 @@ FuncX_LocationData_Get_hl::
 DataX_LocationData_loca_arr:
     .begin
     ASSERT @ - .begin == sizeof_LOCA * AREA_FOREST
-    DB 72, 217     ; X, Y
+    DB 72, 209     ; X, Y
     DB 0           ; prev dir
     DB PADF_UP     ; next dir
     DW DataX_LocationData_Null_path
     DW DataX_LocationData_ForestToFarm_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_FARM
-    DB 59, 156     ; X, Y
+    DB 59, 148     ; X, Y
     DB PADF_DOWN   ; prev dir
     DB PADF_RIGHT  ; next dir
     DW DataX_LocationData_FarmToForest_path
     DW DataX_LocationData_FarmToMountain_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_MOUNTAIN
-    DB 120, 112    ; X, Y
+    DB 130, 108    ; X, Y
     DB PADF_LEFT   ; prev dir
     DB PADF_DOWN   ; next dir
     DW DataX_LocationData_MountainToFarm_path
     DW DataX_LocationData_MountainToLake_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_LAKE
-    DB 150, 191    ; X, Y
+    DB 150, 183    ; X, Y
     DB PADF_UP     ; prev dir
     DB PADF_RIGHT  ; next dir
     DW DataX_LocationData_LakeToMountain_path
     DW DataX_LocationData_LakeToSewer_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_SEWER
-    DB 216, 208    ; X, Y
+    DB 202, 215    ; X, Y
     DB PADF_LEFT   ; prev dir
     DB PADF_UP     ; next dir
     DW DataX_LocationData_SewerToLake_path
     DW DataX_LocationData_SewerToCity_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_CITY
-    DB 216, 112    ; X, Y
+    DB 198, 132    ; X, Y
     DB PADF_DOWN   ; prev dir
     DB PADF_UP     ; next dir
     DW DataX_LocationData_CityToSewer_path
     DW DataX_LocationData_CityToSpace_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_SPACE
-    DB 216, 32     ; X, Y
+    DB 198, 32     ; X, Y
     DB PADF_DOWN   ; prev dir
     DB 0           ; next dir
     DW DataX_LocationData_SpaceToCity_path
@@ -235,40 +236,92 @@ DataX_LocationData_LakeToMountain_path:
 
 DataX_LocationData_LakeToSewer_path:
     PATH_POBJ POBJ_EAST
-    PATH_WALK 2, 0, 16
-    PATH_WALK 2, 1, 17
+    PATH_WALK 1, 0, 18
+    PATH_WALK 1, 1, 6
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 1, 1, 6
+    PATH_WALK 0, 1, 22
+    PATH_WALK 1, 1, 2
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 1, 2
+    PATH_WALK 1, 0, 12
+    PATH_WALK 1, -1, 6
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_SewerToLake_path:
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK -1, 1, 3
     PATH_POBJ POBJ_WEST
-    PATH_WALK -2, -1, 17
-    PATH_WALK -2, 0, 16
+    PATH_WALK -1, 1, 3
+    PATH_WALK -1, 0, 12
+    PATH_WALK -1, -1, 2
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK -1, -1, 2
+    PATH_WALK 0, -1, 22
+    PATH_WALK -1, -1, 6
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, -1, 6
+    PATH_WALK -1, 0, 18
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_SewerToCity_path:
     PATH_POBJ POBJ_NORTH
-    PATH_WALK 0, -2, 48
+    PATH_WALK 0, -1, 6
+    PATH_POBJ POBJ_INVIS
+    PATH_WALK 0, -2, 13
+    PATH_WALK -2, 0, 4
+    PATH_WALK 0, -1, 16
+    PATH_WALK -2, 0, 4
+    PATH_WALK 0, -1, 8
+    PATH_WALK -1, 0, 24
+    PATH_WALK 0, -1, 24
+    PATH_WALK 1, 0, 6
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 0, 8
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 0, 1, 8
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 0, 22
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK 0, -1, 11
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_CityToSewer_path:
     PATH_POBJ POBJ_SOUTH
-    PATH_WALK 0, 2, 48
+    PATH_WALK 0, 1, 11
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, 0, 22
+    PATH_POBJ POBJ_NORTH
+    PATH_WALK 0, -1, 8
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, 0, 8
+    PATH_POBJ POBJ_INVIS
+    PATH_WALK -1, 0, 6
+    PATH_WALK 0, 1, 24
+    PATH_WALK 1, 0, 24
+    PATH_WALK 0, 1, 8
+    PATH_WALK 2, 0, 4
+    PATH_WALK 0, 1, 16
+    PATH_WALK 2, 0, 4
+    PATH_WALK 0, 2, 13
+    PATH_POBJ POBJ_SOUTH
+    PATH_WALK 0, 1, 6
     PATH_HALT
 
 DataX_LocationData_CityToSpace_path:
     PATH_PSFX PSFX_LAUNCH
     PATH_POBJ POBJ_SPACESHIP
-    PATH_WALK 0, -2, 40
+    PATH_WALK 0, -2, 50
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_SpaceToCity_path:
     PATH_PSFX PSFX_LAUNCH
     PATH_POBJ POBJ_SPACESHIP
-    PATH_WALK 0, 2, 40
+    PATH_WALK 0, 2, 50
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 

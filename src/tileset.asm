@@ -80,7 +80,12 @@ _LoadTileset_Title:
     ret
 _LoadTileset_MapCity:
     SKIP_TO_TILE $c0
-    COPY_FROM_ROMX DataX_CityMapTiles_start, DataX_CityMapTiles_end
+    COPY_FROM_ROMX DataX_MapLaunchTiles_start, DataX_MapLaunchTiles_end
+    SKIP_TO_TILE $d0
+    COPY_FROM_ROMX DataX_MapCoverTiles_start, DataX_MapCoverTiles_end
+    COPY_FROM_ROMX DataX_MapOfficeTiles_start, DataX_MapOfficeTiles_end
+    SKIP_TO_TILE $e0
+    COPY_FROM_ROMX DataX_MapSkylineTiles_start, DataX_MapSkylineTiles_end
     ret
 _LoadTileset_MapForest:
     SKIP_TO_TILE $a0
@@ -88,7 +93,9 @@ _LoadTileset_MapForest:
     SKIP_TO_TILE $b0
     COPY_FROM_ROMX DataX_MapTreeTiles_start, DataX_MapTreeTiles_end
     SKIP_TO_TILE $c0
-    COPY_FROM_ROMX DataX_FarmMapTiles_start, DataX_FarmMapTiles_end
+    COPY_FROM_ROMX DataX_MapPipeTiles_start, DataX_MapPipeTiles_end
+    SKIP_TO_TILE $d0
+    COPY_FROM_ROMX DataX_MapBarnTiles_start, DataX_MapBarnTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_MapRiverTiles_start, DataX_MapRiverTiles_end
@@ -96,13 +103,15 @@ _LoadTileset_MapForest:
     jp Func_SetAnimatedTile
 _LoadTileset_MapSewer:
     SKIP_TO_TILE $c0
-    COPY_FROM_ROMX DataX_SewerMapTiles_start, DataX_SewerMapTiles_end
+    COPY_FROM_ROMX DataX_MapPipeTiles_start, DataX_MapPipeTiles_end
+    SKIP_TO_TILE $d0
+    COPY_FROM_ROMX DataX_MapBrickTiles_start, DataX_MapBrickTiles_end
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTile
 _LoadTileset_MapSpace:
     SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
-    SKIP_TO_TILE $fc
+    SKIP_TO_TILE $fb
     COPY_FROM_ROMX DataX_MapStarsTiles_start, DataX_MapStarsTiles_end
     xld hl, DataX_TwinkleTiles_tile_arr
     jp Func_SetAnimatedTile
@@ -112,11 +121,15 @@ _LoadTileset_MapWorld:
     SKIP_TO_TILE $b0
     COPY_FROM_ROMX DataX_MapTreeTiles_start, DataX_MapTreeTiles_end
     SKIP_TO_TILE $c0
-    COPY_FROM_ROMX DataX_FarmMapTiles_start, DataX_FarmMapTiles_end
+    COPY_FROM_ROMX DataX_MapPipeTiles_start, DataX_MapPipeTiles_end
+    SKIP_TO_TILE $d0
+    COPY_FROM_ROMX DataX_MapBarnTiles_start, DataX_MapBarnTiles_end
+    SKIP_TO_TILE $d4
+    COPY_FROM_ROMX DataX_MapOfficeTiles_start, DataX_MapOfficeTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     COPY_FROM_ROMX DataX_MapRiverTiles_start, DataX_MapRiverTiles_end
-    SKIP_TO_TILE $fc
+    SKIP_TO_TILE $fb
     COPY_FROM_ROMX DataX_MapStarsTiles_start, DataX_MapStarsTiles_end
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTile

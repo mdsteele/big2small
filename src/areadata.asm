@@ -432,7 +432,7 @@ DataX_Sewer_area:
 _Sewer_Node0:
     .begin
     DB 13, 5  ; row/col
-    D_TRAIL TN1, TN1, TN1, TN1, TW1, TW1, TW1, TW1, TW1, TW1
+    D_TRAIL TN1, TW1, TW1, TW1, TN1, TN1
     DB PADF_UP | EXIT_MAP      ; prev
     DB PADF_RIGHT | 1          ; next
     DB 0                       ; bonus

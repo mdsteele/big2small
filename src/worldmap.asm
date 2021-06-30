@@ -122,7 +122,7 @@ Func_WorldMapLoad:
     ld [Ram_AnimationClock_u8], a
 _WorldMapLoad_LoadTileMap:
     ;; Load the colorset.
-    ld c, COLORSET_SPRING  ; param: colorset
+    ld c, COLORSET_WORLD  ; param: colorset
     xcall FuncX_Colorset_Load
     ;; Copy the tile data to VRAM.
     ld b, TILESET_MAP_WORLD  ; param: tileset
@@ -457,12 +457,12 @@ _WorldMapUpdateAvatarAndNextScroll_X:
     ld a, [Ram_WorldMapAvatarX_u8]
     ld b, a
     ;; Compute next value for rSCX.
-    if_ge SCRN_X / 2, jr, .notLow
-    xor a
+    if_ge SCRN_X / 2 - 8, jr, .notLow
+    ld a, -8
     jr .setPos
     .notLow
-    if_lt SCRN_VX - SCRN_X / 2, jr, .notHigh
-    ld a, SCRN_VX - SCRN_X
+    if_lt SCRN_VX - SCRN_X / 2 + 8, jr, .notHigh
+    ld a, SCRN_VX - SCRN_X + 8
     jr .setPos
     .notHigh
     sub SCRN_X / 2
@@ -651,9 +651,9 @@ _WorldMapSetCurrentArea_ScrollMap:
 
 Func_LoadWorldMapColor:
     ;; Copy the palette table into HRAM for later.
-    ld hl, Data_WorldMapBgPalettes_u8_arr8
-    ld c, LOW(Hram_WorldMapBgPalettes_u8_arr8)
-    ld b, 8
+    ld hl, Data_WorldMapBgPalettes_u8_arr16
+    ld c, LOW(Hram_WorldMapBgPalettes_u8_arr16)
+    ld b, 16
     .hramLoop
     ld a, [hl+]
     ldh [c], a
@@ -689,10 +689,11 @@ Func_LoadWorldMapColorQuarter:
     ;; Get next tile map value.
     ld a, [de]
     inc de
-    ;; Use bits 4-6 as an index into Hram_WorldMapBgPalettes_u8_arr8.
-    and %01110000
+    ;; Use bits 3-6 as an index into Hram_WorldMapBgPalettes_u8_arr8.
+    and %01111000
+    rlca
     swap a
-    add LOW(Hram_WorldMapBgPalettes_u8_arr8)
+    add LOW(Hram_WorldMapBgPalettes_u8_arr16)
     ld c, a
     ldh a, [c]
     ;; Write the palette from the table into VRAM.
@@ -701,17 +702,17 @@ Func_LoadWorldMapColorQuarter:
     jr nz, .loop
     ret
 
-;;; Maps from bits 4-6 of a world map tile ID to a color palette number.
-Data_WorldMapBgPalettes_u8_arr8:
-    DB 5, 1, 6, 3, 7, 6, 4, 4
+;;; Maps from bits 3-6 of a world map tile ID to a color palette number.
+Data_WorldMapBgPalettes_u8_arr16:
+    DB 5, 5, 1, 1, 6, 4, 3, 3, 7, 7, 6, 2, 4, 4, 4, 4
 
 ;;;=========================================================================;;;
 
 SECTION "HramWorldMapBgPalettes", HRAM
 
 ;;; Helper memory for Func_LoadWorldMapColor that holds a temporary copy of
-;;; Data_WorldMapBgPalettes_u8_arr8.
-Hram_WorldMapBgPalettes_u8_arr8:
-    DS 8
+;;; Data_WorldMapBgPalettes_u8_arr16.
+Hram_WorldMapBgPalettes_u8_arr16:
+    DS 16
 
 ;;;=========================================================================;;;

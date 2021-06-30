@@ -22,14 +22,17 @@ NUM_CPALS_PER_CSET EQU 8
 
 ;;;=========================================================================;;;
 
-;; Enum values for FuncX_Colorset_Load:
 RSRESET
+;;; Enum values for FuncX_Colorset_Load:
 COLORSET_SPRING RB 1
 COLORSET_SUMMER RB 1
 COLORSET_AUTUMN RB 1
 COLORSET_WINTER RB 1
 COLORSET_SEWER  RB 1
 COLORSET_SPACE  RB 1
+COLORSET_WORLD  RB 1
+;;; The number of colorsets:
+NUM_COLORSETS   RB 0
 
 ;;;=========================================================================;;;
 

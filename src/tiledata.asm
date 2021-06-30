@@ -62,25 +62,41 @@ DataX_SharedMapTiles_start::
     INCBIN "out/data/tiles/map_bridge.2bpp"
 DataX_SharedMapTiles_end::
 
-SECTION "CityMapTiles", ROMX
-DataX_CityMapTiles_start::
-    INCBIN "out/data/tiles/map_launch.2bpp"
-    INCBIN "out/data/tiles/map_office.2bpp"
-    DS 1 * sizeof_TILE
-    INCBIN "out/data/tiles/map_skyline.2bpp"
-DataX_CityMapTiles_end::
-
-SECTION "FarmMapTiles", ROMX
-DataX_FarmMapTiles_start::
-    INCBIN "out/data/tiles/map_silo.2bpp"
-    DS 13 * sizeof_TILE
+SECTION "MapBarnTiles", ROMX
+DataX_MapBarnTiles_start::
     INCBIN "out/data/tiles/map_barn.2bpp"
-DataX_FarmMapTiles_end::
+DataX_MapBarnTiles_end::
+
+SECTION "MapBrickTiles", ROMX
+DataX_MapBrickTiles_start::
+    INCBIN "out/data/tiles/map_brick.2bpp"
+DataX_MapBrickTiles_end::
+
+SECTION "MapCoverTiles", ROMX
+DataX_MapCoverTiles_start::
+    INCBIN "out/data/tiles/map_cover.2bpp"
+DataX_MapCoverTiles_end::
+
+SECTION "MapLaunchTiles", ROMX
+DataX_MapLaunchTiles_start::
+    INCBIN "out/data/tiles/map_launch.2bpp"
+DataX_MapLaunchTiles_end::
 
 SECTION "MapMountainTiles", ROMX
 DataX_MapMountainTiles_start::
     INCBIN "out/data/tiles/map_mountain.2bpp"
 DataX_MapMountainTiles_end::
+
+SECTION "MapOfficeTiles", ROMX
+DataX_MapOfficeTiles_start::
+    INCBIN "out/data/tiles/map_office.2bpp"
+DataX_MapOfficeTiles_end::
+
+SECTION "MapPipeTiles", ROMX
+DataX_MapPipeTiles_start::
+    INCBIN "out/data/tiles/map_silo.2bpp"
+    INCBIN "out/data/tiles/map_pipe.2bpp"
+DataX_MapPipeTiles_end::
 
 SECTION "MapRiverTiles", ROMX
 DataX_MapRiverTiles_start::
@@ -97,11 +113,10 @@ DataX_MapTreeTiles_start::
     INCBIN "out/data/tiles/map_tree.2bpp"
 DataX_MapTreeTiles_end::
 
-SECTION "SewerMapTiles", ROMX
-DataX_SewerMapTiles_start::
-    INCBIN "out/data/tiles/map_pipe.2bpp"
-    INCBIN "out/data/tiles/map_brick.2bpp"
-DataX_SewerMapTiles_end::
+SECTION "MapSkylineTiles", ROMX
+DataX_MapSkylineTiles_start::
+    INCBIN "out/data/tiles/map_skyline.2bpp"
+DataX_MapSkylineTiles_end::
 
 SECTION "SpaceMapTiles", ROMX
 DataX_SpaceMapTiles_start::

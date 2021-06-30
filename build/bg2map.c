@@ -121,6 +121,8 @@ int main(int argc, char **argv) {
         fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_bridge")) {
         fputc(0x98 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "map_cover")) {
+        fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_earth")) {
         fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_fence")) {
@@ -130,9 +132,9 @@ int main(int argc, char **argv) {
       } else if (0 == strcmp(tileset, "map_mountain")) {
         fputc(0xa0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_office")) {
-        fputc(0xd0 + tile_index, stdout);
+        fputc(0xd4 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_pipe")) {
-        fputc(0xc0 + tile_index, stdout);
+        fputc(0xc3 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_river")) {
         fputc(0xf0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_ship")) {
@@ -142,7 +144,7 @@ int main(int argc, char **argv) {
       } else if (0 == strcmp(tileset, "map_skyline")) {
         fputc(0xe0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_stars")) {
-        fputc(0xfc + tile_index, stdout);
+        fputc(0xfb + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_station")) {
         fputc(0xc0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_trail")) {
