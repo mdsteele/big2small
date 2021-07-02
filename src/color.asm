@@ -173,111 +173,23 @@ _Colorset_Load_PipeObjPalette:
 
 DataX_Colorset_Table_cset_ptr_arr:
     .begin
-    ASSERT @ - .begin == 2 * COLORSET_SPRING
-    DW DataX_Colorset_Spring_cset
-    ASSERT @ - .begin == 2 * COLORSET_SUMMER
-    DW DataX_Colorset_Summer_cset
     ASSERT @ - .begin == 2 * COLORSET_AUTUMN
     DW DataX_Colorset_Autumn_cset
-    ASSERT @ - .begin == 2 * COLORSET_WINTER
-    DW DataX_Colorset_Winter_cset
+    ASSERT @ - .begin == 2 * COLORSET_CITY
+    DW DataX_Colorset_City_cset
     ASSERT @ - .begin == 2 * COLORSET_MOON
     DW DataX_Colorset_Moon_cset
     ASSERT @ - .begin == 2 * COLORSET_SEWER
     DW DataX_Colorset_Sewer_cset
     ASSERT @ - .begin == 2 * COLORSET_SPACE
     DW DataX_Colorset_Space_cset
+    ASSERT @ - .begin == 2 * COLORSET_SUMMER
+    DW DataX_Colorset_Summer_cset
+    ASSERT @ - .begin == 2 * COLORSET_WINTER
+    DW DataX_Colorset_Winter_cset
     ASSERT @ - .begin == 2 * COLORSET_WORLD
     DW DataX_Colorset_World_cset
     ASSERT @ - .begin == 2 * NUM_COLORSETS
-
-DataX_Colorset_Spring_cset:
-    .begin
-    ;; Palette 0 (menu)
-    D_COLOR 255, 255, 232
-    D_COLOR 192, 224, 128
-    D_COLOR 64, 128, 0
-    D_COLOR 0, 64, 0
-    ;; Palette 1 (wood)
-    D_COLOR 255, 255, 192
-    D_COLOR 192, 128, 64
-    D_COLOR 128, 96, 32
-    D_COLOR 64, 32, 16
-    ;; Palette 2 (apple)
-    D_COLOR 255, 255, 192
-    D_COLOR 224, 255, 96
-    D_COLOR 0, 192, 0
-    D_COLOR 0, 64, 0
-    ;; Palette 3 (plants)
-    D_COLOR 255, 255, 192
-    D_COLOR 0, 255, 0
-    D_COLOR 0, 128, 0
-    D_COLOR 0, 64, 0
-    ;; Palette 4 (water)
-    D_COLOR 255, 255, 192
-    D_COLOR 0, 196, 255
-    D_COLOR 128, 96, 32
-    D_COLOR 64, 32, 0
-    ;; Palette 5 (cheese)
-    D_COLOR 255, 255, 192
-    D_COLOR 255, 192, 0
-    D_COLOR 128, 96, 0
-    D_COLOR 64, 48, 0
-    ;; Palette 6 (brick)
-    D_COLOR 255, 255, 192
-    D_COLOR 192, 160, 160
-    D_COLOR 128, 70, 70
-    D_COLOR 32, 0, 0
-    ;; Palette 7 (metal)
-    D_COLOR 255, 255, 192
-    D_COLOR 192, 192, 192
-    D_COLOR 96, 96, 96
-    D_COLOR 0, 0, 0
-ASSERT @ - .begin == sizeof_CSET
-
-DataX_Colorset_Summer_cset:
-    .begin
-    ;; Palette 0 (menu)
-    D_COLOR 255, 232, 216
-    D_COLOR 96, 192, 96
-    D_COLOR 64, 128, 64
-    D_COLOR 0, 32, 0
-    ;; Palette 1 (wood)
-    D_COLOR 255, 240, 224
-    D_COLOR 192, 128, 64
-    D_COLOR 128, 96, 32
-    D_COLOR 64, 32, 16
-    ;; Palette 2 (apple)
-    D_COLOR 255, 240, 224
-    D_COLOR 255, 160, 0
-    D_COLOR 128, 192, 0
-    D_COLOR 0, 64, 0
-    ;; Palette 3 (plants)
-    D_COLOR 255, 240, 224
-    D_COLOR 0, 208, 0
-    D_COLOR 0, 128, 0
-    D_COLOR 0, 64, 0
-    ;; Palette 4 (water)
-    D_COLOR 255, 240, 224
-    D_COLOR 0, 196, 255
-    D_COLOR 128, 96, 32
-    D_COLOR 64, 32, 0
-    ;; Palette 5 (cheese)
-    D_COLOR 255, 240, 224
-    D_COLOR 255, 192, 0
-    D_COLOR 128, 96, 0
-    D_COLOR 64, 48, 0
-    ;; Palette 6 (brick)
-    D_COLOR 255, 240, 224
-    D_COLOR 192, 160, 160
-    D_COLOR 128, 70, 70
-    D_COLOR 32, 0, 0
-    ;; Palette 7 (metal)
-    D_COLOR 255, 240, 224
-    D_COLOR 192, 192, 192
-    D_COLOR 96, 96, 96
-    D_COLOR 0, 0, 0
-ASSERT @ - .begin == sizeof_CSET
 
 DataX_Colorset_Autumn_cset:
     .begin
@@ -293,8 +205,8 @@ DataX_Colorset_Autumn_cset:
     D_COLOR 64, 32, 16
     ;; Palette 2 (apple)
     D_COLOR 255, 224, 192
-    D_COLOR 255, 0, 0
-    D_COLOR 0, 192, 0
+    D_COLOR 192, 0, 80
+    D_COLOR 0, 96, 0
     D_COLOR 0, 64, 0
     ;; Palette 3 (plants)
     D_COLOR 255, 224, 192
@@ -311,7 +223,7 @@ DataX_Colorset_Autumn_cset:
     D_COLOR 255, 192, 0
     D_COLOR 128, 96, 0
     D_COLOR 64, 48, 0
-    ;; Palette 6 (brick)
+    ;; Palette 6 (walls)
     D_COLOR 255, 224, 192
     D_COLOR 192, 160, 160
     D_COLOR 128, 70, 70
@@ -323,48 +235,48 @@ DataX_Colorset_Autumn_cset:
     D_COLOR 0, 0, 0
 ASSERT @ - .begin == sizeof_CSET
 
-DataX_Colorset_Winter_cset:
+DataX_Colorset_City_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 232, 232
-    D_COLOR 224, 128, 128
-    D_COLOR 128, 0, 0
-    D_COLOR 64, 0, 0
+    D_COLOR 255, 224, 255
+    D_COLOR 192, 0, 192
+    D_COLOR 96, 0, 96
+    D_COLOR 0, 0, 0
     ;; Palette 1 (wood)
-    D_COLOR 255, 255, 255
+    D_COLOR 224, 216, 216
     D_COLOR 192, 128, 64
     D_COLOR 128, 96, 32
     D_COLOR 64, 32, 16
     ;; Palette 2 (apple)
-    D_COLOR 255, 255, 255
+    D_COLOR 224, 216, 216
     D_COLOR 192, 0, 80
     D_COLOR 0, 96, 0
     D_COLOR 0, 64, 0
     ;; Palette 3 (plants)
-    D_COLOR 255, 255, 255
-    D_COLOR 224, 224, 224
-    D_COLOR 64, 128, 64
+    D_COLOR 224, 216, 216
+    D_COLOR 0, 208, 0
+    D_COLOR 0, 128, 0
     D_COLOR 0, 64, 0
-    ;; Palette 4 (water)
-    D_COLOR 255, 255, 255
-    D_COLOR 192, 224, 255
-    D_COLOR 128, 96, 32
+    ;; Palette 4 (water/sky)
+    D_COLOR 224, 216, 216
+    D_COLOR 152, 168, 200
+    D_COLOR 112, 64, 64
     D_COLOR 64, 32, 0
     ;; Palette 5 (cheese)
-    D_COLOR 255, 255, 255
+    D_COLOR 224, 216, 216
     D_COLOR 255, 192, 0
     D_COLOR 128, 96, 0
     D_COLOR 64, 48, 0
-    ;; Palette 6 (brick)
-    D_COLOR 255, 255, 255
-    D_COLOR 192, 160, 160
-    D_COLOR 128, 70, 70
-    D_COLOR 32, 0, 0
+    ;; Palette 6 (buildings)
+    D_COLOR 224, 216, 216
+    D_COLOR 152, 168, 200
+    D_COLOR 64, 136, 96
+    D_COLOR 0, 0, 16
     ;; Palette 7 (metal)
-    D_COLOR 255, 255, 255
-    D_COLOR 192, 192, 192
-    D_COLOR 96, 96, 96
-    D_COLOR 0, 0, 0
+    D_COLOR 224, 216, 216
+    D_COLOR 176, 176, 192
+    D_COLOR 88, 88, 96
+    D_COLOR 0, 0, 8
 ASSERT @ - .begin == sizeof_CSET
 
 DataX_Colorset_Moon_cset:
@@ -430,7 +342,7 @@ DataX_Colorset_Sewer_cset:
     D_COLOR 0, 64, 0
     ;; Palette 3 (plants)
     D_COLOR 216, 216, 224
-    D_COLOR 0, 255, 0
+    D_COLOR 0, 208, 0
     D_COLOR 0, 128, 0
     D_COLOR 0, 64, 0
     ;; Palette 4 (water)
@@ -474,7 +386,7 @@ DataX_Colorset_Space_cset:
     D_COLOR 0, 64, 0
     ;; Palette 3 (plants)
     D_COLOR 255, 232, 240
-    D_COLOR 0, 255, 0
+    D_COLOR 0, 208, 0
     D_COLOR 0, 128, 0
     D_COLOR 0, 64, 0
     ;; Palette 4 (stars)
@@ -499,6 +411,94 @@ DataX_Colorset_Space_cset:
     D_COLOR 0, 0, 0
 ASSERT @ - .begin == sizeof_CSET
 
+DataX_Colorset_Summer_cset:
+    .begin
+    ;; Palette 0 (menu)
+    D_COLOR 255, 232, 216
+    D_COLOR 96, 192, 96
+    D_COLOR 64, 128, 64
+    D_COLOR 0, 32, 0
+    ;; Palette 1 (wood)
+    D_COLOR 255, 240, 224
+    D_COLOR 192, 128, 64
+    D_COLOR 128, 96, 32
+    D_COLOR 64, 32, 16
+    ;; Palette 2 (apple)
+    D_COLOR 255, 240, 224
+    D_COLOR 255, 0, 0
+    D_COLOR 0, 192, 0
+    D_COLOR 0, 64, 0
+    ;; Palette 3 (plants)
+    D_COLOR 255, 240, 224
+    D_COLOR 0, 208, 0
+    D_COLOR 0, 128, 0
+    D_COLOR 0, 64, 0
+    ;; Palette 4 (water)
+    D_COLOR 255, 240, 224
+    D_COLOR 144, 180, 255
+    D_COLOR 128, 96, 32
+    D_COLOR 64, 32, 0
+    ;; Palette 5 (cheese)
+    D_COLOR 255, 240, 224
+    D_COLOR 255, 192, 0
+    D_COLOR 128, 96, 0
+    D_COLOR 64, 48, 0
+    ;; Palette 6 (walls)
+    D_COLOR 255, 240, 224
+    D_COLOR 192, 160, 160
+    D_COLOR 128, 70, 70
+    D_COLOR 32, 0, 0
+    ;; Palette 7 (metal)
+    D_COLOR 255, 240, 224
+    D_COLOR 192, 192, 192
+    D_COLOR 96, 96, 96
+    D_COLOR 0, 0, 0
+ASSERT @ - .begin == sizeof_CSET
+
+DataX_Colorset_Winter_cset:
+    .begin
+    ;; Palette 0 (menu)
+    D_COLOR 255, 232, 232
+    D_COLOR 224, 128, 128
+    D_COLOR 128, 0, 0
+    D_COLOR 64, 0, 0
+    ;; Palette 1 (wood)
+    D_COLOR 255, 255, 255
+    D_COLOR 192, 128, 64
+    D_COLOR 128, 96, 32
+    D_COLOR 64, 32, 16
+    ;; Palette 2 (apple)
+    D_COLOR 255, 255, 255
+    D_COLOR 192, 0, 80
+    D_COLOR 0, 96, 0
+    D_COLOR 0, 64, 0
+    ;; Palette 3 (plants)
+    D_COLOR 255, 255, 255
+    D_COLOR 224, 224, 224
+    D_COLOR 64, 128, 64
+    D_COLOR 0, 64, 0
+    ;; Palette 4 (water)
+    D_COLOR 255, 255, 255
+    D_COLOR 192, 224, 255
+    D_COLOR 128, 96, 32
+    D_COLOR 64, 32, 0
+    ;; Palette 5 (cheese)
+    D_COLOR 255, 255, 255
+    D_COLOR 255, 192, 0
+    D_COLOR 128, 96, 0
+    D_COLOR 64, 48, 0
+    ;; Palette 6 (walls)
+    D_COLOR 255, 255, 255
+    D_COLOR 192, 160, 160
+    D_COLOR 128, 70, 70
+    D_COLOR 32, 0, 0
+    ;; Palette 7 (metal)
+    D_COLOR 255, 255, 255
+    D_COLOR 192, 192, 192
+    D_COLOR 96, 96, 96
+    D_COLOR 0, 0, 0
+ASSERT @ - .begin == sizeof_CSET
+
 DataX_Colorset_World_cset:
     .begin
     ;; Palette 0 (menu)
@@ -513,19 +513,19 @@ DataX_Colorset_World_cset:
     D_COLOR 64, 32, 16
     ;; Palette 2 (skyscrapers)
     D_COLOR 255, 255, 192
-    D_COLOR 180, 144, 255
-    D_COLOR 96, 112, 128
+    D_COLOR 144, 180, 255
+    D_COLOR 64, 136, 96
     D_COLOR 0, 0, 16
     ;; Palette 3 (trees)
     D_COLOR 255, 255, 192
-    D_COLOR 0, 255, 0
+    D_COLOR 0, 208, 0
     D_COLOR 0, 128, 0
     D_COLOR 0, 64, 0
     ;; Palette 4 (water)
-    D_COLOR 255, 224, 192
-    D_COLOR 180, 144, 255
+    D_COLOR 255, 255, 192
+    D_COLOR 144, 180, 255
     D_COLOR 112, 64, 64
-    D_COLOR 64, 32, 0
+    D_COLOR 72, 32, 0
     ;; Palette 5 (wheat)
     D_COLOR 255, 255, 192
     D_COLOR 255, 192, 0

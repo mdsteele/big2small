@@ -238,7 +238,7 @@ ASSERT @ - _Forest_Node0 == NUM_FOREST_PUZZLES * sizeof_NODE
 DataX_Farm_area:
     .begin
     D_BPTR DataX_Circus_song
-    DB COLORSET_AUTUMN
+    DB COLORSET_SUMMER
     DB TILESET_MAP_FOREST
     D_BPTR DataX_FarmTileMap_start
     D_TITLE 20, "HUGESON FARMS"
@@ -363,7 +363,7 @@ ASSERT @ - _Mountain_Node0 == NUM_MOUNTAIN_PUZZLES * sizeof_NODE
 DataX_Lake_area:
     .begin
     D_BPTR DataX_RestYe_song
-    DB COLORSET_AUTUMN
+    DB COLORSET_SUMMER
     DB TILESET_MAP_FOREST
     D_BPTR DataX_LakeTileMap_start
     D_TITLE 20, "MIDDLING MARSH"
@@ -488,7 +488,7 @@ ASSERT @ - _Sewer_Node0 == NUM_SEWER_PUZZLES * sizeof_NODE
 DataX_City_area:
     .begin
     D_BPTR DataX_RestYe_song
-    DB COLORSET_SEWER
+    DB COLORSET_CITY
     DB TILESET_MAP_CITY
     D_BPTR DataX_CityTileMap_start
     D_TITLE 20, "MICROVILLE"
