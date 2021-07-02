@@ -120,6 +120,8 @@ DataX_MapSkylineTiles_end::
 
 SECTION "SpaceMapTiles", ROMX
 DataX_SpaceMapTiles_start::
+    INCBIN "out/data/tiles/map_moon.2bpp"
+    DS 7 * sizeof_TILE
     INCBIN "out/data/tiles/map_station.2bpp"
     DS 2 * sizeof_TILE
     INCBIN "out/data/tiles/map_earth.2bpp"

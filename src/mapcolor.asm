@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/hardware.inc"
+INCLUDE "src/macros.inc"
 
 ;;;=========================================================================;;;
 
@@ -26,7 +27,7 @@ TRAIL_PALETTE EQU 5
 
 ;;;=========================================================================;;;
 
-SECTION "AreaMapColorFunctions", ROM0
+SECTION "MapColorFunctions", ROM0
 
 ;;; If color is enabled, sets the palette number for the specified trail tile.
 ;;; @param hl A pointer to BG map byte in VRAM for the trail tile.
@@ -51,16 +52,8 @@ Func_SetTrailTileColor::
 ;;; @prereq Correct ROM bank for de pointer is set.
 ;;; @param de Pointer to the BG map data for the area.
 Func_LoadAreaMapColor::
-    ;; Copy the palette table into HRAM for later.
-    ld hl, Data_AreaMapBgPalettes_u8_arr8
-    ld c, LOW(Hram_AreaMapBgPalettes_u8_arr8)
-    ld b, 8
-    .hramLoop
-    ld a, [hl+]
-    ldh [c], a
-    inc c
-    dec b
-    jr nz, .hramLoop
+    ld hl, Data_AreaMapBgPalettes_u8_arr16  ; param: palette array
+    call Func_LoadHramPalettes  ; preserves de
     ;; Switch to VRAM bank 1.
     ld a, 1
     ldh [rVBK], a
@@ -89,7 +82,7 @@ Func_LoadAreaMapColor::
     ldh [rVBK], a
     ret
 
-;;; @prereq Hram_AreaMapBgPalettes_u8_arr8 has been populated.
+;;; @prereq Hram_MapBgPalettes_u8_arr16 has been populated.
 ;;; @prereq Correct ROM bank for de pointer is set.
 ;;; @prereq VRAM bank is set to 1.
 ;;; @param de Pointer to start of area tile map row.
@@ -102,10 +95,11 @@ Func_LoadAreaMapColorRow:
     ;; Get next tile map value.
     ld a, [de]
     inc de
-    ;; Use bits 4-6 as an index into Hram_AreaMapBgPalettes_u8_arr8.
-    and %01110000
+    ;; Use bits 3-6 as an index into Hram_MapBgPalettes_u8_arr16.
+    and %01111000
+    rlca
     swap a
-    add LOW(Hram_AreaMapBgPalettes_u8_arr8)
+    add LOW(Hram_MapBgPalettes_u8_arr16)
     ld c, a
     ldh a, [c]
     ;; Write the palette from the table into VRAM.
@@ -117,17 +111,88 @@ Func_LoadAreaMapColorRow:
     add hl, bc
     ret
 
-;;; Maps from bits 4-6 of an area map tile ID to a color palette number.
-Data_AreaMapBgPalettes_u8_arr8:
-    DB TRAIL_PALETTE, 1, 6, 3, 7, 6, 4, 4
+;;;=========================================================================;;;
+
+Func_LoadWorldMapColor::
+    ;; Copy the palette table into HRAM for later.
+    ld hl, Data_WorldMapBgPalettes_u8_arr16
+    call Func_LoadHramPalettes
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Load the color data into VRAM.
+    ld hl, Vram_BgMap
+    xld de, DataX_WorldTileMap_start
+    ASSERT $400 == DataX_WorldTileMap_end - DataX_WorldTileMap_start
+    REPT 4
+    call Func_LoadWorldMapColorQuarter
+    ENDR
+    ;; Switch back to VRAM bank 0.
+    xor a
+    ldh [rVBK], a
+    ret
+
+;;; @prereq Hram_MapBgPalettes_u8_arr8 has been populated.
+;;; @prereq Correct ROM bank for de pointer is set.
+;;; @prereq VRAM bank is set to 1.
+;;; @param de Pointer to start of world tile map quarter.
+;;; @param hl Pointer to start of Vram_BgMap quarter.
+;;; @return de Pointer to start of next area tile map quarter.
+;;; @return hl Pointer to start of next Vram_BgMap quarter.
+Func_LoadWorldMapColorQuarter:
+    ;; Perform $100 iterations.
+    ld b, 0
+    .loop
+    ;; Get next tile map value.
+    ld a, [de]
+    inc de
+    ;; Use bits 3-6 as an index into Hram_WorldMapBgPalettes_u8_arr8.
+    and %01111000
+    rlca
+    swap a
+    add LOW(Hram_MapBgPalettes_u8_arr16)
+    ld c, a
+    ldh a, [c]
+    ;; Write the palette from the table into VRAM.
+    ld [hl+], a
+    dec b
+    jr nz, .loop
+    ret
 
 ;;;=========================================================================;;;
 
-SECTION "HramAreaMapBgPalettes", HRAM
+;;; @param hl Pointer to u8_arr16 to copy into HRAM.
+;;; @preserve de
+Func_LoadHramPalettes:
+    ld c, LOW(Hram_MapBgPalettes_u8_arr16)
+    ld b, 16
+    .hramLoop
+    ld a, [hl+]
+    ldh [c], a
+    inc c
+    dec b
+    jr nz, .hramLoop
+    ret
+
+;;; Maps from bits 3-6 of an area map tile ID to a color palette number.
+Data_AreaMapBgPalettes_u8_arr16:
+    .begin
+    DB TRAIL_PALETTE, 5, 1, 1, 6, 6, 3, 3, 7, 7, 6, 6, 4, 4, 4, 4
+    ASSERT @ - .begin == 16
+
+;;; Maps from bits 3-6 of a world map tile ID to a color palette number.
+Data_WorldMapBgPalettes_u8_arr16:
+    .begin
+    DB 5, 5, 1, 1, 6, 4, 3, 3, 7, 7, 6, 2, 4, 4, 4, 4
+    ASSERT @ - .begin == 16
+
+;;;=========================================================================;;;
+
+SECTION "HramMapBgPalettes", HRAM
 
 ;;; Helper memory for Func_LoadAreaMapColor that holds a temporary copy of
 ;;; Data_AreaMapBgPalettes_u8_arr8.
-Hram_AreaMapBgPalettes_u8_arr8:
-    DS 8
+Hram_MapBgPalettes_u8_arr16:
+    DS 16
 
 ;;;=========================================================================;;;

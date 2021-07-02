@@ -181,6 +181,8 @@ DataX_Colorset_Table_cset_ptr_arr:
     DW DataX_Colorset_Autumn_cset
     ASSERT @ - .begin == 2 * COLORSET_WINTER
     DW DataX_Colorset_Winter_cset
+    ASSERT @ - .begin == 2 * COLORSET_MOON
+    DW DataX_Colorset_Moon_cset
     ASSERT @ - .begin == 2 * COLORSET_SEWER
     DW DataX_Colorset_Sewer_cset
     ASSERT @ - .begin == 2 * COLORSET_SPACE
@@ -362,6 +364,50 @@ DataX_Colorset_Winter_cset:
     D_COLOR 255, 255, 255
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
+    D_COLOR 0, 0, 0
+ASSERT @ - .begin == sizeof_CSET
+
+DataX_Colorset_Moon_cset:
+    .begin
+    ;; Palette 0 (menu)
+    D_COLOR 255, 224, 255
+    D_COLOR 192, 0, 192
+    D_COLOR 96, 0, 96
+    D_COLOR 0, 0, 0
+    ;; Palette 1 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 2 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 3 (moon)
+    D_COLOR 255, 255, 192
+    D_COLOR 255, 192, 0
+    D_COLOR 128, 96, 0
+    D_COLOR 0, 0, 0
+    ;; Palette 4 (stars)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 5 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 6 (moon, again)
+    D_COLOR 255, 255, 192
+    D_COLOR 255, 192, 0
+    D_COLOR 128, 96, 0
+    D_COLOR 0, 0, 0
+    ;; Palette 7 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
     D_COLOR 0, 0, 0
 ASSERT @ - .begin == sizeof_CSET
 

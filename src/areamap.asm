@@ -305,7 +305,7 @@ _LoadAreaMap_LoadTileMap:
     push de
     romb c
     ld hl, Vram_BgMap + SCRN_VX_B
-    ld b, SCRN_VY_B - 2
+    ld b, SCRN_Y_B - 2
     .rowLoop
     ld c, SCRN_X_B
     .colLoop
