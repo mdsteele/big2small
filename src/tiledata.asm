@@ -56,9 +56,10 @@ DataX_UrlTiles_end::
 SECTION "SharedMapTiles", ROMX
 DataX_SharedMapTiles_start::
     INCBIN "out/data/tiles/map_trail.2bpp"
-    DS 12 * sizeof_TILE
+    DS 4 * sizeof_TILE
+    INCBIN "out/data/tiles/map_sat.2bpp"
+    DS 3 * sizeof_TILE
     INCBIN "out/data/tiles/map_fence.2bpp"
-    DS 1 * sizeof_TILE
     INCBIN "out/data/tiles/map_bridge.2bpp"
 DataX_SharedMapTiles_end::
 

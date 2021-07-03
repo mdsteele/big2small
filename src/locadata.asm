@@ -171,7 +171,7 @@ DataX_LocationData_loca_arr:
     DW DataX_LocationData_CityToSewer_path
     DW DataX_LocationData_CityToSpace_path
     ASSERT @ - .begin == sizeof_LOCA * AREA_SPACE
-    DB 198, 32     ; X, Y
+    DB 213, 30     ; X, Y
     DB PADF_DOWN   ; prev dir
     DB 0           ; next dir
     DW DataX_LocationData_SpaceToCity_path
@@ -370,15 +370,23 @@ DataX_LocationData_CityToSpace_path:
     PATH_PSFX PSFX_LAUNCH
     PATH_POBJ POBJ_SPACESHIP
     PATH_WALK 0, -1, 12
-    PATH_WALK 0, -2, 44
+    PATH_WALK 0, -2, 39
+    PATH_WALK 0, -1, 12
+    PATH_WALK 0, 0, 4
+    PATH_POBJ POBJ_EAST
+    PATH_WALK 1, 0, 15
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 
 DataX_LocationData_SpaceToCity_path:
+    PATH_POBJ POBJ_WEST
+    PATH_WALK -1, 0, 15
     PATH_PSFX PSFX_LAUNCH
     PATH_POBJ POBJ_SPACESHIP
-    PATH_WALK 0, 2, 44
     PATH_WALK 0, 1, 12
+    PATH_WALK 0, 2, 39
+    PATH_WALK 0, 1, 12
+    PATH_WALK 0, 0, 12
     PATH_POBJ POBJ_SOUTH
     PATH_HALT
 

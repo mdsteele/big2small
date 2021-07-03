@@ -177,13 +177,13 @@ Func_LoadHramPalettes:
 ;;; Maps from bits 3-6 of an area map tile ID to a color palette number.
 Data_AreaMapBgPalettes_u8_arr16:
     .begin
-    DB TRAIL_PALETTE, 5, 1, 1, 6, 6, 3, 3, 7, 7, 6, 6, 4, 4, 4, 4
+    DB TRAIL_PALETTE, 7, 1, 1, 6, 6, 3, 3, 7, 7, 6, 6, 4, 4, 4, 4
     ASSERT @ - .begin == 16
 
 ;;; Maps from bits 3-6 of a world map tile ID to a color palette number.
 Data_WorldMapBgPalettes_u8_arr16:
     .begin
-    DB 5, 5, 1, 1, 6, 4, 3, 3, 7, 7, 6, 2, 4, 4, 4, 4
+    DB 5, 7, 1, 1, 6, 4, 3, 3, 7, 7, 6, 2, 4, 4, 4, 4
     ASSERT @ - .begin == 16
 
 ;;;=========================================================================;;;

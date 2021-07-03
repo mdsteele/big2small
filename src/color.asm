@@ -525,7 +525,7 @@ DataX_Colorset_World_cset:
     D_COLOR 255, 255, 192
     D_COLOR 144, 180, 255
     D_COLOR 112, 64, 64
-    D_COLOR 72, 32, 0
+    D_COLOR 64, 0, 0
     ;; Palette 5 (wheat)
     D_COLOR 255, 255, 192
     D_COLOR 255, 192, 0
@@ -540,7 +540,7 @@ DataX_Colorset_World_cset:
     D_COLOR 255, 255, 192
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
-    D_COLOR 0, 0, 0
+    D_COLOR 64, 0, 0
 ASSERT @ - .begin == sizeof_CSET
 
 ;;;=========================================================================;;;

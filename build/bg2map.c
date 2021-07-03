@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
       } else if (0 == strcmp(tileset, "map_brick")) {
         fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_bridge")) {
-        fputc(0x98 + tile_index, stdout);
+        fputc(0x97 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_cover")) {
         fputc(0xd0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_earth")) {
@@ -139,6 +139,8 @@ int main(int argc, char **argv) {
         fputc(0xc3 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_river")) {
         fputc(0xf0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "map_sat")) {
+        fputc(0x88 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_ship")) {
         fputc(0xd5 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_silo")) {
