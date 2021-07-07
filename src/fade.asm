@@ -203,7 +203,7 @@ _FadeOut_Color:
     call Func_FadeBgColorToHalfSaturation
     call Func_FadeWait
     ;; Set BG color palettes to 1/4 saturation, then disable objects and wait
-	;; for a few frames.
+    ;; for a few frames.
     call Func_FadeBgColorToQuarterSaturation
     ldh a, [rLCDC]
     and ~LCDCF_OBJON

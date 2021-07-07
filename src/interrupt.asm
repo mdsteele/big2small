@@ -54,7 +54,7 @@ SECTION "InterruptStat", ROM0[$0048]
     push af
     push bc
     ;; Read Hram_StatNext_hlcd_hptr (which must be set to
-	;; LOW(Hram_StatTable_hlcd_arr8) during each VBlank) into c.
+    ;; LOW(Hram_StatTable_hlcd_arr8) during each VBlank) into c.
     ldh a, [Hram_StatNext_hlcd_hptr]
     ld c, a
     ;; The first byte in the table entry is the rLCDC value to set.

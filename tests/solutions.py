@@ -93,8 +93,8 @@ RE_PUZZ_LABEL = re.compile(r'^DataX_([a-zA-Z0-9_]+)_puzz:$', re.MULTILINE)
 RE_TERRAIN_ROW = re.compile(
     r'^ *DB (.*)(?:\n.* (?:0|\$([0-9])([0-9])), (?:0|\$([0-9])([0-9])))?$',
     re.MULTILINE)
-RE_ANIM = re.compile('D_ANIM \$([0-9a-f])([0-9a-f]),')
-RE_PAR = re.compile('D_PAR \$([0-9]{4})')
+RE_ANIM = re.compile(r'D_ANIM \$([0-9a-f])([0-9a-f]),')
+RE_PAR = re.compile(r'D_PAR \$([0-9]{4})')
 RE_ASSERT = re.compile(r'ASSERT')
 
 def load_puzzles():
@@ -222,7 +222,7 @@ def test_solution(puzzle, solution):
 
 #=============================================================================#
 
-if __name__ == '__main__':
+def run_tests():
     puzzles = load_puzzles()
     num_passed = 0
     num_failed = 0
@@ -234,6 +234,10 @@ if __name__ == '__main__':
             print('FAILED: {}: {}'.format(name, err))
             num_failed += 1
         else: num_passed += 1
-    print('{} passed, {} failed'.format(num_passed, num_failed))
+    print('solutions: {} passed, {} failed'.format(num_passed, num_failed))
+    return (num_passed, num_failed)
+
+if __name__ == '__main__':
+    run_tests()
 
 #=============================================================================#

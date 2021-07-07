@@ -52,7 +52,7 @@ run: $(ROMFILE)
 
 .PHONY: test
 test:
-	python tests/solutions.py
+	python tests/all.py
 
 .PHONY: clean
 clean:
