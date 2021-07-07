@@ -205,7 +205,7 @@ _TitleScreen_RunLoop:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_UpdateButtonState
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     ld b, a
 _TitleScreen_HandleButtonUp:
     bit PADB_UP, b
@@ -332,7 +332,7 @@ FuncX_TitleIntro:
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     and PADF_START | PADF_A | PADF_B
     ret nz
     dec c
@@ -368,7 +368,7 @@ _TitleIntro_IntroSlam:
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     and PADF_START | PADF_A | PADF_B
     ret nz
     ASSERT (SCRN_Y / 2) % 3 == 0
@@ -387,7 +387,7 @@ _TitleIntro_IntroShake:
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     and PADF_START | PADF_A | PADF_B
     ret nz
     ld a, -TITLE_SCROLL_OFFSET - 1
@@ -412,7 +412,7 @@ _TitleIntro_IntroWait:
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     and PADF_START | PADF_A | PADF_B
     ret nz
     dec c
@@ -433,7 +433,7 @@ _TitleIntro_IntroScroll:
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     and PADF_START | PADF_A | PADF_B
     ret nz
     ;; Scroll background:

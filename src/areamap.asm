@@ -482,7 +482,7 @@ Main_AreaMapCommand:
     call Func_AnimateTiles
     call Func_UpdateButtonState
 _AreaMapCommand_HandleButtons:
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     ld d, a
     and PADF_START | PADF_A
     jp nz, Main_AreaMapStartNextPuzzle
@@ -653,7 +653,7 @@ Main_AreaMapBackToWorldMap:
 ;;; Fades out the LCD and starts the puzzle for the current node.
 Main_AreaMapStartNextPuzzle:
     ;; Remember for later if SELECT was held.
-    ld a, [Ram_ButtonsHeld_u8]
+    ldh a, [Hram_ButtonsHeld_u8]
     and PADF_SELECT
     push af
     ;; Fade out.

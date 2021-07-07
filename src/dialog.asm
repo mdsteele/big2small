@@ -175,7 +175,7 @@ _RunDialog_WaitForButton:
     call Func_AnimateTiles
     call Func_DialogResetHlcd
     call Func_UpdateButtonState
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     or a
     jr nz, _RunDialog_StartNextText
     jr _RunDialog_WaitForButton

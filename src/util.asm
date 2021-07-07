@@ -125,25 +125,24 @@ Func_UpdateButtonState::
     ld a, P1F_GET_NONE
     ldh [rP1], a
     ;; Update state variables.
-    ld a, [Ram_ButtonsHeld_u8]
+    ldh a, [Hram_ButtonsHeld_u8]
     cpl
     ld c, a
     ld a, b
-    ld [Ram_ButtonsHeld_u8], a
+    ldh [Hram_ButtonsHeld_u8], a
     and c
-    ld [Ram_ButtonsPressed_u8], a
+    ldh [Hram_ButtonsPressed_u8], a
     ret
 
-;;; TODO: Move this to HRAM.
-SECTION "ButtonState", WRAM0
+SECTION "ButtonState", HRAM
 
 ;;; ButtonsHeld: A bitfield indicating which buttons are currently being held.
-Ram_ButtonsHeld_u8::
+Hram_ButtonsHeld_u8::
     DB
 
 ;;; ButtonsPressed: A bitfield indicating which buttons have been newly pressed
 ;;;   since the previous call to Func_UpdateButtonState.
-Ram_ButtonsPressed_u8::
+Hram_ButtonsPressed_u8::
     DB
 
 ;;;=========================================================================;;;

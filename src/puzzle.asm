@@ -152,7 +152,7 @@ Main_PuzzleCommand::
     call Func_WaitForVBlankAndPerformDma
     call Func_UpdatePuzzleTerrain
     call Func_UpdateButtonState
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     ld b, a
 _PuzzleCommand_HandleButtonStart:
     bit PADB_START, b

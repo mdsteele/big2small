@@ -197,7 +197,7 @@ Main_WorldMapCommand:
     call Func_AnimateTiles
     call Func_UpdateButtonState
 _WorldMapCommand_HandleButtons:
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     ld d, a
     and PADF_START | PADF_A
     jr nz, _WorldMapCommand_EnterArea

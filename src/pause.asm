@@ -117,7 +117,7 @@ _PausingGame_MoveWindow:
     if_eq SCRN_Y, jr, _PausingGame_Unpause
 _PausingGame_HandleButtonStart:
     call Func_UpdateButtonState
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     bit PADB_START, a
     jr z, .noPress
     ld a, [Ram_PauseWindowVelocity_i8]
@@ -143,7 +143,7 @@ Main_PauseMenu:
     call Func_PauseMenuResetHlcd
     call Func_UpdateButtonState
 _PauseMenu_HandleButtons:
-    ld a, [Ram_ButtonsPressed_u8]
+    ldh a, [Hram_ButtonsPressed_u8]
     ld b, a
     and PADF_START | PADF_A
     jr nz, _PauseMenu_Confirm
