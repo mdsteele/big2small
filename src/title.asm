@@ -20,19 +20,44 @@
 INCLUDE "src/charmap.inc"
 INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
+INCLUDE "src/interrupt.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
 INCLUDE "src/tileset.inc"
 
 ;;;=========================================================================;;;
 
-TITLE_MENU_ROW EQU (SCRN_Y_B - NUM_SAVE_FILES - 3)
-TITLE_MENU_COL EQU 3
+INTRO_LINES_SEP_ROW EQU 22
+INTRO_LINES_COL EQU 6
+INTRO_LINES_SCY EQU (INTRO_LINES_SEP_ROW * 8 - SCRN_Y / 2)
+
+TITLE_SEP_ROW EQU 6
+TITLE_SCROLL_OFFSET EQU (SCRN_Y / 2 - TITLE_SEP_ROW * 8)
+
+TITLE1_ROWS EQU 4
+TITLE1_COLS EQU 18
+TITLE1_START_ROW EQU (TITLE_SEP_ROW - TITLE1_ROWS)
+TITLE1_START_COL EQU ((SCRN_X_B - TITLE1_COLS) / 2)
+
+TITLE2_ROWS EQU 4
+TITLE2_COLS EQU 12
+TITLE2_START_ROW EQU TITLE_SEP_ROW
+TITLE2_START_COL EQU ((SCRN_X_B - TITLE2_COLS) / 2)
+
+TITLE_MENU_START_ROW EQU 0
+TITLE_MENU_START_COL EQU 3
 
 TITLE_MENU_ITEM_ERASE EQU NUM_SAVE_FILES
 TITLE_MENU_NUM_ITEMS EQU (TITLE_MENU_ITEM_ERASE + 1)
 
-URL_ROW EQU (SCRN_Y_B - 1)
+URL_ROW EQU (TITLE_MENU_NUM_ITEMS + 1)
+
+TITLE_WINDOW_ROWS EQU (URL_ROW + 1)
+TITLE_WINDOW_HEIGHT EQU (8 * TITLE_WINDOW_ROWS)
+TITLE_WINDOW_TOP EQU (SCRN_Y - TITLE_WINDOW_HEIGHT)
+
+URL_START_TILEID EQU $80
+TITLE1_START_TILEID EQU $90
 
 ;;;=========================================================================;;;
 
@@ -62,25 +87,75 @@ Main_TitleScreen::
     xor a
     ld [Ram_TitleMenuItem_u8], a
     ld [Ram_TitleMenuIsErasing_bool], a
-    ldh [rSCX], a
-    ldh [rSCY], a
-    ;; Clear relevant part of background map.
+_TitleScreen_ClearBgMap:
+    ;; Clear background map.
     ld a, " "
     ld hl, Vram_BgMap
-    ld c, 141
-    .clearLoop
+    ld c, 0
+    .loop
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     dec c
+    jr nz, .loop
+_TitleScreen_DrawUpperTitle:
+    ld hl, Vram_BgMap + SCRN_VX_B * TITLE1_START_ROW + TITLE1_START_COL
+    ld de, SCRN_VX_B - TITLE1_COLS
+    ld a, TITLE1_START_TILEID
+    ld b, TITLE1_ROWS
+    .rowLoop
+    ld c, TITLE1_COLS
+    .colLoop
+    ld [hl+], a
+    add 4
+    dec c
+    jr nz, .colLoop
+    add hl, de
+    sub TITLE1_COLS * TITLE1_ROWS - 1
+    dec b
+    jr nz, .rowLoop
+_TitleScreen_DrawLowerTitle:
+    ld hl, Vram_BgMap + SCRN_VX_B * TITLE2_START_ROW + TITLE2_START_COL
+    xld de, DataX_Title2TileMap_start
+    ld b, TITLE2_ROWS
+    .rowLoop
+    ld c, TITLE2_COLS
+    .colLoop
+    ld a, [de]
+    inc de
+    ld [hl+], a
+    dec c
+    jr nz, .colLoop
+    ld a, b
+    ld bc, SCRN_VX_B - TITLE2_COLS
+    add hl, bc
+    ld b, a
+    dec b
+    jr nz, .rowLoop
+_TitleScreen_DrawIntroLines:
+    ld hl, Vram_BgMap + SCRN_VX_B * (INTRO_LINES_SEP_ROW - 1) + INTRO_LINES_COL
+    COPY_FROM_ROM0 Data_IntroLine1_start, Data_IntroLine1_end
+    ld hl, Vram_BgMap + SCRN_VX_B * INTRO_LINES_SEP_ROW + INTRO_LINES_COL
+    COPY_FROM_ROM0 Data_IntroLine2_start, Data_IntroLine2_end
+_TitleScreen_SetUpWindow:
+    ;; Clear relevent portion of window.
+    ld hl, Vram_WindowMap
+    xor a
+    ASSERT SCRN_VX_B * TITLE_WINDOW_ROWS < $100
+    ld c, SCRN_VX_B * TITLE_WINDOW_ROWS
+    .clearLoop
+    ld [hl+], a
+    dec c
     jr nz, .clearLoop
     ;; Draw URL.
-    ld a, $f0
-    ld hl, Vram_BgMap + SCRN_VX_B * URL_ROW + 2
+    ld c, 16
+    ld a, URL_START_TILEID
+    ld hl, Vram_WindowMap + SCRN_VX_B * URL_ROW + 2
     .urlLoop
     ld [hl+], a
     inc a
+    dec c
     jr nz, .urlLoop
     ;; Set up menu.
 FILE_NUMBER = 0
@@ -89,15 +164,43 @@ FILE_NUMBER = 0
     call Func_TitleMenuDrawFileItem
 FILE_NUMBER = FILE_NUMBER + 1
     ENDR
-    ld hl, (Vram_BgMap + SCRN_VX_B * (TITLE_MENU_ROW + TITLE_MENU_ITEM_ERASE) \
-            + TITLE_MENU_COL)  ; dest
+    ld hl, (Vram_WindowMap \
+            + SCRN_VX_B * (TITLE_MENU_START_ROW + TITLE_MENU_ITEM_ERASE) \
+            + TITLE_MENU_START_COL)  ; dest
     COPY_FROM_ROM0 Data_StartEraseStr_start, Data_StartEraseStr_end
     ld c, ">"  ; cursor tile ID
     call Func_TitleMenuSetCursorTile
+_TitleScreen_FadeIn:
+    ;; Set up the STAT interrupt table.
+    ld a, LCDCF_ON | LCDCF_BGON
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Lcdc_u8], a
+    ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_Lcdc_u8], a
+    xor a
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Scy_u8], a
+    ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_Scy_u8], a
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_NextLyc_u8], a
+    ld a, 255
+    ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_NextLyc_u8], a
+    ;; Fade in, then start playing the music.
     call Func_ClearOam
-    PLAY_SONG DataX_TitleMusic_song
+    call Func_MusicStop
+    xor a
+    ldh [rSCX], a
+    ld a, INTRO_LINES_SCY
+    ldh [rSCY], a
     ld d, LCDCF_BGON  ; param: display flags
     call Func_FadeIn
+    PLAY_SONG DataX_TitleMusic_song
+_TitleScreen_Intro:
+    xcall FuncX_TitleIntro
+    xor a
+    ldh [rSCY], a
+    ld a, 7
+    ldh [rWX], a
+    ld a, TITLE_WINDOW_TOP
+    ldh [rWY], a
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
 _TitleScreen_RunLoop:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
@@ -171,7 +274,8 @@ _TitleScreen_EraseFile:
     swap a
     rlca
     ldb bc, a
-    ld hl, Vram_BgMap + SCRN_VX_B * TITLE_MENU_ROW + TITLE_MENU_COL + 9
+    ld hl, (Vram_WindowMap + SCRN_VX_B * TITLE_MENU_START_ROW \
+            + TITLE_MENU_START_COL + 9)
     add hl, bc  ; dest
     COPY_FROM_ROM0 Data_FileEmptyStr_start, Data_FileEmptyStr_end
     ;; Actually erase the file.
@@ -189,8 +293,9 @@ FILE_NUMBER = 0
 FILE_NUMBER = FILE_NUMBER + 1
     ENDR
     ;; Change the "ERASE FILE" item to "END".
-    ld hl, (Vram_BgMap + SCRN_VX_B * (TITLE_MENU_ROW + TITLE_MENU_ITEM_ERASE) \
-            + TITLE_MENU_COL)  ; dest
+    ld hl, (Vram_WindowMap \
+            + SCRN_VX_B * (TITLE_MENU_START_ROW + TITLE_MENU_ITEM_ERASE) \
+            + TITLE_MENU_START_COL)  ; dest
     COPY_FROM_ROM0 Data_StopEraseStr_start, Data_StopEraseStr_end
     ;; Enable erase mode.
     ld a, 1
@@ -206,8 +311,9 @@ FILE_NUMBER = 0
 FILE_NUMBER = FILE_NUMBER + 1
     ENDR
     ;; Change the "END" item back to "ERASE FILE".
-    ld hl, (Vram_BgMap + SCRN_VX_B * (TITLE_MENU_ROW + TITLE_MENU_ITEM_ERASE) \
-            + TITLE_MENU_COL)  ; dest
+    ld hl, (Vram_WindowMap \
+            + SCRN_VX_B * (TITLE_MENU_START_ROW + TITLE_MENU_ITEM_ERASE) \
+            + TITLE_MENU_START_COL)  ; dest
     COPY_FROM_ROM0 Data_StartEraseStr_start, Data_StartEraseStr_end
     ;; Disable erase mode.
     xor a
@@ -215,6 +321,138 @@ FILE_NUMBER = FILE_NUMBER + 1
     jp _TitleScreen_RunLoop
 
 ;;;=========================================================================;;;
+
+SECTION "TitleIntro", ROMX
+
+FuncX_TitleIntro:
+    ld c, 88
+    .loop
+    push bc
+    zcall Func_UpdateAudio
+    call Func_WaitForVBlank
+    call Func_UpdateButtonState
+    pop bc
+    ld a, [Ram_ButtonsPressed_u8]
+    and PADF_START | PADF_A | PADF_B
+    ret nz
+    dec c
+    jr nz, .loop
+_TitleIntro_IntroSlam:
+    call Func_EnableLycInterrupt
+    ld c, SCRN_Y / 2
+    .loop
+    ld a, LOW(Hram_StatTable_hlcd_arr8)
+    ldh [Hram_StatNext_hlcd_hptr], a
+    ;; rSCY = -TITLE_SCROLL_OFFSET + c
+    ld a, -TITLE_SCROLL_OFFSET
+    add c
+    ldh [rSCY], a
+    ;; rLYC = SCRN_Y / 2 - c
+    ld a, SCRN_Y / 2
+    sub c
+    ldh [rLYC], a
+    ;; hlcd[0].Scy = INTRO_LINES_SCY
+    ld a, INTRO_LINES_SCY
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Scy_u8], a
+    ;; hlcd[0].NextLyc = SCRN_Y / 2 + c
+    ld a, SCRN_Y / 2
+    add c
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_NextLyc_u8], a
+    ;; hlcd[1].Scy = -TITLE_SCROLL_OFFSET - c
+    ld a, -TITLE_SCROLL_OFFSET
+    sub c
+    ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_Scy_u8], a
+    ;; Process frame.
+    push bc
+    zcall Func_UpdateAudio
+    call Func_WaitForVBlank
+    call Func_UpdateButtonState
+    pop bc
+    ld a, [Ram_ButtonsPressed_u8]
+    and PADF_START | PADF_A | PADF_B
+    ret nz
+    ASSERT (SCRN_Y / 2) % 3 == 0
+    dec c
+    dec c
+    dec c
+    jr nz, .loop
+    ;; Disable LY=LYC interrupt.
+    ld a, IEF_VBLANK
+    ldh [rIE], a
+_TitleIntro_IntroShake:
+    ld c, 31
+    .loop
+    push bc
+    zcall Func_UpdateAudio
+    call Func_WaitForVBlank
+    call Func_UpdateButtonState
+    pop bc
+    ld a, [Ram_ButtonsPressed_u8]
+    and PADF_START | PADF_A | PADF_B
+    ret nz
+    ld a, -TITLE_SCROLL_OFFSET - 1
+    bit 1, c
+    jr z, .shake
+    bit 4, c
+    jr z, .small
+    inc a
+    .small
+    inc a
+    .shake
+    ldh [rSCY], a
+    dec c
+    jr nz, .loop
+_TitleIntro_IntroWait:
+    ld a, -TITLE_SCROLL_OFFSET
+    ldh [rSCY], a
+    ld c, 60
+    .loop
+    push bc
+    zcall Func_UpdateAudio
+    call Func_WaitForVBlank
+    call Func_UpdateButtonState
+    pop bc
+    ld a, [Ram_ButtonsPressed_u8]
+    and PADF_START | PADF_A | PADF_B
+    ret nz
+    dec c
+    jr nz, .loop
+_TitleIntro_IntroScroll:
+    ;; Enable window.
+    ld a, 7
+    ldh [rWX], a
+    ld a, SCRN_Y - 2
+    ldh [rWY], a
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
+    ;; Loop, scrolling title and scrolling window into view.
+    ld c, TITLE_SCROLL_OFFSET - 1
+    .loop
+    push bc
+    zcall Func_UpdateAudio
+    call Func_WaitForVBlank
+    call Func_UpdateButtonState
+    pop bc
+    ld a, [Ram_ButtonsPressed_u8]
+    and PADF_START | PADF_A | PADF_B
+    ret nz
+    ;; Scroll background:
+    xor a
+    sub c
+    ldh [rSCY], a
+    ;; Scroll menu window:
+    ld a, TITLE_WINDOW_TOP
+    ASSERT TITLE_WINDOW_HEIGHT == 2 * TITLE_SCROLL_OFFSET
+    add c
+    add c
+    ldh [rWY], a
+    dec c
+    jr nz, .loop
+    ret
+
+;;;=========================================================================;;;
+
+SECTION "TitleDrawFunctions", ROM0
 
 ;;; @param b The menu item number.
 ;;; @return hl A pointer to the first BG map tile of the menu item.
@@ -228,7 +466,8 @@ Func_GetTitleMenuItemPtr_hl:
     rlca
     ldb de, a
     ;; Make hl point to the first BG map tile of the menu item.
-    ld hl, Vram_BgMap + SCRN_VX_B * TITLE_MENU_ROW + TITLE_MENU_COL
+    ld hl, (Vram_WindowMap + SCRN_VX_B * TITLE_MENU_START_ROW \
+            + TITLE_MENU_START_COL)
     add hl, de
     ret
 
@@ -330,23 +569,31 @@ Func_TitleMenuDrawFileItem:
 
 SECTION "TitleMenuStrings", ROM0
 
-Data_StartEraseStr_start::
-Data_EraseItemStr_start::
+Data_IntroLine1_start:
+    DB "mdsteele"
+Data_IntroLine1_end:
+
+Data_IntroLine2_start:
+    DB "PRESENTS"
+Data_IntroLine2_end:
+
+Data_StartEraseStr_start:
+Data_EraseItemStr_start:
     DB "Erase "
-Data_EraseItemStr_end::
+Data_EraseItemStr_end:
     DB "file"
-Data_StartEraseStr_end::
+Data_StartEraseStr_end:
 
-Data_FileItemStr_start::
+Data_FileItemStr_start:
     DB "File "
-Data_FileItemStr_end::
+Data_FileItemStr_end:
 
-Data_StopEraseStr_start::
+Data_StopEraseStr_start:
     DB "Done      "
-Data_StopEraseStr_end::
+Data_StopEraseStr_end:
 
-Data_FileEmptyStr_start::
+Data_FileEmptyStr_start:
     DB "Empty"
-Data_FileEmptyStr_end::
+Data_FileEmptyStr_end:
 
 ;;;=========================================================================;;;

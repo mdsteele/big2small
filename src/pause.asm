@@ -19,6 +19,7 @@
 
 INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
+INCLUDE "src/interrupt.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/puzzle.inc"
 INCLUDE "src/save.inc"
@@ -68,12 +69,6 @@ Main_BeginPause::
     xor a
     ld [Ram_PauseWindowRowsDrawn_u8], a
     xcall FuncX_DrawPause_DrawNextWindowRow
-    ;; Hide arrow objects.
-    xor a
-    ld [Ram_ArrowN_oama + OAMA_Y], a
-    ld [Ram_ArrowS_oama + OAMA_Y], a
-    ld [Ram_ArrowE_oama + OAMA_Y], a
-    ld [Ram_ArrowW_oama + OAMA_Y], a
     ;; Show the window.
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
@@ -83,17 +78,22 @@ Main_BeginPause::
     ld a, SCRN_Y - PAUSE_WINDOW_SPEED
     ldh [rWY], a
     ldh [rLYC], a
-    ;; Enable LY=LYC interrupt.  We have to disable interrupts before, and
-    ;; clear rIF after, because writing to rSTAT can trigger a spurious STAT
-    ;; interrupt.
-    di
-    ld a, STATF_LYC
-    ldh [rSTAT], a
-    ld a, IEF_VBLANK | IEF_LCDC
-    ldh [rIE], a
+    ;; Set up the STAT interrupt table.
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Lcdc_u8], a
     xor a
-    ldh [rIF], a
-    ei
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Scy_u8], a
+    ld a, 255
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_NextLyc_u8], a
+    ld a, LOW(Hram_StatTable_hlcd_arr8)
+    ldh [Hram_StatNext_hlcd_hptr], a
+    call Func_EnableLycInterrupt
+    ;; Hide arrow objects.
+    xor a
+    ld [Ram_ArrowN_oama + OAMA_Y], a
+    ld [Ram_ArrowS_oama + OAMA_Y], a
+    ld [Ram_ArrowE_oama + OAMA_Y], a
+    ld [Ram_ArrowW_oama + OAMA_Y], a
     ;; Initialize state.
     xor a
     ld [Ram_PauseMenuItem_u8], a
@@ -107,14 +107,12 @@ Main_PausingGame:
     call Func_AnimateTiles
     xcall FuncX_DrawPause_DrawNextWindowRow
 _PausingGame_MoveWindow:
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
     ld hl, Ram_PauseWindowVelocity_i8
     ldh a, [rWY]
     add [hl]
     ldh [rWY], a
-    ldh [rLYC], a
+    call Func_PauseMenuResetHlcd
+    ldh a, [rWY]
     if_eq (SCRN_Y - PAUSE_WINDOW_HEIGHT), jp, Main_PauseMenu
     if_eq SCRN_Y, jr, _PausingGame_Unpause
 _PausingGame_HandleButtonStart:
@@ -142,9 +140,7 @@ Main_PauseMenu:
     call Func_UpdateAudio
     call Func_WaitForVBlank
     call Func_AnimateTiles
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
+    call Func_PauseMenuResetHlcd
     call Func_UpdateButtonState
 _PauseMenu_HandleButtons:
     ld a, [Ram_ButtonsPressed_u8]
@@ -211,6 +207,16 @@ _PauseMenu_ResetPuzzle:
     jp Main_ResetPuzzle
 
 ;;;=========================================================================;;;
+
+Func_PauseMenuResetHlcd:
+    ld a, LOW(Hram_StatTable_hlcd_arr8)
+    ldh [Hram_StatNext_hlcd_hptr], a
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
+          LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
+    ldh a, [rWY]
+    ldh [rLYC], a
+    ret
 
 ;;; Sets the tile ID in the window map for the pause menu cursor.
 ;;; @param d Tile ID to place (should be either " " or ">").

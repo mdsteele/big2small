@@ -37,7 +37,7 @@ TREE_START     EQU $a0
 
 D_TERR: MACRO
     STATIC_ASSERT _NARG == 6
-ANI = ANIMATED_TILE_ID - (\6)
+ANI = ANIMATED_TILEID - (\6)
 EMP = $00 - (\6)
     ASSERT @ - DataX_TerrainTable == 4 * (\1)
     DB (\2) + (\6), (\3) + (\6), (\4) + (\6), (\5) + (\6)

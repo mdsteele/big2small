@@ -138,8 +138,8 @@ DataX_Forest2Outro_dlog::
     DB "Let's get more!\r"
     DB DIALOG_MOUSE
     DB "Okay. But I\n"
-    DB "still want\n"
-    DB "that spaceship.\r"
+    DB "still want that\n"
+    DB "spaceship.\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;

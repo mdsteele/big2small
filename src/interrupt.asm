@@ -18,6 +18,28 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/hardware.inc"
+INCLUDE "src/interrupt.inc"
+INCLUDE "src/macros.inc"
+
+;;;=========================================================================;;;
+
+SECTION "RstTrampoline", ROM0[$0008]
+;;; Calls the function with address hl, then sets the ROM bank before
+;;; returning.
+;;; @param hl The address to call.
+;;; @param a The ROM bank to set before returning.
+Rst_Trampoline::
+    push af
+    rst Rst_CallHl
+    pop af
+    romb
+    ret
+
+SECTION "RstCallHl", ROM0[$0010]
+;;; Jumps to the address stored in hl.  Thus, `rst Rst_CallHl` is effectively
+;;; `call hl`, if that were a real instruction.
+Rst_CallHl::
+    jp hl
 
 ;;;=========================================================================;;;
 
@@ -30,24 +52,54 @@ SECTION "InterruptVBlank", ROM0[$0040]
 
 SECTION "InterruptStat", ROM0[$0048]
     push af
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_WINON | LCDCF_WIN9C00
+    push bc
+    ;; Read Hram_StatNext_hlcd_hptr (which must be set to
+	;; LOW(Hram_StatTable_hlcd_arr8) during each VBlank) into c.
+    ldh a, [Hram_StatNext_hlcd_hptr]
+    ld c, a
+    ;; The first byte in the table entry is the rLCDC value to set.
+    ASSERT HLCD_Lcdc_u8 == 0
+    ldh a, [c]
     ldh [rLCDC], a
+    inc c
+    ;; The second byte in the table entry is the rSCY value to set.
+    ASSERT HLCD_Scy_u8 == 1
+    ldh a, [c]
+    ldh [rSCY], a
+    inc c
+    ;; The third byte in the table entry is the next rLYC value to set.
+    ASSERT HLCD_NextLyc_u8 == 2
+    ldh a, [c]
+    ldh [rLYC], a
+    inc c
+    ;; Now that we've read the whole table entry, store c back into
+    ;; Hram_StatNext_hlcd_hptr.
+    ASSERT sizeof_HLCD == 3
+    ld a, c
+    ldh [Hram_StatNext_hlcd_hptr], a
+    ;; Restore register state.
+    pop bc
     pop af
-    reti
-
-SECTION "InterruptTimer", ROM0[$0050]
-    reti
-
-SECTION "InterruptSerial", ROM0[$0058]
-    reti
-
-SECTION "InterruptJoypad", ROM0[$0060]
     reti
 
 ;;;=========================================================================;;;
 
 SECTION "InterruptState", HRAM
+
 Hram_VBlank_bool::
     DB
+
+;;; A 1-byte HRAM-pointer (low byte of address) pointing to the HLCD struct to
+;;; use for the next STAT interrupt.  While the STAT interrupt is enabled, this
+;;; should be reset to LOW(Hram_StatTable_hlcd_arr8) during each VBlank; it
+;;; will be be advanced automatically by the STAT interrupt handler.
+Hram_StatNext_hlcd_hptr::
+    DB
+
+;;; The array of up to 8 HLCD structs that will be used by the STAT interrupt
+;;; handler during each frame.  The last entry to be used should have NextLyc
+;;; set to 255 to prevent any further STAT interrupts from firing.
+Hram_StatTable_hlcd_arr8::
+    DS sizeof_HLCD * 8
 
 ;;;=========================================================================;;;

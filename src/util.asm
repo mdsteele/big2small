@@ -83,6 +83,18 @@ Func_WaitForVBlankAndPerformDma::
     call Func_PerformDma
     reti  ; "Unlock"
 
+Func_EnableLycInterrupt::
+    ;; We have to disable interrupts before, and clear rIF after, because
+    ;; writing to rSTAT can trigger a spurious STAT interrupt.
+    di
+    ld a, STATF_LYC
+    ldh [rSTAT], a
+    ld a, IEF_VBLANK | IEF_LCDC
+    ldh [rIE], a
+    xor a
+    ldh [rIF], a
+    reti
+
 ;;;=========================================================================;;;
 
 SECTION "ButtonFunctions", ROM0
@@ -122,6 +134,7 @@ Func_UpdateButtonState::
     ld [Ram_ButtonsPressed_u8], a
     ret
 
+;;; TODO: Move this to HRAM.
 SECTION "ButtonState", WRAM0
 
 ;;; ButtonsHeld: A bitfield indicating which buttons are currently being held.

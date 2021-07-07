@@ -75,8 +75,8 @@ _LoadTileset_Puzz:
     ret
 
 _LoadTileset_Title:
-    SKIP_TO_TILE $f0
-    COPY_FROM_ROMX DataX_UrlTiles_start, DataX_UrlTiles_end
+    SKIP_TO_TILE $80
+    COPY_FROM_ROMX DataX_TitleTiles_start, DataX_TitleTiles_end
     ret
 _LoadTileset_MapCity:
     SKIP_TO_TILE $c0
@@ -241,7 +241,7 @@ _AnimateTiles_Copy:
 ;;; @prereq Correct ROM bank for hl pointer is set.
 ;;; @param hl A pointer to the tile to copy.
 Func_SetAnimatedTile:
-    ld de, Vram_BgTiles + sizeof_TILE * ANIMATED_TILE_ID
+    ld de, Vram_BgTiles + sizeof_TILE * ANIMATED_TILEID
     REPT sizeof_TILE - 1
     ld a, [hl+]
     ld [de], a

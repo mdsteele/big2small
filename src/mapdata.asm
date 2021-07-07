@@ -49,7 +49,6 @@ ASSERT @ - DataX_LakeTileMap_start == AREA_MAP_LENGTH
 SECTION "MoonTileMap", ROMX
 DataX_MoonTileMap_start::
     INCBIN "out/data/maps/moon.map"
-DataX_MoonTileMap_end::
 ASSERT @ - DataX_MoonTileMap_start == AREA_MAP_LENGTH
 
 SECTION "MountainTileMap", ROMX
@@ -66,6 +65,11 @@ SECTION "SpaceTileMap", ROMX
 DataX_SpaceTileMap_start::
     INCBIN "out/data/maps/space.map"
 ASSERT @ - DataX_SpaceTileMap_start == AREA_MAP_LENGTH
+
+SECTION "Title2TileMap", ROMX
+DataX_Title2TileMap_start::
+    INCBIN "out/data/maps/title2.map"
+ASSERT @ - DataX_Title2TileMap_start == 12 * 4
 
 SECTION "WorldTileMap", ROMX
 DataX_WorldTileMap_start::

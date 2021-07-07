@@ -157,6 +157,14 @@ int main(int argc, char **argv) {
         fputc(0xb0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "river")) {
         fputc(0xe0 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "title2a")) {
+        fputc(0xd8 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "title2b")) {
+        fputc(0xe3 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "title2c")) {
+        fputc(0xe9 + tile_index, stdout);
+      } else if (0 == strcmp(tileset, "title2d")) {
+        fputc(0xf5 + tile_index, stdout);
       } else {
         fprintf(stderr, "unknown tileset: %s\n", tileset);
         return EXIT_FAILURE;

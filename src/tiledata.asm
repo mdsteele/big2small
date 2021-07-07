@@ -45,10 +45,15 @@ DataX_ObjTiles_end::
 ;;;=========================================================================;;;
 ;;; Title screen tiles:
 
-SECTION "UrlTiles", ROMX
-DataX_UrlTiles_start::
+SECTION "TitleTiles", ROMX
+DataX_TitleTiles_start::
     INCBIN "out/data/tiles/url.2bpp"
-DataX_UrlTiles_end::
+    INCBIN "out/data/tiles/title1.2bpp"
+    INCBIN "out/data/tiles/title2a.2bpp"
+    INCBIN "out/data/tiles/title2b.2bpp"
+    INCBIN "out/data/tiles/title2c.2bpp"
+    INCBIN "out/data/tiles/title2d.2bpp"
+DataX_TitleTiles_end::
 
 ;;;=========================================================================;;;
 ;;; Map terrain tiles:

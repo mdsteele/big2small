@@ -20,6 +20,7 @@
 INCLUDE "src/charmap.inc"
 INCLUDE "src/dialog.inc"
 INCLUDE "src/hardware.inc"
+INCLUDE "src/interrupt.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/vram.inc"
 
@@ -83,12 +84,6 @@ Func_RunDialog::
     xor a
     ld [Ram_DialogWindowRowsDrawn_u8], a
     xcall FuncX_DrawDialog_DrawNextWindowRow
-    ;; Hide arrow objects.
-    xor a
-    ld [Ram_ArrowN_oama + OAMA_Y], a
-    ld [Ram_ArrowS_oama + OAMA_Y], a
-    ld [Ram_ArrowE_oama + OAMA_Y], a
-    ld [Ram_ArrowW_oama + OAMA_Y], a
     ;; Show the window.
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
           LCDCF_WINON | LCDCF_WIN9C00
@@ -98,29 +93,32 @@ Func_RunDialog::
     ld a, SCRN_Y - DIALOG_WINDOW_SPEED
     ldh [rWY], a
     ldh [rLYC], a
-    ;; Enable LY=LYC interrupt.  We have to disable interrupts before, and
-    ;; clear rIF after, because writing to rSTAT can trigger a spurious STAT
-    ;; interrupt.
-    di
-    ld a, STATF_LYC
-    ldh [rSTAT], a
-    ld a, IEF_VBLANK | IEF_LCDC
-    ldh [rIE], a
+    ;; Set up the STAT interrupt table.
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Lcdc_u8], a
     xor a
-    ldh [rIF], a
-    ei
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Scy_u8], a
+    ld a, 255
+    ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_NextLyc_u8], a
+    ld a, LOW(Hram_StatTable_hlcd_arr8)
+    ldh [Hram_StatNext_hlcd_hptr], a
+    call Func_EnableLycInterrupt
+    ;; Hide arrow objects.
+    xor a
+    ld [Ram_ArrowN_oama + OAMA_Y], a
+    ld [Ram_ArrowS_oama + OAMA_Y], a
+    ld [Ram_ArrowE_oama + OAMA_Y], a
+    ld [Ram_ArrowW_oama + OAMA_Y], a
 _RunDialog_ShowWindow:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_AnimateTiles
     xcall FuncX_DrawDialog_DrawNextWindowRow
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
     ldh a, [rWY]
     sub DIALOG_WINDOW_SPEED
     ldh [rWY], a
-    ldh [rLYC], a
+    call Func_DialogResetHlcd
+    ldh a, [rWY]
     if_ne (SCRN_Y - DIALOG_WINDOW_HEIGHT), jr, _RunDialog_ShowWindow
 _RunDialog_StartNextText:
     xcall FuncX_DrawDialog_ClearText
@@ -146,9 +144,7 @@ _RunDialog_AdvanceText:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_AnimateTiles
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
+    call Func_DialogResetHlcd
     pop hl
     pop de
     ;; Read the next character of text and check for sentinel values.
@@ -177,9 +173,7 @@ _RunDialog_WaitForButton:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_AnimateTiles
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
+    call Func_DialogResetHlcd
     call Func_UpdateButtonState
     ld a, [Ram_ButtonsPressed_u8]
     or a
@@ -190,14 +184,12 @@ _RunDialog_HideWindow:
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
     call Func_AnimateTiles
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
     ldh a, [rWY]
     add DIALOG_WINDOW_SPEED
     ldh [rWY], a
-    ldh [rLYC], a
-    if_ne SCRN_Y, jr, _RunDialog_HideWindow
+    if_eq SCRN_Y, jr, _RunDialog_Finish
+    call Func_DialogResetHlcd
+    jr _RunDialog_HideWindow
 _RunDialog_Finish:
     ;; Show objects and hide the window.
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16
@@ -205,6 +197,18 @@ _RunDialog_Finish:
     ;; Disable LY=LYC interrupt.
     ld a, IEF_VBLANK
     ldh [rIE], a
+    ret
+
+;;;=========================================================================;;;
+
+Func_DialogResetHlcd:
+    ld a, LOW(Hram_StatTable_hlcd_arr8)
+    ldh [Hram_StatNext_hlcd_hptr], a
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
+          LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
+    ldh a, [rWY]
+    ldh [rLYC], a
     ret
 
 ;;;=========================================================================;;;

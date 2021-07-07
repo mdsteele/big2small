@@ -207,6 +207,8 @@ xld: MACRO
     ELIF _NARG > 2
     FAIL "Too many arguments to xld macro"
     ENDC
+    ASSERT BANK(@) == 0
+    ASSERT BANK(\2) != 0
     romb BANK(\2)
     ld \1, \2
 ENDM
@@ -223,8 +225,25 @@ xcall: MACRO
     ELIF _NARG > 1
     FAIL "Too many arguments to xcall macro"
     ENDC
+    ASSERT BANK(@) == 0
+    ASSERT BANK(\1) != 0
     romb BANK(\1)
     call \1
+ENDM
+
+;;; Allows code in ROMX to safely call a function in ROM0 that doesn't
+;;; preserve the ROM bank.  The hl register is destroyed in the process, so
+;;; this cannot be used to call functions that use hl as a parameter.
+;;;
+;;; Examples:
+;;;     zcall Func_Foo
+zcall: MACRO
+    STATIC_ASSERT _NARG == 1
+    ASSERT BANK(@) != 0
+    ASSERT BANK(\1) == 0
+    ld a, BANK(@)
+    ld hl, \1
+    rst Rst_Trampoline
 ENDM
 
 ;;;=========================================================================;;;

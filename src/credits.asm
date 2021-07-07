@@ -24,7 +24,7 @@ INCLUDE "src/tileset.inc"
 
 ;;;=========================================================================;;;
 
-SOLID_BLACK_TILE_ID EQU $fb
+SOLID_BLACK_TILEID EQU $fb
 
 D_BPTR: MACRO
     STATIC_ASSERT _NARG == 1
@@ -74,7 +74,7 @@ Func_CreditsLoadFlyingScreen:
     call Func_LoadTileset
 _CreditsLoadFlyingScreen_LoadTileMap:
     ;; Fill the relevant part of the background map with animated tiles.
-    ld a, ANIMATED_TILE_ID
+    ld a, ANIMATED_TILEID
     ld hl, Vram_BgMap
     ld c, 141
     .clearLoop
@@ -134,7 +134,7 @@ _CreditsLoadMoonScreen_LoadTileMap:
     dec b
     jr nz, .rowLoop
     ;; Fill in black for the top and bottom rows.
-    ld a, SOLID_BLACK_TILE_ID
+    ld a, SOLID_BLACK_TILEID
     ld hl, Vram_BgMap
     ld c, SCRN_X_B
     .topRowLoop
