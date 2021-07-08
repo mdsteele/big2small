@@ -20,6 +20,7 @@
 INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
+INCLUDE "src/primitive.inc"
 INCLUDE "src/puzzle.inc"
 
 ;;;=========================================================================;;;
@@ -116,7 +117,7 @@ SECTION "Colorset", ROMX
 ;;; @return hl A pointer to a CSET struct in BANK("Colorset").
 FuncX_Colorset_GetCurrentCsetPtr_hl::
     ld a, [Ram_LastBgColorset_u8]
-    mult 2
+    mult sizeof_PTR
     ldb bc, a
     ld hl, DataX_Colorset_Table_cset_ptr_arr
     add hl, bc
@@ -183,23 +184,23 @@ _Colorset_Load_PipeObjPalette:
 
 DataX_Colorset_Table_cset_ptr_arr:
     .begin
-    ASSERT @ - .begin == 2 * COLORSET_AUTUMN
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_AUTUMN
     DW DataX_Colorset_Autumn_cset
-    ASSERT @ - .begin == 2 * COLORSET_CITY
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_CITY
     DW DataX_Colorset_City_cset
-    ASSERT @ - .begin == 2 * COLORSET_MOON
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_MOON
     DW DataX_Colorset_Moon_cset
-    ASSERT @ - .begin == 2 * COLORSET_SEWER
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_SEWER
     DW DataX_Colorset_Sewer_cset
-    ASSERT @ - .begin == 2 * COLORSET_SPACE
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_SPACE
     DW DataX_Colorset_Space_cset
-    ASSERT @ - .begin == 2 * COLORSET_SUMMER
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_SUMMER
     DW DataX_Colorset_Summer_cset
-    ASSERT @ - .begin == 2 * COLORSET_WINTER
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_WINTER
     DW DataX_Colorset_Winter_cset
-    ASSERT @ - .begin == 2 * COLORSET_WORLD
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_WORLD
     DW DataX_Colorset_World_cset
-    ASSERT @ - .begin == 2 * NUM_COLORSETS
+    ASSERT @ - .begin == sizeof_PTR * NUM_COLORSETS
 
 DataX_Colorset_Autumn_cset:
     .begin

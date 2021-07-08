@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/macros.inc"
+INCLUDE "src/primitive.inc"
 INCLUDE "src/puzzle.inc"
 INCLUDE "src/save.inc"
 
@@ -62,8 +63,8 @@ _Victory_CheckForNewRecord:
     ;; Otherwise, we need to compare the current move count to the previous
     ;; record.  Start by setting bc to the previous record for this puzzle.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ASSERT 2 * NUM_PUZZLES < $100
-    mult 2
+    ASSERT sizeof_BCD16 * NUM_PUZZLES < $100
+    mult sizeof_BCD16
     ldb de, a
     ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
     add hl, de
@@ -81,8 +82,8 @@ _Victory_CheckForNewRecord:
     ;; file.
     .recordNewRecord
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ASSERT 2 * NUM_PUZZLES < $100
-    mult 2
+    ASSERT sizeof_BCD16 * NUM_PUZZLES < $100
+    mult sizeof_BCD16
     ldb bc, a
     ld hl, Ram_Progress_file + FILE_PuzzleBest_bcd16_arr
     add hl, bc

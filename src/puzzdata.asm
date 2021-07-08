@@ -18,6 +18,7 @@
 ;;;=========================================================================;;;
 
 INCLUDE "src/color.inc"
+INCLUDE "src/primitive.inc"
 INCLUDE "src/puzzle.inc"
 INCLUDE "src/save.inc"
 INCLUDE "src/tileset.inc"
@@ -111,7 +112,7 @@ DataX_Puzzles_puzz_ptr_arr::
     DW DataX_Space3_puzz
     DW DataX_SpaceBonusB_puzz
     DW DataX_Space5_puzz
-ASSERT @ - DataX_Puzzles_puzz_ptr_arr == 2 * NUM_PUZZLES
+ASSERT @ - DataX_Puzzles_puzz_ptr_arr == sizeof_PTR * NUM_PUZZLES
 
 ;;;=========================================================================;;;
 

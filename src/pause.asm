@@ -21,6 +21,7 @@ INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/interrupt.inc"
 INCLUDE "src/macros.inc"
+INCLUDE "src/primitive.inc"
 INCLUDE "src/puzzle.inc"
 INCLUDE "src/save.inc"
 INCLUDE "src/vram.inc"
@@ -28,7 +29,7 @@ INCLUDE "src/vram.inc"
 ;;;=========================================================================;;;
 
 ;;; The height, in pixels, of the pause window when fully visible.
-PAUSE_WINDOW_HEIGHT EQU (5 * TILE_HEIGHT)
+PAUSE_WINDOW_HEIGHT EQU (TILE_HEIGHT * 5)
 
 ;;; The number of pixels per frame that the window slides up/down while
 ;;; pausing/unpausing.
@@ -311,8 +312,8 @@ _DrawPause_DrawNextWindowRow_ThirdRow:
     jr z, _DrawPause_DrawNextWindowRow_NullMoveCount
     ;; Otherwise, make de point to the best move count for the current puzzle.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ASSERT NUM_PUZZLES * 2 < $100
-    mult 2
+    ASSERT sizeof_BCD16 * NUM_PUZZLES < $100
+    mult sizeof_BCD16
     add LOW(Ram_Progress_file + FILE_PuzzleBest_bcd16_arr)
     ld e, a
     ld a, HIGH(Ram_Progress_file + FILE_PuzzleBest_bcd16_arr)

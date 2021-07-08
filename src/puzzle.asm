@@ -19,6 +19,7 @@
 
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
+INCLUDE "src/primitive.inc"
 INCLUDE "src/puzzle.inc"
 INCLUDE "src/save.inc"
 INCLUDE "src/tileset.inc"
@@ -95,7 +96,7 @@ Main_BeginPuzzle::
 _BeginPuzzle_Init:
     ;; Store pointer to current PUZZ struct in de.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    mult 2
+    mult sizeof_PTR
     ldb bc, a
     xld hl, DataX_Puzzles_puzz_ptr_arr
     add hl, bc

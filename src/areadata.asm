@@ -22,6 +22,7 @@ INCLUDE "src/charmap.inc"
 INCLUDE "src/color.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
+INCLUDE "src/primitive.inc"
 INCLUDE "src/save.inc"
 INCLUDE "src/tileset.inc"
 
@@ -95,19 +96,19 @@ SECTION "AreaFunctions", ROM0
 ;;; stored in BANK("AreaData").
 Data_AreaTable_area_ptr_arr:
     .begin
-    ASSERT @ - .begin == 2 * AREA_FOREST
+    ASSERT @ - .begin == sizeof_PTR * AREA_FOREST
     DW DataX_Forest_area
-    ASSERT @ - .begin == 2 * AREA_FARM
+    ASSERT @ - .begin == sizeof_PTR * AREA_FARM
     DW DataX_Farm_area
-    ASSERT @ - .begin == 2 * AREA_MOUNTAIN
+    ASSERT @ - .begin == sizeof_PTR * AREA_MOUNTAIN
     DW DataX_Mountain_area
-    ASSERT @ - .begin == 2 * AREA_LAKE
+    ASSERT @ - .begin == sizeof_PTR * AREA_LAKE
     DW DataX_Lake_area
-    ASSERT @ - .begin == 2 * AREA_SEWER
+    ASSERT @ - .begin == sizeof_PTR * AREA_SEWER
     DW DataX_Sewer_area
-    ASSERT @ - .begin == 2 * AREA_CITY
+    ASSERT @ - .begin == sizeof_PTR * AREA_CITY
     DW DataX_City_area
-    ASSERT @ - .begin == 2 * AREA_SPACE
+    ASSERT @ - .begin == sizeof_PTR * AREA_SPACE
     DW DataX_Space_area
 
 ;;; Returns a pointer to the specified AREA struct in BANK("AreaData").  Note
