@@ -140,7 +140,8 @@ _BeginPuzzle_Init:
     call Func_FadeIn
     ;; Run intro dialog.
     ld a, [Ram_PuzzleSkipIntroDialog_bool]
-    ld hl, Ram_PuzzleState_puzz + PUZZ_Intro_dlog_bptr
+    ld hl, Ram_PuzzleState_puzz + PUZZ_Intro_dlog_bptr  ; param: dialog
+    ld de, Func_DialogNullUpdate  ; param: update function
     or a
     call z, Func_RunDialog
     ;; fall through to Main_PuzzleCommand

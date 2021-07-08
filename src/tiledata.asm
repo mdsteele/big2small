@@ -183,6 +183,9 @@ DataX_FenceWoodTiles_end::
 SECTION "GirderTiles", ROMX
 DataX_GirderTiles_start::
     INCBIN "out/data/tiles/girder.2bpp"
+    DS 1 * sizeof_TILE
+    INCBIN "out/data/tiles/ship.2bpp"
+    INCBIN "out/data/tiles/thrust.2bpp"
 DataX_GirderTiles_end::
 
 SECTION "MountainTiles", ROMX

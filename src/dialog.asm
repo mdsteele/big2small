@@ -44,10 +44,16 @@ STATIC_ASSERT DIALOG_WINDOW_HEIGHT % DIALOG_WINDOW_SPEED == 0
 
 SECTION "DialogState", WRAM0
 
+Ram_DialogPrevLcdc_u8:
+    DB
+
 Ram_DialogBank_u8:
     DB
 
 Ram_DialogNext_ptr:
+    DW
+
+Ram_DialogUpdate_func_ptr:
     DW
 
 ;;; The current portrait number (one of the DIALOG_* constants).
@@ -63,8 +69,17 @@ Ram_DialogWindowRowsDrawn_u8:
 
 SECTION "DialogFunctions", ROM0
 
+;;; A no-op function that can be passed to Func_RunDialog.
+Func_DialogNullUpdate::
+    ret
+
+;;; @param de A pointer to a function to call each frame.
 ;;; @param hl A pointer to a banked pointer to a DLOG struct.
 Func_RunDialog::
+    ld a, e
+    ld [Ram_DialogUpdate_func_ptr + 0], a
+    ld a, d
+    ld [Ram_DialogUpdate_func_ptr + 1], a
     ;; Read the banked pointer that hl points to.
     ld a, [hl+]
     ld [Ram_DialogBank_u8], a
@@ -85,16 +100,17 @@ Func_RunDialog::
     ld [Ram_DialogWindowRowsDrawn_u8], a
     xcall FuncX_DrawDialog_DrawNextWindowRow
     ;; Show the window.
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
-    ldh [rLCDC], a
     ld a, 7
     ldh [rWX], a
     ld a, SCRN_Y - DIALOG_WINDOW_SPEED
     ldh [rWY], a
     ldh [rLYC], a
+    ldh a, [rLCDC]
+    ld [Ram_DialogPrevLcdc_u8], a
+    or LCDCF_WINON | LCDCF_WIN9C00
+    ldh [rLCDC], a
     ;; Set up the STAT interrupt table.
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00
+    and ~LCDCF_OBJON
     ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Lcdc_u8], a
     xor a
     ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Scy_u8], a
@@ -110,9 +126,7 @@ Func_RunDialog::
     ld [Ram_ArrowE_oama + OAMA_Y], a
     ld [Ram_ArrowW_oama + OAMA_Y], a
 _RunDialog_ShowWindow:
-    call Func_UpdateAudio
-    call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateTiles
+    call Func_DialogProcessFrame
     xcall FuncX_DrawDialog_DrawNextWindowRow
     ldh a, [rWY]
     sub DIALOG_WINDOW_SPEED
@@ -141,9 +155,7 @@ _RunDialog_AdvanceText:
     ;; points to the location in the VRAM window map to draw that character.
     push de
     push hl
-    call Func_UpdateAudio
-    call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateTiles
+    call Func_DialogProcessFrame
     call Func_DialogResetHlcd
     pop hl
     pop de
@@ -170,9 +182,7 @@ _RunDialog_AdvanceText:
     ld a, d
     ld [Ram_DialogNext_ptr + 1], a
 _RunDialog_WaitForButton:
-    call Func_UpdateAudio
-    call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateTiles
+    call Func_DialogProcessFrame
     call Func_DialogResetHlcd
     call Func_UpdateButtonState
     ldh a, [Hram_ButtonsPressed_u8]
@@ -181,9 +191,7 @@ _RunDialog_WaitForButton:
     jr _RunDialog_WaitForButton
 
 _RunDialog_HideWindow:
-    call Func_UpdateAudio
-    call Func_WaitForVBlankAndPerformDma
-    call Func_AnimateTiles
+    call Func_DialogProcessFrame
     ldh a, [rWY]
     add DIALOG_WINDOW_SPEED
     ldh [rWY], a
@@ -191,8 +199,8 @@ _RunDialog_HideWindow:
     call Func_DialogResetHlcd
     jr _RunDialog_HideWindow
 _RunDialog_Finish:
-    ;; Show objects and hide the window.
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16
+    ;; Restore the previous LCD settings.
+    ld a, [Ram_DialogPrevLcdc_u8]
     ldh [rLCDC], a
     ;; Disable LY=LYC interrupt.
     ld a, IEF_VBLANK
@@ -201,11 +209,19 @@ _RunDialog_Finish:
 
 ;;;=========================================================================;;;
 
+Func_DialogProcessFrame:
+    ld hl, Ram_DialogUpdate_func_ptr
+    deref hl
+    rst Rst_CallHl
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
+    jp Func_AnimateTiles
+
 Func_DialogResetHlcd:
     ld a, LOW(Hram_StatTable_hlcd_arr8)
     ldh [Hram_StatNext_hlcd_hptr], a
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | \
-          LCDCF_WINON | LCDCF_WIN9C00
+    ld a, [Ram_DialogPrevLcdc_u8]
+    or LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
     ldh a, [rWY]
     ldh [rLYC], a

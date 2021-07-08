@@ -24,8 +24,15 @@ import re
 
 #=============================================================================#
 
+# A target for an ldh instruction can be "c", or "rFOO" (if "FOO" doesn't start
+# with "RAM" or "ROM", since those hardware registers are actually in the
+# cartridge ROM address space, not the $ff page), or an "Hram_Foo" label.
+LDH_TARGET = r'(?:c|r(?!R[AO]M)[A-Z0-9]+|Hram_[a-zA-Z0-9_]+)'
+LD_WITH_LDH_TARGET = r'ld a, \[{0}\]|ld \[{0}\], a'.format(LDH_TARGET)
+
 PATTERNS = [
     ('exported private label', re.compile(r'^_[a-zA-Z0-9_]+::')),
+    ('ld instead of ldh', re.compile(LD_WITH_LDH_TARGET)),
     ('over-long line', re.compile(r'^.{80,}\n$')),
     ('tab character', re.compile(r'\t')),
     ('TILE_ID instead of TILEID', re.compile(r'TILE_ID')),

@@ -67,6 +67,15 @@ Ram_PipeEL_oama::
 Ram_PipeER_oama::
     DS sizeof_OAM_ATTRS
 
+Ram_ShipL_oama::
+    DS sizeof_OAM_ATTRS
+Ram_ShipM_oama::
+    DS sizeof_OAM_ATTRS
+Ram_ShipR_oama::
+    DS sizeof_OAM_ATTRS
+Ram_Thrust_oama::
+    DS sizeof_OAM_ATTRS
+
 ENDU
 Ram_ShadowOam_end:
 

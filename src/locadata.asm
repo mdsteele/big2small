@@ -28,7 +28,7 @@ POBJ_NORTH EQU 1
 POBJ_WEST EQU 2
 POBJ_EAST EQU (POBJ_WEST | POBJF_FLIP)
 POBJ_SPACESHIP EQU 3
-POBJ_INVIS EQU 4
+POBJ_INVIS EQU 5
 
 ;;;=========================================================================;;;
 

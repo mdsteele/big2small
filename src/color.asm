@@ -95,6 +95,16 @@ DataX_ObjColorPalettes_start:
     D_COLOR 192, 128, 224
     D_COLOR 96, 64, 128
     D_COLOR 0, 0, 0
+    ;; Palette 5 (spaceship)
+    D_COLOR 255, 255, 255
+    D_COLOR 255, 232, 240
+    D_COLOR 192, 192, 224
+    D_COLOR 96, 96, 128
+    ;; Palette 6 (thrust)
+    D_COLOR 255, 255, 255
+    D_COLOR 255, 255, 0
+    D_COLOR 255, 128, 0
+    D_COLOR 192, 0, 0
 DataX_ObjColorPalettes_end:
 
 ;;;=========================================================================;;;

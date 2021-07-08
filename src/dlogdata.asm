@@ -417,7 +417,7 @@ DataX_Space5Intro_dlog::
 
 SECTION "CreditsDialog", ROMX
 
-DataX_Credits1_dlog::
+DataX_CreditsFlying_dlog::
     DB DIALOG_GOAT_MOUTH_OPEN
     DB "Wheeeeeeeeeee!\n"
     DB "Here we go!\r"
@@ -435,7 +435,7 @@ DataX_Credits1_dlog::
     DB "obvious.\r"
     DB DIALOG_END
 
-DataX_Credits2_dlog::
+DataX_CreditsMoon_dlog::
     DB DIALOG_MOUSE
     DB "Everyone knows\n"
     DB "the moon is\n"
