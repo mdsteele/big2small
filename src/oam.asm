@@ -43,6 +43,9 @@ Ram_TeleportL_oama::
 Ram_TeleportR_oama::
     DS sizeof_OAM_ATTRS
 
+Ram_Avatar_oama::
+    DS sizeof_OAM_ATTRS
+
 Ram_ElephantL_oama::
     DS sizeof_OAM_ATTRS
 Ram_ElephantR_oama::

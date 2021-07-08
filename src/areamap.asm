@@ -872,7 +872,7 @@ Func_UpdateAreaMapAvatarObj:
     rrca
     add 5
     sub d
-    ld [Ram_ElephantL_oama + OAMA_Y], a
+    ld [Ram_Avatar_oama + OAMA_Y], a
     ;; Set X position:
     ld a, [Ram_AreaMapAvatarCol_i8]
     and %00011111  ; account for possibility that col is negative
@@ -880,18 +880,18 @@ Func_UpdateAreaMapAvatarObj:
     rrca
     add 7
     sub e
-    ld [Ram_ElephantL_oama + OAMA_X], a
+    ld [Ram_Avatar_oama + OAMA_X], a
     ;; Set tile ID:
     ld a, [Ram_AnimationClock_u8]
     and %00010000
     swap a
     rlca
     add c
-    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    ld [Ram_Avatar_oama + OAMA_TILEID], a
     ;; Set flags:
     ld a, [Ram_AreaMapAvatarPriority_u8]
     or b
-    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_Avatar_oama + OAMA_FLAGS], a
     ret
 
 ;;;=========================================================================;;;

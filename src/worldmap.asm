@@ -98,9 +98,9 @@ Func_WorldMapLoad:
     ;; Set up avatar object.
     call Func_ClearOam
     ld a, AVATAR_INITIAL_TILEID
-    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    ld [Ram_Avatar_oama + OAMA_TILEID], a
     ld a, AVATAR_PALETTE
-    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_Avatar_oama + OAMA_FLAGS], a
     ;; Set up arrow objects.
     ld a, ARROW_PALETTE
     ld [Ram_ArrowN_oama + OAMA_FLAGS], a
@@ -378,12 +378,12 @@ _WorldMapWalk_Obj:
     jr z, .notFlipped
     set OAMB_XFLIP, a
     .notFlipped
-    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_Avatar_oama + OAMA_FLAGS], a
     ld a, b
     and %00001111
     mult 4
     add AVATAR_INITIAL_TILEID
-    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    ld [Ram_Avatar_oama + OAMA_TILEID], a
     jr _WorldMapWalk_Read
 _WorldMapWalk_Sound:
     ;; At this point, a holds %11ssssss.
@@ -472,7 +472,7 @@ _WorldMapUpdateAvatarAndNextScroll_X:
     ld a, b
     sub c
     add 4
-    ld [Ram_ElephantL_oama + OAMA_X], a
+    ld [Ram_Avatar_oama + OAMA_X], a
 _WorldMapUpdateAvatarAndNextScroll_Y:
     ld a, [Ram_WorldMapAvatarY_u8]
     ld b, a
@@ -492,7 +492,7 @@ _WorldMapUpdateAvatarAndNextScroll_Y:
     ld c, a
     ld a, b
     sub c
-    ld [Ram_ElephantL_oama + OAMA_Y], a
+    ld [Ram_Avatar_oama + OAMA_Y], a
     ret
 
 ;;; Switches the parity of the avatar object's tile ID every few frames
@@ -503,10 +503,10 @@ Func_WorldMapAnimateAvatar:
     swap a
     rlca
     ld b, a
-    ld a, [Ram_ElephantL_oama + OAMA_TILEID]
+    ld a, [Ram_Avatar_oama + OAMA_TILEID]
     and %11111100
     or b
-    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    ld [Ram_Avatar_oama + OAMA_TILEID], a
     ret
 
 ;;; Updates the X/Y positions of the arrow objects.
@@ -542,11 +542,11 @@ Func_WorldMapUpdateArrowObjects:
     .skipNextDir
     ld d, a
     ;; Store the avatar object's left in c and top in b.
-    ld a, [Ram_ElephantL_oama + OAMA_X]
+    ld a, [Ram_Avatar_oama + OAMA_X]
     ld [Ram_ArrowN_oama + OAMA_X], a
     ld [Ram_ArrowS_oama + OAMA_X], a
     ld c, a
-    ld a, [Ram_ElephantL_oama + OAMA_Y]
+    ld a, [Ram_Avatar_oama + OAMA_Y]
     ld b, a
     .updateArrows
 _WorldMapUpdateArrowObjects_North:
