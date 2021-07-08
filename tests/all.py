@@ -21,6 +21,7 @@ from __future__ import print_function
 
 import lint
 import solutions
+import spelling
 
 #=============================================================================#
 
@@ -32,6 +33,7 @@ def run_tests():
         results[1] += num_failed
     run(lint)
     run(solutions)
+    run(spelling)
     print('all: {} passed, {} failed'.format(*results))
     return tuple(results)
 
