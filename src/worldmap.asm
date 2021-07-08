@@ -381,8 +381,7 @@ _WorldMapWalk_Obj:
     ld [Ram_ElephantL_oama + OAMA_FLAGS], a
     ld a, b
     and %00001111
-    rlca
-    rlca
+    mult 4
     add AVATAR_INITIAL_TILEID
     ld [Ram_ElephantL_oama + OAMA_TILEID], a
     jr _WorldMapWalk_Read
@@ -391,9 +390,7 @@ _WorldMapWalk_Sound:
     push hl
     ;; Make hl point to entry number %ssssss in Data_WorldMapSounds_psfx_arr.
     and %00111111
-    ASSERT sizeof_PSFX == 4
-    rlca
-    rlca
+    mult sizeof_PSFX
     ldb bc, a
     ld hl, Data_WorldMapSounds_psfx_arr
     add hl, bc

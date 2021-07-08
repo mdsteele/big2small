@@ -312,7 +312,7 @@ _DrawPause_DrawNextWindowRow_ThirdRow:
     ;; Otherwise, make de point to the best move count for the current puzzle.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     ASSERT NUM_PUZZLES * 2 < $100
-    rlca
+    mult 2
     add LOW(Ram_Progress_file + FILE_PuzzleBest_bcd16_arr)
     ld e, a
     ld a, HIGH(Ram_Progress_file + FILE_PuzzleBest_bcd16_arr)

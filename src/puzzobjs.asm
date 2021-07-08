@@ -455,7 +455,7 @@ _UpdateSelectedAnimalObjs_Goat:
     .afterJump
     xor a
     .doneJumping
-    rlca
+    mult 2
     ld c, a
     ;; Store the facing direction in b.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Goat_anim + ANIM_Facing_u8]
@@ -555,7 +555,7 @@ _UpdateSelectedAnimalObjs_GoatTileAndFlags:
 _UpdateSelectedAnimalObjs_Mouse:
     ;; Calculate and store the walking offset in c.
     ld a, [Ram_WalkingCountdown_u8]
-    rlca
+    mult 2
     ld c, a
     ;; Store the facing direction in b.
     ld a, [Ram_PuzzleState_puzz + PUZZ_Mouse_anim + ANIM_Facing_u8]

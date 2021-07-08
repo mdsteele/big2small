@@ -166,6 +166,27 @@ ENDM
 
 ;;;=========================================================================;;;
 
+;;; Multiplies the `a` register by a fixed constant (only small powers of two
+;;; are supported).  Sets/clears the `z` and `c` flags as appropriate.
+;;; Examples:
+;;;     mult 2  ; multiplies a by 2
+;;;     mult 4  ; multiplies a by 4
+mult: MACRO
+    STATIC_ASSERT _NARG == 1
+    IF (\1) == 2
+    add a
+    ELIF (\1) == 4
+    add a
+    add a
+    ELIF (\1) == 8
+    add a
+    add a
+    add a
+    ELSE
+    FAIL "Unsupported mult factor"
+    ENDC
+ENDM
+
 ;;; Negates the `a` register.  Sets/clears the `z` flag if the result is
 ;;; zero/nonzero.
 neg: MACRO

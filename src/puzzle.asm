@@ -95,7 +95,7 @@ Main_BeginPuzzle::
 _BeginPuzzle_Init:
     ;; Store pointer to current PUZZ struct in de.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    rlca
+    mult 2
     ldb bc, a
     xld hl, DataX_Puzzles_puzz_ptr_arr
     add hl, bc

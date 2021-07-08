@@ -116,7 +116,7 @@ SECTION "Colorset", ROMX
 ;;; @return hl A pointer to a CSET struct in BANK("Colorset").
 FuncX_Colorset_GetCurrentCsetPtr_hl::
     ld a, [Ram_LastBgColorset_u8]
-    rlca
+    mult 2
     ldb bc, a
     ld hl, DataX_Colorset_Table_cset_ptr_arr
     add hl, bc

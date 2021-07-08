@@ -233,11 +233,9 @@ _UpdateAudio_ExecOpcodeSetf:
     jr _UpdateAudio_ExecOpcode
 _UpdateAudio_ExecOpcodePlay:
     ;; Store section ptr offset in bc.
-    ASSERT sizeof_SECT == 8
     ld a, [hl]
     and %00011111
-    swap a
-    rrca
+    mult sizeof_SECT
     ldb bc, a
     ;; Store ptr to section table in hl.
     push hl
@@ -479,10 +477,8 @@ _MusicStartNoteCh1_NoteTone:
     jr _MusicStartNoteCh1_Finish
 _MusicStartNoteCh1_NoteInst:
     ;; Store instrument ptr offset in bc.
-    ASSERT sizeof_INST == 4
     and %00111111
-    rlca
-    rlca
+    mult sizeof_INST
     ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
@@ -597,10 +593,8 @@ _MusicStartNoteCh2_NoteTone:
     jr _MusicStartNoteCh2_Finish
 _MusicStartNoteCh2_NoteInst:
     ;; Store instrument ptr offset in bc.
-    ASSERT sizeof_INST == 4
     and %00111111
-    rlca
-    rlca
+    mult sizeof_INST
     ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
@@ -712,10 +706,8 @@ _MusicStartNoteCh3_NoteTone:
     jr _MusicStartNoteCh3_Finish
 _MusicStartNoteCh3_NoteInst:
     ;; Store instrument ptr offset in bc.
-    ASSERT sizeof_INST == 4
     and %00111111
-    rlca
-    rlca
+    mult sizeof_INST
     ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl
@@ -836,10 +828,8 @@ _MusicStartNoteCh4_NoteTone:
     jr _MusicStartNoteCh4_Finish
 _MusicStartNoteCh4_NoteInst:
     ;; Store instrument ptr offset in bc.
-    ASSERT sizeof_INST == 4
     and %00111111
-    rlca
-    rlca
+    mult sizeof_INST
     ldb bc, a
     ;; Copy the pointer to the start of the instrument table into hl.
     push hl

@@ -303,10 +303,10 @@ Func_LoadTerrainCellIntoVram::
     ;; Make hl point to the VRAM tile for the top-left quarter of the square.
     ld a, e
     and $f0
-    rla
+    mult 2
     ld c, a
     ld a, 0
-    adc 0
+    rla
     ld b, a
     ld a, e
     and $0f
@@ -317,8 +317,7 @@ Func_LoadTerrainCellIntoVram::
     add hl, bc
     ;; Make bc point to the start of the terrain table entry.
     ld a, [de]
-    rlca
-    sla a
+    mult 4
     ld c, a
     ASSERT LOW(DataX_TerrainTable) == 0
     ld a, HIGH(DataX_TerrainTable)
@@ -378,8 +377,7 @@ Func_LoadTerrainRow:
     .topLoop
     ld a, [de]
     inc e
-    rlca
-    sla a
+    mult 4
     ld c, a
     ASSERT LOW(DataX_TerrainTable) == 0
     ld a, HIGH(DataX_TerrainTable)
@@ -403,8 +401,7 @@ Func_LoadTerrainRow:
     .botLoop
     ld a, [de]
     inc e
-    rlca
-    sla a
+    mult 4
     ld c, a
     ASSERT LOW(DataX_TerrainTable) == 0
     ld a, HIGH(DataX_TerrainTable)
@@ -438,7 +435,7 @@ Func_LoadTerrainPaletteRow:
     .topLoop
     ld a, [de]
     inc e
-    rlca
+    mult 2
     ld c, a
     ASSERT LOW(DataX_TerrainPaletteTable) == 0
     ld b, HIGH(DataX_TerrainPaletteTable)
@@ -458,7 +455,7 @@ Func_LoadTerrainPaletteRow:
     .botLoop
     ld a, [de]
     inc e
-    rlca
+    mult 2
     ld c, a
     ASSERT LOW(DataX_TerrainPaletteTable) == 0
     ld b, HIGH(DataX_TerrainPaletteTable)

@@ -19,6 +19,7 @@
 
 INCLUDE "src/areamap.inc"
 INCLUDE "src/hardware.inc"
+INCLUDE "src/macros.inc"
 INCLUDE "src/worldmap.inc"
 
 ;;;=========================================================================;;;
@@ -124,10 +125,9 @@ SECTION "LocationData", ROMX
 ;;; @return hl A pointer to the specified LOCA struct.
 ;;; @preserve de
 FuncX_LocationData_Get_hl::
-    ASSERT sizeof_LOCA == 8
-    swap c
-    srl c
-    ld b, 0
+    ld a, c
+    mult sizeof_LOCA
+    ldb bc, a
     ld hl, DataX_LocationData_loca_arr
     add hl, bc
     ret
