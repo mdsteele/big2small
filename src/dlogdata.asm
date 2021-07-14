@@ -239,6 +239,32 @@ DataX_Farm0Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Farm2Dialog", ROMX
+
+DataX_Farm2Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "You know, these\n"
+    DB "shrubs can be\n"
+    DB "useful, Gisele.\r"
+    DB DIALOG_MOUSE
+    DB "And once you\n"
+    DB "eat one, you\n"
+    DB "can't uneat it.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "True, but the\n"
+    DB "puzzle always\n"
+    DB "stays solvable.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "So, we COULD\n"
+    DB "reset with the\n"
+    DB "START menu...\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "...but we don't\n"
+    DB "HAVE to!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 SECTION "Mountain0Dialog", ROMX
 
 DataX_Mountain0Intro_dlog::
@@ -354,6 +380,10 @@ DataX_City0Intro_dlog::
     DB "I run into one,\n"
     DB "I'm toast.\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "And then we do\n"
+    DB "have to reset\n"
+    DB "the puzzle.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
     DB "Don't worry!\n"
     DB "We can help you\n"
     DB "avoid them.\r"
@@ -361,6 +391,43 @@ DataX_City0Intro_dlog::
     DB "Remember, we\n"
     DB "can reset with\n"
     DB "the START menu.\r"
+    DB DIALOG_END
+
+DataX_City0Outro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "There, that\n"
+    DB "wasn't so bad,\n"
+    DB "was it?\r"
+    DB DIALOG_MOUSE
+    DB "That puzzle was\n"
+    DB "terrifying.\r"
+    DB DIALOG_MOUSE
+    DB "The sooner we\n"
+    DB "leave here, the\n"
+    DB "better.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "City1Dialog", ROMX
+
+DataX_City1Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "Yikes, how am I\n"
+    DB "supposed to get\n"
+    DB "through THIS?\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "We can reset if\n"
+    DB "you actually\n"
+    DB "hit a trap.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "But a puzzle is\n"
+    DB "always solvable\n"
+    DB "until you do.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "We can help you\n"
+    DB "out if you seem\n"
+    DB "stuck, Mel!\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;

@@ -318,7 +318,7 @@ DataX_Farm2_puzz:
     DB W_FNW, M_FNS, W_FNS, W_FE1, O_EMP, O_EMP, O_EMP, W_TTP, W_FW1, W_FNS
     D_BPTR DataX_RestYe_song
     DB W_FSE, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Farm2Intro_dlog
     DB O_GRS, O_EMP, O_EMP, W_TTP, S_BSH, S_BSH, S_BSH, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, G_CHS, W_TST, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, O_EMP
@@ -740,7 +740,7 @@ DataX_City0_puzz:
     DB W_LSE, O_EMP, O_EMP, W_BS1, G_PNT, O_EMP, O_EMP, O_EMP, S_MTP, W_LSW
     D_BPTR DataX_City0Intro_dlog
     DB W_BSE, O_EMP, O_EMP, S_MTP, O_EMP, W_LW1, W_LE1, O_EMP, O_EMP, W_BSW
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_City0Outro_dlog
     DB W_FNS, W_FE1, O_EMP, O_EMP, O_EMP, W_BSW, W_BSE, S_MTP, O_EMP, O_EMP
     D_SETS TILESET_PUZZ_CITY, COLORSET_CITY
     DB O_EMP, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP, G_CHS, W_LW1
@@ -801,7 +801,7 @@ DataX_City1_puzz:
     DB O_EMP, O_EMP, O_EMP, W_BS1, S_ARS, O_EMP, S_ARW, O_EMP, O_EMP, W_LW3
     D_BPTR DataX_MarchingHome_song
     DB O_EMP, G_PNT, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, S_ARW, O_EMP, W_LSW
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_City1Intro_dlog
     DB O_EMP, O_EMP, O_EMP, W_LC4, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW
     D_BPTR DataX_Null_dlog
     DB W_FNS, M_FNS, W_FNS, W_BS1, M_FNS, W_FE1, O_EMP, S_ARN, O_EMP, O_EMP
