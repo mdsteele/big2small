@@ -193,11 +193,15 @@ DataX_MountainTiles_start::
     INCBIN "out/data/tiles/mountain.2bpp"
 DataX_MountainTiles_end::
 
+SECTION "PebbleTiles", ROMX
+DataX_PebbleTiles_start::
+    INCBIN "out/data/tiles/pebble.2bpp"
+DataX_PebbleTiles_end::
+
 SECTION "RiverTiles", ROMX
 DataX_RiverTiles_start::
     INCBIN "out/data/tiles/river.2bpp"
 DataX_RiverTiles_end::
-
 
 SECTION "SpaceTiles", ROMX
 DataX_SpaceTiles_start::

@@ -135,13 +135,14 @@ _LoadTileset_MapWorld:
     jp Func_SetAnimatedTile
 _LoadTileset_PuzzCity:
     COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
+    SKIP_TO_TILE $c8
+    COPY_FROM_ROMX DataX_PebbleTiles_start, DataX_PebbleTiles_end
     SKIP_TO_TILE $d0
     COPY_FROM_ROMX DataX_FenceChainTiles_start, DataX_FenceChainTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_CityTiles_start, DataX_CityTiles_end
     ret
 _LoadTileset_PuzzFarm:
-    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
     SKIP_TO_TILE $d0
     COPY_FROM_ROMX DataX_FenceWoodTiles_start, DataX_FenceWoodTiles_end
     SKIP_TO_TILE $f0
@@ -156,8 +157,8 @@ _LoadTileset_PuzzLake:
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTile
 _LoadTileset_PuzzMountain:
-    COPY_FROM_ROMX DataX_RiverTiles_start, DataX_RiverTiles_end
-    COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
+    SKIP_TO_TILE $c8
+    COPY_FROM_ROMX DataX_PebbleTiles_start, DataX_PebbleTiles_end
     SKIP_TO_TILE $d0
     COPY_FROM_ROMX DataX_MountainTiles_start, DataX_MountainTiles_end
     ret
@@ -165,6 +166,7 @@ _LoadTileset_PuzzSewer:
     COPY_FROM_ROMX DataX_EdgeTiles_start, DataX_EdgeTiles_end
     SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_BridgeTiles_start, DataX_BridgeTiles_end
+    COPY_FROM_ROMX DataX_PebbleTiles_start, DataX_PebbleTiles_end
     SKIP_TO_TILE $e0
     COPY_FROM_ROMX DataX_BrickTiles_start, DataX_BrickTiles_end
     xld hl, DataX_OceanTiles_tile_arr

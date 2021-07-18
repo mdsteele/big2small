@@ -30,6 +30,7 @@ FENCE_START    EQU $d0
 GOAL_START     EQU $80
 HOUSE_START    EQU $f0
 MOUNTAIN_START EQU $d0
+PEBBLE_START   EQU $c8
 PIPE_START     EQU $8c
 SHORE_START    EQU $b0
 TELEPORT_START EQU $94
@@ -61,6 +62,7 @@ DataX_TerrainTable:
     ;; Open terrain:
     D_TERR O_EMP, $00, $00, $00, $00, 0
     D_TERR O_GRS, $05, $05, $05, $05, TREE_START
+    D_TERR O_PEB, $00, $02, $01, $03, PEBBLE_START
     D_TERR O_BNS, $04, $06, $05, $07, BRIDGE_START
     D_TERR O_BEW, $00, $02, $01, $03, BRIDGE_START
     D_TERR O_RMD, $04, $06, $05, $07, MOUNTAIN_START
@@ -181,6 +183,7 @@ DataX_TerrainPaletteTable:
     ;; Open terrain:
     D_PAL O_EMP, 7
     D_PAL O_GRS, 3
+    D_PAL O_PEB, 7
     D_PAL O_BNS, 1
     D_PAL O_BEW, 1
     D_PAL O_RMD, 6

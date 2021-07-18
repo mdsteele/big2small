@@ -99,6 +99,7 @@ RSRESET
 ;;; Open terrain:
 O_EMP RB 1  ; Empty
 O_GRS RB 1  ; Grass
+O_PEB RB 1  ; Pebbles
 O_BNS RB 1  ; Bridge over river north/south
 O_BEW RB 1  ; Bridge over river east/west
 O_RMD RB 1  ; Ramp medium
