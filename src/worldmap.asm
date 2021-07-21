@@ -170,7 +170,7 @@ _WorldMapLoad_SetUnlockedAreas:
     ld [Ram_WorldMapLastUnlockedArea_u8], a
 _WorldMapLoad_Finish:
     ;; Initialize music.
-    PLAY_SONG DataX_RestYe_song
+    PLAY_SONG DataX_Train_song
     ;; Set up window.
     ld a, 7
     ldh [rWX], a

@@ -1,0 +1,67 @@
+!SONG "Train" "A|BCBDEFEG"
+=tempo q12
+=key 0N  % C major
+
+!DRUM H { E(13, -7) }
+
+!PART A
+
+1 { E(9, -6) D(3/4) }
+2 { E(10, -4) D(1/4) }
+3 { W(86420024689a989a989a989abcdefeca) }
+
+2' g3q |
+
+!PART B
+
+1| rh.+      | +h.+      | +h  c5q | c5h rq  |
+ | rh.+      | +h.       | e5q f e | d5h rq  |
+ | d5h    rq | d5h    rq | f5h b4q | g5h b4q |
+2| c4q e4 g3 | c4q e4 g3 | c4h c4q | c4h g3q |
+ | c4q e4 g3 | c4q e4 g3 | f4h e4q | d4h g3q |
+ | b3q d4 g3 | b3q d4 g3 | d4h d4q | e4h d4q |
+3| c3h.      | b2h.      | a2h.    | g2h.    |
+ | c3h.      | b2h.      | d3h.    | g2h.    |
+ | d3h.      | b2h.      | g2h.    | b2h.    |
+4|: xHh.     | xHh xHq :6|
+
+!PART C
+
+1| c5h.      | e5h.      | c5h.    | g4h.     |
+2| c4h.+     | +h.+      | +h.     | rh g3q   |
+3| c3h.      | b2h.      | a2h.    | g2h.     |
+4| xHh.      | xHh xHq   | xHq xHq xHq | xHh. |
+
+!PART D
+
+1| c5h.      | e5h.      | c5h.    |
+2| c4h.+     | +h.+      | +h.     | g4h e4q  |
+3| c3h.      | b2h.      | a2h.    | g2h.     |
+4| xHh.      | xHh xHq   | xHq xHq xHq | xHh. |
+
+!PART E
+
+1| rh.+      | +h.+         | +h.        | e5h  f5q |
+ | d5h rq+   | +h.+         | +h.        | d5h  e5q |
+ | c5h rq+   | +h.          | c5q. rq.   | d5h  b4q |
+2| a4h.+     | +q. g4e. fe. | e4q. d4q.+ | +h.      |
+ | rq. g4q.  | f4h   e4q    | d4q. c4q.+ | +h.      |
+ | rq. f4q.  | e4h   d4q    | c4q. b3q.+ | +q. d4q. |
+3| f2h.      | c3h.      | g2h.    | d3h.     |
+ | e2h.      | b2h.      | a2h.    | e3h.     |
+ | f2h.      | c3h.      | g2h.    | d3h.     |
+4|: xHh.     | xHh xHq :6|
+
+!PART F
+
+1| e5h cq    | f5h cq    | g5h cq  | g5h eq   |
+2| e4h.      | f4h.      | g4h.    | g4h.     |
+3| c3h.      | a2h.      | g2h.    | e2h.     |
+4| xHh.      | xHh xHq   | xHq xHq xHq | xHh. |
+
+!PART G
+
+1| c5h b4q   | g4q a b   | c5h g4q | c5h.     |
+2| c4h.+     | +h.+      | +h.     | rh g3q   |
+3| c3h.      | b2h.      | a2h.    | g2h.     |
+4| xHh.      | xHh xHq   | xHq xHq xHq | xHh. |
