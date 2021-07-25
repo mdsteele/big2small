@@ -363,7 +363,7 @@ ASSERT @ - _Mountain_Node0 == NUM_MOUNTAIN_PUZZLES * sizeof_NODE
 
 DataX_Lake_area:
     .begin
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_LakeMap_song
     DB COLORSET_SUMMER
     DB TILESET_MAP_FOREST
     D_BPTR DataX_LakeTileMap_start

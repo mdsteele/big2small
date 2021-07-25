@@ -1,0 +1,38 @@
+!SONG "LakeMap" "|ABC"
+=tempo q30
+=key 7#  % C# major
+
+!DRUM H { E(7, -7) }
+
+!PART A
+
+2 { E(5, -3) D(1/2) }
+ | c4q3 c4e3 ' c5q3 c5e3+ ' +q3 c4e3 ' c5q3 c4e3 |
+ | f4q3 f4e3 ' f5q3 f5e3+ ' +q3 f4e3 ' f5q3 f4e3 |
+ | c4q3 c4e3 ' c5q3 c5e3+ ' +q3 c4e3 ' c5q3 g4e3 |
+ | { E(5, -0) D(1/2) } g5h { E(5, -1) D(1/2) } g5h |
+4|: xHq ' xHq3 xHe3 :8|
+
+!PART B
+
+3 { W(86420024689a989a989a989abcdefeca) L(100) }
+
+2 { E(5, -3) D(1/2) }
+ | c4q3 c4e3 ' c5q3 c5e3+ ' +q3 c4e3 ' c5q3 c4e3 |
+ | f4q3 f4e3 ' f5q3 f5e3+ ' +q3 f4e3 ' f5q3 f4e3 |
+ | c4q3 c4e3 ' c5q3 c5e3+ ' +q3 c4e3 ' c5q3 g4e3 |
+ | g5q ' f ' eq3 fe3 ' dq |
+3| e4h c | f4h c |
+ | e4h cq e | d4q+q3 ce3 b3h |
+4|: xHq ' xHq3 xHe3 :8|
+
+!PART C
+
+2 { E(5, -3) D(1/2) }
+ | c4q3 c4e3 ' c5q3 c5e3+ ' +q3 c4e3 ' c5q3 c4e3 |
+ | f4q3 f4e3 ' f5q3 f5e3+ ' +q3 f4e3 ' f5q3 f4e3 |
+ | c4q3 c4e3 ' c5q3 c5e3+ ' +q3 c4e3 ' c5q3 g4e3 |
+ | g5q ' f ' eq3 fe3 ' dq |
+3| e4h c | f4h c |
+ | g4h eq g | f4h d |
+4|: xHq ' xHq3 xHe3 :8|
