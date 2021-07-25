@@ -1,0 +1,13 @@
+!SONG "SpaceMap" "|A"
+=tempo q30
+=key 4#  % C# minor
+
+!DRUM H { E(7, -7) }
+
+!PART A
+
+2 { E(6, -6) D(1/2) }
+
+2| f5q c f c | e5q b4 e5 b4 |
+ | f5q c f c | g5q e g e |
+4|: xHq xHq3 xHe3 :8|

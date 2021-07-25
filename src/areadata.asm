@@ -546,7 +546,7 @@ ASSERT @ - _City_Node0 == NUM_CITY_PUZZLES * sizeof_NODE
 
 DataX_Space_area:
     .begin
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_SpaceMap_song
     DB COLORSET_SPACE
     DB TILESET_MAP_SPACE
     D_BPTR DataX_SpaceTileMap_start
