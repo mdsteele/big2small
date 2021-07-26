@@ -169,7 +169,7 @@ DataX_Forest2_puzz:
     DB W_TST, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_PNT, O_EMP, W_TST
     D_ANIM $11, DIRF_EAST
     DB W_TST, W_TTP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR
-    D_BPTR DataX_Train_song
+    D_BPTR DataX_ForestGreen_song
     DB W_TST, W_TTR, O_EMP, O_GRS, W_TST, W_TTP, O_EMP, W_FW1, W_FNS, W_FNS
     D_BPTR DataX_Forest2Intro_dlog
     DB W_TST, O_EMP, O_EMP, O_EMP, W_TTR, W_TTR, O_EMP, O_EMP, O_EMP, W_TTP
@@ -190,7 +190,7 @@ DataX_Forest3_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, W_TST
     D_ANIM $31, DIRF_EAST
     DB W_TTP, O_GRS, O_GRS, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, W_RCK, W_TST
-    D_BPTR DataX_Train_song
+    D_BPTR DataX_ForestGreen_song
     DB W_TTR, W_TTP, W_FW1, W_FNS, W_FE1, W_TTR, W_RCK, O_EMP, O_GRS, W_TST
     D_BPTR DataX_Forest3Intro_dlog
     DB W_TTP, W_TTR, O_EMP, O_EMP, G_PNT, O_EMP, O_EMP, O_GRS, O_GRS, W_TST
@@ -274,7 +274,7 @@ DataX_Farm0_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_ANIM $80, DIRF_SOUTH
     DB W_FNW, W_FNS, W_FNS, W_FNS, W_FNS, W_FNS, M_FNS, W_FNS, W_FNE, O_EMP
-    D_BPTR DataX_Train_song
+    D_BPTR DataX_RestYe_song
     DB W_FSE, W_COW, O_GRS, O_GRS, O_GRS, O_GRS, O_EMP, O_GRS, W_FEW, O_EMP
     D_BPTR DataX_Farm0Intro_dlog
     DB O_GRS, O_GRS, O_EMP, O_GRS, O_GRS, G_APL, O_GRS, O_GRS, W_FEW, O_EMP
@@ -500,13 +500,13 @@ DataX_Lake0_puzz:
     .begin
     DB W_TTP, W_TTR, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
     D_ANIM $11, DIRF_SOUTH
-    DB W_TTR, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
+    DB W_TTR, O_EMP, O_EMP, R_RNS, O_EMP, O_GRS, O_EMP, R_RNS, O_EMP, O_GRS
     D_ANIM $04, DIRF_SOUTH
     DB O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, O_BNS, O_EMP, O_EMP
     D_ANIM $09, DIRF_SOUTH
-    DB O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
+    DB O_EMP, O_GRS, O_EMP, R_RNS, O_EMP, O_EMP, O_GRS, R_RNS, O_EMP, O_EMP
     D_BPTR DataX_TitleMusic_song
-    DB O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP
+    DB O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP, R_RNS, O_EMP, O_GRS
     D_BPTR DataX_Lake0Intro_dlog
     DB O_GRS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, R_RSE, R_RNW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
@@ -547,7 +547,7 @@ DataX_LakeBonus_puzz:
     DB O_EMP, O_EMP, O_EMP, G_CHS, O_EMP, O_EMP, W_RCK, G_APL, W_TTR, W_TST
     D_ANIM $20, DIRF_SOUTH
     DB O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_ARW, W_TTR
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_ForestGreen_song
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, R_RSE, R_REW, R_REW, R_REW, R_REW
     D_BPTR DataX_Null_dlog
     DB O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_GRS, S_BSH, W_TTP
@@ -561,13 +561,13 @@ ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Lake3_puzz:
     .begin
-    DB O_EMP, O_EMP, O_EMP, S_BSH, G_CHS, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP
+    DB O_GRS, O_EMP, O_EMP, S_BSH, G_CHS, W_TTP, O_GRS, O_EMP, O_EMP, O_GRS
     D_ANIM $06, DIRF_EAST
-    DB O_EMP, W_FW1, M_FNS, W_FE1, S_ARS, W_TTR, O_EMP, O_EMP, O_EMP, O_EMP
+    DB O_EMP, W_FW1, M_FNS, W_FE1, S_ARS, W_TTR, O_EMP, O_GRS, O_EMP, O_EMP
     D_ANIM $09, DIRF_WEST
     DB O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_ARS, O_EMP
     D_ANIM $59, DIRF_WEST
-    DB S_BSH, W_TST, O_EMP, S_ARN, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, R_SNW
+    DB S_BSH, W_TST, O_EMP, S_ARN, G_PNT, O_EMP, O_GRS, O_EMP, O_EMP, R_SNW
     D_BPTR DataX_TitleMusic_song
     DB O_EMP, W_TTR, S_ARE, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_APL, R_SSW
     D_BPTR DataX_Null_dlog
@@ -575,9 +575,9 @@ DataX_Lake3_puzz:
     D_BPTR DataX_Null_dlog
     DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_REW, R_REW, R_REW
     D_SETS TILESET_PUZZ_LAKE, COLORSET_SUMMER
-    DB O_EMP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
+    DB O_EMP, O_EMP, O_GRS, W_TTP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS
     D_PAR $0033
-    DB O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, S_ARN, O_EMP, O_EMP, O_EMP, O_EMP
+    DB O_GRS, O_EMP, O_EMP, W_TTR, O_EMP, S_ARN, O_EMP, O_GRS, O_EMP, O_EMP
 ASSERT @ - .begin == sizeof_PUZZ
 
 DataX_Lake4_puzz:
