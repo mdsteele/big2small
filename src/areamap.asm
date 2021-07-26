@@ -254,8 +254,7 @@ _AreaMapResume_Finish:
 Func_LoadAreaMap:
     ld a, c
     ld [Ram_AreaMapCurrentArea_u8], a
-    call Func_GetAreaData_hl
-    romb BANK("AreaData")
+    xcall FuncX_AreaData_Get_hl
 _LoadAreaMap_InitMusic:
     ;; Read the banked pointer to the SONG data from the AREA struct, then
     ;; start that music playing.

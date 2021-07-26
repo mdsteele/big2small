@@ -140,7 +140,6 @@ _WorldMapLoad_SetUnlockedAreas:
     ;; the furthest unlocked area so far.
     ld a, [Ram_WorldMapCurrentArea_u8]
     ld e, a
-    romb BANK("AreaData")
     .areaLoop
     ;; Set a to the next area to consider.  If e is already the last area, then
     ;; we're done.
@@ -149,7 +148,7 @@ _WorldMapLoad_SetUnlockedAreas:
     if_eq NUM_AREAS, jr, .areaDone
     ;; Make hl point to the AREA struct for area c.
     ld c, a  ; param: area number
-    call Func_GetAreaData_hl  ; preserves e
+    xcall FuncX_AreaData_Get_hl  ; preserves e
     ;; Set l to the last puzzle before area a.
     ld bc, AREA_FirstPuzzle_u8
     add hl, bc
@@ -599,8 +598,7 @@ Func_WorldMapSetCurrentArea:
     ld [Ram_WorldMapCurrentArea_u8], a
 _WorldMapSetCurrentArea_DrawTitle:
     ;; Make hl point to the title of area c.
-    call Func_GetAreaData_hl
-    romb BANK("AreaData")
+    xcall FuncX_AreaData_Get_hl
     ld bc, AREA_Title_u8_arr20
     add hl, bc
     ;; Draw the area title to the window map in VRAM.
