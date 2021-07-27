@@ -17,6 +17,48 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+D_ENV: MACRO
+    IF (\2) < 0
+    DB ((\1) << 4) | ((\2) & $7)
+    ELSE
+    DB ((\1) << 4) | ((-(\2)) & $f)
+    ENDC
+ENDM
+
+D_TONE: MACRO
+    IF "\1" == "C"
+BASE_FREQ = 16.35160
+    ELIF "\1" == "C#" || "\1" == "Db"
+BASE_FREQ = 17.32391
+    ELIF "\1" == "D"
+BASE_FREQ = 18.35405
+    ELIF "\1" == "D#" || "\1" == "Eb"
+BASE_FREQ = 19.44544
+    ELIF "\1" == "E"
+BASE_FREQ = 20.60172
+    ELIF "\1" == "F"
+BASE_FREQ = 21.82676
+    ELIF "\1" == "F#" || "\1" == "Gb"
+BASE_FREQ = 23.12465
+    ELIF "\1" == "G"
+BASE_FREQ = 24.49971
+    ELIF "\1" == "G#" || "\1" == "Ab"
+BASE_FREQ = 25.95654
+    ELIF "\1" == "A"
+BASE_FREQ = 27.50000
+    ELIF "\1" == "A#" || "\1" == "Bb"
+BASE_FREQ = 29.13524
+    ELIF "\1" == "B"
+BASE_FREQ = 30.86771
+    ELSE
+    FAIL "Invalid note: \1"
+    ENDC
+TONE_FREQ = BASE_FREQ << (\2)
+    DW $8000 | ((2048.0 - MUL(DIV(16384.0, TONE_FREQ), 8.0)) >> 16)
+ENDM
+
+;;;=========================================================================;;;
+
 SECTION "SoundData", ROMX
 
 DataX_ArrowTerrain_sfx1::
@@ -114,6 +156,57 @@ DataX_Teleport_sfx4::
     DB %11100010  ; env
     DB %01001010  ; poly
     DB %10000000  ; go
+    DB 0
+
+DataX_VictoryNoPar_sfx1::
+    DB 4
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -7
+    D_TONE G, 4
+    DB 4
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -7
+    D_TONE B, 4
+    DB 4
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -7
+    D_TONE D, 5
+    DB 32
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -5
+    D_TONE G, 5
+    DB 0
+
+DataX_VictoryPar_sfx1::
+    DB 8
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -7
+    D_TONE D, 5
+    DB 8
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -7
+    D_TONE B, 4
+    DB 8
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -7
+    D_TONE G, 4
+    DB 8
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -7
+    D_TONE D, 5
+    DB 32
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 15, -5
+    D_TONE G, 5
     DB 0
 
 ;;;=========================================================================;;;

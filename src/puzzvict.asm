@@ -27,11 +27,23 @@ INCLUDE "src/save.inc"
 SECTION "MainVictory", ROM0
 
 Main_Victory::
-    ;; TODO: Play some kind of victory jingle.
+    ;; Determine if we made par, then play an appropriate victory jingle.
+    ld hl, Ram_PuzzleNumMoves_bcd16 + 1
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Par_bcd16 + 1]
+    if_lt [hl], jr, .didNotMakePar
+    ld a, [Ram_PuzzleState_puzz + PUZZ_Par_bcd16 + 0]
+    dec hl
+    if_lt [hl], jr, .didNotMakePar
+    .madePar
+    PLAY_SFX1 DataX_VictoryPar_sfx1
+    jr .done
+    .didNotMakePar
+    PLAY_SFX1 DataX_VictoryNoPar_sfx1
+    .done
 _Victory_AnimateJumping:
     ;; Animate the animals jumping up and down four times.
     ld b, 4 * 16
-    .jumpLoop
+    .loop
     push bc
     call Func_VictoryHopAnimalObjs
     call Func_UpdateAudio
@@ -40,10 +52,21 @@ _Victory_AnimateJumping:
     pop bc
     xor a
     or b
-    jr z, .doneJumping
+    jr z, .done
     dec b
-    jr .jumpLoop
-    .doneJumping
+    jr .loop
+    .done
+_Victory_Delay:
+    ;; Wait for a few frames.
+    ld b, 10
+    .loop
+    push bc
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
+    call Func_AnimateTiles
+    pop bc
+    dec b
+    jr nz, .loop
 _Victory_OutroDialog:
     ld a, [Ram_PuzzleSkipOutroDialog_bool]
     ld hl, Ram_PuzzleState_puzz + PUZZ_Outro_dlog_bptr  ; param: dialog
