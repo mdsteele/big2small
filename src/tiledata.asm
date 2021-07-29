@@ -17,18 +17,46 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
+INCLUDE "src/macros.inc"
 INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
 SECTION "BgTiles", ROMX
-DataX_BgTiles_start::
+
+FuncX_BgTiles_Init::
+    ld hl, Vram_BgTiles  ; param: dest
+    COPY_FROM_SAME DataX_BgTiles_First_start, DataX_BgTiles_First_end
+    if_cgb jr, .cgb
+    COPY_FROM_SAME DataX_BgTiles_GoatDmg_start, DataX_BgTiles_GoatDmg_end
+    jr .last
+    .cgb
+    COPY_FROM_SAME DataX_BgTiles_GoatCgb_start, DataX_BgTiles_GoatCgb_end
+    .last
+    COPY_FROM_SAME DataX_BgTiles_Last_start, DataX_BgTiles_Last_end
+    ret
+
+DataX_BgTiles_First_start:
     INCBIN "out/data/tiles/font.2bpp"
-    INCBIN "out/data/tiles/portrait.2bpp"
-    INCBIN "out/data/tiles/porvar.2bpp"
+    INCBIN "out/data/tiles/portrait_e1.2bpp"
+    INCBIN "out/data/tiles/portrait_e2.2bpp"
+DataX_BgTiles_First_end:
+
+DataX_BgTiles_GoatDmg_start:
+    INCBIN "out/data/tiles/portrait_g1_dmg.2bpp"
+    INCBIN "out/data/tiles/portrait_g2_dmg.2bpp"
+DataX_BgTiles_GoatDmg_end:
+
+DataX_BgTiles_GoatCgb_start:
+    INCBIN "out/data/tiles/portrait_g1_cgb.2bpp"
+    INCBIN "out/data/tiles/portrait_g2_cgb.2bpp"
+DataX_BgTiles_GoatCgb_end:
+
+DataX_BgTiles_Last_start:
+    INCBIN "out/data/tiles/portrait_m.2bpp"
     INCBIN "out/data/tiles/cow.2bpp"
     INCBIN "out/data/tiles/devices.2bpp"
-DataX_BgTiles_end::
+DataX_BgTiles_Last_end:
 
 ;;;=========================================================================;;;
 

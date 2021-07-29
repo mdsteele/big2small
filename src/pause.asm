@@ -28,6 +28,9 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
+;;; The BG palette number to use for the pause window.
+PAUSE_WINDOW_PALETTE EQU 6
+
 ;;; The height, in pixels, of the pause window when fully visible.
 PAUSE_WINDOW_HEIGHT EQU (TILE_HEIGHT * 5)
 
@@ -274,6 +277,7 @@ _DrawPause_DrawNextWindowRow_LastRow:
 _DrawPause_DrawNextWindowRow_FirstRow:
     ld hl, Vram_WindowMap + SCRN_VX_B * 0
 _DrawPause_DrawNextWindowRow_FirstOrLastRow:
+    if_cgb call, FuncX_DrawPause_ColorRow
     ld a, "+"
     ld [hl+], a
     ld a, "="
@@ -295,11 +299,13 @@ _DrawPause_DrawNextWindowRow_FirstOrLastRow:
     ret
 _DrawPause_DrawNextWindowRow_SecondRow:
     ld hl, Vram_WindowMap + SCRN_VX_B * 1  ; param: dest
+    if_cgb call, FuncX_DrawPause_ColorRow
     COPY_FROM_SAME DataX_DrawPause_2ndRow_start, DataX_DrawPause_2ndRow_end
     ld de, Ram_PuzzleNumMoves_bcd16
     jr _DrawPause_DrawNextWindowRow_DrawMoveCount
 _DrawPause_DrawNextWindowRow_ThirdRow:
     ld hl, Vram_WindowMap + SCRN_VX_B * 2  ; param: dest
+    if_cgb call, FuncX_DrawPause_ColorRow
     COPY_FROM_SAME DataX_DrawPause_3rdRow_start, DataX_DrawPause_3rdRow_end
     ;; If the current puzzle hasn't been solved, draw dashes for the best move
     ;; count.
@@ -322,6 +328,7 @@ _DrawPause_DrawNextWindowRow_ThirdRow:
     jr _DrawPause_DrawNextWindowRow_DrawMoveCount
 _DrawPause_DrawNextWindowRow_FourthRow:
     ld hl, Vram_WindowMap + SCRN_VX_B * 3  ; param: dest
+    if_cgb call, FuncX_DrawPause_ColorRow
     COPY_FROM_SAME DataX_DrawPause_4thRow_start, DataX_DrawPause_4thRow_end
     ld de, Ram_PuzzleState_puzz + PUZZ_Par_bcd16
     jr _DrawPause_DrawNextWindowRow_DrawMoveCount
@@ -351,6 +358,28 @@ _DrawPause_DrawNextWindowRow_DrawMoveCount:
     ld [hl+], a
     ld a, "|"
     ld [hl], a
+    ret
+
+;;; Sets the BG color palette for one row of tiles in the pause window.
+;;; @param hl Pointer to the start of a VRAM map row.
+;;; @preserve hl
+FuncX_DrawPause_ColorRow:
+    push hl
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Set the palette for the whole row.
+    ld a, PAUSE_WINDOW_PALETTE
+    ld c, SCRN_X_B / 2
+    .loop
+    ld [hl+], a
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ;; Switch back to VRAM bank 0.
+    xor a
+    ldh [rVBK], a
+    pop hl
     ret
 
 ;;;=========================================================================;;;

@@ -355,9 +355,7 @@ Func_LoadPuzzleTerrainIntoVram::
     ENDR
     pop de
     ;; If color is disabled, we're done.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    ret z
+    if_dmg ret
     ;; Load terrain color palette numbers into the BG tile map.
     ld a, 1
     ldh [rVBK], a

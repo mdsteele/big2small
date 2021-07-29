@@ -105,6 +105,44 @@ if_ge: MACRO
     ENDC
 ENDM
 
+;;; Executes a conditional instruction if running on a color-enabled device.
+;;; This will change `af`, but preserve other registers.
+;;;
+;;; Examples:
+;;;     if_cgb jr, .label  ; jump-relative to .label if running on a CGB
+;;;     if_cgb call, Func  ; call Func if running on a CGB
+;;;     if_cgb ret         ; return if running on a CGB
+if_cgb: MACRO
+    ldh a, [Hram_ColorEnabled_bool]
+    or a
+    IF _NARG == 1
+    \1 nz
+    ELIF _NARG == 2
+    \1 nz, \2
+    ELSE
+    FAIL "Wrong number of arguments to if_cgb macro"
+    ENDC
+ENDM
+
+;;; Executes a conditional instruction if NOT running on a color-enabled
+;;; device.  This will change `af`, but preserve other registers.
+;;;
+;;; Examples:
+;;;     if_dmg jr, .label  ; jump-relative to .label if running on a DMG
+;;;     if_dmg call, Func  ; call Func if running on a DMG
+;;;     if_dmg ret         ; return if running on a DMG
+if_dmg: MACRO
+    ldh a, [Hram_ColorEnabled_bool]
+    or a
+    IF _NARG == 1
+    \1 z
+    ELIF _NARG == 2
+    \1 z, \2
+    ELSE
+    FAIL "Wrong number of arguments to if_dmg macro"
+    ENDC
+ENDM
+
 ;;;=========================================================================;;;
 
 ;;; If hl points to a 2-byte little-endian value stored in memory (such as

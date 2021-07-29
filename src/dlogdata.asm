@@ -380,7 +380,7 @@ DataX_City0Intro_dlog::
     DB "I run into one,\n"
     DB "I'm toast.\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
-    DB "And then we do\n"
+    DB "And then we DO\n"
     DB "have to reset\n"
     DB "the puzzle.\r"
     DB DIALOG_ELEPHANT_EYES_OPEN

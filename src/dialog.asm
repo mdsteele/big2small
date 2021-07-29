@@ -26,6 +26,10 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
+;;; The BG palette numbers to use for the dialog window frame and portrait.
+DIALOG_FRAME_PALETTE EQU 6
+DIALOG_PORTRAIT_PALETTE EQU 0
+
 ;;; The maximum number of lines of dialog text in the window at once.
 DIALOG_NUM_TEXT_LINES EQU 3
 
@@ -271,6 +275,7 @@ _DrawDialog_DrawNextWindowRow_LastRow:
 _DrawDialog_DrawNextWindowRow_FirstRow:
     ld hl, Vram_WindowMap + SCRN_VX_B * 0
 _DrawDialog_DrawNextWindowRow_FirstOrLastRow:
+    if_cgb call, FuncX_DrawDialog_ColorFirstOrLastRow
     ld d, "="
     ld e, "+"
     jp FuncX_DrawDialog_DrawWindowRow
@@ -280,11 +285,13 @@ _DrawDialog_DrawNextWindowRow_SecondRow:
 _DrawDialog_DrawNextWindowRow_ThirdRow:
     ld hl, Vram_WindowMap + SCRN_VX_B * 2
 _DrawDialog_DrawNextWindowRow_SecondOrThirdRow:
+    if_cgb call, FuncX_DrawDialog_ColorMiddleRow
     ld d, " "
     ld e, "|"
     jp FuncX_DrawDialog_DrawWindowRow
 _DrawDialog_DrawNextWindowRow_FourthRow:
     ld hl, Vram_WindowMap + SCRN_VX_B * 3
+    if_cgb call, FuncX_DrawDialog_ColorMiddleRow
     ld d, " "
     ld e, "|"
     call FuncX_DrawDialog_DrawWindowRow
@@ -305,6 +312,60 @@ FuncX_DrawDialog_DrawWindowRow:
     jr nz, .loop
     ld a, e
     ld [hl], a
+    ret
+
+;;; Sets the BG color palette for the top or bottom row of tiles in the dialog
+;;; window.
+;;; @param hl Pointer to the start of a VRAM map row.
+;;; @preserve hl
+FuncX_DrawDialog_ColorFirstOrLastRow:
+    push hl
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Set the palette for the whole row.
+    ld a, DIALOG_FRAME_PALETTE
+    ld c, SCRN_X_B / 2
+    .loop
+    ld [hl+], a
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ;; Switch back to VRAM bank 0.
+    xor a
+    ldh [rVBK], a
+    pop hl
+    ret
+
+;;; Sets the BG color palettes for a middle row of tiles in the dialog window.
+;;; @param hl Pointer to the start of a VRAM map row.
+;;; @preserve hl
+FuncX_DrawDialog_ColorMiddleRow:
+    push hl
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Set the palette for the first column.
+    ld a, DIALOG_FRAME_PALETTE
+    ld [hl+], a
+    ;; Set the palette for the portrait.
+    ASSERT DIALOG_PORTRAIT_PALETTE == 0
+    xor a
+    ld [hl+], a
+    ld [hl+], a
+    ld [hl+], a
+    ;; Set the palette for rest of the row.
+    ld a, DIALOG_FRAME_PALETTE
+    ld c, (SCRN_X_B - 4) / 2
+    .loop
+    ld [hl+], a
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ;; Switch back to VRAM bank 0.
+    xor a
+    ldh [rVBK], a
+    pop hl
     ret
 
 ;;; Sets tiles in the window map for the current dialog portrait.
@@ -333,22 +394,44 @@ WINDOW_ROW = 1
     ld [de], a
 WINDOW_ROW = WINDOW_ROW + 1
     ENDR
-    ret
+    ;; Switch the palette.
+    ld a, [Ram_DialogPortrait_u8]
+    ldb bc, a
+    ld hl, DataX_DrawDialog_PortraitPalettes_u8_arr
+    add hl, bc
+    ld c, [hl]  ; param: obj palette index
+    jp Func_SetBgColorPaletteZero
 
 DataX_DrawDialog_PortraitTable_u8_arr9_arr:
     .begin
     ASSERT @ - .begin == 9 * DIALOG_ELEPHANT_EYES_OPEN
-    DB $4b, $4e, $51, $4c, $4f, $52, $4d, $50, $53
+    DB $4a, $4d, $50, $4b, $4e, $51, $4c, $4f, $52
     ASSERT @ - .begin == 9 * DIALOG_ELEPHANT_EYES_CLOSED
-    DB $4b, $4e, $51, $66, $67, $52, $4d, $50, $53
+    DB $4a, $4d, $50, $53, $54, $51, $4c, $4f, $52
     ASSERT @ - .begin == 9 * DIALOG_GOAT_MOUTH_CLOSED
-    DB $54, $57, $5a, $55, $58, $5b, $56, $59, $5c
+    DB $55, $58, $5b, $56, $59, $5c, $57, $5a, $5d
     ASSERT @ - .begin == 9 * DIALOG_GOAT_MOUTH_OPEN
-    DB $54, $57, $5a, $55, $58, $5b, $56, $59, $63
+    DB $55, $58, $5b, $56, $59, $5c, $57, $5a, $5e
     ASSERT @ - .begin == 9 * DIALOG_MOUSE
-    DB $5d, $60, $00, $5e, $61, $64, $5f, $62, $65
+    DB $5f, $62, $00, $60, $63, $66, $61, $64, $67
     ASSERT @ - .begin == 9 * DIALOG_BLANK
     DB $00, $00, $00, $00, $00, $00, $00, $00, $00
     ASSERT @ - .begin == 9 * DIALOG_END
+
+DataX_DrawDialog_PortraitPalettes_u8_arr:
+    .begin
+    ASSERT @ - .begin == DIALOG_ELEPHANT_EYES_OPEN
+    DB 1
+    ASSERT @ - .begin == DIALOG_ELEPHANT_EYES_CLOSED
+    DB 1
+    ASSERT @ - .begin == DIALOG_GOAT_MOUTH_CLOSED
+    DB 2
+    ASSERT @ - .begin == DIALOG_GOAT_MOUTH_OPEN
+    DB 2
+    ASSERT @ - .begin == DIALOG_MOUSE
+    DB 3
+    ASSERT @ - .begin == DIALOG_BLANK
+    DB 6
+    ASSERT @ - .begin == DIALOG_END
 
 ;;;=========================================================================;;;

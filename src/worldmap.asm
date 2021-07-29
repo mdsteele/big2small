@@ -131,9 +131,28 @@ _WorldMapLoad_LoadTileMap:
     ld hl, Vram_BgMap  ; param: dest
     COPY_FROM_ROMX DataX_WorldTileMap_start, DataX_WorldTileMap_end
     ;; If color is enabled, load color data into VRAM.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    call nz, Func_LoadWorldMapColor
+    if_cgb call, Func_LoadWorldMapColor
+_WorldMapLoad_SetWindowPosition:
+    ld a, 7
+    ldh [rWX], a
+    ld a, SCRN_Y - 8
+    ldh [rWY], a
+_WorldMapLoad_SetWindowColor:
+    if_dmg jr, .noColor
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Set the first row of the window to palette 0.
+    ld hl, Vram_WindowMap
+    xor a
+    ld c, SCRN_X_B
+    .loop
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ;; Switch back to VRAM bank 0.
+    ldh [rVBK], a
+    .noColor
 _WorldMapLoad_SetUnlockedAreas:
     ;; Determine which areas are unlocked.  We start by assuming that all areas
     ;; up to and including the current area are unlocked.  We'll use e to store
@@ -170,11 +189,6 @@ _WorldMapLoad_SetUnlockedAreas:
 _WorldMapLoad_Finish:
     ;; Initialize music.
     PLAY_SONG DataX_Train_song
-    ;; Set up window.
-    ld a, 7
-    ldh [rWX], a
-    ld a, SCRN_Y - 8
-    ldh [rWY], a
     ret
 
 ;;; @prereq LCD is off.

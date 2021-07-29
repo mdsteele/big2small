@@ -34,9 +34,7 @@ SECTION "MapColorFunctions", ROM0
 ;;; @preserve bc, de, hl, romb
 Func_SetTrailTileColor::
     ;; Do nothing if color is disabled.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    ret z
+    if_dmg ret
     ;; Switch to VRAM bank 1.
     ld a, 1
     ldh [rVBK], a

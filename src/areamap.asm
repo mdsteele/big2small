@@ -324,9 +324,7 @@ _LoadAreaMap_SetBgColorData:
     ;; point, the ROM bank is still set to the bank for this data.
     pop de  ; param: BG tile map pointer
     ;; If color is enabled, load color data into VRAM.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    call nz, Func_LoadAreaMapColor
+    if_cgb call, Func_LoadAreaMapColor
     ;; Resume reading the AREA struct where we left off.
     romb BANK("AreaData")
     pop hl

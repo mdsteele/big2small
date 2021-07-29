@@ -51,10 +51,9 @@ Main::
     ld a, LCDCF_OFF
     ldh [rLCDC], a
     ;; Copy tiles to VRAM.
-    ld hl, Vram_BgTiles  ; param: dest
-    COPY_FROM_ROMX DataX_BgTiles_start, DataX_BgTiles_end
     ld hl, Vram_ObjTiles  ; param: dest
     COPY_FROM_ROMX DataX_ObjTiles_start, DataX_ObjTiles_end
+    xcall FuncX_BgTiles_Init
     ;; Initialize global state.
     xcall FuncX_InitObjColorPalettes
     call Func_InitSaveSummaries

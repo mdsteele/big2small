@@ -111,10 +111,7 @@ Func_FadeIn::
     ld a, d
     or LCDCF_ON
     push af
-    ;; Check if color is enabled.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    jr nz, _FadeIn_Color
+    if_cgb jr, _FadeIn_Color
 _FadeIn_Grayscale:
     ;; Set grayscale palettes to 1/3 saturation.
     ld a, GRAYSCALE_PALETTE_13
@@ -173,10 +170,7 @@ Func_FadeOut::
     ;; End the current frame and sync OAM.
     call Func_UpdateAudio
     call Func_WaitForVBlankAndPerformDma
-    ;; Check if color is enabled.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    jr nz, _FadeOut_Color
+    if_cgb jr, _FadeOut_Color
 _FadeOut_Grayscale:
     ;; Set grayscale palettes to 2/3 saturation, then wait for a few frames.
     ld a, GRAYSCALE_PALETTE_23

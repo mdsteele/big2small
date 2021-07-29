@@ -50,14 +50,36 @@ Ram_LastBgColorset_u8:
 
 ;;;=========================================================================;;;
 
+SECTION "ColorFunctions", ROM0
+
+;;; Sets the second, third, and fourth colors of BG color palette 0 to match
+;;; the corresponding colors of the specified object color palette.
+;;; @param c Obj palette index to use.
+Func_SetBgColorPaletteZero::
+    ld a, c
+    mult sizeof_CPAL
+    add sizeof_U16  ; skip first color in palette
+    ldb bc, a
+    xld hl, DataX_ObjColorPalettes_start
+    add hl, bc
+    ld a, OCPSF_AUTOINC | sizeof_U16  ; skip first color in palette
+    ldh [rBCPS], a
+    ld c, sizeof_CPAL - sizeof_U16  ; skip first color in palette
+    .loop
+    ld a, [hl+]
+    ldh [rBCPD], a
+    dec c
+    jr nz, .loop
+    ret
+
+;;;=========================================================================;;;
+
 SECTION "ObjColorPalettes", ROMX
 
 ;;; If color is enabled, transfers object color palette data.
 FuncX_InitObjColorPalettes::
     ;; If color is disabled, we're done.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    ret z
+    if_dmg ret
     ;; Transfer object color palette data.
     ld a, OCPSF_AUTOINC
     ldh [rOCPS], a
@@ -130,9 +152,7 @@ FuncX_Colorset_GetCurrentCsetPtr_hl::
 ;;; @prereq LCD is off, or VBlank has recently started.
 FuncX_Colorset_Reload::
     ;; If color is disabled, we're done.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    ret z
+    if_dmg ret
     ;; Use the most recently set colorset enum value.
     ld a, [Ram_LastBgColorset_u8]
     ld c, a
@@ -145,9 +165,7 @@ FuncX_Colorset_Reload::
 ;;; @param c The chosen colorset.
 FuncX_Colorset_Load::
     ;; If color is disabled, we're done.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    ret z
+    if_dmg ret
     ;; Store the chosen colorset enum value in Ram_LastBgColorset_u8.
     ld a, c
     ld [Ram_LastBgColorset_u8], a
@@ -205,7 +223,7 @@ DataX_Colorset_Table_cset_ptr_arr:
 DataX_Colorset_Autumn_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 255, 255
+    D_COLOR 255, 224, 192
     D_COLOR 192, 96, 0
     D_COLOR 96, 48, 0
     D_COLOR 0, 0, 0
@@ -249,7 +267,7 @@ ASSERT @ - .begin == sizeof_CSET
 DataX_Colorset_City_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 224, 255
+    D_COLOR 224, 216, 216
     D_COLOR 192, 0, 192
     D_COLOR 96, 0, 96
     D_COLOR 0, 0, 0
@@ -337,7 +355,7 @@ ASSERT @ - .begin == sizeof_CSET
 DataX_Colorset_Sewer_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 224, 255
+    D_COLOR 216, 216, 224
     D_COLOR 192, 0, 192
     D_COLOR 96, 0, 96
     D_COLOR 0, 0, 0
@@ -381,7 +399,7 @@ ASSERT @ - .begin == sizeof_CSET
 DataX_Colorset_Space_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 224, 255
+    D_COLOR 255, 232, 240
     D_COLOR 192, 0, 192
     D_COLOR 96, 0, 96
     D_COLOR 0, 0, 0
@@ -425,7 +443,7 @@ ASSERT @ - .begin == sizeof_CSET
 DataX_Colorset_Summer_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 232, 216
+    D_COLOR 255, 240, 224
     D_COLOR 96, 192, 96
     D_COLOR 64, 128, 64
     D_COLOR 0, 32, 0
@@ -469,7 +487,7 @@ ASSERT @ - .begin == sizeof_CSET
 DataX_Colorset_Winter_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 232, 232
+    D_COLOR 255, 255, 255
     D_COLOR 224, 128, 128
     D_COLOR 128, 0, 0
     D_COLOR 64, 0, 0

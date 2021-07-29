@@ -110,9 +110,7 @@ _CreditsLoadFlyingScreen_LoadTileMap:
     jr nz, .clearLoop
 _CreditsLoadFlyingScreen_LoadColor:
     ;; If color is enabled, load color data into VRAM.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    jr z, .noColor
+    if_dmg jr, .noColor
     ld a, 1
     ldh [rVBK], a
     ld a, 4
@@ -224,9 +222,7 @@ _CreditsLoadMoonScreen_LoadTileMap:
     jr nz, .botRowLoop
 _CreditsLoadMoonScreen_LoadColor:
     ;; If color is enabled, load color data into VRAM.
-    ldh a, [Hram_ColorEnabled_bool]
-    or a
-    jr z, .noColor
+    if_dmg jr, .noColor
     xld de, DataX_MoonTileMap_start
     call Func_LoadAreaMapColor
     .noColor
