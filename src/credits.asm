@@ -223,7 +223,8 @@ _CreditsLoadMoonScreen_LoadTileMap:
 _CreditsLoadMoonScreen_LoadColor:
     ;; If color is enabled, load color data into VRAM.
     if_dmg jr, .noColor
-    xld de, DataX_MoonTileMap_start
+    xld de, DataX_MoonTileMap_start  ; param: BG tile map pointer
+    ld b, 4  ; param: top/bottom row palette
     call Func_LoadAreaMapColor
     .noColor
 _CreditsLoadMoonScreen_SetUpOjbects:

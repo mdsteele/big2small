@@ -109,7 +109,9 @@ _LoadTileset_MapSewer:
     xld hl, DataX_OceanTiles_tile_arr
     jp Func_SetAnimatedTile
 _LoadTileset_MapSpace:
-    SKIP_TO_TILE $a0
+    SKIP_TO_TILE $87
+    COPY_FROM_ROMX DataX_MapMoonTiles_start, DataX_MapMoonTiles_end
+    SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
     SKIP_TO_TILE $fb
     COPY_FROM_ROMX DataX_MapStarsTiles_start, DataX_MapStarsTiles_end

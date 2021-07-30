@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
       } else if (0 == strcmp(tileset, "map_launch")) {
         fputc(0xc0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_moon")) {
-        fputc(0xa0 + tile_index, stdout);
+        fputc(0x87 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_mountain")) {
         fputc(0xa0 + tile_index, stdout);
       } else if (0 == strcmp(tileset, "map_office")) {

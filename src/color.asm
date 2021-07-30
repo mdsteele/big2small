@@ -310,41 +310,41 @@ ASSERT @ - .begin == sizeof_CSET
 
 DataX_Colorset_Moon_cset:
     .begin
-    ;; Palette 0 (menu)
-    D_COLOR 255, 224, 255
-    D_COLOR 192, 0, 192
-    D_COLOR 96, 0, 96
-    D_COLOR 0, 0, 0
-    ;; Palette 1 (unused)
-    D_COLOR 255, 255, 255
-    D_COLOR 170, 170, 170
-    D_COLOR 85, 85, 85
+    ;; Palette 0 (dialog portrait)
+    D_COLOR 255, 232, 240
+    D_COLOR 192, 192, 224
+    D_COLOR 96, 96, 128
+    D_COLOR 0, 0, 16
+    ;; Palette 1 (moon)
+    D_COLOR 255, 255, 192
+    D_COLOR 255, 192, 0
+    D_COLOR 128, 96, 0
     D_COLOR 0, 0, 0
     ;; Palette 2 (unused)
     D_COLOR 255, 255, 255
     D_COLOR 170, 170, 170
     D_COLOR 85, 85, 85
     D_COLOR 0, 0, 0
-    ;; Palette 3 (moon)
-    D_COLOR 255, 255, 192
-    D_COLOR 255, 192, 0
-    D_COLOR 128, 96, 0
+    ;; Palette 3 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
     D_COLOR 0, 0, 0
     ;; Palette 4 (stars)
     D_COLOR 255, 255, 255
     D_COLOR 170, 170, 170
     D_COLOR 85, 85, 85
     D_COLOR 0, 0, 0
-    ;; Palette 5 (unused)
-    D_COLOR 255, 255, 255
-    D_COLOR 170, 170, 170
-    D_COLOR 85, 85, 85
-    D_COLOR 0, 0, 0
-    ;; Palette 6 (moon, again)
+    ;; Palette 5 (moon, again)
     D_COLOR 255, 255, 192
     D_COLOR 255, 192, 0
     D_COLOR 128, 96, 0
     D_COLOR 0, 0, 0
+    ;; Palette 6 (dialog frame)
+    D_COLOR 255, 232, 240
+    D_COLOR 192, 192, 224
+    D_COLOR 96, 96, 128
+    D_COLOR 0, 0, 16
     ;; Palette 7 (unused)
     D_COLOR 255, 255, 255
     D_COLOR 170, 170, 170

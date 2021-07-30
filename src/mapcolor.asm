@@ -48,21 +48,15 @@ Func_SetTrailTileColor::
 ;;;=========================================================================;;;
 
 ;;; @prereq Correct ROM bank for de pointer is set.
+;;; @param b BG palette number to use for top/bottom rows.
 ;;; @param de Pointer to the BG map data for the area.
 Func_LoadAreaMapColor::
-    ld hl, Data_AreaMapBgPalettes_u8_arr16  ; param: palette array
-    call Func_LoadHramPalettes  ; preserves de
     ;; Switch to VRAM bank 1.
     ld a, 1
     ldh [rVBK], a
-    ;; Set the color palettes for the area map based on the tile IDs.
-    ld hl, Vram_BgMap + SCRN_VX_B
-    REPT SCRN_Y_B - 2
-    call Func_LoadAreaMapColorRow
-    ENDR
     ;; Set the color palette for the top and bottom rows of tiles (where the
-    ;; area and puzzle titles go) to 0.
-    xor a
+    ;; area and puzzle titles go) to b.
+    ld a, b
     ld hl, Vram_BgMap
     ld c, SCRN_X_B
     .topRowLoop
@@ -75,6 +69,17 @@ Func_LoadAreaMapColor::
     ld [hl+], a
     dec c
     jr nz, .botRowLoop
+    ;; Set the color palettes for the area map based on the tile IDs.
+    ld hl, Data_AreaMapBgPalettes_u8_arr16  ; param: palette array
+    call Func_LoadHramPalettes  ; preserves de
+    ld hl, Vram_BgMap + SCRN_VX_B
+    ld c, SCRN_Y_B - 2
+    .rowLoop
+    push bc
+    call Func_LoadAreaMapColorRow
+    pop bc
+    dec c
+    jr nz, .rowLoop
     ;; Switch back to VRAM bank 0.
     xor a
     ldh [rVBK], a
@@ -175,7 +180,7 @@ Func_LoadHramPalettes:
 ;;; Maps from bits 3-6 of an area map tile ID to a color palette number.
 Data_AreaMapBgPalettes_u8_arr16:
     .begin
-    DB TRAIL_PALETTE, 7, 1, 1, 6, 6, 3, 3, 7, 7, 6, 6, 4, 4, 4, 4
+    DB TRAIL_PALETTE, 1, 1, 1, 6, 6, 3, 3, 7, 7, 6, 6, 4, 4, 4, 4
     ASSERT @ - .begin == 16
 
 ;;; Maps from bits 3-6 of a world map tile ID to a color palette number.
