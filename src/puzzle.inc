@@ -221,5 +221,13 @@ W_LW3 RB 1  ; Brick lip west multi
 W_LLE RB 1  ; Brick lip L-shape east
 W_LC4 RB 1  ; Brick lip four sides
 W_ROP RB 1  ; Brick roof open
+W_PNW RB 1  ; Launchpad north/west
+W_PSW RB 1  ; Launchpad south/west
+W_PNE RB 1  ; Launchpad north/east
+W_PSE RB 1  ; Launchpad south/east
+W_PNR RB 1  ; Launchpad north rocket
+W_PSR RB 1  ; Launchpad south rocket
+W_PNT RB 1  ; Launchpad north tower
+W_PST RB 1  ; Launchpad south tower
 
 ;;;=========================================================================;;;

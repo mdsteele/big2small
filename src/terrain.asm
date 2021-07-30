@@ -29,8 +29,9 @@ BRIDGE_START   EQU $c0
 FENCE_START    EQU $d0
 GOAL_START     EQU $80
 HOUSE_START    EQU $f0
+LAUNCH_START   EQU $c0
 MOUNTAIN_START EQU $d0
-PEBBLE_START   EQU $c8
+PEBBLE_START   EQU $cc
 PIPE_START     EQU $8c
 SHORE_START    EQU $b0
 TELEPORT_START EQU $94
@@ -173,6 +174,14 @@ DataX_TerrainTable:
     D_TERR W_LLE, $10, $0b, $0c, $0f, BRICK_START + $04
     D_TERR W_LC4, $06, $0a, $0d, $0f, BRICK_START + $04
     D_TERR W_ROP, $09, $09, $09, $09, BRICK_START + $04
+    D_TERR W_PNW, EMP, EMP, $15, $1c, BRICK_START
+    D_TERR W_PSW, $18, $12, $19, $1d, BRICK_START
+    D_TERR W_PNE, EMP, EMP, $1c, $17, BRICK_START
+    D_TERR W_PSE, $12, $1a, $1d, $1b, BRICK_START
+    D_TERR W_PNR, $00, $03, $01, $04, LAUNCH_START
+    D_TERR W_PSR, $02, $05, $3d, $3d, LAUNCH_START
+    D_TERR W_PNT, $06, $09, $07, $0a, LAUNCH_START
+    D_TERR W_PST, $08, $0b, $3d, $3d, LAUNCH_START
 ASSERT @ - DataX_TerrainTable <= 512
 
 ;;;=========================================================================;;;
@@ -294,6 +303,14 @@ DataX_TerrainPaletteTable:
     D_PAL W_LLE, 6
     D_PAL W_LC4, 6
     D_PAL W_ROP, 6
+    D_PAL W_PNW, 6
+    D_PAL W_PSW, 6
+    D_PAL W_PNE, 6
+    D_PAL W_PSE, 6
+    D_PAL W_PNR, 7
+    D_PAL W_PSR, 7, 6
+    D_PAL W_PNT, 6
+    D_PAL W_PST, 6
 ASSERT @ - DataX_TerrainPaletteTable <= 256
 
 ;;;=========================================================================;;;

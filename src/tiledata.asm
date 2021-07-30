@@ -216,6 +216,11 @@ DataX_GirderTiles_start::
     INCBIN "out/data/tiles/thrust.2bpp"
 DataX_GirderTiles_end::
 
+SECTION "LaunchTiles", ROMX
+DataX_LaunchTiles_start::
+    INCBIN "out/data/tiles/launch.2bpp"
+DataX_LaunchTiles_end::
+
 SECTION "MountainTiles", ROMX
 DataX_MountainTiles_start::
     INCBIN "out/data/tiles/mountain.2bpp"
