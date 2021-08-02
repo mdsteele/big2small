@@ -1,0 +1,82 @@
+!SONG "Chantey" "A|BCDE"
+=tempo q30
+=key 3b  % C minor
+
+!DRUM H { E(13, -7) }
+
+!PART A
+
+1 { E(5, -3) D(1/2) }
+2 { E(10, -4) D(1/8) }
+3 { W(889abbcefeedccba9743210024567898) }
+
+2' g3e3 |
+
+!PART B
+
+1| rh+                    ' +q3  c5e3  ' c5q       |
+ | rh+                    ' +q3  e5e3  ' e5q       |
+ | rq3  g5e3 ' g5q3 re3+  ' +q3  f5e3  ' f5q       |
+ | rq3  e5e3 ' rq3  d5e3  ' rq3  c5e3  ' c5q       |
+2| c4q3 g3e3 ' g3q3 g3e3  ' c4q+       ' +q3  d4e3 |
+ | e4q3 b3e3 ' b3q3 b3e3  ' e4q+       ' +q3  f4e3 |
+ | g4q3 e4e3 ' e4q3 g4e3  ' f4q3 d4e3  ' d4q3 f4e3 |
+ | e4q3 d4e3 ' c4q3 b3e3  ' c4q+       ' +q3  g3e3 |
+3| c3q       ' g2q        ' c3q        ' g2q       |
+ | e3q       ' b2q        ' e3q        ' b2q       |
+ | g3q       ' e3q        ' f3q        ' d3q       |
+ | e3q       ' f3q3 d3e3  ' c3q        ' g2q       |
+4|: xHq      ' xHq        ' xHq ' xHe3 xHe3 xHe3 :2|
+ | xHq       ' xHq        ' xHq        ' xHq       |
+ | xHq       ' xHq        ' xHe3 xHe3 xHe3 ' xHq   |
+
+!PART C
+
+1| rh                     ' c5e3 d bN4 ' c5q       |
+ | rh                     ' e5e3 f d   ' e5q       |
+ | g5e3 a f  ' g5q        ' f5e3 g e   ' f5q       |
+ | e5e3 f d  ' c5e3 d bN4 ' c5q        ' rq        |
+2| c4q3 g3e3 ' g3q3 c4e3  ' c4q+       ' +q3  d4e3 |
+ | e4q3 b3e3 ' b3q3 e4e3  ' e4q+       ' +q3  f4e3 |
+ | g4q3 e4e3 ' e4q3 g4e3  ' f4q3 d4e3  ' d4q3 d4e3 |
+ | c4q3 d4e3 ' e4q3 d4e3  ' c4q        ' g4q       |
+3| c3q       ' g2q        ' c3q        ' g2q       |
+ | e3q       ' b2q        ' e3q        ' b2q       |
+ | g3q       ' e3q        ' f3q        ' d3q       |
+ | c3q       ' bN2q3 d3e3 ' c3q3 d3e3  ' e3e3 f g  |
+4|: xHq      ' xHq        ' xHq ' xHe3 xHe3 xHe3 :2|
+ | xHq       ' xHq        ' xHq        ' xHq       |
+ | xHq       ' xHq        ' xHe3 xHe3 xHe3 ' xHq   |
+
+!PART D
+
+1| e5q ' g5q ' b4h        |
+ | d5q ' f5q ' a4h        |
+ | c5q ' e5q ' d5q ' bN4q |
+ | c5q ' { S(7, +2) E(5, -1) D(3/4) } g4q ' { E(5, -3) D(1/2) } c5q '
+2| g4q ' e4q ' e4q+       ' +q3 g4e3   |
+ | f4q ' d4q ' d4q+       ' +q3 f4e3   |
+ | e4q ' c4q ' bN3q3 c4e3 ' d4q3 bN3e3 |
+ | c4q ' g3q ' c4q+       ' +q3 g4e3   |
+3|: b3q3 g3e3 :4|
+ |: a3q3 f3e3 :4|
+ | g3q3 e3e3 ' g3q3 e3e3 ' f3q3 d3e3 ' f3q3 d3e3 |
+ | c3q3 e3e3 ' d3q3 bN2e3 ' c3q3 d3e3 ' e3e3 f g |
+4|: xHq ' xHq3 xHe3 :8|
+
+!PART E
+
+1| e5q ' g5q ' b4h       |
+ | d5q ' f5q ' c5h       |
+ | d5q ' f5q ' e5q ' g5q |
+ | a5q ' d5q ' c5h       |
+2| g4q        ' e4q             ' e4q+           ' +q3  g4e3 |
+ | f4q        ' d4q3      f4e3  ' e4q+           ' +q3  e4e3 |
+ | d4q3 d4e3  ' d4q3      f4e3  ' e4e3 c4e3 c4e3 ' c4q3 c4e3 |
+ | bN3q3 c4e3 ' d4e3 c4e3 bN3e3 ' c4q            ' g3q       |
+3|: b3q3 g3e3 :4|
+ | a3q3 f3e3 ' a3q3 f3e3 ' g3q3 e3e3 ' g3q3 e3e3 |
+ | f3q3 d3e3 ' f3q3 d3e3 ' e3q3 c3e3 ' e3q3 c3e3 |
+ | d3q       ' bN2q      ' c3q       ' g2q       |
+4|: xHq ' xHq3 xHe3 :6|
+ | xHq ' xHq ' xHe3 xHe3 xHe3 ' xHq |

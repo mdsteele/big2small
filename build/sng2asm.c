@@ -565,7 +565,17 @@ static void parse_instrument_sweep() {
   if (parser.current_instrument.effect != -1) {
     PARSE_ERROR("can't set sweep twice in one instrument\n");
   }
-  PARSE_ERROR("TODO: parse_instrument_sweep not implemented\n");
+  read_symbol('(');
+  int shifts = read_unsigned_int();
+  read_symbol(',');
+  int speed = read_signed_int();
+  read_symbol(')');
+  if (shifts > 7) PARSE_ERROR("invalid sweep shifts: %d\n", shifts);
+  if (speed < -7 || speed > 7) PARSE_ERROR("invalid sweep speed: %d\n", speed);
+  parser.current_instrument.effect = shifts |
+    (speed > 0 ? (8 - speed) << 4 :
+     speed < 0 ? ((8 + speed) << 4) | 0x8 :
+     0);
 }
 
 static void parse_instrument_wave() {
