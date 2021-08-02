@@ -208,9 +208,16 @@ _TitleScreen_RunLoop:
     call Func_UpdateButtonState
     ldh a, [Hram_ButtonsPressed_u8]
     ld b, a
-_TitleScreen_HandleButtonUp:
+_TitleScreen_HandleButtons:
+    and PADF_START | PADF_A
+    jr nz, _TitleScreen_OnConfirm
     bit PADB_UP, b
-    jr z, .noPress
+    jr nz, _TitleScreen_OnButtonUp
+    bit PADB_DOWN, b
+    jr nz, _TitleScreen_OnButtonDown
+    jr _TitleScreen_RunLoop
+
+_TitleScreen_OnButtonUp:
     ld c, " "  ; cursor tile ID
     call Func_TitleMenuSetCursorTile
     ld a, [Ram_TitleMenuItem_u8]
@@ -219,10 +226,8 @@ _TitleScreen_HandleButtonUp:
     ld a, TITLE_MENU_NUM_ITEMS - 1
     .noUnderflow
     jr _TitleScreen_UpdateCursor
-    .noPress
-_TitleScreen_HandleButtonDown:
-    bit PADB_DOWN, b
-    jr z, .noPress
+
+_TitleScreen_OnButtonDown:
     ld c, " "  ; cursor tile ID
     call Func_TitleMenuSetCursorTile
     ld a, [Ram_TitleMenuItem_u8]
@@ -231,10 +236,8 @@ _TitleScreen_HandleButtonDown:
     xor a
     .noOverflow
     jr _TitleScreen_UpdateCursor
-    .noPress
-_TitleScreen_HandleButtonStart:
-    bit PADB_START, b
-    jr z, _TitleScreen_RunLoop
+
+_TitleScreen_OnConfirm:
     ld a, [Ram_TitleMenuItem_u8]
     if_ne TITLE_MENU_ITEM_ERASE, jr, _TitleScreen_SelectFile
     ld a, [Ram_TitleMenuIsErasing_bool]
