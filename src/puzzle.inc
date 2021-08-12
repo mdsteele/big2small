@@ -216,8 +216,10 @@ W_LSW RB 1  ; Brick lip south/west
 W_LEW RB 1  ; Brick lip east/west
 W_LE1 RB 1  ; Brick lip east single
 W_LE3 RB 1  ; Brick lip east multi
+W_LEC RB 1  ; Brick lip east with corner (in northwest)
 W_LW1 RB 1  ; Brick lip west single
 W_LW3 RB 1  ; Brick lip west multi
+W_LWC RB 1  ; Brick lip west with corner (in northeast)
 W_LLE RB 1  ; Brick lip L-shape east
 W_LC4 RB 1  ; Brick lip four sides
 W_ROP RB 1  ; Brick roof open

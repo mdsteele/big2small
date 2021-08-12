@@ -169,8 +169,10 @@ DataX_TerrainTable:
     D_TERR W_LEW, $07, $0b, $07, $0b, BRICK_START + $04
     D_TERR W_LE1, $08, $0a, $0c, $0f, BRICK_START + $04
     D_TERR W_LE3, $09, $0b, $09, $0b, BRICK_START + $04
+    D_TERR W_LEC, $0c, $0b, $09, $0b, BRICK_START + $04
     D_TERR W_LW1, $06, $08, $0d, $0c, BRICK_START + $04
     D_TERR W_LW3, $07, $09, $07, $09, BRICK_START + $04
+    D_TERR W_LWC, $07, $0e, $07, $09, BRICK_START + $04
     D_TERR W_LLE, $10, $0b, $0c, $0f, BRICK_START + $04
     D_TERR W_LC4, $06, $0a, $0d, $0f, BRICK_START + $04
     D_TERR W_ROP, $09, $09, $09, $09, BRICK_START + $04
@@ -298,8 +300,10 @@ DataX_TerrainPaletteTable:
     D_PAL W_LEW, 6
     D_PAL W_LE1, 6
     D_PAL W_LE3, 6
+    D_PAL W_LEC, 6
     D_PAL W_LW1, 6
     D_PAL W_LW3, 6
+    D_PAL W_LWC, 6
     D_PAL W_LLE, 6
     D_PAL W_LC4, 6
     D_PAL W_ROP, 6

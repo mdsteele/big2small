@@ -716,7 +716,7 @@ DataX_Sewer5_puzz:
     D_ANIM $54, DIRF_EAST
     DB O_EMP, S_PPW, W_LN1, O_EMP, O_EMP, O_EMP, O_EMP, W_LN1, O_PEB, O_EMP
     D_BPTR DataX_RestYe_song
-    DB O_PEB, O_EMP, W_LW3, W_LNE, W_BSE, S_BSH, W_BSW, W_LEW, O_EMP, O_EMP
+    DB O_PEB, O_EMP, W_LWC, W_LNE, W_BSE, S_BSH, W_BSW, W_LEW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, W_LEW, W_BSE, O_EMP, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP
     D_BPTR DataX_Null_dlog
@@ -842,7 +842,7 @@ DataX_Space0_puzz:
     D_ANIM $15, DIRF_WEST, 0, 0, $47, $33
     DB W_LEW, O_EMP, W_LN1, S_TMF, O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, W_LEW
     D_BPTR DataX_LightsOn_song, 0, 0, $24
-    DB W_LEW, W_BS3, W_BS3, W_BS3, M_BNS, W_LNW, W_LE3, S_TGE, O_EMP, W_LEW
+    DB W_LEW, W_BS3, W_BS3, W_BS3, M_BNS, W_LNW, W_LEC, S_TGE, O_EMP, W_LEW
     D_BPTR DataX_Space0Intro_dlog, 0, $21, 0
     DB W_LEW, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW, W_LEW, O_EMP, O_EMP, W_LEW
     D_BPTR DataX_Null_dlog
