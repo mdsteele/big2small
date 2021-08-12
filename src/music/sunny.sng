@@ -1,0 +1,55 @@
+!SONG "Sunny" "A|BCDEBCDF"
+=tempo q30
+=key 7#  % C# major
+
+!DRUM H { E(13, -7) }
+
+!PART A
+
+1 { E(6, -5) D(1/2) }
+2 { E(10, -4) D(1/8) }
+3 { W(889abbcefeedccba9743210024567898) }
+
+2' g3e3 |
+
+!PART B
+
+1| rw+ | +h+             ' +q3  g5e3 ' gq3
+2| c4q+      ' +q3  g3e3 ' d4q+      ' +q3  e4e3 |
+ | e4q3 de3  ' c4q3 ee3  ' dq+       ' +q3  g3e3 |
+3| c3q3 g2e3 ' c3q3 g2e3 ' b2q3 ge3  ' b2q3 ge3  |
+ | c3q3 g2e3 ' c3q3 g2e3 ' d3q3 b2e3 ' d3q3 b2e3 |
+4| xHq : xHq :7|
+
+!PART C
+
+2| c4q+      ' +q3  g3e3 ' d4q+      ' +q3  g3e3 |
+ | e4q3 de3  ' cq3  ee3  ' dq+       ' +q3  g4e3 |
+3| c3q3 g2e3 ' c3q3 g2e3 ' b2q3 ge3  ' b2q3 ge3  |
+ | c3q3 g2e3 ' c3q3 g2e3 ' d3q3 b2e3 ' d3q3 b2e3 |
+4| xHq : xHq :7|
+
+!PART D
+
+1| rw+ | +h+q3 gN5e3 gq3 '
+2| g4q3 ee3  ' e4q3 ge3  ' fq3  de3+ ' +q3  fe3  |
+ | e4q3 de3  ' cq3  ee3  ' dq+       ' +q3  g4e3 |
+3| c3q3 g2e3 ' c3q3 g2e3 ' b2q3 ge3  ' b2q3 ge3  |
+ | c3q3 g2e3 ' c3q3 g2e3 ' d3q3 b2e3 ' d3q3 b2e3 |
+4|: xHq      ' xHq3 xHe3 :4|
+
+!PART E
+
+2| g4q3 ee3  ' e4q3 ge3  ' fq3  de3  ' dq3  de3  |
+ | e4q3 de3  ' cq3  ee3  ' dq3  b3e3 ' g3q3 ge3  |
+3| c3q3 g2e3 ' c3q3 g2e3 ' b2q3 ge3  ' b2q3 ge3  |
+ | c3q3 g2e3 ' c3q3 g2e3 ' d3q3 b2e3 ' d3q3 b2e3 |
+4|: xHq      ' xHq3 xHe3 :3' xHq     ' xHq       |
+
+!PART F
+
+2| g4q3 ee3  ' e4q3 ge3  ' fq3 de3   ' dq3  de3  |
+ | e4q3 ce3  ' dq3  b3e3 ' c4q       ' g3q       |
+3| c3q3 g2e3 ' c3q3 g2e3 ' b2q3 ge3  ' b2q3 ge3  |
+ | c3q3 g2e3 ' b2q3 ge3  ' e3q3 ce3  ' d3q3 b2e3 |
+4|: xHq      ' xHq3 xHe3 :4|

@@ -191,7 +191,7 @@ _TitleScreen_FadeIn:
     ldh [rSCY], a
     ld d, LCDCF_BGON  ; param: display flags
     call Func_FadeIn
-    PLAY_SONG DataX_TitleMusic_song
+    PLAY_SONG DataX_Title_song
 _TitleScreen_Intro:
     xcall FuncX_TitleIntro
     xor a

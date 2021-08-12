@@ -274,7 +274,7 @@ DataX_Farm0_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_ANIM $80, DIRF_SOUTH
     DB W_FNW, W_FNS, W_FNS, W_FNS, W_FNS, W_FNS, M_FNS, W_FNS, W_FNE, O_EMP
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_Sunny_song
     DB W_FSE, W_COW, O_GRS, O_GRS, O_GRS, O_GRS, O_EMP, O_GRS, W_FEW, O_EMP
     D_BPTR DataX_Farm0Intro_dlog
     DB O_GRS, O_GRS, O_EMP, O_GRS, O_GRS, G_APL, O_GRS, O_GRS, W_FEW, O_EMP
@@ -295,7 +295,7 @@ DataX_Farm1_puzz:
     DB W_TTR, W_TTR, O_EMP, W_TST, W_FW1, W_FNS, W_FNS, W_FNS, M_FNS, W_FNS
     D_ANIM $60, DIRF_EAST
     DB O_EMP, O_GRS, O_EMP, W_TTR, O_EMP, O_EMP, O_GRS, O_GRS, O_EMP, O_GRS
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_Sunny_song
     DB O_EMP, O_EMP, O_GRS, O_GRS, O_GRS, W_COW, O_EMP, O_GRS, S_BSH, O_GRS
     D_BPTR DataX_Null_dlog
     DB W_FNS, M_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNE, O_EMP, W_COW
@@ -442,7 +442,7 @@ DataX_Mountain3_puzz:
     DB R_KS3, R_KSE, O_EMP, O_PEB, O_EMP, S_ARW, R_KSW, R_KSE, O_EMP, O_EMP
     D_ANIM $28, DIRF_SOUTH
     DB O_CW3, O_PEB, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_CHS
-    D_BPTR DataX_ComingRound_song
+    D_BPTR DataX_Sunny_song
     DB O_CW3, O_EMP, O_EMP, S_ARS, O_EMP, G_APL, O_EMP, O_PEB, O_EMP, O_EMP
     D_BPTR DataX_Mountain3Intro_dlog
     DB O_CW3, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
@@ -505,7 +505,7 @@ DataX_Lake0_puzz:
     DB O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, O_BNS, O_EMP, O_EMP
     D_ANIM $09, DIRF_SOUTH
     DB O_EMP, O_GRS, O_EMP, R_RNS, O_EMP, O_EMP, O_GRS, R_RNS, O_EMP, O_EMP
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_Sunny_song
     DB O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP, R_RNS, O_EMP, O_GRS
     D_BPTR DataX_Lake0Intro_dlog
     DB O_GRS, O_EMP, O_EMP, O_EMP, R_RNS, O_EMP, R_RSE, R_RNW, O_EMP, O_EMP
@@ -526,7 +526,7 @@ DataX_Lake1_puzz:
     DB O_EMP, O_EMP, R_RSE, R_REW, R_RSW, O_EMP, R_RNS, O_EMP, G_PNT, O_EMP
     D_ANIM $21, DIRF_EAST
     DB O_EMP, S_BSH, R_RNS, G_APL, R_RNS, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP
-    D_BPTR DataX_TitleMusic_song
+    D_BPTR DataX_Sunny_song
     DB O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP, R_RNS, O_EMP, O_GRS, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP

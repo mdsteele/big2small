@@ -63,7 +63,7 @@ Main_CreditsScreen::
     xcall FuncX_Colorset_Load
 _CreditsScreen_Flying:
     call Func_CreditsLoadFlyingScreen
-    PLAY_SONG DataX_TitleMusic_song
+    PLAY_SONG DataX_Title_song
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16
     call Func_FadeIn
     ld a, GRAYSCALE_PALETTE_23
