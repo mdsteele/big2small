@@ -614,7 +614,7 @@ DataX_Sewer0_puzz:
     DB R_OOP, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Sewer0Intro_dlog
     DB R_OOP, O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, G_APL, O_EMP, W_LN1, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Sewer0Outro_dlog
     DB R_OOP, R_EDG, R_GRT, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP
     D_SETS TILESET_PUZZ_SEWER, COLORSET_SEWER
     DB R_OOP, R_OOP, R_OOP, O_EMP, O_EMP, O_EMP, R_GRT, O_EMP, O_EMP, O_EMP
@@ -633,7 +633,7 @@ DataX_Sewer1_puzz:
     DB W_BS3, W_BSE, O_EMP, W_BS1, W_RCK, W_RCK, W_BSW, W_LEW, O_EMP, O_EMP
     D_BPTR DataX_RestYe_song
     DB O_EMP, O_EMP, S_ARE, O_EMP, O_EMP, O_EMP, O_EMP, W_LEW, O_PEB, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Sewer1Intro_dlog
     DB O_EMP, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP, O_EMP, W_LEW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB G_APL, O_EMP, O_EMP, S_ARS, O_EMP, O_EMP, G_PNT, W_LEW, O_EMP, G_CHS
@@ -780,9 +780,9 @@ DataX_City4_puzz:
     DB S_ARE, O_EMP, W_LN1, O_EMP, O_EMP, O_EMP, W_LS1, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Chantey_song
     DB O_EMP, O_EMP, W_LEW, O_EMP, G_APL, O_EMP, W_BS1, O_EMP, O_EMP, G_CHS
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_City4Intro_dlog
     DB G_PNT, O_EMP, W_LEW, O_EMP, O_EMP, O_EMP, S_MTP, O_EMP, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_City4Outro_dlog
     DB O_EMP, S_PPW, W_LS1, O_EMP, O_EMP, O_EMP, R_RS1, O_EMP, O_EMP, S_MTP
     D_SETS TILESET_PUZZ_CITY, COLORSET_CITY
     DB W_LE1, M_FNS, W_BS1, M_FNS, W_FNS, W_FE1, R_RNS, W_LW1, W_LNS, W_LE1

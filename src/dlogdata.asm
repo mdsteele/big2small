@@ -349,6 +349,10 @@ DataX_Lake0Intro_dlog::
 SECTION "Sewer0Dialog", ROMX
 
 DataX_Sewer0Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Well, here we\n"
+    DB "are down in the\n"
+    DB "sewers!\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "These giant\n"
     DB "pipes look\n"
@@ -358,9 +362,41 @@ DataX_Sewer0Intro_dlog::
     DB "push them. I'm\n"
     DB "VERY strong.\r"
     DB DIALOG_MOUSE
-    DB "Good, because\n"
-    DB "I'm kinda stuck\n"
-    DB "in here...\r"
+    DB "Good, maybe you\n"
+    DB "could come get\n"
+    DB "me out of here?\r"
+    DB DIALOG_END
+
+DataX_Sewer0Outro_dlog::
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Good thing\n"
+    DB "there's lots of\n"
+    DB "food down here!\r"
+    DB DIALOG_MOUSE
+    DB "...Should we be\n"
+    DB "eating food out\n"
+    DB "of the sewer?\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "It's probably\n"
+    DB "fine.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Sewer1Dialog", ROMX
+
+DataX_Sewer1Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "Ugh, I feel\n"
+    DB "gross walking\n"
+    DB "around in here.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Maybe we need\n"
+    DB "some kind of\n"
+    DB "sewer shoes?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Maybe we should\n"
+    DB "wear CLOGS!\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
@@ -432,6 +468,39 @@ DataX_City1Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "City4Dialog", ROMX
+
+DataX_City4Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "Finally. This\n"
+    DB "is what I was\n"
+    DB "looking for.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "A spaceship!\n"
+    DB "All aboard,\n"
+    DB "then?\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Let's grab some\n"
+    DB "snacks for the\n"
+    DB "road first!\r"
+    DB DIALOG_END
+
+DataX_City4Outro_dlog::
+    DB DIALOG_MOUSE
+    DB "Okay everyone,\n"
+    DB "it's time to\n"
+    DB "lift off.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "This is going\n"
+    DB "to be fun!\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "I'd say it's\n"
+    DB "going to be a\n"
+    DB "...BLAST!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 SECTION "Space0Dialog", ROMX
 
 DataX_Space0Intro_dlog::
@@ -498,7 +567,7 @@ DataX_CreditsFlying_dlog::
     DB "to the moon?\r"
     DB DIALOG_MOUSE
     DB "Oh, sorry. I\n"
-    DB "thought it was\n"
+    DB "assumed it was\n"
     DB "obvious.\r"
     DB DIALOG_END
 
