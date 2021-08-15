@@ -1,0 +1,89 @@
+!SONG "Spearmint" "A|BCDE"
+=tempo q36
+=key 1b  % F major
+=transpose -3  % to D major
+
+!DRUM H { E(13, -7) }
+
+!PART A
+
+2 { E(10, -5) D(1/4) }
+3 { W(889abbcefeedccba9743210024567898) L(100) }
+
+2' c5e b4e |
+3' c3q     |
+
+!PART B
+
+1 { E(7, -3) D(1/2) }
+3 { W(889abbcefeedccba9743210024567898) L(100) }
+
+1| c3e a ' fe ae ' ce ae ' fe ae |
+ | c3e b ' ge be ' ce be ' ge be |
+ | c3e b ' ge be ' ce be ' ge be |
+ | c3e a ' fe ae ' ce ae ' fe ae |
+2| a4e a ' a a ' ae3 ae gq3 ae |
+ | b4e b ' be3 ae gq3+e ' d5q3 ce3 |
+ | b4e b ' b b ' be3 be aq3 be |
+ | c5e c ' ce3 b4e aq3+e ' { E(10, -5) D(1/8) } c5q3 c#e3 |
+3| f3e r ' c r ' f r ' c r |
+ | g3e r ' e r ' c r ' cq  |
+ | e3e r ' c r ' e r ' c r |
+ | f3e r ' c r ' f r ' fq  |
+4|: xHq :16|
+
+!PART C
+
+1 { E(7, -3) D(1/2) }
+3 { W(889abbcefeedccba9743210024567898) L(100) }
+
+1| d3e b ' fe be ' de be ' fe be |
+ | c3e a ' fe ae ' ce ae ' fe ae |
+ | c3e a ' fe ae ' ce ae ' fe ae |
+ | c3e a ' ge be ' { E(7, -1) D(1/2) } fh |
+2| d5e d ' d d ' de3 de fq3 ee |
+ | c5e c ' ce3 ee fq3+e ' { E(10, -5) D(1/4) } f4q3 ge3 |
+ | a4e a ' a a ' ae3 be c5q3 f4e |
+ | a4e f ' ge3 e4e { E(10, -3) D(1/4) } fq3+e+ ' +e { E(10, -5) D(1/4) } a4e |
+3| b2e r ' b r ' f3 r ' c r |
+ | a3e r ' a r ' f r ' f r |
+ | c3e r ' c r ' f r ' a r |
+ | c3e r ' b r ' f r ' fq  |
+4|: xHq :16|
+
+!PART D
+
+1 { E(8, -4) D(3/4) }
+3 { W(889abbcefeedccba9743210024567898) L(50) }
+
+1|: c3e b ' ge be ce ae ' fe ae :2|
+ | d3e b ' fe be ce ae ' fe ae |
+ | d3e bN ' ge bNe ee c4e ' g3e c4e |
+2| c5e b4e ' a4e3 g4e f4q3 c4e ' f4e a4e |
+ | c5e b4e ' a4e3 g4e f4q3+e+ ' +q | { E(10, -5) D(1/8) }
+ | d5q ' d5e3 d5e d5q3 c5e+ ' +e a4e |
+ | a4e ge ' ae3 ge d5q3 c5e+ ' +e { E(10, -5) D(1/4) } a4e |
+3| g5e r ' c r ' f r ' f f# |
+ | g5e r ' c r ' f re+ ' +q |
+ | f5e r ' f r ' fq  ' re d |
+ | g5e r ' g r ' cq ' re f# |
+4|: xHq :16|
+
+!PART E
+
+1 { E(8, -4) D(3/4) }
+3 { W(889abbcefeedccba9743210024567898) L(50) }
+
+1|: c3e b ' ge be ce ae ' fe ae :2|
+ | d3e bN ' fe bNe ce ae ' ee ae |
+ | d3e bN ' ge bNe { E(8, -1) D(3/4) } c4h |
+2| c5e b4e ' a4e3 g4e f4q3 c4e ' f4e a4e |
+ | c5e b4e ' a4e3 g4e f4q3+e+ ' +e { E(10, -5) D(1/8) } a4e |
+ | g4e g4e ' a4e3 bN4e a4q3 a4e ' bN4e c5e |
+ | bN4e bN ' c5e3 d5e { E(10, -4) D(1/8) } c5q3+e '
+ ' { E(10, -5) D(1/4) } c5q3 b4e3 |
+3| g5e r ' c r ' f r ' f f# |
+ | g5e r ' c r ' f re+ ' +e dNe3 f#s3 |
+ | g5q ' re+e3 f#s3 ' gq ' re+e3 f#s3 |
+ | g5q ' r ' ce r ' c4q |
+4|: xHq :16|

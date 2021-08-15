@@ -124,6 +124,7 @@ struct {
   int current_part; // index of current part, or -1 if not in a part
   int current_channel;
   int current_key; // -k = k flats, +k = k sharps
+  int global_transpose;  // num half steps
   int named_pitch; // -1 = rest, 0 = C, 1 = C#, ..., 11 = B
   int base_pitch; // initially, named_pitch with current_key applied
   int pitch_adjust; // 1 = sharp, -1 = flat
@@ -373,7 +374,7 @@ static void finish_tone(void) {
     note->kind = NOTE_TONE;
     const int absolute_pitch =
       parser.base_pitch + parser.pitch_adjust +
-      HALF_STEPS_PER_OCTAVE * parser.octave;
+      HALF_STEPS_PER_OCTAVE * parser.octave + parser.global_transpose;
     const double a4_relative_pitch = absolute_pitch - A4_PITCH;
     const double frequency =
       A4_FREQUENCY * pow(2.0, a4_relative_pitch / HALF_STEPS_PER_OCTAVE);
@@ -384,6 +385,13 @@ static void finish_tone(void) {
 }
 
 /*===========================================================================*/
+
+static int read_exactly(const char *str) {
+  for (int ch = *str; ch != 0; ch = *++str) {
+    if (next_char() != ch) return 0;
+  }
+  return 1;
+}
 
 static void read_symbol(int ch) {
   while (next_char() == ' ') {}
@@ -694,21 +702,29 @@ static void parse_tempo_directive(void) {
   parser.frames_per_whole_note = multiplier * num_frames;
 }
 
+static void parse_transpose_directive(void) {
+  while (peek_char() == ' ') next_char();
+  parser.global_transpose = read_signed_int();
+}
+
 static void parse_directive(void) {
   switch (next_char()) {
     case 'k':
-      if (next_char() != 'e') goto invalid;
-      if (next_char() != 'y') goto invalid;
-      if (next_char() != ' ') goto invalid;
+      if (!read_exactly("ey ")) goto invalid;
       parse_key_directive();
       break;
     case 't':
-      if (next_char() != 'e') goto invalid;
-      if (next_char() != 'm') goto invalid;
-      if (next_char() != 'p') goto invalid;
-      if (next_char() != 'o') goto invalid;
-      if (next_char() != ' ') goto invalid;
-      parse_tempo_directive();
+      switch (next_char()) {
+        case 'e':
+          if (!read_exactly("mpo ")) goto invalid;
+          parse_tempo_directive();
+          break;
+        case 'r':
+          if (!read_exactly("anspose ")) goto invalid;
+          parse_transpose_directive();
+          break;
+        default: goto invalid;
+      }
       break;
     default:
     invalid:
