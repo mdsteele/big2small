@@ -39,6 +39,15 @@ POBJ_INVIS EQU 5
 ;;;     PATH_PSFX PSFX_JUMP  ; Plays the "jump" sound effect.
 PATH_PSFX: MACRO
     STATIC_ASSERT _NARG == 1
+    DB %11100000 | (\1)
+ENDM
+
+;;; Emits a SETJ path opcode.
+;;;
+;;; Example:
+;;;     PATH_SETJ 2  ; Sets the current jump height to 2.
+PATH_SETJ: MACRO
+    STATIC_ASSERT _NARG == 1
     DB %11000000 | (\1)
 ENDM
 
@@ -62,6 +71,17 @@ PATH_STEP: MACRO
     DB %01000000 | (((\1) & %00000111) << 3) | ((\2) & %00000111)
 ENDM
 
+;;; Emits a REPT path opcode.
+;;;
+;;; Example:
+;;;     PATH_REPT 2  ; Repeats previous speed for 2 more frames.
+PATH_REPT: MACRO
+    STATIC_ASSERT _NARG == 1
+    ASSERT (\1) > 0
+    ASSERT (\1) < 64
+    DB (\1)
+ENDM
+
 ;;; Emits path opcodes to walk at a given speed for a given number of frames.
 ;;;
 ;;; Example:
@@ -72,39 +92,91 @@ PATH_WALK: MACRO
     STATIC_ASSERT (\3) <= 64
     PATH_STEP (\1), (\2)
     IF (\3) > 1
-    DB (\3) - 1
+    PATH_REPT (\3) - 1
     ENDC
 ENDM
 
-;;; Emits path opcodes to jump with a given ground speed, staying airborne for
-;;; a given number of frames.
+;;; Emits path opcodes to jump with a given ground speed, taking 10 steps at
+;;; that speed while staying airborne for 30 frames.
 ;;;
 ;;; Example:
-;;;     PATH_JUMP -1, 1, 30  ; Jumps with ground speed x=-1 y=1 for 30 frames.
+;;;     PATH_JUMP -1, 1  ; Jumps with ground speed x=-1 y=1.
 PATH_JUMP: MACRO
-    STATIC_ASSERT _NARG == 3
-    STATIC_ASSERT (\3) >= 1
-    STATIC_ASSERT (\3) % 2 == 0
-JUMP_D = 6  ; Smaller number means higher jumps
-JUMP_H = ((\3) / 2)
-JUMP_N = 0
-    REPT JUMP_H
-    IF JUMP_N % 3 == 1
-    PATH_STEP (\1), (\2) - (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+    STATIC_ASSERT _NARG == 2
+    IF (\1) >= 0
+GND_X0 = ((0 + (\1)) / 3)
+GND_X1 = ((2 + (\1)) / 3)
+GND_X2 = ((1 + (\1)) / 3)
     ELSE
-    PATH_STEP 0, -(JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+GND_X0 = -((0 - (\1)) / 3)
+GND_X1 = -((2 - (\1)) / 3)
+GND_X2 = -((1 - (\1)) / 3)
     ENDC
-JUMP_N = (JUMP_N + 1)
-    ENDR
-JUMP_N = (JUMP_H - 1)
-    REPT JUMP_H
-    IF JUMP_N % 3 == 1
-    PATH_STEP (\1), (\2) + (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+    IF (\2) >= 0
+GND_Y0 = ((0 + (\2)) / 3)
+GND_Y1 = ((2 + (\2)) / 3)
+GND_Y2 = ((1 + (\2)) / 3)
     ELSE
-    PATH_STEP 0, (JUMP_H / JUMP_D - JUMP_N / JUMP_D)
+GND_Y0 = -((0 - (\2)) / 3)
+GND_Y1 = -((2 - (\2)) / 3)
+GND_Y2 = -((1 - (\2)) / 3)
     ENDC
-JUMP_N = (JUMP_N - 1)
-    ENDR
+    ;; Up:
+    PATH_SETJ 2
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 4
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 6
+    PATH_STEP GND_X2, GND_Y2
+    PATH_SETJ 8
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 10
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 12
+    PATH_STEP GND_X2, GND_Y2
+    PATH_SETJ 13
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 14
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 15
+    PATH_STEP GND_X2, GND_Y2
+    PATH_SETJ 16
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 17
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 18
+    PATH_STEP GND_X2, GND_Y2
+    PATH_STEP GND_X0, GND_Y0
+    PATH_STEP GND_X1, GND_Y1
+    PATH_STEP GND_X2, GND_Y2
+    ;; Down:
+    PATH_STEP GND_X0, GND_Y0
+    PATH_STEP GND_X1, GND_Y1
+    PATH_STEP GND_X2, GND_Y2
+    PATH_SETJ 17
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 16
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 15
+    PATH_STEP GND_X2, GND_Y2
+    PATH_SETJ 14
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 13
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 12
+    PATH_STEP GND_X2, GND_Y2
+    PATH_SETJ 10
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 8
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 6
+    PATH_STEP GND_X2, GND_Y2
+    PATH_SETJ 4
+    PATH_STEP GND_X0, GND_Y0
+    PATH_SETJ 2
+    PATH_STEP GND_X1, GND_Y1
+    PATH_SETJ 0
+    PATH_STEP GND_X2, GND_Y2
 ENDM
 
 ;;; Emits a HALT path opcode to mark the end of the path.
@@ -185,9 +257,9 @@ DataX_LocationData_NewGame_path::
     PATH_POBJ POBJ_SOUTH
     PATH_WALK 0, 0, 20
     PATH_PSFX PSFX_JUMP
-    PATH_JUMP 0, 0, 30
+    PATH_JUMP 0, 0
     PATH_PSFX PSFX_JUMP
-    PATH_JUMP 0, 0, 30
+    PATH_JUMP 0, 0
     PATH_WALK 0, 0, 20
     PATH_POBJ POBJ_EAST
     PATH_WALK 1, 0, 4
@@ -247,10 +319,10 @@ DataX_LocationData_MountainToFarm_path:
     PATH_POBJ POBJ_WEST
     PATH_WALK -1, 0, 3
     PATH_PSFX PSFX_JUMP
-    PATH_JUMP -2, 1, 30
+    PATH_JUMP -2, 1
     PATH_WALK -1, 0, 5
     PATH_PSFX PSFX_JUMP
-    PATH_JUMP -2, 1, 30
+    PATH_JUMP -2, 1
     PATH_POBJ POBJ_SOUTH
     PATH_WALK 0, 1, 26
     PATH_POBJ POBJ_WEST
@@ -265,11 +337,11 @@ DataX_LocationData_MountainToLake_path:
     PATH_POBJ POBJ_SOUTH
     PATH_WALK 0, 1, 4
     PATH_PSFX PSFX_JUMP
-    PATH_JUMP 1, 1, 30
-    PATH_WALK 0, 1, 8
+    PATH_JUMP 1, 1
+    PATH_WALK 0, 1, 6
     PATH_PSFX PSFX_JUMP
-    PATH_JUMP 1, 1, 30
-    PATH_WALK 0, 1, 44
+    PATH_JUMP 1, 1
+    PATH_WALK 0, 1, 46
     PATH_HALT
 
 DataX_LocationData_LakeToMountain_path:

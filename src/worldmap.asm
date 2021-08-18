@@ -66,6 +66,12 @@ Ram_WorldMapAvatarX_u8:
 Ram_WorldMapAvatarY_u8:
     DB
 
+;;; The current jump height for the avatar, in pixels.  The avatar is drawn
+;;; this many pixels higher on the screen than it would be otherwise, but
+;;; unlike Ram_WorldMapAvatarY_u8, this doesn't affect the screen scroll.
+Ram_WorldMapAvatarJump_u8:
+    DB
+
 ;;; The X and Y background scroll coordinates to be copied into rSCX and rSCY
 ;;; during the next VBlank period.
 Ram_WorldMapNextScrollX_u8:
@@ -335,9 +341,9 @@ _WorldMapWalk_Read:
     romb BANK("LocationData")
     ld a, [hl+]
     bit 7, a
-    jr nz, _WorldMapWalk_ObjOrSound
+    jr nz, _WorldMapWalk_ObjOrSoundOrJump
     bit 6, a
-    jr z, _WorldMapWalk_RepeatOrHalt
+    jp z, _WorldMapWalk_RepeatOrHalt
 _WorldMapWalk_SetSpeed:
     ;; At this point, a holds %01xxxyyy.  We need to decode xxx and yyy as
     ;; signed 3-bit numbers.
@@ -375,9 +381,9 @@ _WorldMapWalk_TakeStep:
     ld [Ram_WorldMapAvatarY_u8], a
     jr _WorldMapWalk_Frame
 
-_WorldMapWalk_ObjOrSound:
+_WorldMapWalk_ObjOrSoundOrJump:
     bit 6, a
-    jr nz, _WorldMapWalk_Sound
+    jr nz, _WorldMapWalk_SoundOrJump
 _WorldMapWalk_Obj:
     ;; At this point, a holds %10uftttt.  We need to use %u and %f to set the
     ;; avatar's object flags, and use %tttt to pick a tile ID.
@@ -398,11 +404,19 @@ _WorldMapWalk_Obj:
     add AVATAR_INITIAL_TILEID
     ld [Ram_Avatar_oama + OAMA_TILEID], a
     jr _WorldMapWalk_Read
+_WorldMapWalk_SoundOrJump:
+    bit 5, a
+    jr nz, _WorldMapWalk_Sound
+_WorldMapWalk_Jump:
+    ;; At this point, a holds %110yyyyy.
+    and %00011111
+    ld [Ram_WorldMapAvatarJump_u8], a
+    jr _WorldMapWalk_Read
 _WorldMapWalk_Sound:
-    ;; At this point, a holds %11ssssss.
+    ;; At this point, a holds %111sssss.
     push hl
-    ;; Make hl point to entry number %ssssss in Data_WorldMapSounds_psfx_arr.
-    and %00111111
+    ;; Make hl point to entry number %sssss in Data_WorldMapSounds_psfx_arr.
+    and %00011111
     mult sizeof_PSFX
     ldb bc, a
     ld hl, Data_WorldMapSounds_psfx_arr
@@ -503,8 +517,11 @@ _WorldMapUpdateAvatarAndNextScroll_Y:
     ld [Ram_WorldMapNextScrollY_u8], a
     ;; Set Y-position for avatar object.
     ld c, a
+    ld a, [Ram_WorldMapAvatarJump_u8]
+    ld d, a
     ld a, b
     sub c
+    sub d
     ld [Ram_Avatar_oama + OAMA_Y], a
     ret
 
@@ -638,6 +655,8 @@ _WorldMapSetCurrentArea_DrawStars:
     ld [Vram_WindowMap + SCRN_X_B - 2], a
     .noStars
 _WorldMapSetCurrentArea_SetAvatarPosition:
+    xor a
+    ld [Ram_WorldMapAvatarJump_u8], a
     ld a, [Ram_WorldMapCurrentArea_u8]
     ld c, a
     xcall FuncX_LocationData_Get_hl

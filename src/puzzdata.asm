@@ -673,7 +673,7 @@ DataX_Sewer3_puzz:
     DB O_EMP, R_OOP, S_ARE, O_EMP, O_EMP, W_BSW, M_BNS, W_BSE, O_EMP, O_EMP
     D_ANIM $04, DIRF_SOUTH
     DB O_EMP, R_OOP, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_PEB
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_ComingRound_song
     DB O_PEB, R_OOP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_PEB, O_PEB, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, R_OOP, O_EMP, W_LN1, O_EMP, G_APL, O_EMP, O_EMP, O_PEB, O_EMP

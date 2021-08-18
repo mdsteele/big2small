@@ -63,8 +63,9 @@ sizeof_LOCA RB 0
 RSRESET
 ;;; Opcodes: The start of an array of one or more path opcode bytes.  The
 ;;;   opcode decoding scheme is as follows:
-;;;     - PSFX [%11ssssss].  Plays a sound effect.  The %ssssss should be one
-;;;       of the PSFX_* values above.
+;;;     - PSFX [%111sssss].  Plays a sound effect.  The %sssss should be one of
+;;;       the PSFX_* values above.
+;;;     - SETJ [%110yyyyy].  Sets the avatar's current jump height to %yyyyy.
 ;;;     - POBJ [%10uftttt].  Sets the avatar object.  The tile ID of the object
 ;;;       will be set based on %tttt.  The object will be flipped horizontally
 ;;;       if %f=1.  It will be under the background if %u=1.
