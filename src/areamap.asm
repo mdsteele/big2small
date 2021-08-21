@@ -184,6 +184,7 @@ _AreaMapResume_LoadArea:
     call Func_PlaceAvatarAtCurrentNode
     ld a, TRAIL_SOUTH
     ld [Ram_AreaMapAvatarFacing_u8], a
+    call Func_UpdateAreaMapAvatarObj
     ;; Turn on the LCD and fade in.
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
@@ -1010,6 +1011,7 @@ _DrawTrailAnimated_AnimateLoop:
     ld [Ram_AreaMapAnimateTrailTimer_u8], a
     .sleepLoop
     call Func_UpdateAudio
+    call Func_UpdateAreaMapAvatarObj
     call Func_WaitForVBlankAndPerformDma
     call Func_AnimateTiles
     ld a, [Ram_AreaMapAnimateTrailTimer_u8]
