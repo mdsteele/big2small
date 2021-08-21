@@ -286,6 +286,7 @@ _TitleScreen_EraseFile:
     ld a, [Ram_TitleMenuItem_u8]
     ld b, a  ; param: save file number
     call Func_EraseFile
+    PLAY_SFX4 DataX_Mousetrap_sfx4
     jp _TitleScreen_RunLoop
 
 _TitleScreen_StartErasing:

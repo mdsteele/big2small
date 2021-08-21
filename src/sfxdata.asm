@@ -85,6 +85,24 @@ DataX_CannotMove_sfx1::
     DB %10000111  ; high
     DB 0
 
+DataX_DrawPuzzleNode_sfx1::
+    DB 10
+    DB $24  ; sweep
+    DB $80  ; len
+    DB $e1  ; env
+    DB $7e  ; low
+    DB $84  ; high
+    DB 0
+
+DataX_DrawPuzzleTrail_sfx1::
+    DB 10
+    DB $23  ; sweep
+    DB $80  ; len
+    DB $b1  ; env
+    DB $1a  ; low
+    DB $84  ; high
+    DB 0
+
 DataX_EatBush_sfx4::
     DB 8
     DB %00000000  ; len

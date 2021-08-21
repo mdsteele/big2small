@@ -1002,9 +1002,9 @@ _DrawTrailAnimated_StartAnimate:
     ;; At this point, hl points to the VRAM tile for the start of the animated
     ;; trail.
     ld de, Ram_AreaMapActiveTrail_u8_arr
-_DrawTrailAnimated_AnimateLoop:
     push hl
     push de
+_DrawTrailAnimated_AnimateLoop:
     ;; Wait for ANIMATE_TRAIL_FRAMES_PER_TICK frames.
     ld a, ANIMATE_TRAIL_FRAMES_PER_TICK
     ld [Ram_AreaMapAnimateTrailTimer_u8], a
@@ -1016,8 +1016,6 @@ _DrawTrailAnimated_AnimateLoop:
     dec a
     ld [Ram_AreaMapAnimateTrailTimer_u8], a
     jr nz, .sleepLoop
-    ;; Play a sound effect.
-    PLAY_SFX1 DataX_CannotMove_sfx1  ; TODO: different sound effect
     ;; Update hl to point to the VRAM tile for the next trail tick.
     pop de
     pop hl
@@ -1027,9 +1025,13 @@ _DrawTrailAnimated_AnimateLoop:
     inc de
     bit TRAILB_END, a
     jr nz, _DrawTrailAnimated_DrawNode
-    ;; Draw the next trail tick mark and continue.
+    ;; Draw the next trail tick mark.
     ld [hl], TRAIL_TILEID
     call Func_SetTrailTileColor  ; preserves de and hl
+    ;; Play a sound effect and continue.
+    push hl
+    push de
+    PLAY_SFX1 DataX_DrawPuzzleTrail_sfx1
     jr _DrawTrailAnimated_AnimateLoop
 _DrawTrailAnimated_DrawNode:
     ;; At this point, hl points to the VRAM tile where we should draw the node.
@@ -1053,7 +1055,10 @@ _DrawTrailAnimated_DrawNode:
     .node2
     ld [hl], NODE2_TILEID
     .nodeDone
-    jp Func_SetTrailTileColor
+    call Func_SetTrailTileColor
+    ;; Play a sound effect and finish.
+    PLAY_SFX1 DataX_DrawPuzzleNode_sfx1
+    ret
 
 ;;; If de points to a trail entry and hl points to a VRAM tile, updates hl to
 ;;; point to the next VRAM tile, based on the trail entry.
