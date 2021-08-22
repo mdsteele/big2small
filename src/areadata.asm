@@ -420,7 +420,7 @@ ASSERT @ - _AreaData_Lake_Node0 == NUM_LAKE_PUZZLES * sizeof_NODE
 
 DataX_AreaData_Sewer_area:
     .begin
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_RestYe_song  ; TODO sewer map music
     DB COLORSET_SEWER
     DB TILESET_MAP_SEWER
     D_BPTR DataX_SewerTileMap_start
@@ -487,7 +487,7 @@ ASSERT @ - _AreaData_Sewer_Node0 == NUM_SEWER_PUZZLES * sizeof_NODE
 
 DataX_AreaData_City_area:
     .begin
-    D_BPTR DataX_RestYe_song
+    D_BPTR DataX_CityMap_song
     DB COLORSET_CITY
     DB TILESET_MAP_CITY
     D_BPTR DataX_CityTileMap_start

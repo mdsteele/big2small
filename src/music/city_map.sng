@@ -1,0 +1,32 @@
+!SONG "CityMap" "A|BCBCCB"
+=tempo q40
+=key 0N  % A minor
+
+!DRUM H { E(7, -7) P(0, 0, 0) }  % hi-hat
+!DRUM S { E(7, -7) P(2, 0, 1) }  % snare
+
+!PART A
+
+2 { E(7, -1) D(1/8) }
+
+4' xHt xH xH xH |
+
+!PART B
+
+2| a3e a3e+h+e g3e | a3e a3q g3h+e |
+ | a3e a3e+h+e g3e | a3e a3q c4h+e |
+4|: xSe xHs xSe xHs xH xH ' xSe xS ' xSq                |
+ |  xSe xHs xSe xHs xH xH ' xSe xS ' xSe xHt xH xH xH :2|
+
+!PART C
+
+1 { E(6, -4) D(1/2) }
+ | a4e as a ' ee as a ' g4e d     ' c5e g4 |
+ | a4e as a ' ee as a ' g4e d     ' { E(6, -2) D(1/2) } c5q |
+  { E(6, -4) D(1/2) }
+ | a4e as a ' ee as a ' g4e d     ' c5e d  |
+ | e5e es e ' de b4e  ' c5s c g4e ' { E(6, -2) D(1/2) } a4q |
+2| a3e a3e+h+e g3e | a3e a3q g3h+e |
+ | a3e a3e+h+e g3e | a3e a3q c4h+e |
+4|: xSe xHs xSe xHs xH xH ' xSe xS ' xSq                |
+ |  xSe xHs xSe xHs xH xH ' xSe xS ' xSe xHt xH xH xH :2|
