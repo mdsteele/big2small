@@ -28,6 +28,9 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
+;;; The BG palette number to use for the title background.
+TITLE_BG_PALETTE EQU 0
+
 INTRO_LINES_SEP_ROW EQU 22
 INTRO_LINES_COL EQU 6
 INTRO_LINES_SCY EQU (TILE_HEIGHT * INTRO_LINES_SEP_ROW - SCRN_Y / 2)
@@ -52,6 +55,9 @@ TITLE_MENU_ITEM_ERASE EQU NUM_SAVE_FILES
 TITLE_MENU_NUM_ITEMS EQU (TITLE_MENU_ITEM_ERASE + 1)
 
 URL_ROW EQU (TITLE_MENU_NUM_ITEMS + 1)
+
+;;; The BG palette number to use for the title menu.
+TITLE_MENU_PALETTE EQU 6
 
 TITLE_WINDOW_ROWS EQU (URL_ROW + 1)
 TITLE_WINDOW_HEIGHT EQU (TILE_HEIGHT * TITLE_WINDOW_ROWS)
@@ -89,17 +95,9 @@ Main_TitleScreen::
     ld [Ram_TitleMenuItem_u8], a
     ld [Ram_TitleMenuIsErasing_bool], a
 _TitleScreen_ClearBgMap:
-    ;; Clear background map.
-    ld a, " "
-    ld hl, Vram_BgMap
-    ld c, 0
-    .loop
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
-    dec c
-    jr nz, .loop
+    ld c, " "  ; param: tile value
+    call Func_TitleClearBgMap
+    if_cgb call, Func_TitleClearBgColor
 _TitleScreen_DrawUpperTitle:
     ld hl, Vram_BgMap + SCRN_VX_B * TITLE1_START_ROW + TITLE1_START_COL
     ld de, SCRN_VX_B - TITLE1_COLS
@@ -149,6 +147,7 @@ _TitleScreen_SetUpWindow:
     ld [hl+], a
     dec c
     jr nz, .clearLoop
+    if_cgb call, Func_TitleMenuColor
     ;; Draw URL.
     ld c, 16
     ld a, URL_START_TILEID
@@ -568,6 +567,57 @@ Func_TitleMenuDrawFileItem:
     ld [hl+], a
     .percent
     ld [hl], "%"
+    ret
+
+;;; Sets the whole title menu to use TITLE_MENU_PALETTE.
+;;; @prereq Color is enabled.
+;;; @prereq LCD is off.
+Func_TitleMenuColor:
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Set the relevant portion of the window to TITLE_MENU_PALETTE.
+    ld hl, Vram_WindowMap
+    ld a, TITLE_MENU_PALETTE
+    ld c, TITLE_WINDOW_ROWS * SCRN_VX_B
+    .loop
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ;; Switch back to VRAM bank 0.
+    xor a
+    ldh [rVBK], a
+    ret
+
+;;; Sets all tiles in the BG map to use TITLE_BG_PALETTE.
+;;; @prereq Color is enabled.
+;;; @prereq LCD is off.
+Func_TitleClearBgColor:
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Fill the BG map with TITLE_BG_PALETTE.
+    ld c, TITLE_BG_PALETTE  ; param: tile value
+    call Func_TitleClearBgMap
+    ;; Switch back to VRAM bank 0.
+    xor a
+    ldh [rVBK], a
+    ret
+
+;;; Fills all tiles in the BG map with the given value.
+;;; @prereq LCD is off.
+;;; @param c The value to set on each tile.
+Func_TitleClearBgMap:
+    ld a, c
+    ld hl, Vram_BgMap
+    ld c, 0
+    .loop
+    ld [hl+], a
+    ld [hl+], a
+    ld [hl+], a
+    ld [hl+], a
+    dec c
+    jr nz, .loop
     ret
 
 ;;;=========================================================================;;;
