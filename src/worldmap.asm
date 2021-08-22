@@ -199,8 +199,35 @@ _WorldMapLoad_Finish:
 
 ;;; @prereq LCD is off.
 ;;; @param c The current area (one of the AREA_* enum values).
+;;; @param d If 1, immediately walk to next area.
 Main_WorldMapResume::
+    push de
     call Func_WorldMapLoad
+    ;; Check if we should walk to the next area; if not, go to command mode.
+    pop de
+    bit 0, d
+    jr z, _WorldMapResume_GoToCommandMode
+    ;; Store the current area number in c.
+    ld a, [Ram_WorldMapCurrentArea_u8]
+    ld c, a
+    ;; Check if we can walk to the next area; if not, go to command mode.
+    ld a, [Ram_WorldMapLastUnlockedArea_u8]
+    if_eq c, jr, _WorldMapResume_GoToCommandMode
+_WorldMapResume_WalkToNextArea:
+    ;; Make hl point to the PATH pointer.
+    xcall FuncX_LocationData_Get_hl
+    ld bc, LOCA_NextPath_path_ptr
+    add hl, bc
+    ;; Turn on the LCD and fade in.
+    push hl
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WIN9C00
+    call Func_FadeIn
+    pop hl
+    ;; Walk to the next area.
+    deref hl  ; param: pointer to PATH struct
+    ld e, 1   ; param: area number delta
+    jp Main_WorldMapWalk
+_WorldMapResume_GoToCommandMode:
     ;; Turn on the LCD and fade in.
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00
     call Func_FadeIn

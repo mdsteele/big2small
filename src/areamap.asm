@@ -46,21 +46,14 @@ SECTION "AreaMapState", WRAM0
 ;;; The current area number (one of the AREA_* enum values).
 Ram_AreaMapCurrentArea_u8:
     DB
-;;; The puzzle number for node zero of this area.  Each node in the area has a
-;;; puzzle number equal to the node index plus this number.
-Ram_AreaMapFirstPuzzle_u8:
+
+;;; A copy of the AREA struct data for the current area.
+Ram_AreaMapData_area:
+    DS AREA_Nodes_node_arr + sizeof_NODE * 7
+
+;;; True if the exit trail was unlocked when the area map was loaded.
+Ram_AreaMapJustOpenedExitTrail_bool:
     DB
-;;; A pointer to the start of the current area's exit trail array in
-;;; BANK("AreaData").
-Ram_AreaMapExitTrail_u8_arr_ptr:
-    DW
-;;; The number of nodes in the current area.
-Ram_AreaMapNumNodes_u8:
-    DB
-;;; A pointer to the start of the NODE array in BANK("AreaData") for the
-;;; current area.
-Ram_AreaMapNodes_node_arr_ptr:
-    DW
 
 ;;; The index of the currently selected node.
 Ram_AreaMapCurrentNode_u8:
@@ -115,7 +108,15 @@ SECTION "MainAreaMap", ROM0
 ;;; @prereq LCD is off.
 ;;; @param c The area to load (one of the AREA_* enum values).
 Main_AreaMapEnter::
+    call Func_CopyAreaData
+    xor a
+    ld [Ram_AreaMapJustOpenedExitTrail_bool], a
     call Func_LoadAreaMap
+    ;; Hide the avatar.
+    xor a
+    ld [Ram_AreaMapAvatarRow_u8], a
+    dec a
+    ld [Ram_AreaMapAvatarCol_i8], a
     ;; Turn on the LCD and fade in.
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
@@ -157,6 +158,14 @@ _AreaMapEnter_WalkIn:
 ;;;   at/under par.
 ;;; @prereq LCD is off.
 Main_AreaMapResume::
+    ;; Copy the area data into RAM.
+    push bc
+    ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
+    ld c, a  ; param: puzzle number
+    call Func_GetPuzzleArea_c  ; param: area to load
+    call Func_CopyAreaData
+    pop bc
+_AreaMapResume_UpdateProgress:
     ;; Make hl point to the puzzle status entry for the current puzzle.
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
@@ -167,16 +176,38 @@ Main_AreaMapResume::
     ld b, a
     or c
     ld [hl], a
-_AreaMapResume_LoadArea:
     push bc
     call Func_UpdateProgressAreas
-    ;; Load the area map for the current puzzle.
+    pop bc
+_AreaMapResume_LoadArea:
+    ;; Store the node number for the current puzzle in d.
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
+    ld d, a
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
-    ld c, a  ; param: puzzle number
-    call Func_GetPuzzleArea_c  ; param: area to load
+    sub d
+    ld d, a
+    ;; Set e to 1 if we just solved the last puzzle in the area for the first
+    ;; time.
+    ld e, 0
+    bit STATB_SOLVED, b
+    jr nz, .wasAlreadySolved
+    bit STATB_SOLVED, c
+    jr z, .didNotJustSolve
+    ld a, [Ram_AreaMapData_area + AREA_NumNodes_u8]
+    dec a
+    if_ne d, jr, .notLastNode
+    inc e
+    .wasAlreadySolved
+    .didNotJustSolve
+    .notLastNode
+    ;; Load the area map for the current puzzle.
+    ld a, e
+    ld [Ram_AreaMapJustOpenedExitTrail_bool], a
+    push bc
     call Func_LoadAreaMap
+_AreaMapResume_FadeIn:
     ;; Place the avatar at the node for the current puzzle.
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     ld b, a
     ld a, [Ram_Progress_file + FILE_CurrentPuzzleNumber_u8]
     sub b
@@ -188,28 +219,13 @@ _AreaMapResume_LoadArea:
     ;; Turn on the LCD and fade in.
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
-    pop bc
 _AreaMapResume_CheckIfSolved:
+    pop bc
     ;; At this point, b stores the old puzzle status, and c stores the update
     ;; to that status.  If the player didn't just solve the current puzzle,
     ;; then we're completely done.
     bit STATB_SOLVED, c
     jp z, Main_AreaMapCommand
-    ;; If the current puzzle had previously been solved, skip this section.
-    bit STATB_SOLVED, b
-    jr nz, .alreadySolved
-    ;; Otherwise, the player just solved this puzzle for the first time.
-    ;; If the next node is an EXIT_* value, animate drawing the exit trail.
-    push bc
-    call Func_GetPointerToCurrentNode_hl
-    ld bc, NODE_Next_u8
-    add hl, bc
-    ld a, [hl]
-    and $0f
-    ld e, a  ; param: trail node
-    if_ge EXIT_MIN, call, Func_DrawTrailAnimated
-    pop bc
-    .alreadySolved
 _AreaMapResume_UnlockBonusPuzzle:
     ;; If the current puzzle was just solved at/under par, unlock the bonus
     ;; puzzle (if any).
@@ -226,7 +242,8 @@ _AreaMapResume_UnlockBonusPuzzle:
     call Func_UnlockNode_b
     .noBonus
 _AreaMapResume_UnlockNextPuzzle:
-    ;; Unlock the puzzle for the next node (if it's not an EXIT_* node).
+    ;; Unlock the puzzle for the next node (if it's not an EXIT_* node), or
+    ;; draw the exit trail if we just unlocked it.
     call Func_GetPointerToCurrentNode_hl
     ld bc, NODE_Next_u8
     add hl, bc
@@ -250,60 +267,62 @@ _AreaMapResume_Finish:
     ld e, d  ; param: trail node
     jp Main_AreaMapFollowTrail
 
-;;; @prereq LCD is off.
-;;; @param c The area to load (one of the AREA_* enum values).
-Func_LoadAreaMap:
+;;;=========================================================================;;;
+
+;;; Sets the current area number and copies data for the specified area into
+;;; Ram_AreaMapData_area.
+;;; @param c The area to copy data for (one of the AREA_* enum values).
+Func_CopyAreaData:
+    ;; Set the current area number, and get a pointer to its data.
     ld a, c
     ld [Ram_AreaMapCurrentArea_u8], a
     xcall FuncX_AreaData_Get_hl
+    ;; Copy the AREA struct into WRAM.
+    ldw de, hl                   ; param: src
+    ld hl, Ram_AreaMapData_area  ; param: dest
+    ld bc, AREA_Nodes_node_arr   ; param: len
+    call Func_MemCopy
+    ;; Copy the NODE array into WRAM.
+    ld a, [Ram_AreaMapData_area + AREA_NumNodes_u8]
+    .loop
+    push af
+    ld bc, sizeof_NODE  ; param: len
+    call Func_MemCopy
+    pop af
+    dec a
+    jr nz, .loop
+    ret
+
+;;; Sets up the screen and other state for the current area.
+;;; @prereq LCD is off.
+Func_LoadAreaMap:
 _LoadAreaMap_InitMusic:
     ;; Read the banked pointer to the SONG data from the AREA struct, then
     ;; start that music playing.
-    ASSERT AREA_Music_song_bptr == 0
+    ld hl, Ram_AreaMapData_area + AREA_Music_song_bptr
     ld a, [hl+]
-    ld c, a     ; param: bank
-    ld a, [hl+]
-    ld e, a
-    ld a, [hl+]
-    ld d, a
-    push hl
-    ldw hl, de  ; param: song ptr
+    ld c, a   ; param: bank
+    deref hl  ; param: song ptr
     call Func_MusicStart
-    romb BANK("AreaData")
-    pop hl
 _LoadAreaMap_InitColorset:
     ;; Read the COLORSET_* enum value from the AREA struct, then load the
     ;; corresponding background color palettes.
-    ASSERT AREA_Colorset_u8 == 3
-    ld a, [hl+]
-    push hl
+    ld a, [Ram_AreaMapData_area + AREA_Colorset_u8]
     ld c, a  ; param: colorset
     xcall FuncX_Colorset_Load
-    romb BANK("AreaData")
-    pop hl
 _LoadAreaMap_InitTileset:
     ;; Read the TILESET_* enum value from the AREA struct, then load the
     ;; corresponding tile data into VRAM.
-    ASSERT AREA_Tileset_u8 == 4
-    ld a, [hl+]
-    push hl
+    ld a, [Ram_AreaMapData_area + AREA_Tileset_u8]
     ld b, a  ; param: tileset
     call Func_LoadTileset
-    romb BANK("AreaData")
-    pop hl
 _LoadAreaMap_LoadTileMap:
     ;; Read the banked pointer to the BG tile map data from the AREA struct,
     ;; then copy that map data into VRAM.
-    ASSERT AREA_TileMap_bptr == 5
-    ld a, [hl+]
-    ld c, a
-    ld a, [hl+]
-    ld e, a
-    ld a, [hl+]
-    ld d, a
-    push hl
+    ld hl, Ram_AreaMapData_area + AREA_TileMap_bptr
+    romb [hl+]
+    deref de, hl
     push de
-    romb c
     ld hl, Vram_BgMap + SCRN_VX_B
     ld b, SCRN_Y_B - 2
     .rowLoop
@@ -327,12 +346,9 @@ _LoadAreaMap_SetBgColorData:
     ;; If color is enabled, load color data into VRAM.
     ld b, 0  ; param: top/bottom row palette
     if_cgb call, Func_LoadAreaMapColor
-    ;; Resume reading the AREA struct where we left off.
-    romb BANK("AreaData")
-    pop hl
 _LoadAreaMap_DrawAreaTitle:
     ;; Copy the area title to the BG tile map.
-    ASSERT AREA_Title_u8_arr20 == 8
+    ld hl, Ram_AreaMapData_area + AREA_Title_u8_arr20
     ld de, Vram_BgMap
     ld c, 20
     .loop
@@ -341,29 +357,6 @@ _LoadAreaMap_DrawAreaTitle:
     inc de
     dec c
     jr nz, .loop
-_LoadAreaMap_StoreNodeMetadata:
-    ;; Store the exit trail pointer for later.
-    ASSERT AREA_ExitTrail_u8_arr == 28
-    ld a, l
-    ld [Ram_AreaMapExitTrail_u8_arr_ptr + 0], a
-    ld a, h
-    ld [Ram_AreaMapExitTrail_u8_arr_ptr + 1], a
-    ld bc, MAX_TRAIL_LENGTH
-    add hl, bc
-    ;; Read and store the first puzzle number for later.
-    ASSERT AREA_FirstPuzzle_u8 == 39
-    ld a, [hl+]
-    ld [Ram_AreaMapFirstPuzzle_u8], a
-    ;; Read and store the number of nodes for later.
-    ASSERT AREA_NumNodes_u8 == 40
-    ld a, [hl+]
-    ld [Ram_AreaMapNumNodes_u8], a
-    ;; Store the pointer to the nodes array for later.
-    ASSERT AREA_Nodes_node_arr == 41
-    ld a, l
-    ld [Ram_AreaMapNodes_node_arr_ptr + 0], a
-    ld a, h
-    ld [Ram_AreaMapNodes_node_arr_ptr + 1], a
 _LoadAreaMap_DrawAreaStars:
     ;; Make hl point to the ProgressAreas entry for this area.
     ld a, [Ram_AreaMapCurrentArea_u8]
@@ -380,12 +373,15 @@ _LoadAreaMap_DrawAreaStars:
     ld [Vram_BgMap + SCRN_X_B - 2], a
     .noStars
 _LoadAreaMap_DrawExitTrail:
+    ld a, [Ram_AreaMapJustOpenedExitTrail_bool]
+    or a
+    jr nz, .noExitTrail
     ;; Set c to the index of the last node.
-    ld a, [Ram_AreaMapNumNodes_u8]
+    ld a, [Ram_AreaMapData_area + AREA_NumNodes_u8]
     dec a
     ld c, a
     ;; Set a to the puzzle number for the last node.
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     add c
     ;; Make hl point to the progress entry for puzzle number a.
     ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
@@ -394,23 +390,21 @@ _LoadAreaMap_DrawExitTrail:
     ;; If the last puzzle isn't solved, skip drawing the exit trail.
     bit STATB_SOLVED, [hl]
     jr z, .noExitTrail
-    ;; Make de point to the exit trail array.
-    ld hl, Ram_AreaMapExitTrail_u8_arr_ptr
-    deref de, hl
     ;; Make hl point to the VRAM BG map cell for the last node's position.
     ;; Note that for now, c is still set to the index of the last node.
     call Func_GetNodeVramTilePtr_hl  ; preserves de
     ;; Draw the exit trail.
+    ld de, Ram_AreaMapData_area + AREA_ExitTrail_u8_arr  ; param: trail ptr
     call Func_DrawTrail
     .noExitTrail
 _LoadAreaMap_DrawUnlockedNodes:
     ;; Loop over each node in the area, starting with the last one.
-    ld a, [Ram_AreaMapNumNodes_u8]
+    ld a, [Ram_AreaMapData_area + AREA_NumNodes_u8]
     ld c, a
     .loop
     dec c
     ;; Set a to the puzzle number for node c.
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     add c
     ;; Make hl point to the progress entry for puzzle number a.
     ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
@@ -443,12 +437,18 @@ _LoadAreaMap_InitState:
 ;;; @return b 0 if the puzzle was already unlocked, 1 otherwise.
 ;;; @preserve c
 Func_UnlockNode_b:
-    ;; Do nothing for the exit node.
+    ;; If this is an exit node, then draw the exit trail if we just unlocked
+    ;; it.
     ld a, c
-    if_ge EXIT_MIN, jr, .doNothing
+    if_lt EXIT_MIN, jr, .notExitNode
+    ld a, [Ram_AreaMapJustOpenedExitTrail_bool]
+    or a
+    jr z, .doNothing
+    jr .animateTrail
+    .notExitNode
     ;; Make hl point to the progress status entry for the puzzle of the node to
     ;; unlock.
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     add c
     ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
     ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
@@ -463,6 +463,7 @@ Func_UnlockNode_b:
     ;; Mark the puzzle as unlocked.
     set STATB_UNLOCKED, [hl]
     ;; Animate drawing the trail.
+    .animateTrail
     push bc
     ld e, c  ; param: trail node
     call Func_DrawTrailAnimated
@@ -525,7 +526,7 @@ _AreaMapCommand_FollowPrevTrail:
 
 _AreaMapCommand_FollowNextTrail:
     ;; Set a to the current node's puzzle number.
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     ld b, a
     ld a, [Ram_AreaMapCurrentNode_u8]
     add b
@@ -549,7 +550,7 @@ _AreaMapCommand_FollowBonusTrail:
     and $0f
     ld d, a  ; param: destination node
     ;; Set a to the bonus node's puzzle number.
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     add d
     ;; Check if the bonus puzzle is unlocked.  If not, we can't go there.
     ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
@@ -647,6 +648,8 @@ Main_AreaMapBackToWorldMap:
     call Func_FadeOut
     ld a, [Ram_AreaMapCurrentArea_u8]
     ld c, a  ; param: area number
+    ld a, [Ram_AreaMapJustOpenedExitTrail_bool]
+    ld d, a  ; param: walk to next area
     jp Main_WorldMapResume
 
 ;;; Fades out the LCD and starts the puzzle for the current node.
@@ -658,7 +661,7 @@ Main_AreaMapStartNextPuzzle:
     ;; Fade out.
     call Func_FadeOut
     ;; Set a to the current node's puzzle number.
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     ld b, a
     ld a, [Ram_AreaMapCurrentNode_u8]
     add b
@@ -681,10 +684,9 @@ Func_GetPointerToCurrentNode_hl:
     ld c, a
     ;; fall through to Func_GetPointerToNode_hl
 
-;;; Returns a pointer to the specified NODE struct and switches to the ROM bank
-;;; that NODE struct is stored in.
+;;; Returns a pointer to the specified NODE struct in the current area.
 ;;; @param c The index of the NODE struct to get a pointer to.
-;;; @return hl A pointer to the specified NODE struct.
+;;; @return hl A pointer to the specified NODE struct in RAM.
 ;;; @preserve de
 Func_GetPointerToNode_hl:
     ;; Set bc to the byte offset into the NODE array.
@@ -695,11 +697,8 @@ Func_GetPointerToNode_hl:
     rla
     ld b, a
     ;; Make hl point to the NODE struct.
-    ld hl, Ram_AreaMapNodes_node_arr_ptr
-    deref hl
+    ld hl, Ram_AreaMapData_area + AREA_Nodes_node_arr
     add hl, bc
-    ;; Switch to the ROM bank that holds the NODE struct.
-    romb BANK("AreaData")
     ret
 
 ;;; @param c The index of the NODE struct to get a VRAM pointer for.
@@ -768,7 +767,7 @@ Func_PlaceAvatarAtCurrentNode:
     ;; Check if this puzzle has been solved at/under par.  If not, we're done.
     ld a, [Ram_AreaMapCurrentNode_u8]
     ld c, a
-    ld a, [Ram_AreaMapFirstPuzzle_u8]
+    ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]
     add c
     ld h, HIGH(Ram_Progress_file + FILE_PuzzleStatus_u8_arr)
     ASSERT LOW(Ram_Progress_file + FILE_PuzzleStatus_u8_arr) == 0
@@ -899,7 +898,7 @@ Func_UpdateAreaMapAvatarObj:
 ;;; the current area.
 ;;; @param c The node index to draw.
 Func_DrawNodeAndTrail:
-    call Func_GetPointerToNode_hl  ; switches to BANK("AreaData")
+    call Func_GetPointerToNode_hl
     ;; Load position row into a and col into c.
     ASSERT NODE_Row_u8 == 0
     ld a, [hl+]
@@ -995,7 +994,7 @@ _DrawTrailAnimated_NodeTrail:
     jr _DrawTrailAnimated_StartAnimate
 _DrawTrailAnimated_ExitTrail:
     call Func_AreaMapCopyExitTrail
-    ld a, [Ram_AreaMapNumNodes_u8]
+    ld a, [Ram_AreaMapData_area + AREA_NumNodes_u8]
     dec a
     ld c, a  ; param: node index
     call Func_GetNodeVramTilePtr_hl
@@ -1104,13 +1103,10 @@ Func_AreaMapApplyTrailEntryToVramPtr_hl:
 
 ;;; Copies the current area's exit trail to Ram_AreaMapActiveTrail_u8_arr.
 Func_AreaMapCopyExitTrail:
-    romb BANK("AreaData")
-    ld hl, Ram_AreaMapExitTrail_u8_arr_ptr
-    deref hl
+    ld hl, Ram_AreaMapData_area + AREA_ExitTrail_u8_arr
     ;; fall through to Func_AreaMapCopyTrailForward
 
 ;;; Copies the specified trail to Ram_AreaMapActiveTrail_u8_arr.
-;;; @prereq ROM bank is set to BANK("AreaData").
 ;;; @param hl A pointer to a trail array.
 Func_AreaMapCopyTrailForward:
     ldw de, hl                            ; param: src
@@ -1120,7 +1116,6 @@ Func_AreaMapCopyTrailForward:
 
 ;;; Copies the reverse of the specified trail to
 ;;; Ram_AreaMapActiveTrail_u8_arr.
-;;; @prereq ROM bank is set to BANK("AreaData").
 ;;; @param hl A pointer to a trail array.
 Func_AreaMapCopyTrailReverse:
     ;; At this point, hl points to a trail array to copy.  Put the length of
