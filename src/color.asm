@@ -268,8 +268,8 @@ DataX_Colorset_City_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 224, 216, 216
-    D_COLOR 192, 0, 192
-    D_COLOR 96, 0, 96
+    D_COLOR 160, 104, 120
+    D_COLOR 98, 48, 64
     D_COLOR 0, 0, 0
     ;; Palette 1 (wood)
     D_COLOR 224, 216, 216
@@ -356,8 +356,8 @@ DataX_Colorset_Sewer_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 216, 216, 224
-    D_COLOR 192, 0, 192
-    D_COLOR 96, 0, 96
+    D_COLOR 160, 168, 96
+    D_COLOR 128, 96, 32
     D_COLOR 0, 0, 0
     ;; Palette 1 (wood)
     D_COLOR 216, 216, 224
@@ -444,9 +444,9 @@ DataX_Colorset_Summer_cset:
     .begin
     ;; Palette 0 (menu)
     D_COLOR 255, 240, 224
-    D_COLOR 96, 192, 96
-    D_COLOR 64, 128, 64
-    D_COLOR 0, 32, 0
+    D_COLOR 208, 120, 120
+    D_COLOR 128, 64, 64
+    D_COLOR 0, 0, 0
     ;; Palette 1 (wood)
     D_COLOR 255, 240, 224
     D_COLOR 192, 128, 64
@@ -531,42 +531,42 @@ ASSERT @ - .begin == sizeof_CSET
 DataX_Colorset_World_cset:
     .begin
     ;; Palette 0 (menu)
-    D_COLOR 255, 255, 232
-    D_COLOR 192, 224, 128
-    D_COLOR 64, 128, 0
-    D_COLOR 0, 64, 0
+    D_COLOR 255, 240, 224
+    D_COLOR 208, 120, 120
+    D_COLOR 128, 64, 64
+    D_COLOR 0, 0, 0
     ;; Palette 1 (wood)
-    D_COLOR 255, 255, 192
+    D_COLOR 255, 248, 208
     D_COLOR 192, 128, 64
     D_COLOR 128, 96, 32
     D_COLOR 64, 32, 16
     ;; Palette 2 (skyscrapers)
-    D_COLOR 255, 255, 192
+    D_COLOR 255, 248, 208
     D_COLOR 144, 180, 255
     D_COLOR 64, 136, 96
     D_COLOR 0, 0, 16
     ;; Palette 3 (trees)
-    D_COLOR 255, 255, 192
+    D_COLOR 255, 248, 208
     D_COLOR 0, 208, 0
     D_COLOR 0, 128, 0
     D_COLOR 0, 64, 0
     ;; Palette 4 (water)
-    D_COLOR 255, 255, 192
+    D_COLOR 255, 248, 208
     D_COLOR 144, 180, 255
     D_COLOR 112, 64, 64
     D_COLOR 64, 0, 0
     ;; Palette 5 (wheat)
-    D_COLOR 255, 255, 192
+    D_COLOR 255, 248, 208
     D_COLOR 255, 192, 0
     D_COLOR 128, 96, 0
     D_COLOR 64, 48, 0
     ;; Palette 6 (mountains)
-    D_COLOR 255, 255, 192
+    D_COLOR 255, 248, 208
     D_COLOR 192, 160, 160
     D_COLOR 128, 70, 70
     D_COLOR 32, 0, 0
     ;; Palette 7 (metal)
-    D_COLOR 255, 255, 192
+    D_COLOR 255, 248, 208
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
     D_COLOR 64, 0, 0
