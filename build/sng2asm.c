@@ -30,7 +30,6 @@
 #define HALF_STEPS_PER_OCTAVE 12
 #define MAX_BYTES_PER_NOTE 3
 #define MAX_INSTRUMENTS 64
-#define MAX_DRUMS 26
 #define MAX_INTEGER_DIGITS 6
 #define MAX_NOTES_PER_CHANNEL 1000
 #define MAX_PARTS_PER_SONG 26
@@ -38,6 +37,7 @@
 #define MAX_SONGS_PER_FILE 64
 #define MAX_WAVES MAX_INSTRUMENTS
 #define NUM_CHANNELS 4
+#define NUM_LETTERS 26
 
 // Pitch number (in half steps above c0) and frequency (in Hz) of a4:
 #define A4_PITCH (9 + 4 * HALF_STEPS_PER_OCTAVE)
@@ -98,8 +98,7 @@ typedef struct {
 struct {
   int current_char; // the most recent character read
   int line;
-  int num_drums;
-  int drum_instruments[MAX_DRUMS];
+  int predeclared_instruments[NUM_CHANNELS][NUM_LETTERS];
   int num_waves;
   sng_wave_t waves[MAX_WAVES];
   int num_instruments;
@@ -115,13 +114,13 @@ struct {
     CONTINUE_DURATION,
     BEGIN_DURATION,
     ADJUST_DURATION,
-    INSTRUMENT,
+    DEFINE_INSTRUMENT,
     AFTER_DECL_OR_DIR,
     LINE_COMMENT
   } state;
   int frames_per_whole_note;
-  int current_drum; // index of current drum, or -1 if not in a drum
-  int current_part; // index of current part, or -1 if not in a part
+  int current_predeclared_instrument; // letter index, or -1 if not in an !INST
+  int current_part; // index of current part, or -1 if not in a !PART
   int current_channel;
   int current_key; // -k = k flats, +k = k sharps
   int global_transpose;  // num half steps
@@ -154,11 +153,13 @@ static void begin_line(void) {
 }
 
 static void init_parser(void) {
-  for (int d = 0; d < MAX_DRUMS; ++d) {
-    parser.drum_instruments[d] = -1;
+  for (int c = 0; c < NUM_CHANNELS; ++c) {
+    for (int n = 0; n < NUM_LETTERS; ++n) {
+      parser.predeclared_instruments[c][n] = -1;
+    }
   }
   parser.frames_per_whole_note = 96;
-  parser.current_drum = -1;
+  parser.current_predeclared_instrument = -1;
   parser.current_part = -1;
   parser.current_channel = -1;
   parser.line = 1;
@@ -314,8 +315,8 @@ static void start_drum() {
   if (letter < 'A' || letter > 'Z') {
     PARSE_ERROR("invalid drum name: '%c'\n", letter);
   }
-  const int drum_index = letter - 'A';
-  const int inst_number = parser.drum_instruments[drum_index];
+  const int letter_index = letter - 'A';
+  const int inst_number = parser.predeclared_instruments[3][letter_index];
   if (inst_number < 0) {
     PARSE_ERROR("drum '%c' has not been declared\n", letter);
   }
@@ -325,7 +326,34 @@ static void start_drum() {
     note->value = inst_number;
     parser.last_instrument_number = inst_number;
   }
+  parser.named_pitch = 0;
+  parser.base_pitch = 0;
+  parser.pitch_adjust = 0;
   parser.state = BEGIN_DURATION;
+}
+
+static void start_switch_instrument() {
+  if (parser.current_channel < 0) {
+    PARSE_ERROR("can't switch instruments before setting the channel\n");
+  }
+  const char letter = next_char();
+  if (letter < 'A' || letter > 'Z') {
+    PARSE_ERROR("invalid instrument name: '%c'\n", letter);
+  }
+  const int letter_index = letter - 'A';
+  const int inst_number =
+    parser.predeclared_instruments[parser.current_channel][letter_index];
+  if (inst_number < 0) {
+    PARSE_ERROR("instrument '%d%c' has not been declared\n",
+                parser.current_channel + 1, letter);
+  }
+  if (parser.last_instrument_number != inst_number) {
+    sng_note_t *note = next_note();
+    note->kind = NOTE_INST;
+    note->value = inst_number;
+    parser.last_instrument_number = inst_number;
+  }
+  parser.state = NEW_NOTE;
 }
 
 static void start_tone(int named_pitch, int flat_key, int sharp_key) {
@@ -472,7 +500,7 @@ static void toggle_repeat(void) {
 
 /*===========================================================================*/
 
-static void start_instrument(void) {
+static void start_instrument_spec(void) {
   if (parser.current_channel < 0) {
     PARSE_ERROR("can't start instrument before setting the channel\n");
   }
@@ -480,7 +508,7 @@ static void start_instrument(void) {
   parser.current_instrument.envelope = -1;
   parser.current_instrument.effect = -1;
   parser.current_instrument.duty = -1;
-  parser.state = INSTRUMENT;
+  parser.state = DEFINE_INSTRUMENT;
 }
 
 static void parse_instrument_duty() {
@@ -621,8 +649,8 @@ static void parse_instrument_wave() {
   parser.current_instrument.wave = wave_number;
 }
 
-static void finish_instrument(void) {
-  const int chan = parser.current_drum >= 0 ? 4 : parser.current_channel + 1;
+static void finish_instrument_spec(void) {
+  const int chan = parser.current_channel + 1;
   sng_instrument_t *curr = &parser.current_instrument;
   if (curr->envelope == -1) {
     if (chan == 3) curr->envelope = 0x20;
@@ -659,15 +687,18 @@ static void finish_instrument(void) {
     inst_number = parser.num_instruments++;
     parser.instruments[inst_number] = parser.current_instrument;
   }
-  if (parser.current_drum >= 0) {
-    parser.drum_instruments[parser.current_drum] = inst_number;
-    parser.current_drum = -1;
+  if (parser.current_predeclared_instrument >= 0) {
+    parser.predeclared_instruments[parser.current_channel]
+      [parser.current_predeclared_instrument] = inst_number;
+    parser.current_predeclared_instrument = -1;
     parser.state = AFTER_DECL_OR_DIR;
   } else if (parser.last_instrument_number != inst_number) {
     sng_note_t *note = next_note();
     note->kind = NOTE_INST;
     note->value = inst_number;
     parser.last_instrument_number = inst_number;
+  } else {
+    parser.state = NEW_NOTE;
   }
 }
 
@@ -764,14 +795,38 @@ static void parse_drum_declaration(void) {
   if (letter < 'A' || letter > 'Z') {
     PARSE_ERROR("invalid drum name: '%c'\n", letter);
   }
-  const int drum_index = letter - 'A';
-  if (parser.drum_instruments[drum_index] >= 0) {
+  const int letter_index = letter - 'A';
+  if (parser.predeclared_instruments[3][letter_index] >= 0) {
     PARSE_ERROR("reused drum name: '%c'\n", letter);
   }
   read_symbol('{');
-  parser.current_drum = drum_index;
+  parser.current_predeclared_instrument = letter_index;
   parser.current_channel = 3;
-  start_instrument();
+  start_instrument_spec();
+}
+
+static void parse_inst_declaration(void) {
+  if (parser.current_part >= 0) {
+    PARSE_ERROR("can't predeclare an instrument inside of a part\n");
+  }
+  while (next_char() == ' ') {}
+  const char digit = parser.current_char;
+  if (digit < '1' || digit > '4') {
+    PARSE_ERROR("invalid instrument channel: '%c'\n", digit);
+  }
+  const int channel_index = digit - '1';
+  const char letter = next_char();
+  if (letter < 'A' || letter > 'Z') {
+    PARSE_ERROR("invalid instrument name: '%c'\n", letter);
+  }
+  const int letter_index = letter - 'A';
+  if (parser.predeclared_instruments[channel_index][letter_index] >= 0) {
+    PARSE_ERROR("reused instrument channel/name: '%c%c'\n", digit, letter);
+  }
+  read_symbol('{');
+  parser.current_predeclared_instrument = letter_index;
+  parser.current_channel = channel_index;
+  start_instrument_spec();
 }
 
 static void parse_part_declaration(void) {
@@ -825,24 +880,19 @@ static void parse_song_declaration(void) {
 static void parse_declaration(void) {
   switch (next_char()) {
     case 'D':
-      if (next_char() != 'R') goto invalid;
-      if (next_char() != 'U') goto invalid;
-      if (next_char() != 'M') goto invalid;
-      if (next_char() != ' ') goto invalid;
+      if (!read_exactly("RUM ")) goto invalid;
       parse_drum_declaration();
       return;
+    case 'I':
+      if (!read_exactly("NST ")) goto invalid;
+      parse_inst_declaration();
+      return;
     case 'P':
-      if (next_char() != 'A') goto invalid;
-      if (next_char() != 'R') goto invalid;
-      if (next_char() != 'T') goto invalid;
-      if (next_char() != ' ') goto invalid;
+      if (!read_exactly("ART ")) goto invalid;
       parse_part_declaration();
       break;
     case 'S':
-      if (next_char() != 'O') goto invalid;
-      if (next_char() != 'N') goto invalid;
-      if (next_char() != 'G') goto invalid;
-      if (next_char() != ' ') goto invalid;
+      if (!read_exactly("ONG ")) goto invalid;
       parse_song_declaration();
       break;
     default:
@@ -889,8 +939,9 @@ static void parse_input(void) {
           case 'f': start_tone( 5, -7, 1); break;
           case 'g': start_tone( 7, -5, 3); break;
           case 'r': start_tone(-1, -9, 9); break;
+          case 'i': start_switch_instrument(); break;
           case 'x': start_drum(); break;
-          case '{': start_instrument(); break;
+          case '{': start_instrument_spec(); break;
           case ':': toggle_repeat(); break;
           case ' ': case '|': case '\'': break;
           case '\n': begin_line(); break;
@@ -996,7 +1047,7 @@ static void parse_input(void) {
             PARSE_ERROR("invalid duration adjustment char: '%c'\n", ch);
         }
         break;
-      case INSTRUMENT:
+      case DEFINE_INSTRUMENT:
         switch (ch) {
           case 'D': parse_instrument_duty(); break;
           case 'E': parse_instrument_envelope(); break;
@@ -1004,7 +1055,7 @@ static void parse_input(void) {
           case 'P': parse_instrument_poly(); break;
           case 'S': parse_instrument_sweep(); break;
           case 'W': parse_instrument_wave(); break;
-          case '}': finish_instrument(); break;
+          case '}': finish_instrument_spec(); break;
           case ' ': break;
           case '%': case '\n': case EOF:
             PARSE_ERROR("unterminated instrument\n");

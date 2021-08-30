@@ -262,7 +262,6 @@ _AreaMapResume_Finish:
     bit 0, b
     jp z, Main_AreaMapCommand
     ;; If we did just unlock the next node, then walk to it.
-    ;; TODO: Also, if we just drew the exit trail, we should follow it.
     ld d, c  ; param: destination node
     ld e, d  ; param: trail node
     jp Main_AreaMapFollowTrail

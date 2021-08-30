@@ -1,0 +1,72 @@
+!SONG "Chill" "A|BCDE"
+=tempo q48
+=key 5#  % B major
+
+!INST 1X { E(8, -3) D(1/2) }
+!INST 1Y { E(8, -3) D(3/4) }
+
+!INST 2A { E(10, -1) D(1/4) }
+!INST 2B { E(10, -2) D(1/4) }
+!INST 2D { E(10, -4) D(1/4) }
+
+!INST 4C { E(11, -7) P( 5, 0, 0) }  % clap
+
+!PART A
+
+2' iD f4s3 a4e |
+
+!PART B
+
+1| iX b3q  ' g3e+e3   f3s3+ ' +q     ' a3q     |
+ | b3e d4e ' g3e3 b3e f3s3+ ' +q     ' a3q     |
+ | b3e d4e ' g3e3 b3e c4s3+ ' +e c4e ' a3e c4e |
+ | b3e f3e ' g3e    a3e     ' be3 fe bs3+ ' +q |
+2| iA b4h+                ' +e iD e5e ' e5e3 d5s3 c5e |
+ | iB d5q  ' b4e+e3 f4s3+ ' +e iD e5e ' e5e3 d5s3 c5e |
+ | iB d5q  ' b4e+e3 f4s3+ ' +e iD d5e ' c5e3 b4s3 c5e |
+ | iA b4h+                ' +q+     ' +e3 iD f4s3 a4e |
+4| re xCq : xCq :14 xCe |
+
+!PART C
+
+1| iX b3q  ' g3e+e3   f3s3+ ' +q     ' a3q     |
+ | b3e d4e ' g3e3 b3e f3s3+ ' +q     ' a3q     |
+ | b3e d4e ' g3e3 b3e c4s3+ ' +e c4e ' a3e c4e |
+ | b3e f3e ' g3e    a3e     ' be3 fe bs3+ ' +q |
+2| iA b4h+               ' +e iD e5e ' e5e3 d5s3 c5e |
+ | iB d5q ' b4e+e3 f4s3+ ' +e iD e5e ' e5e3 d5s3 c5e |
+ | iB d5q ' b4e+e3 f4s3+ ' +e iD d5e ' c5e3 b4s3 c5e |
+ | iA b4h+               ' +q+     ' +e3 iD e5s3 f5e |
+4| re xCq : xCq :14 xCe |
+
+!PART D
+
+% TODO
+=transpose -12
+1 iY
+ | g4e e4e ' g4e3 e4e f4s3+ ' +e+e3 f4s3 ' d4e e4e |
+ | f4e d4e ' f4e3 d4e f4s3+ ' +e+e3 f4s3 ' d4e f4e |
+ | e4e c4e ' e4e3 c4e d4s3+ ' +e   c4e   ' b3e c4e |
+ | d4e f4e ' d4e3 f4e d4s3+ ' +q         ' e4e f4e |
+=transpose -0
+2| iB g5q ' e5e+e3 c5s3+ ' +q+ ' +e3 iD e5s3 g5e |
+ | iB f5q ' d5e+e3 b4s3+ ' +q+ ' +e3 iD b4s3 d5e |
+ | iB c5q+ ' +e iD c5e ' b4e b4e ' b4e3 c5e iA d5s3+ | +h+ ' +q+ ' +e3
+   iD e5s3 f5e |
+4| re xCq : xCq :14 xCe |
+
+!PART E
+
+1 iY
+
+=transpose -12
+1 iY
+ | g4e e4e ' g4e3 e4e f4s3+ ' +q         ' d4e e4e |
+ | f4q     ' d4e+e3 b3s3+   ' +q         ' d4e e4e |
+ | f4e d4e ' f4e3 d4e f4s3+ ' +e+e3 f4s3 ' d4e f4e |
+=transpose -0
+2| iB g5q ' e5e+e3 c5s3+ ' +q ' iD c5e g5e |
+ | f5e g5e ' f5e3 d5e b4s3+ ' +e e5e ' e5e3 d5s3 c5e |
+ | iB d5q ' b4e+e3 f4s3+ ' +e iD d5e ' c5e3 b4s3 c5e |
+ | iA b4h+ ' +q+ ' +e3 iD f4s3 a4e |
+4| re xCq : xCq :14 xCe |

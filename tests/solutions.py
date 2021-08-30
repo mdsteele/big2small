@@ -40,7 +40,7 @@ SOLUTIONS = {
                   'MswnesGswnese'),
     'Farm4': 'EseneMswnEwsMwswnEwneGwneEsenMeseneEesenMws',
     'Mountain0': 'GeMeeseeEweseeMsswGesswwnesMenes',
-    'Mountain1': 'EwMwGswMneEeneswGnneswEnesMwEnMesEseGeMeeGnwEwnwGsenwsMsn',
+    'Mountain1': 'EwMwGswMnEenGnnewEeswMsEeGeMeeGnwEwnwGsenwsMsn',
     'MountainBonusA': ('MnEwneswwMsesGwsenEeMnwsGwseseMeneseEwGnEeseMwnGswnEwn'
                        'MesGnMwwGsEsewMnesEwnesMwneses'),
     'Mountain3': ('GeMeswseGnwsenMenwswGeswsnGenwsMenEsenesMwEnGwnMeGeenEeMe'
