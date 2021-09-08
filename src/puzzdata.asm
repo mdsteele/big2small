@@ -402,9 +402,9 @@ DataX_Mountain1_puzz:
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_ComingRound_song
     DB W_CS3, O_RMD, W_CS3, W_CS3, O_CW3, O_EMP, O_EMP, S_ARE, O_EMP, W_RCK
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Mountain1Intro_dlog
     DB O_EMP, O_EMP, O_EMP, W_RCK, O_CW3, O_PEB, O_EMP, O_EMP, S_ARW, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Mountain1Outro_dlog
     DB W_RCK, O_EMP, S_ARW, O_EMP, W_CSW, W_CS3, W_CS3, W_CS3, W_CS3, W_CS3
     D_SETS TILESET_PUZZ_MOUNTAIN, COLORSET_SUMMER
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP
@@ -528,7 +528,7 @@ DataX_Lake1_puzz:
     DB O_EMP, S_BSH, R_RNS, G_APL, R_RNS, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Sunny_song
     DB O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP, R_RNS, O_EMP, O_GRS, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Lake1Intro_dlog
     DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB G_CHS, O_EMP, O_EMP, S_ARW, O_EMP, O_EMP, O_EMP, O_BNS, O_GRS, R_SNW
@@ -822,7 +822,7 @@ DataX_City2_puzz:
     DB O_EMP, O_EMP, S_PPW, W_BS1, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_BSW
     D_BPTR DataX_RestYe_song
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, S_BSH, O_EMP, O_EMP, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_City2Intro_dlog
     DB O_EMP, O_PEB, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_PEB, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_LC4, O_EMP, O_EMP, O_PEB, O_EMP, O_PEB

@@ -292,6 +292,46 @@ DataX_Mountain0Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Mountain1Dialog", ROMX
+
+DataX_Mountain1Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Huff...puff...\n"
+    DB "This trail is\n"
+    DB "pretty steep!\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Really? Because\n"
+    DB "I think that\n"
+    DB "this trail...\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "...ROCKS!\r"
+    DB DIALOG_MOUSE
+    DB "Oh, boy. This\n"
+    DB "is going to be\n"
+    DB "a long trip.\r"
+    DB DIALOG_END
+
+DataX_Mountain1Outro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Just wondering,\n"
+    DB "if we replay a\n"
+    DB "puzzle again...\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "...how can we\n"
+    DB "also replay our\n"
+    DB "conversation?\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Easy, just hold\n"
+    DB "SELECT while we\n"
+    DB "enter a puzzle.\r"
+    DB DIALOG_MOUSE
+    DB "Right. So be\n"
+    DB "sure to never\n"
+    DB "do that.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 SECTION "Mountain3Dialog", ROMX
 
 DataX_Mountain3Intro_dlog::
@@ -342,6 +382,25 @@ DataX_Lake0Intro_dlog::
     DB "Oh. Well I can!\n"
     DB "You two can use\n"
     DB "the bridges.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Lake1Dialog", ROMX
+
+DataX_Lake1Intro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Hey Elle, why\n"
+    DB "did the river\n"
+    DB "cross the road?\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "I don't know,\n"
+    DB "why?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "To WET to the\n"
+    DB "other side!\r"
+    DB DIALOG_MOUSE
+    DB "...Please stop.\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
@@ -397,6 +456,10 @@ DataX_Sewer1Intro_dlog::
     DB DIALOG_GOAT_MOUTH_OPEN
     DB "Maybe we should\n"
     DB "wear CLOGS!\r"
+    DB DIALOG_MOUSE
+    DB "I'll pretend I\n"
+    DB "didn't hear\n"
+    DB "that.\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
@@ -464,6 +527,32 @@ DataX_City1Intro_dlog::
     DB "We can help you\n"
     DB "out if you seem\n"
     DB "stuck, Mel!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "City2Dialog", ROMX
+
+DataX_City2Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "We're almost to\n"
+    DB "the end of our\n"
+    DB "journey.\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "But we're far\n"
+    DB "from 100% on\n"
+    DB "the title menu!\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "For 100%, we\n"
+    DB "need *stars* on\n"
+    DB "every puzzle.\r"
+    DB DIALOG_MOUSE
+    DB "And on every\n"
+    DB "bonus puzzle.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Oh, right! And\n"
+    DB "we need a Par\n"
+    DB "score for that.\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
