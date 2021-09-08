@@ -103,6 +103,7 @@ Main_BeginPause::
     ld [Ram_PauseMenuItem_u8], a
     ld a, -PAUSE_WINDOW_SPEED
     ld [Ram_PauseWindowVelocity_i8], a
+    PLAY_SFX1 DataX_MenuConfirm_sfx1
     ;; fall through to Main_PausingGame
 
 Main_PausingGame:
@@ -186,15 +187,18 @@ _PauseMenu_Confirm:
 _PauseMenu_Unpause:
     ld a, PAUSE_WINDOW_SPEED
     ld [Ram_PauseWindowVelocity_i8], a
+    PLAY_SFX1 DataX_MenuConfirm_sfx1
     jp Main_PausingGame
 
 _PauseMenu_UpdateCursor:
     ld [Ram_PauseMenuItem_u8], a
     ld d, ">"  ; cursor tile ID
     call Func_PauseMenuSetCursorTile
+    PLAY_SFX1 DataX_MenuMove_sfx1
     jr Main_PauseMenu
 
 _PauseMenu_QuitPuzzle:
+    PLAY_SFX4 DataX_BackToMap_sfx4
     call Func_FadeOut
     ;; Disable LY=LYC interrupt.
     ld a, IEF_VBLANK
@@ -204,6 +208,7 @@ _PauseMenu_QuitPuzzle:
     jp Main_AreaMapResume
 
 _PauseMenu_ResetPuzzle:
+    PLAY_SFX4 DataX_Mousetrap_sfx4
     call Func_FadeOut
     ;; Disable LY=LYC interrupt.
     ld a, IEF_VBLANK

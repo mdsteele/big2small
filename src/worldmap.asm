@@ -305,6 +305,7 @@ _WorldMapCommand_FollowPath:
     jp Main_WorldMapWalk
 
 _WorldMapCommand_EnterArea:
+    PLAY_SFX1 DataX_EnterArea_sfx1
     call Func_FadeOut
     ld a, [Ram_WorldMapCurrentArea_u8]
     ld c, a  ; param: area number
@@ -495,7 +496,7 @@ Data_WorldMapSounds_psfx_arr:
     ASSERT @ - .begin == sizeof_PSFX * PSFX_JUMP
     D_PSFX DataX_Leap_sfx1, 1
     ASSERT @ - .begin == sizeof_PSFX * PSFX_LAUNCH
-    D_PSFX DataX_PushPipe_sfx4, 4  ; TODO
+    D_PSFX DataX_LaunchShip_sfx4, 4
     ASSERT @ - .begin == sizeof_PSFX * PSFX_PIPE
     D_PSFX DataX_EnterPipe_sfx1, 1
     ASSERT @ - .begin == sizeof_PSFX * NUM_PSFXS

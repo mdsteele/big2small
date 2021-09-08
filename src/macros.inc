@@ -370,6 +370,7 @@ PLAY_SFX1: MACRO
     ELIF _NARG > 1
     FAIL "Too many arguments to PLAY_SFX1 macro"
     ENDC
+    ASSERT STRCMP(STRSUB("\1", STRLEN("\1") - 4, 5), "_sfx1") == 0
     ld c, BANK(\1)
     ld hl, \1
     call Func_PlaySfx1
@@ -381,6 +382,7 @@ PLAY_SFX4: MACRO
     ELIF _NARG > 1
     FAIL "Too many arguments to PLAY_SFX4 macro"
     ENDC
+    ASSERT STRCMP(STRSUB("\1", STRLEN("\1") - 4, 5), "_sfx4") == 0
     ld c, BANK(\1)
     ld hl, \1
     call Func_PlaySfx4
@@ -392,6 +394,7 @@ PLAY_SONG: MACRO
     ELIF _NARG > 1
     FAIL "Too many arguments to PLAY_SONG macro"
     ENDC
+    ASSERT STRCMP(STRSUB("\1", STRLEN("\1") - 4, 5), "_song") == 0
     ld c, BANK(\1)
     ld hl, \1
     call Func_MusicStart

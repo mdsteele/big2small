@@ -76,6 +76,16 @@ DataX_ArrowTerrain_sfx1::
     DB %10000101  ; high
     DB 0
 
+DataX_BackToMap_sfx4::
+    REPT 3
+    DB 13
+    DB %00000000  ; len
+    DB %10000001  ; env
+    DB %00110100  ; poly
+    DB %10000000  ; go
+    ENDR
+    DB 0
+
 DataX_CannotMove_sfx1::
     DB 10
     DB %00101101  ; sweep
@@ -116,23 +126,6 @@ DataX_EatBush_sfx4::
     DB %10000000  ; go
     DB 0
 
-DataX_Leap_sfx1::
-    DB 14
-    DB %01110101  ; sweep
-    DB %01000000  ; len
-    DB %11110010  ; env
-    DB %11001001  ; low
-    DB %10000101  ; high
-    DB 0
-
-DataX_Mousetrap_sfx4::
-    DB 24
-    DB %00000000  ; len
-    DB %11110010  ; env
-    DB %01010011  ; poly
-    DB %10000000  ; go
-    DB 0
-
 DataX_EnterPipe_sfx1::
     REPT 5
     DB 16
@@ -148,6 +141,78 @@ DataX_EnterPipe_sfx1::
     DB %11110111  ; env
     DB %11000000  ; low
     DB %10000011  ; high
+    DB 0
+
+DataX_EnterPuzzle_sfx1::
+    DB 4
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 14, -7
+    D_TONE G, 4
+    DB 4
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 14, -7
+    D_TONE D, 5
+    DB 12
+    DB %00000000  ; sweep
+    DB %10000000  ; len
+    D_ENV 14, -6
+    D_TONE G, 5
+    DB 0
+
+DataX_LaunchShip_sfx4::
+    DB 12
+    DB %00000000  ; len
+    DB %11110110  ; env
+    DB %01110001  ; poly
+    DB %10000000  ; go
+    DB 12
+    DB %00000000  ; len
+    DB %11010110  ; env
+    DB %01110010  ; poly
+    DB %10000000  ; go
+    DB 39
+    DB %00000000  ; len
+    DB %10110101  ; env
+    DB %01110011  ; poly
+    DB %10000000  ; go
+    DB 0
+
+DataX_Leap_sfx1::
+    DB 14
+    DB %01110101  ; sweep
+    DB %01000000  ; len
+    DB %11110010  ; env
+    DB %11001001  ; low
+    DB %10000101  ; high
+    DB 0
+
+DataX_EnterArea_sfx1::
+DataX_MenuConfirm_sfx1::
+    DB 10
+    DB $73  ; sweep
+    DB $80  ; len
+    DB $f1  ; env
+    DB $cc  ; low
+    DB $85  ; high
+    DB 0
+
+DataX_MenuMove_sfx1::
+    DB 4
+    DB $70  ; sweep
+    DB $80  ; len
+    DB $c1  ; env
+    DB $04  ; low
+    DB $86  ; high
+    DB 0
+
+DataX_Mousetrap_sfx4::
+    DB 24
+    DB %00000000  ; len
+    DB %11110010  ; env
+    DB %01010011  ; poly
+    DB %10000000  ; go
     DB 0
 
 DataX_PushPipe_sfx4::
@@ -173,6 +238,14 @@ DataX_Teleport_sfx4::
     DB %00000000  ; len
     DB %11100010  ; env
     DB %01001010  ; poly
+    DB %10000000  ; go
+    DB 0
+
+DataX_TitleCrash_sfx4::
+    DB 28
+    DB %00000000  ; len
+    DB %10000011  ; env
+    DB %01100001  ; poly
     DB %10000000  ; go
     DB 0
 

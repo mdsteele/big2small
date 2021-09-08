@@ -644,6 +644,7 @@ _AreaMapFollowTrail_GoToCredits:
 
 ;;; Fades out the LCD and returns to the world map screen.
 Main_AreaMapBackToWorldMap:
+    PLAY_SFX4 DataX_BackToMap_sfx4
     call Func_FadeOut
     ld a, [Ram_AreaMapCurrentArea_u8]
     ld c, a  ; param: area number
@@ -658,6 +659,7 @@ Main_AreaMapStartNextPuzzle:
     and PADF_SELECT
     push af
     ;; Fade out.
+    PLAY_SFX1 DataX_EnterPuzzle_sfx1
     call Func_FadeOut
     ;; Set a to the current node's puzzle number.
     ld a, [Ram_AreaMapData_area + AREA_FirstPuzzle_u8]

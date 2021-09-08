@@ -241,13 +241,14 @@ _TitleScreen_OnConfirm:
     if_ne TITLE_MENU_ITEM_ERASE, jr, _TitleScreen_SelectFile
     ld a, [Ram_TitleMenuIsErasing_bool]
     bit 0, a
-    jr nz, _TitleScreen_StopErasing
+    jp nz, _TitleScreen_StopErasing
     jr _TitleScreen_StartErasing
 
 _TitleScreen_UpdateCursor:
     ld [Ram_TitleMenuItem_u8], a
     ld c, ">"  ; param: cursor tile ID
     call Func_TitleMenuSetCursorTile
+    PLAY_SFX1 DataX_MenuMove_sfx1
     jr _TitleScreen_RunLoop
 
 _TitleScreen_SelectFile:
@@ -256,6 +257,7 @@ _TitleScreen_SelectFile:
     bit 0, a
     jr nz, _TitleScreen_EraseFile
 _TitleScreen_LoadFile:
+    PLAY_SFX1 DataX_MenuConfirm_sfx1
     call Func_FadeOut
     ld a, [Ram_TitleMenuItem_u8]
     ld b, a  ; param: save file number
@@ -304,6 +306,7 @@ FILE_NUMBER = FILE_NUMBER + 1
     ;; Enable erase mode.
     ld a, 1
     ld [Ram_TitleMenuIsErasing_bool], a
+    PLAY_SFX1 DataX_MenuConfirm_sfx1
     jp _TitleScreen_RunLoop
 
 _TitleScreen_StopErasing:
@@ -322,6 +325,7 @@ FILE_NUMBER = FILE_NUMBER + 1
     ;; Disable erase mode.
     xor a
     ld [Ram_TitleMenuIsErasing_bool], a
+    PLAY_SFX1 DataX_MenuConfirm_sfx1
     jp _TitleScreen_RunLoop
 
 ;;;=========================================================================;;;
@@ -384,6 +388,7 @@ _TitleIntro_IntroSlam:
     ld a, IEF_VBLANK
     ldh [rIE], a
 _TitleIntro_IntroShake:
+    PLAY_SFX4 DataX_TitleCrash_sfx4
     ld c, 31
     .loop
     push bc

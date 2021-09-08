@@ -191,8 +191,8 @@ _RunDialog_WaitForButton:
     call Func_UpdateButtonState
     ldh a, [Hram_ButtonsPressed_u8]
     or a
-    jr nz, _RunDialog_StartNextText
-    jr _RunDialog_WaitForButton
+    jr z, _RunDialog_WaitForButton
+    jr _RunDialog_StartNextText
 
 _RunDialog_HideWindow:
     call Func_DialogProcessFrame
