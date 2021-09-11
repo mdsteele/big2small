@@ -1,0 +1,43 @@
+!SONG "SewerMap" "A|BBCD"
+=tempo q30
+=key 0N  % C major
+
+!INST 2A { E(9, -5) D(1/4) }
+!INST 2B { E(9, -4) D(1/4) }
+!INST 4H { E(7, -7) P(0, 0, 0) }  % hi-hat
+!INST 4C { E(7, -7) P(5, 0, 0) }  % clap
+
+!PART A
+
+1 { E(6, -5) D(1/2) }
+2| iA g3e3 |
+
+!PART B
+
+1| c3q ': c3q3 g2e3 :2' c3q |
+ | b2q ': b2q3 g2e3 :3|
+ | b2q ': b2q3 f2e3 :3|
+ | d3q ': d3q3 b2e3 :2' d3q |
+2| iA c4q3 iB c4e3+ ' +q+ ' +q3 iA ce3 ' cq3 ce3 |
+ | d4q3    iB d4e3+ ' +q+ ' +q+        ' +q      |
+ | iA d4q3 iB d4e3+ ' +q+ ' +q3 iA de3 ' dq3 de3 |
+ | g3q3    iB g3e3+ ' +q+ ' +q+        ' +q3 ge3 |
+4|: xHq xHq xCq xHq :4|
+
+!PART C
+
+1| c3q ': c3q3 g2e3 :2' c3q |
+ | b2q ': b2q3 g2e3 :3|
+ | b2q ': b2q3 f2e3 :3|
+ | d3q ': d3q3 b2e3 :2' d3q |
+2| iB c4w+w |
+4|: xHq xHq xCq xHq :4|
+
+!PART D
+
+1| c3q ': c3q3 g2e3 :2' c3q |
+ | b2q ': b2q3 g2e3 :3|
+ | b2q ': b2q3 f2e3 :3|
+ | d3q ': d3q3 b2e3 :2' d3q |
+2| iA rw+w | rw+h.+q3 g3e3 |
+4|: xHq xHq xCq xHq :4|
