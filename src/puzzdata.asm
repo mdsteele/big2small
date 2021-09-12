@@ -297,7 +297,7 @@ DataX_Farm1_puzz:
     DB O_EMP, O_GRS, O_EMP, W_TTR, O_EMP, O_EMP, O_GRS, O_GRS, O_EMP, O_GRS
     D_BPTR DataX_Spearmint_song
     DB O_EMP, O_EMP, O_GRS, O_GRS, O_GRS, W_COW, O_EMP, O_GRS, S_BSH, O_GRS
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Farm1Intro_dlog
     DB W_FNS, M_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNS, W_FNE, O_EMP, W_COW
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, O_EMP, W_HNW, W_HNE, O_EMP, O_GRS, W_FSW, M_FNS, W_FNS
@@ -339,7 +339,7 @@ DataX_Farm4_puzz:
     DB O_EMP, O_GRS, O_GRS, O_EMP, W_TTR, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Spearmint_song
     DB O_GRS, O_EMP, O_GRS, O_EMP, O_EMP, O_EMP, W_TTP, O_EMP, O_EMP, G_PNT
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Farm4Intro_dlog
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_TTR, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_EMP, W_FW1, W_FNS, W_FNS, M_FNS, W_FNS, M_FNS, W_FNS, W_FNS
@@ -465,7 +465,7 @@ DataX_Mountain5_puzz:
     DB O_EMP, O_EMP, G_APL, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_CE3, W_CS3
     D_BPTR DataX_ComingRound_song
     DB O_EMP, O_EMP, O_EMP, W_RCK, O_EMP, O_EMP, O_CE3, W_CS3, W_CSE, O_GRS
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Mountain5Intro_dlog
     DB O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, W_CW1, W_CSE, O_GRS, O_EMP, S_ARS
     D_BPTR DataX_Null_dlog
     DB O_RMD, W_CE1, O_EMP, O_EMP, O_GRS, O_GRS, O_EMP, O_EMP, O_EMP, O_EMP
@@ -570,7 +570,7 @@ DataX_Lake3_puzz:
     DB S_BSH, W_TST, O_EMP, S_ARN, G_PNT, O_EMP, O_GRS, O_EMP, O_EMP, R_SNW
     D_BPTR DataX_Chantey_song
     DB O_EMP, W_TTR, S_ARE, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, G_APL, R_SSW
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Lake3Intro_dlog
     DB O_BEW, R_REW, R_REW, R_REW, R_REW, R_REW, R_RSW, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_REW, R_REW, R_REW
@@ -591,7 +591,7 @@ DataX_Lake4_puzz:
     DB W_FNS, W_FE1, R_RNS, O_EMP, R_RNS, W_FW1, M_FNS, W_FE1, O_EMP, O_EMP
     D_BPTR DataX_Chantey_song
     DB O_EMP, G_APL, R_RNS, O_EMP, R_RNS, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Lake4Intro_dlog
     DB O_EMP, O_EMP, R_RNS, O_GRS, R_RNS, O_EMP, O_EMP, G_CHS, O_EMP, G_PNT
     D_BPTR DataX_Null_dlog
     DB O_GRS, O_EMP, R_RNS, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP, O_EMP, O_EMP
@@ -654,7 +654,7 @@ DataX_Sewer2_puzz:
     DB O_EMP, O_EMP, W_BS1, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP, W_LN1, O_EMP
     D_BPTR DataX_Spearmint_song
     DB O_EMP, O_PEB, O_EMP, O_EMP, W_LN1, O_EMP, O_EMP, O_EMP, W_LEW, O_PEB
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Sewer2Intro_dlog
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_LEW, S_PPE, O_EMP, O_EMP, W_LEW, O_EMP
     D_BPTR DataX_Null_dlog
     DB G_PNT, O_EMP, O_PEB, O_EMP, W_BS1, O_EMP, W_BSW, W_BS3, W_BSE, G_APL
@@ -675,7 +675,7 @@ DataX_Sewer3_puzz:
     DB O_EMP, R_OOP, O_EMP, G_PNT, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_PEB
     D_BPTR DataX_ComingRound_song
     DB O_PEB, R_OOP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_PEB, O_PEB, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Sewer3Intro_dlog
     DB O_EMP, R_OOP, O_EMP, W_LN1, O_EMP, G_APL, O_EMP, O_EMP, O_PEB, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, O_BNS, S_PPW, W_LEW, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
@@ -717,7 +717,7 @@ DataX_Sewer5_puzz:
     DB O_EMP, S_PPW, W_LN1, O_EMP, O_EMP, O_EMP, O_EMP, W_LN1, O_PEB, O_EMP
     D_BPTR DataX_RestYe_song
     DB O_PEB, O_EMP, W_LWC, W_LNE, W_BSE, S_BSH, W_BSW, W_LEW, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Sewer5Intro_dlog
     DB O_EMP, O_EMP, W_LEW, W_BSE, O_EMP, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP
     D_BPTR DataX_Null_dlog
     DB O_EMP, S_PPW, W_BS1, O_EMP, O_EMP, O_EMP, O_PEB, O_EMP, O_EMP, O_EMP
@@ -864,7 +864,7 @@ DataX_Space1_puzz:
     DB O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, W_BS1, S_TME, O_EMP, W_LEW, O_EMP
     D_BPTR DataX_LightsOn_song, 0, $01, 0
     DB S_ARS, O_EMP, W_LEW, S_ARE, O_EMP, O_EMP, W_BW1, W_BS3, W_BSE, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Space1Intro_dlog
     DB O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_Null_dlog
     DB R_GDR, O_EMP, W_LEW, O_EMP, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR, R_GDR
@@ -885,7 +885,7 @@ DataX_Space3_puzz:
     DB O_EMP, O_EMP, W_LEW, S_PPE, O_EMP, G_CHS, W_LEW, O_EMP, O_EMP, O_EMP
     D_BPTR DataX_LightsOn_song
     DB O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Space3Intro_dlog
     DB R_GDR, R_GDR, W_LEW, O_EMP, O_EMP, O_EMP, W_BS1, R_GDR, R_GDR, R_GDR
     D_BPTR DataX_Null_dlog
     DB S_ARE, G_PNT, W_BS1, O_EMP, S_ARN, O_EMP, O_EMP, O_EMP, O_EMP, O_EMP

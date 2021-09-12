@@ -30,6 +30,14 @@ CHARMAP "\r", DIALOG_TEXT_EOF
 SECTION "NullDialog", ROMX
 
 DataX_Null_dlog::
+DataX_Farm1Intro_dlog::
+DataX_Lake3Intro_dlog::
+DataX_Lake4Intro_dlog::
+DataX_Sewer2Intro_dlog::
+DataX_Sewer3Intro_dlog::
+DataX_Sewer5Intro_dlog::
+DataX_Space1Intro_dlog::
+DataX_Space3Intro_dlog::
     DB DIALOG_END
 
 ;;;=========================================================================;;;
@@ -265,6 +273,33 @@ DataX_Farm2Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Farm4Dialog", ROMX
+
+DataX_Farm4Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "I just noticed\n"
+    DB "something back\n"
+    DB "on the map...\r"
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Why does this\n"
+    DB "puzzle's marker\n"
+    DB "look different?\r"
+    DB DIALOG_MOUSE
+    DB "It means we can\n"
+    DB "unlock a bonus\n"
+    DB "puzzle here.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Oh, right! And\n"
+    DB "we need a Par\n"
+    DB "score for that.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Yep! Check the\n"
+    DB "START menu to\n"
+    DB "see our score.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 SECTION "Mountain0Dialog", ROMX
 
 DataX_Mountain0Intro_dlog::
@@ -355,6 +390,21 @@ DataX_Mountain3Intro_dlog::
     DB "Yes. I want to\n"
     DB "be the first\n"
     DB "mouse-tronaut.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Mountain5Dialog", ROMX
+
+DataX_Mountain5Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Whew! We're\n"
+    DB "almost through\n"
+    DB "the mountains.\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Yep, it's all\n"
+    DB "downhill from\n"
+    DB "here!\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
@@ -498,12 +548,12 @@ DataX_City0Outro_dlog::
     DB "wasn't so bad,\n"
     DB "was it?\r"
     DB DIALOG_MOUSE
-    DB "That puzzle was\n"
+    DB "That was\n"
     DB "terrifying.\r"
     DB DIALOG_MOUSE
-    DB "The sooner we\n"
-    DB "leave here, the\n"
-    DB "better.\r"
+    DB "Let's never do\n"
+    DB "this puzzle\n"
+    DB "ever again.\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
@@ -518,7 +568,7 @@ DataX_City1Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "We can reset if\n"
     DB "you actually\n"
-    DB "hit a trap.\r"
+    DB "hit a trap...\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "But a puzzle is\n"
     DB "always solvable\n"
@@ -547,12 +597,15 @@ DataX_City2Intro_dlog::
     DB "need *stars* on\n"
     DB "every puzzle.\r"
     DB DIALOG_MOUSE
-    DB "And on every\n"
+    DB "Including every\n"
     DB "bonus puzzle.\r"
     DB DIALOG_ELEPHANT_EYES_CLOSED
-    DB "Oh, right! And\n"
-    DB "we need a Par\n"
-    DB "score for that.\r"
+    DB "Wow! I wonder\n"
+    DB "if it's worth\n"
+    DB "the effort?\r"
+    DB DIALOG_MOUSE
+    DB "Probably not,\n"
+    DB "honestly.\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;
