@@ -1,16 +1,20 @@
-!SONG "Chantey" "A|BCDE"
+!SONG "Chantey" "A|BCDE BCDF GH"
 =tempo q30
 =key 3b  % C minor
 
-!DRUM H { E(13, -7) }
+!INST 1S { E(5, -3) D(1/2) }
+!INST 1L { E(5, -1) D(1/2) }
+!INST 1H { E(5, -0) D(1/2) }
+!INST 2S { E(10, -4) D(1/8) }
+!INST 2L { E(10, -1) D(1/8) }
+!INST 4H { E(13, -7) }
 
 !PART A
 
-1 { E(5, -3) D(1/2) }
-2 { E(10, -4) D(1/8) }
 3 { W(889abbcefeedccba9743210024567898) }
 
-2' g3e3 |
+1 iS
+2 iS g3e3 |
 
 !PART B
 
@@ -80,3 +84,54 @@
  | d3q       ' bN2q      ' c3q       ' g2q       |
 4|: xHq ' xHq3 xHe3 :6|
  | xHq ' xHq ' xHe3 xHe3 xHe3 ' xHq |
+
+!PART F
+
+1| e5q ' g5q ' b4h       |
+ | d5q ' f5q ' c5h       |
+ | d5q ' f5q ' e5q ' g5q |
+ | a5q ' d5q ' c5h       |
+2| g4q        ' e4q             ' e4q+           ' +q3  g4e3 |
+ | f4q        ' d4q3      f4e3  ' e4q+           ' +q3  e4e3 |
+ | d4q3 d4e3  ' d4q3      f4e3  ' e4e3 c4e3 c4e3 ' c4q3 c4e3 |
+ | bN3q3 c4e3 ' d4e3 c4e3 bN3e3 ' c4q            ' d4q       |
+3|: b3q3 g3e3 :4|
+ | a3q3 f3e3 ' a3q3 f3e3 ' g3q3 e3e3 ' g3q3 e3e3 |
+ | f3q3 d3e3 ' f3q3 d3e3 ' e3q3 c3e3 ' e3q3 c3e3 |
+ | d3q       ' bN2q      ' c3q       ' g2q       |
+4|: xHq ' xHq3 xHe3 :6|
+ | xHq ' xHq ' xHe3 xHe3 xHe3 ' xHq |
+
+!PART G
+
+1| rh ' iH e5q ' iL e5q |
+ | rh ' iH f5q ' iL f5q |
+ | rq ' iH g5q ' iL g5q3 e5e3+ ' +q3 g5e3 |
+ | rq ' f5q ' rq ' g5q iS |
+2| iL e4h. ' iS b3q3 b3e3 |
+ | iL f4h. ' iS b3q3 b3e3 |
+ | iL g4q+ ' +q3 iS f4e3 ' e4q ' g4q |
+ | iL f4h ' g4h iS |
+3|: e3q3 b2e3 :3' e3q |
+ |: f3q3 b2e3 :3' f3q |
+ |: g3q3 e3e3 :4|
+ |: f3q3 b2e3 :2': g3q3 e3e3 :2|
+4|: xHq ' xHq3 xHe3 :8|
+
+!PART H
+
+1| a5q ' f5q  ' e5h             |
+ | d5q ' d5q  ' bN4q ' c5e3 d e |
+ | f5q ' d5q  ' g5q  ' c5q      |
+ | d5q ' bN4q ' c5h             |
+2| a4q3 f4e3 ' f4q3 a4e3 ' g4q3 e4e3 ' e4e3 f g  |
+ | f4q3 g4e3 ' a4e3 g f  ' g4q       ' g4q       |
+ | a4q3 f4e3 ' f4q3 a4e3 ' g4e3 a g  ' e4q3 g4e3 |
+ | f4e3 e d  ' e f bN3   ' c4q       ' d4q       |
+3| a3q ' f3q ' g3q ' e3q |
+ | f3q ' a3q ' g3q ' e3q |
+ | a3q ' f3q ' g3q ' e3q |
+ | d3q ' b2q ' c3q ' d3q |
+4|: xHq      ' xHq        ' xHq ' xHe3 xHe3 xHe3 :2|
+ | xHq       ' xHq        ' xHq        ' xHq       |
+ | xHq       ' xHq        ' xHe3 xHe3 xHe3 ' xHq   |

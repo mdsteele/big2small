@@ -192,7 +192,7 @@ _TitleScreen_FadeIn:
     call Func_FadeIn
     PLAY_SONG DataX_Title_song
 _TitleScreen_Intro:
-    xcall FuncX_TitleIntro
+    call Func_TitleIntro
     xor a
     ldh [rSCY], a
     ld a, 7
@@ -330,13 +330,13 @@ FILE_NUMBER = FILE_NUMBER + 1
 
 ;;;=========================================================================;;;
 
-SECTION "TitleIntro", ROMX
+SECTION "TitleIntro", ROM0
 
-FuncX_TitleIntro:
+Func_TitleIntro:
     ld c, 88
     .loop
     push bc
-    zcall Func_UpdateAudio
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
@@ -372,7 +372,7 @@ _TitleIntro_IntroSlam:
     ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_Scy_u8], a
     ;; Process frame.
     push bc
-    zcall Func_UpdateAudio
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
@@ -392,7 +392,7 @@ _TitleIntro_IntroShake:
     ld c, 31
     .loop
     push bc
-    zcall Func_UpdateAudio
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
@@ -417,7 +417,7 @@ _TitleIntro_IntroWait:
     ld c, 60
     .loop
     push bc
-    zcall Func_UpdateAudio
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
@@ -438,7 +438,7 @@ _TitleIntro_IntroScroll:
     ld c, TITLE_SCROLL_OFFSET - 1
     .loop
     push bc
-    zcall Func_UpdateAudio
+    call Func_UpdateAudio
     call Func_WaitForVBlank
     call Func_UpdateButtonState
     pop bc
