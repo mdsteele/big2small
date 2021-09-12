@@ -65,7 +65,7 @@ SOLUTIONS = {
     'SewerBonus': ('EwGwsesEeneGnewnEsGeEnewnwnGwEseneseeMnwneseGneseeneses'
                    'EswGnwnwseEenesesweswMwnwswsEnwswswnwnGwswnwEseGnMnwne'
                    'EwneMswsesGseswMnwneseenese'),
-    'Sewer5': ('EwnMeGswnenswnwnMswEswnewsGseEnGwEseGsEwseGnEwGseEenenMene'
+    'Sewer5': ('EwnMeGswnenswnMswEswnewsGseEnGwEseGsEwseGnEwGseEenenMene'
                'EswsMnEeMswEwnenGnMn'),
     'City0': ('EwsGesenMenEnGeneMeneGsEeswMseGwEnwsGeneEnGwEwnwseGnEwGseEnGwEs'
               'GeEeswMs'),
@@ -169,10 +169,14 @@ def is_blocked(position, direction, current_animal, animals, terrain,
     return False
 
 def make_move(direction, current_animal, animals, terrain, teleport):
+    moved = False
     while True:
         position = apply_direction(animals[current_animal], direction)
         if is_blocked(position, direction, current_animal, animals, terrain):
+            if not moved:
+                raise RuntimeError('pointless move {}'.format(direction))
             return
+        moved = True
         animals[current_animal] = position
         tile = terrain[position]
         if tile == 'S_BSH': terrain[position] = 'O_BST'
