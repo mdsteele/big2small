@@ -58,7 +58,7 @@ SOLUTIONS = {
     'Sewer0': ('GnEwsesenGesesenEenwGswEeMsEwswnGenEeneMnGwEwsesGesMwseEwsen'
                'Mnw'),
     'Sewer1': 'MnEessGsEnwGsweEeswswewnGwwwEsensweMsenwse',
-    'Sewer2': ('MnwGnEwneMeGnMwEneseswnMeseseGesesMwEwsGwnwseEnGwEseGesEsw'
+    'Sewer2': ('MnwGnEwneMeGnMwEneseswnMeseseGesesMwEwsGnwseEnGwEseGesEwse'
                'Gnesenes'),
     'Sewer3': ('EsGwwseEnGwEsewGenEenneGsenEsenMsEwGsEeswMesEnMwEsGnMeGsw'
                'MswwEseswwMnsene'),
