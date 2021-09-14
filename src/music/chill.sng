@@ -5,15 +5,21 @@
 !INST 1X { E(8, -3) D(1/2) }
 !INST 1Y { E(8, -3) D(3/4) }
 
-!INST 2A { E(10, -1) D(1/4) }
-!INST 2B { E(10, -2) D(1/4) }
-!INST 2D { E(10, -4) D(1/4) }
+!INST 2A { E(10, -1) D(1/2) }
+!INST 2B { E(10, -2) D(1/2) }
+!INST 2D { E(10, -4) D(1/2) }
+!INST 2E { E(10, -1) D(1/4) }
+!INST 2F { E(10, -2) D(1/4) }
+!INST 2H { E(10, -4) D(1/4) }
+
+!INST 3T { W(89abcdeffedcba987654321001234567) }
 
 !INST 4C { E(11, -7) P( 5, 0, 0) }  % clap
 
 !PART A
 
 2' iD f4s3 a4e |
+3 iT
 
 !PART B
 
@@ -25,6 +31,8 @@
  | iB d5q  ' b4e+e3 f4s3+ ' +e iD e5e ' e5e3 d5s3 c5e |
  | iB d5q  ' b4e+e3 f4s3+ ' +e iD d5e ' c5e3 b4s3 c5e |
  | iA b4h+                ' +q+     ' +e3 iD f4s3 a4e |
+3|: b2e re ' d3e re3 c3s3+ ' +e re ' a2e re :3|
+ |  b2e re ' a2e re3 g2s3+ ' +e re ' a2e re   |
 4| re xCq : xCq :14 xCe |
 
 !PART C
@@ -36,37 +44,41 @@
 2| iA b4h+               ' +e iD e5e ' e5e3 d5s3 c5e |
  | iB d5q ' b4e+e3 f4s3+ ' +e iD e5e ' e5e3 d5s3 c5e |
  | iB d5q ' b4e+e3 f4s3+ ' +e iD d5e ' c5e3 b4s3 c5e |
- | iA b4h+               ' +q+     ' +e3 iD e5s3 f5e |
+ | iA b4h+               ' +q+     ' +e3 iH e5s3 f5e |
+3|: b2e re ' d3e re3 c3s3+ ' +e re ' a2e re :3|
+ |  b2e re ' a2e re3 g2s3+ ' +e re ' a2e re   |
 4| re xCq : xCq :14 xCe |
 
 !PART D
 
-% TODO
-=transpose -12
 1 iY
- | g4e e4e ' g4e3 e4e f4s3+ ' +e+e3 f4s3 ' d4e e4e |
- | f4e d4e ' f4e3 d4e f4s3+ ' +e+e3 f4s3 ' d4e f4e |
- | e4e c4e ' e4e3 c4e d4s3+ ' +e   c4e   ' b3e c4e |
- | d4e f4e ' d4e3 f4e d4s3+ ' +q         ' e4e f4e |
-=transpose -0
-2| iB g5q ' e5e+e3 c5s3+ ' +q+ ' +e3 iD e5s3 g5e |
- | iB f5q ' d5e+e3 b4s3+ ' +q+ ' +e3 iD b4s3 d5e |
- | iB c5q+ ' +e iD c5e ' b4e b4e ' b4e3 c5e iA d5s3+ | +h+ ' +q+ ' +e3
-   iD e5s3 f5e |
+ | g3e e3e ' g3e3 e3e f3s3+ ' +e+e3 f3s3 ' d3e e3e |
+ | f3e d3e ' f3e3 d3e f3s3+ ' +e+e3 f3s3 ' d3e f3e |
+ | e3e c3e ' e3e3 c3e d3s3+ ' +e   c3e   ' b2e c3e |
+ | d3e f3e ' d3e3 f3e d3s3+ ' +q         ' e3e f3e |
+2| iF g5q ' e5e+e3 c5s3+ ' +q+ ' +e3 iH e5s3 g5e |
+ | iF f5q ' d5e+e3 b4s3+ ' +q+ ' +e3 iH b4s3 d5e |
+ | iF c5q+ ' +e iH c5e ' b4e b4e ' b4e3 c5e iE d5s3+ | +h+ ' +q+ ' +e3
+   iH e5s3 f5e |
+3| e3e re ' c3e re3 e3s3+ ' +e re ' g3e re |
+ | d3e re ' b2e re3 d3s3+ ' +e re ' f3e re |
+ | c3e re ' a2e re3 c3s3+ ' +e re ' e3e re |
+ | d3e re ' b2e re3 d3s3+ ' +e re ' f3e re |
 4| re xCq : xCq :14 xCe |
 
 !PART E
 
 1 iY
-
-=transpose -12
-1 iY
- | g4e e4e ' g4e3 e4e f4s3+ ' +q         ' d4e e4e |
- | f4q     ' d4e+e3 b3s3+   ' +q         ' d4e e4e |
- | f4e d4e ' f4e3 d4e f4s3+ ' +e+e3 f4s3 ' d4e f4e |
-=transpose -0
-2| iB g5q ' e5e+e3 c5s3+ ' +q ' iD c5e g5e |
+ | g3e e3e ' g3e3 e3e f3s3+ ' +q         ' d3e e3e |
+ | f3q     ' d3e+e3 b2s3+   ' +q         ' d3e e3e |
+ | f3e d3e ' f3e3 d3e f3s3+ ' +e+e3 f3s3 ' d3e c3e |
+ | b2e d3e ' b2e3 a2e b2s3+ ' +h                   |
+2| iF g5q ' e5e+e3 c5s3+ ' +q ' iH c5e g5e |
  | f5e g5e ' f5e3 d5e b4s3+ ' +e e5e ' e5e3 d5s3 c5e |
- | iB d5q ' b4e+e3 f4s3+ ' +e iD d5e ' c5e3 b4s3 c5e |
- | iA b4h+ ' +q+ ' +e3 iD f4s3 a4e |
+ | iF d5q ' b4e+e3 f4s3+ ' +e iH d5e ' c5e3 b4s3 c5e |
+ | iE b4h+ ' +q+ ' +e3 iD f4s3 a4e |
+3| e3e re ' c3e re3 e3s3+ ' +e re ' g3e re |
+ | d3e re ' b2e re3 d3s3+ ' +e re ' b2e re |
+ | d3e re ' b2e re3 c3s3+ ' +e re ' a2e re |
+ | b2e re ' a2e re3 b2s3+ ' +e re ' b2e re |
 4| re xCq : xCq :14 xCe |
