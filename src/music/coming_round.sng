@@ -1,37 +1,72 @@
-!SONG "ComingRound" "S|A"
+!SONG "ComingRound" "S|ABACDE"
 =tempo q28
 =key 7#  % C# major
 
-!DRUM B { E(6, -6) P( 8, 1, 0) }  % bass
-!DRUM C { E(10, -7) P( 5, 0, 0) }  % clap
-!DRUM H { E(15, -7) P( 0, 0, 0) }  % hi-hat
-!DRUM S { E(6, -6) P( 8, 0, 0) }  % snare
+!INST 1A { E(6, -4) D(3/4) }
+
+!INST 2A { E(9, -3) D(1/8) }
+!INST 2B { E(9, -6) D(1/4) }
+
+!INST 4B { E( 6, -6) P( 8, 1, 0) }  % bass
+!INST 4C { E(10, -7) P( 5, 0, 0) }  % clap
+!INST 4H { E(15, -7) P( 0, 0, 0) }  % hi-hat
+!INST 4S { E( 6, -6) P( 8, 0, 0) }  % snare
 
 !PART S
 
-2 { E(9, -3) D(1/8) }
-3 { W(7369bcddccba99988776666556778368) L(50) }
-
-2| g3e a |
+1 iA
+2| iA g3e a |
 
 !PART A
 
-2| c4s ce. ' ce. cs ' a3e g ' e g | c4h ' rq ' c4e d |
-3| c2e g ' e g ' c2e g ' e g | c2e g ' e g ' c2e g ' e g |
+1| c2e g ' e g ' c2e g ' e g | c2e g ' e g ' c2e g ' e g |
+ | c2e g ' e g ' c2e g ' e g | b1e g2 ' f g ' b1e g2 ' f g |
+ | c2e g ' e g ' c2e g ' e g |
+ | c2e a ' f a ' c2e a ' f a |
+2 iA
+ | c4s ce. ' ce. cs ' a3e g ' e g | c4h ' rq ' c4e d |
+ | e4s ee. ' ee. es ' g4e g ' g e | d4h ' rq ' g4e f |
+ | e4s ee. ' ee. es ' d4e c ' c c |
+ | c4s ce. ' ce. cs ' f4e f ' f f |
 4| xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
+ | xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
+ | xBq ' xCq ' xBq ' xCq |
+ | xBq ' xCq ' xBq ' xCq |
 
-2| e4s ee. ' ee. es ' g4e g ' g e | d4h ' rq ' g4e f |
-3| c2e g ' e g ' c2e g ' e g | b1e g2 ' f g ' b1e g2 ' f g |
-4| xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
-
-2| e4s ee. ' ee. es ' d4e c ' c c |
-3| c2e g ' e g ' c2e g ' e g |
-4| xBq ' xCq ' xBq ' xCq |
-
-2| c4s ce. ' ce. cs ' f4e f ' f f |
-3| c2e a ' f a ' c2e a ' f a |
-4| xBq ' xCq ' xBq ' xCq |
+!PART B
 
 2| e4s ee. ' ee. es ' d4e d ' e d | c4h ' rq ' g3e a |
-3| c2e g ' e g ' b1e g2 ' f g | c2e g ' e g ' c2e g ' e g |
+1| c2e g ' e g ' b1e g2 ' f g | c2e g ' e g ' c2e g ' e g |
+4| xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
+
+!PART C
+
+2| e4s ee. ' ee. es ' d4e d ' e d | c4h ' rq ' iB g4e a |
+1| c2e g ' e g ' b1e g2 ' f g | c2e g ' e g ' c2e g ' e g |
+4| xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
+
+!PART D
+
+1| c2e g ' e g ' c2e g ' e g | c2e g ' e g ' c2e g ' e g |
+ | c2e g ' e g ' c2e g ' e g | b1e g2 ' f g ' b1e g2 ' f g |
+ | c2e g ' e g ' c2e g ' e g |
+ | c2e a ' f a ' c2e a ' f a |
+=transpose +12
+2 iB
+ | c4q ' cq ' a3e g   ' e g | c4q+ ' +q  ' rq       ' c4e d |
+ | e4q ' eq ' g4e g   ' g e | d4q  ' b3q ' g3e g4e+ ' +e fe |
+ | e4q ' eq ' d4e ce+ ' +q  |
+ | c4q ' cq ' f4e fe+ ' +q  |
+=transpose +0
+4| xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
+ | xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
+ | xBq ' xCq ' xBq ' xCq |
+ | xBq ' xCq ' xBq ' xCq |
+
+!PART E
+
+1| c2e g ' e g ' b1e g2 ' f g | c2e g ' e g ' c2e g ' e2e g |
+=transpose +12
+2| e4q ' eq ' d4e g3 ' a b | c4q+ ' +q ' rq ' iA g2e a |
+=transpose +0
 4| xBq ' xCq ' xBq ' xCq | xBq ' xSs xHs xSs xHs ' xSq ' xCq |
