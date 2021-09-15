@@ -29,6 +29,9 @@ also
 always
 am
 and
+animals
+another
+any
 anyway
 appealing
 apple
@@ -37,6 +40,7 @@ are
 around
 arrows
 as
+ask
 assumed
 at
 ate
@@ -69,6 +73,7 @@ clogs
 come
 conversation
 could
+cows
 cross
 delicious
 dessert
@@ -77,6 +82,7 @@ didn't
 different
 do
 does
+doesn't
 don't
 down
 downhill
@@ -87,6 +93,7 @@ effort
 elephant
 end
 enter
+even
 ever
 every
 everyone
@@ -99,6 +106,7 @@ fences
 few
 final
 finally
+find
 fine
 first
 following
@@ -120,6 +128,7 @@ go
 goat
 going
 good
+goodbye
 got
 gotta
 grab
@@ -141,6 +150,7 @@ here
 hey
 hi
 high
+hill-arious
 hit
 hold
 hole
@@ -157,6 +167,8 @@ into
 is
 it
 it's
+join
+joke
 journey
 jump
 just
@@ -165,6 +177,7 @@ kinda
 know
 knows
 last
+later
 leave
 let's
 lift
@@ -213,6 +226,7 @@ noticed
 now
 number
 obvious
+ocean
 of
 off
 oh
@@ -258,14 +272,17 @@ rivers
 road
 rocks
 run
+sailor
 saw
 say
 scary
 score
+sea
 see
 seem
 select
 selected
+sense
 sewer
 sewers
 shoes
@@ -273,6 +290,7 @@ short
 should
 shrubs
 side
+silly
 smell
 snacks
 so
@@ -299,9 +317,11 @@ supposed
 sure
 swim
 take
+talk
 tasty
 team
 tell
+terrible
 terrifying
 thank
 thanks
@@ -350,6 +370,7 @@ walking
 want
 was
 wasn't
+waves
 way
 we
 we're

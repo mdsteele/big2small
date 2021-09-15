@@ -30,9 +30,7 @@ CHARMAP "\r", DIALOG_TEXT_EOF
 SECTION "NullDialog", ROMX
 
 DataX_Null_dlog::
-DataX_Farm1Intro_dlog::
 DataX_Lake3Intro_dlog::
-DataX_Lake4Intro_dlog::
 DataX_Sewer2Intro_dlog::
 DataX_Sewer3Intro_dlog::
 DataX_Sewer5Intro_dlog::
@@ -247,6 +245,28 @@ DataX_Farm0Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Farm1Dialog", ROMX
+
+DataX_Farm1Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "Do you think\n"
+    DB "these cows want\n"
+    DB "to join us?\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Why don't we\n"
+    DB "ask them?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Hey cows, want\n"
+    DB "to come find\n"
+    DB "food with us?\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Don't be silly,\n"
+    DB "Gisele, animals\n"
+    DB "can't talk!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 SECTION "Farm2Dialog", ROMX
 
 DataX_Farm2Intro_dlog::
@@ -267,7 +287,7 @@ DataX_Farm2Intro_dlog::
     DB "reset with the\n"
     DB "START menu...\r"
     DB DIALOG_ELEPHANT_EYES_CLOSED
-    DB "...but we don't\n"
+    DB "...but we never\n"
     DB "HAVE to!\r"
     DB DIALOG_END
 
@@ -333,13 +353,13 @@ DataX_Mountain1Intro_dlog::
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "Huff...puff...\n"
     DB "This trail is\n"
-    DB "pretty steep!\r"
+    DB "no joke!\r"
     DB DIALOG_GOAT_MOUTH_CLOSED
     DB "Really? Because\n"
-    DB "I think that\n"
-    DB "this trail...\r"
+    DB "I think this\n"
+    DB "trail is...\r"
     DB DIALOG_GOAT_MOUTH_OPEN
-    DB "...ROCKS!\r"
+    DB "...HILL-arious!\r"
     DB DIALOG_MOUSE
     DB "Oh, boy. This\n"
     DB "is going to be\n"
@@ -440,17 +460,52 @@ SECTION "Lake1Dialog", ROMX
 
 DataX_Lake1Intro_dlog::
     DB DIALOG_GOAT_MOUTH_CLOSED
-    DB "Hey Elle, why\n"
-    DB "did the river\n"
-    DB "cross the road?\r"
+    DB "Hey Elle, how\n"
+    DB "does the ocean\n"
+    DB "say hello?\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB "I don't know,\n"
-    DB "why?\r"
+    DB "how?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "It WAVES!\r"
+    DB DIALOG_MOUSE
+    DB "...That joke\n"
+    DB "was terrible.\r"
+    DB DIALOG_END
+
+DataX_Lake1Outro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Hey Elle, how\n"
+    DB "does a sailor\n"
+    DB "say goodbye?\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "I don't know,\n"
+    DB "how?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "SEA you later!\r"
+    DB DIALOG_MOUSE
+    DB "Please stop.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Lake4Dialog", ROMX
+
+DataX_Lake4Intro_dlog::
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Hey Mel, why\n"
+    DB "did the river\n"
+    DB "cross the road?\r"
+    DB DIALOG_MOUSE
+    DB "Really? Another\n"
+    DB "one of these?\r"
     DB DIALOG_GOAT_MOUTH_OPEN
     DB "To WET to the\n"
     DB "other side!\r"
     DB DIALOG_MOUSE
-    DB "...Please stop.\r"
+    DB "That doesn't\n"
+    DB "even make any\n"
+    DB "sense!\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;

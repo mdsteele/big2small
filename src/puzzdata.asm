@@ -530,7 +530,7 @@ DataX_Lake1_puzz:
     DB O_EMP, O_EMP, R_RNE, R_REW, R_RNW, O_EMP, R_RNS, O_EMP, O_GRS, O_EMP
     D_BPTR DataX_Lake1Intro_dlog
     DB O_EMP, W_RCK, O_EMP, O_EMP, O_EMP, O_EMP, R_RNE, R_RSW, O_EMP, O_EMP
-    D_BPTR DataX_Null_dlog
+    D_BPTR DataX_Lake1Outro_dlog
     DB G_CHS, O_EMP, O_EMP, S_ARW, O_EMP, O_EMP, O_EMP, O_BNS, O_GRS, R_SNW
     D_SETS TILESET_PUZZ_LAKE, COLORSET_SUMMER
     DB O_GRS, S_BSH, O_GRS, O_GRS, O_EMP, O_EMP, R_SNW, R_ONN, R_SN3, R_ONW
