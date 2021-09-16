@@ -49,6 +49,7 @@ away
 back
 bad
 be
+beaten
 because
 best
 bet
@@ -56,6 +57,7 @@ better
 bigger
 blast
 bonus
+born
 both
 bound
 boy
@@ -71,6 +73,7 @@ city
 clear
 clogs
 come
+complicated
 conversation
 could
 cows
@@ -84,8 +87,10 @@ do
 does
 doesn't
 don't
+doubt
 down
 downhill
+easier
 easy
 eat
 eating
@@ -112,6 +117,7 @@ first
 following
 food
 for
+forest
 fresh
 friend
 friends
@@ -131,6 +137,7 @@ good
 goodbye
 got
 gotta
+gotten
 grab
 great
 gross
@@ -156,6 +163,7 @@ hold
 hole
 holes
 honestly
+hooray
 how
 huff
 huh
@@ -171,6 +179,7 @@ join
 joke
 journey
 jump
+jumping
 just
 kind
 kinda
@@ -201,6 +210,7 @@ means
 meantime
 mechanic
 menu
+met
 might
 mmm
 moon
@@ -217,6 +227,7 @@ name's
 need
 never
 new
+next
 no
 nope
 not
@@ -242,6 +253,7 @@ other
 our
 out
 over
+overly
 par
 path
 peanut
@@ -252,6 +264,7 @@ place
 plan
 playing
 please
+plumbing
 press
 pretend
 pretty
@@ -262,6 +275,7 @@ puzzle
 puzzle's
 puzzles
 reached
+ready
 really
 remember
 replay
@@ -280,6 +294,7 @@ score
 sea
 see
 seem
+seems
 select
 selected
 sense
@@ -290,12 +305,15 @@ short
 should
 shrubs
 side
+sigh
 silly
+since
 smell
 snacks
 so
 solvable
 some
+somehow
 something
 sometimes
 sooner
@@ -365,6 +383,7 @@ useful
 uses
 vegetables
 very
+video
 view
 walking
 want
@@ -382,6 +401,7 @@ wet
 what
 what's
 wheeeeeeeeeee
+when
 whew
 which
 while

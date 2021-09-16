@@ -30,10 +30,6 @@ CHARMAP "\r", DIALOG_TEXT_EOF
 SECTION "NullDialog", ROMX
 
 DataX_Null_dlog::
-DataX_Lake3Intro_dlog::
-DataX_Sewer2Intro_dlog::
-DataX_Sewer3Intro_dlog::
-DataX_Sewer5Intro_dlog::
 DataX_Space1Intro_dlog::
 DataX_Space3Intro_dlog::
     DB DIALOG_END
@@ -489,6 +485,23 @@ DataX_Lake1Outro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Lake3Dialog", ROMX
+
+DataX_Lake3Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "Sigh...another\n"
+    DB "river.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Ready for some\n"
+    DB "more jumping,\n"
+    DB "Gisele?\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "I was born\n"
+    DB "ready!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 SECTION "Lake4Dialog", ROMX
 
 DataX_Lake4Intro_dlog::
@@ -569,6 +582,65 @@ DataX_Sewer1Intro_dlog::
 
 ;;;=========================================================================;;;
 
+SECTION "Sewer2Dialog", ROMX
+
+DataX_Sewer2Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "This plumbing\n"
+    DB "seems overly\n"
+    DB "complicated.\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "Yeah, what are\n"
+    DB "all these pipes\n"
+    DB "even for?\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "It's as if this\n"
+    DB "sewer is from a\n"
+    DB "video game!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Sewer3Dialog", ROMX
+
+DataX_Sewer3Intro_dlog::
+    DB DIALOG_ELEPHANT_EYES_OPEN
+    DB "Remember when\n"
+    DB "we all met back\n"
+    DB "in the forest?\r"
+    DB DIALOG_GOAT_MOUTH_CLOSED
+    DB "We've come a\n"
+    DB "long way since\n"
+    DB "then!\r"
+    DB DIALOG_MOUSE
+    DB "And the puzzles\n"
+    DB "have gotten a\n"
+    DB "lot harder.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Yep, but we're\n"
+    DB "not beaten yet!\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
+SECTION "Sewer5Dialog", ROMX
+
+DataX_Sewer5Intro_dlog::
+    DB DIALOG_MOUSE
+    DB "Finally, we're\n"
+    DB "almost out of\n"
+    DB "the sewers.\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Maybe the game\n"
+    DB "will get easier\n"
+    DB "from here on!\r"
+    DB DIALOG_MOUSE
+    DB "Somehow, I\n"
+    DB "doubt it.\r"
+    DB DIALOG_END
+
+;;;=========================================================================;;;
+
 SECTION "City0Dialog", ROMX
 
 DataX_City0Intro_dlog::
@@ -607,7 +679,7 @@ DataX_City0Outro_dlog::
     DB "terrifying.\r"
     DB DIALOG_MOUSE
     DB "Let's never do\n"
-    DB "this puzzle\n"
+    DB "that puzzle\n"
     DB "ever again.\r"
     DB DIALOG_END
 
@@ -744,6 +816,15 @@ DataX_Space5Intro_dlog::
     DB "We can do it,\n"
     DB "gals! Best of\n"
     DB "luck to us!\r"
+    DB DIALOG_END
+
+DataX_Space5Outro_dlog::
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Hooray, we did\n"
+    DB "it!\r"
+    DB DIALOG_MOUSE
+    DB "Next stop, the\n"
+    DB "moon!\r"
     DB DIALOG_END
 
 ;;;=========================================================================;;;

@@ -950,7 +950,7 @@ DataX_Space5_puzz:
     DB O_EMP, O_EMP, S_MTP, S_PPW, W_LEW, O_EMP, S_BSH, W_LN1, O_EMP, O_EMP
     D_BPTR DataX_Space5Intro_dlog
     DB S_TGE, O_EMP, O_EMP, O_EMP, W_LEW, O_EMP, O_EMP, W_BS1, S_PPE, O_EMP
-    D_BPTR DataX_Null_dlog, 0, $69, 0
+    D_BPTR DataX_Space5Outro_dlog, 0, $69, 0
     DB O_EMP, S_TMF, O_EMP, S_BSH, W_LEW, O_EMP, S_ARS, O_EMP, G_APL, S_TGE
     D_SETS TILESET_PUZZ_SPACE, COLORSET_SPACE, 0, 0, $50, $07
     DB O_EMP, O_EMP, O_EMP, O_EMP, W_BS1, O_EMP, S_TEF, O_EMP, O_EMP, O_EMP

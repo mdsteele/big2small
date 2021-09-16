@@ -250,6 +250,9 @@ Func_CreditsMoonAnimate:
     ;; Do nothing for the first MOON_SHIP_DELAY frames.
     if_lt MOON_SHIP_DELAY, ret
     sub MOON_SHIP_DELAY
+    jr nz, .doneSound
+    PLAY_SFX4 DataX_LaunchShip_sfx4
+    .doneSound
     ;; Update the object tile ID.
 _CreditsMoonAnimate_Tile:
     ld b, MINI_SHIP_1_TILEID
