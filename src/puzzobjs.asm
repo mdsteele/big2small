@@ -517,8 +517,17 @@ _UpdateSelectedAnimalObjs_GoatXPosition:
     add 8
     ld [Ram_GoatR_oama + OAMA_X], a
 _UpdateSelectedAnimalObjs_GoatTileAndFlags:
+    ld hl, Ram_WalkingAction_u8
     ld a, c
-    and %00000100
+    bit ACTB_LEAP, [hl]
+    jr z, .notLeaping
+    and %00010000
+    rrca
+    jr .doneLeaping
+    .notLeaping
+    and %00001000
+    .doneLeaping
+    rrca
     bit DIRB_EAST, b
     jr z, .notEast
     add GOAT_WL1_TILEID
