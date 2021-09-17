@@ -95,6 +95,7 @@ DataX_CannotMove_sfx1::
     DB %10000111  ; high
     DB 0
 
+DataX_EnterShip_sfx1::
 DataX_DrawPuzzleNode_sfx1::
     DB 10
     DB $24  ; sweep

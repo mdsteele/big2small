@@ -111,6 +111,8 @@ _LoadTileset_MapSewer:
 _LoadTileset_MapSpace:
     SKIP_TO_TILE $87
     COPY_FROM_ROMX DataX_MapMoonTiles_start, DataX_MapMoonTiles_end
+    SKIP_TO_TILE $b0
+    COPY_FROM_ROMX DataX_GirderTiles_start, DataX_GirderTiles_end
     SKIP_TO_TILE $c0
     COPY_FROM_ROMX DataX_SpaceMapTiles_start, DataX_SpaceMapTiles_end
     SKIP_TO_TILE $fb

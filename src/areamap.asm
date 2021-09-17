@@ -22,6 +22,7 @@ INCLUDE "src/charmap.inc"
 INCLUDE "src/hardware.inc"
 INCLUDE "src/macros.inc"
 INCLUDE "src/save.inc"
+INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
@@ -120,6 +121,8 @@ Main_AreaMapEnter::
     ;; Turn on the LCD and fade in.
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
+    ld a, GRAYSCALE_PALETTE_23
+    ldh [rOBP1], a
     ;; Unlock the first node if needed.
     ld c, 0  ; param: node index
     call Func_UnlockNode_b
@@ -219,6 +222,8 @@ _AreaMapResume_FadeIn:
     ;; Turn on the LCD and fade in.
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
     call Func_FadeIn
+    ld a, GRAYSCALE_PALETTE_23
+    ldh [rOBP1], a
 _AreaMapResume_CheckIfSolved:
     pop bc
     ;; At this point, b stores the old puzzle status, and c stores the update
@@ -426,6 +431,9 @@ _LoadAreaMap_InitState:
     ldh [rSCX], a
     ldh [rSCY], a
     call Func_ClearOam
+    ld a, [Ram_AreaMapCurrentArea_u8]
+    ld c, a  ; param: current area
+    call Func_AreaMapInitExtraObjs
     jp Func_ClearAreaMapNodeTitle
 
 ;;;=========================================================================;;;
@@ -637,6 +645,7 @@ _AreaMapFollowTrail_FinishFollowing:
     call Func_PlaceAvatarAtCurrentNode
     jp Main_AreaMapCommand
 _AreaMapFollowTrail_GoToCredits:
+    call Func_AreaMapSpaceshipDepart
     call Func_FadeOut
     jp Main_CreditsScreen
 
