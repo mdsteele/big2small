@@ -132,14 +132,14 @@ DataX_EnterPipe_sfx1::
     DB 16
     DB %01110011  ; sweep
     DB %10000000  ; len
-    DB %11110111  ; env
+    DB %10100111  ; env
     DB %11000000  ; low
     DB %10000011  ; high
     ENDR
     DB 24
     DB %01110011  ; sweep
     DB %10000000  ; len
-    DB %11110111  ; env
+    DB %10100111  ; env
     DB %11000000  ; low
     DB %10000011  ; high
     DB 0
