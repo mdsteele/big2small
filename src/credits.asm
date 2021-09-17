@@ -72,13 +72,27 @@ _CreditsScreen_Flying:
     ld de, Func_CreditsFlyingAnimate  ; param: update func
     call Func_RunDialog
     call Func_FadeOut
-_CreditsScreen_Moon:
+_CreditsScreen_Moon1:
     call Func_CreditsLoadMoonScreen
     ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ8
     call Func_FadeIn
     ld a, GRAYSCALE_PALETTE_23
     ldh [rOBP1], a
-    ld hl, Data_CreditsMoon_dlog_bptr  ; param: dialog
+    ld hl, Data_CreditsMoon1_dlog_bptr  ; param: dialog
+    ld de, Func_CreditsMoonAnimate  ; param: update func
+    call Func_RunDialog
+    ld c, 60
+_CreditsScreen_Wait:
+    push bc
+    call Func_CreditsMoonAnimate
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
+    call Func_AnimateTiles
+    pop bc
+    dec c
+    jr nz, _CreditsScreen_Wait
+_CreditsScreen_Moon2:
+    ld hl, Data_CreditsMoon2_dlog_bptr  ; param: dialog
     ld de, Func_CreditsMoonAnimate  ; param: update func
     call Func_RunDialog
     call Func_FadeOut
@@ -87,8 +101,10 @@ _CreditsScreen_Finish:
 
 Data_CreditsFlying_dlog_bptr:
     D_BPTR DataX_CreditsFlying_dlog
-Data_CreditsMoon_dlog_bptr:
-    D_BPTR DataX_CreditsMoon_dlog
+Data_CreditsMoon1_dlog_bptr:
+    D_BPTR DataX_CreditsMoon1_dlog
+Data_CreditsMoon2_dlog_bptr:
+    D_BPTR DataX_CreditsMoon2_dlog
 
 ;;;=========================================================================;;;
 

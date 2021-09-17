@@ -849,7 +849,7 @@ DataX_CreditsFlying_dlog::
     DB "obvious.\r"
     DB DIALOG_END
 
-DataX_CreditsMoon_dlog::
+DataX_CreditsMoon1_dlog::
     DB DIALOG_MOUSE
     DB "Everyone knows\n"
     DB "the moon is\n"
@@ -860,6 +860,10 @@ DataX_CreditsMoon_dlog::
     DB " a game by\n"
     DB " Matthew D.\n"
     DB "   Steele\r"
+    DB DIALOG_BLANK
+    DB "...with many\n"
+    DB "thanks to my\n"
+    DB "  family!\r"
     DB DIALOG_ELEPHANT_EYES_OPEN
     DB " * STARRING *\n"
     DB "   Elle the\n"
@@ -870,11 +874,23 @@ DataX_CreditsMoon_dlog::
     DB "     Goat\r"
     DB DIALOG_MOUSE
     DB " * STARRING *\n"
-    DB "   Mel the\n"
-    DB "    Mouse\r"
+    DB "  Melanie the\n"
+    DB "     Mouse\r"
     DB DIALOG_BLANK
-    DB "\n Thanks for\n"
+    DB " Thanks for\n"
     DB "  playing!\r"
+    DB DIALOG_END
+
+DataX_CreditsMoon2_dlog::
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "Hey, look!\r"
+    DB DIALOG_GOAT_MOUTH_OPEN
+    DB "There's apples\n"
+    DB "and peanuts\n"
+    DB "here too!\r"
+    DB DIALOG_ELEPHANT_EYES_CLOSED
+    DB "Hooray! Food\n"
+    DB "for all of us!\r"
     DB DIALOG_BLANK
     DB "\n  THE END\r"
     DB DIALOG_END
