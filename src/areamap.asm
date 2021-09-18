@@ -115,6 +115,7 @@ Main_AreaMapEnter::
     call Func_LoadAreaMap
     ;; Hide the avatar.
     xor a
+    ld [Ram_AreaMapAvatarOffset_u8], a
     ld [Ram_AreaMapAvatarRow_u8], a
     dec a
     ld [Ram_AreaMapAvatarCol_i8], a
@@ -876,16 +877,13 @@ Func_UpdateAreaMapAvatarObj:
     .doneFacing
     ;; Set Y position:
     ld a, [Ram_AreaMapAvatarRow_u8]
-    swap a
-    rrca
+    mult TILE_HEIGHT
     add 5
     sub d
     ld [Ram_Avatar_oama + OAMA_Y], a
     ;; Set X position:
     ld a, [Ram_AreaMapAvatarCol_i8]
-    and %00011111  ; account for possibility that col is negative
-    swap a
-    rrca
+    mult TILE_WIDTH
     add 7
     sub e
     ld [Ram_Avatar_oama + OAMA_X], a
