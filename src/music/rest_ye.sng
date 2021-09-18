@@ -12,35 +12,37 @@
 
 !PART B
 
-2| e4e b4q bq. aq | gq3 ge3 fe eq d b3e | e4q fq ge aq be+  | +h. re e4   |
-3| e3h   d#       | eq.  ce+q gq        | ch     eq ce b2e+ | +h e3q d#3q |
+2| e4q3 b4q bq+e3 aq  | gq3 ge3 fq3 eq dq b3e3 |
+ | e4q fq gq3 aq be3+ | +h.           rq3 e4e3 |
+3| e3h   d#3            | e3q+q3  c3e3+q g3q |
+ | c3h   e3q c3q3 b2e3+ | +h        e3q d#3q |
 4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
  | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
 
 !PART C
 
-2| e4q b bq. ae | ge fq e d b3e | e4q f ge aq be+ | +h. b4q   |
-3| e3h   d#     | eq.  ce+q gq  | ch    eq c      | b2h. e3q  |
+2| e4q b bq+q3 ae3 | gq3 fq eq dq b3e3 | e4q f gq3 aq be3+ | +h. b4q   |
+3| e3h   d#     | eq+q3  ce3+q gq  | ch    eq c      | b2h. e3q  |
 4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
  | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
 
 !PART D
 
-2| c5q a4 b c5 | de eq b4 a ae | gq e f g | ah  gq a |
-3| a3h  gq e   | c3h  gq b2    | e3h  d   | d3h eq f |
+2| c5q a4 b c5 | dq3 eq b4q aq ae3 | gq eq fq3  gq ae3+  | +h  gq a |
+3| a3h    gq eq | c3h     g3q b2q   | e3h  d3q   b2q     | d3h eq f |
 4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
  | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
 
 !PART E
 
-2| b4h c5q b4 | b a  g f | eh ge f eq | ah  gq a |
-3| g3h g      | g3q a bh | e3h   rh   | d3h eq f |  % TODO
+2| b4h c5q b4 | b4q a gq3 fq ee3+ | +h gq3 fe3 eq3 ae3+ | +h gq a |
+3| g3h e3q d  | g3q f e d# | e3h   g    | d3h eq f |
 4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
  | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
 
 !PART F
 
-2| b4q c5 d e | b4 a g f | e4w   | rh. e4q |
-3| g3h bq rq  | rw       | e3w   | rw      |  % TODO
+2| b4q c5 d e | b4q a gq3 fq e4e3+  | +w   | rh. e4q3 de3 |
+3| g3q e b c4 | g3q a b  b2         | e3w  | rw           |
 4| dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
  | dq dq3 de3 ' dq dq3 de3 | dq dq3 de3 ' dq dq3 de3 |
