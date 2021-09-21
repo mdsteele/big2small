@@ -28,14 +28,13 @@ SOLUTIONS = {
     'Forest1': 'EnGnwneEe',
     'Forest2': 'GnwMseEwneGswMnwswGnenws',
     'Forest3': 'GenEeMneEseGwswMseswEwGsMwGnMesese',
-    'Forest4': 'GeswnesnMenGwswMwswGsewEwnwsGeMnEwMsGwMnEneMenws',
+    'Forest4': 'GeswnesnMenGwswMwswGseMnGwEwnwsGnesEwneMenws',
     'ForestBonus': ('GesnMsEwGsesEeGnenEsMneEnesMsGswsenenwseMneswseGswswMnGe'
                     'MswnwseEw'),
     'Forest6': 'EnMeneswswnwseGeswsMwsenGnenwEwsGeseMesenEesenGwsMeswsGwnwswn',
     'Farm0': 'MenwsEenMwEsMenwEnwMseswnenGnwsMeGnMwsGeMnGwsMeswn',
     'Farm1': 'GnweMeEswnMwnenwGwseneswnwswneneMeGswneMswneEsenw',
-    'Farm2': ('MeswsenGswnwMswneEneGnenMswEwsGswswswnMenwswswneGeneneEnene'
-              'Gwsen'),
+    'Farm2': 'MeswsenGswnwnEwneGsEwGnwswnMswneEneGenenenEwGseEeneGwsen',
     'FarmBonus': ('MesEneseswseGwseMwneswneEnenwMnwsEenwswsMwnwnwsenwEnwsenw'
                   'MswnesGswnese'),
     'Farm4': 'EseneMswnEwsMwswnEwneGwneEsenMeseneEesenMws',
@@ -47,8 +46,8 @@ SOLUTIONS = {
                   'EswnesMesEeMnwswne'),
     'MountainBonusB': ('EwMsenGsenewwMwwGenesewswseEewMwsenwEswsMewswneGnwe'
                        'EenweenwMwwGwMenGwsen'),
-    'Mountain5': 'MwwGneswseMnwseeEnwMwnwGnenEnenenMenseGeswEseswswGsesEsenGn',
-    'Lake0': 'GsenwMsGeEsenwMnwneEsMwEneswGwsMeswswnGwnwsMsesGesEs',
+    'Mountain5': 'MwwGneswseMnwseeGnenEnwseenMwnenseGeswEseswswGsesEsenGn',
+    'Lake0': 'GsEsenwsGeMswnEeGswEswGesMswnGwnwsMsesGesEs',
     'Lake1': 'EneGnwswnMwneEswnGesMwnesGwseneswnwMwseneswsw',
     'LakeBonus': 'MseswnGnenwEwswGseswnwseMsGwMneseswsenGenMswnEws',
     'Lake3': 'GwsEsMwnwswwsGwwswnesMnGewwMsGsMnEwnwesGeMwne',
