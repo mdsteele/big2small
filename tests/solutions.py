@@ -40,8 +40,9 @@ SOLUTIONS = [
      'EnMeneswswnwseGeswsMwsenGnenwEwsGeseMesenEesenGwsMeswsGwnwswn'),
     ('Forest6', 4,
      'GeMnEwneswswnwseGswsEwnenGnenwMsGesenMeEesenwGswsMsGwnwswn'),
-    ('Farm0', 0, 'MenwsEenMwEsMenwEnwMseswnenGnwsMeGnMwsGeMnGwsMeswn'),
-    ('Farm0', 5, 'MenwsEenMwEsMenwEnwMseswneneGwnMswnGwseMn'),
+    ('Farm0', -5, 'MenwsEenMwEsMenwEnwMseswnenGnwsMeGnMwsGeMnGwsMeswn'),
+    ('Farm0', -1, 'MenwsEenMwEsMenwEnwMseswneGnwMnwGseMeGnwseMn'),
+    ('Farm0', 0, 'MenwsEenMwEsMenwEnwMseswneneGwnMswnGwseMn'),
     ('Farm1', 0, 'GnweMeEswnMwnenwGwseneswnwswneneMeGswneMswneEsenw'),
     ('Farm2', 0, 'MeswsenGswnwnEwneGsEwGnwswnMswneEneGenenenEwGseEeneGwsen'),
     ('Farm2', 3, 'MeswsenGswnwnEwneGsEwGnEneGwsMswGwneMnGnenenswsenEwne'),
@@ -60,10 +61,10 @@ SOLUTIONS = [
     ('MountainBonusA', 9,
      'EwneswGswMnEwMsEsMesGenwseMnwsEeneseMeGsMsGwnMnEwnMwGsEseMwEwMnesEwnes'
      'Mwneses'),
-    ('Mountain3', 0,
+    ('Mountain3', -13,
      'GeMeswseGnwsenMenwswGeswsnGenwsMenEsenesMwEnGwnMeGeenEeMeEswnesMesEe'
      'Mnwswne'),
-    ('Mountain3', 13,
+    ('Mountain3', 0,
      'EseGeMeswGnwnMenwswnGwsMeGneEnesGwEnGeEsMsEeMnwswneGswnesenMe'),
     ('MountainBonusB', 0,
      'EwMsenGsenewwMwwGenesewswseEewMwsenwEswsMewswneGnweEenweenwMwwGwMen'
@@ -72,6 +73,7 @@ SOLUTIONS = [
      'GsenewMsGwMenwwGenwsEwseGewMwsenwGswseEnMewswGnweEweenwMwGwMwsenGen'),
     ('Mountain5', 0,
      'MwwGneswseMnwseeGnenEnwseenMwnenseGeswEseswswGsesEsenGn'),
+    ('Mountain5', 11, 'MsGneswMwseGseMnwGeEnGwEwseGsEeMenEnMseneEswsenGn'),
     ('Lake0', 0, 'GsEsenwsGeMswnEeGswEswGesMswnGwnwsMsesGesEs'),
     ('Lake0', 3, 'EesGseMswsGwsMeswswsEenGnEeswneswsGs'),
     ('Lake1', 0, 'EneGnwswnMwneEswnGesMwnesGwseneswnwMwseneswsw'),
@@ -99,10 +101,13 @@ SOLUTIONS = [
      'Mnsene'),
     ('Sewer3', 9,
      'GwwsenwEsesGenEnGsEnesMsGeEsGwEnMenEenwMsEesMwwEweswwMnsene'),
-    ('SewerBonus', 0,
+    ('SewerBonus', -18,
      'EwGwsesEeneGnewnEsGeEnewnwnGwEseneseeMnwneseGneseenesesEswGnwnwseEenese'
      'sweswMwnwswsEnwswswnwnGwswnwEseGnMnwneEwneMswsesGseswMnwneseenese'),
-    ('SewerBonus', 29,
+    ('SewerBonus', 0,
+     'GwseEnwnGsEeGnewEwnGnwEseGeEsenewneseGwneseeMnEeneseGwenesesEswGneEenMw'
+     'EwnwswsGwnwswsMsGwEnwnwnMwnwEsewGeMeswnEenGwMeseenese'),
+    ('SewerBonus', 11,
      'EwGseEeneGneEnGwneEnewnwneseGwneseeMnEeneseMwGnwneseEsweGsneEnwnGwnEws'
      'GwMnEwnwsGwMwEnwnMnwEsesMeswnEnGwMeseenese'),
     ('Sewer5', 0,
@@ -144,12 +149,17 @@ SOLUTIONS = [
     ('Space3', 14,
      'MnweGesenesEenesMsEnMnEsMsEeGnMnwEeGeEwGeEnMneswGnMsenGsnMenwseswGwEwsw'
      'MnenEn'),
-    ('SpaceBonusB', 0,
+    ('SpaceBonusB', -14,
      'GeEwsenenwnenMeseEseswswsenMnsEsMensEwnMwsenwGnEseMeswnwseGswneEnwMenw'
      'GwEsenGeEseGwseEn'),
-    ('SpaceBonusB', 21,
-     'GnEwsenenwnenMeseEseswswMnsEseMnGwMsGensMwnGwMsenEenGeEsGwEeGseEn'),
+    ('SpaceBonusB', 0,
+     'EwsenenwnenMeseEseswswseMnswseEeGnwnEwGswneEenwMenwGwEneGeEwseGwseEn'),
+    ('SpaceBonusB', 7,
+     'EwsenenwnenMeseEseswswMnsEseMnGnwMsGensMwnGwMsenEenGeEsGwEeGseEn'),
     ('Space5', 0,
+     'MesGeEnwseswsneswMswsGwsEnMwsGeEnwGnwsMnGnwEnwswseGsesnwnMsEweMenGeEsw'
+     'MsEeGsEwMwnwwnEnwsnwwssweMsEnwssenwsMnenEwMsEsenwMnwEssenwse'),
+    ('Space5', 9,
      'MesGeEwneswsneswMswsGwMwsGseEnnGnwseEwsGnwnswwneEnwswseMseEnwssMwGs'
      'EenwseMnEwssweMsEwnnenwMnenEswMsEsenwMnwEsnenwse'),
 ]
