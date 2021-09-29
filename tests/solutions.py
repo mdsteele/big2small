@@ -19,71 +19,145 @@
 
 from __future__ import print_function
 
+import collections
 import re
+import sys
 
 #=============================================================================#
 
-SOLUTIONS = {
-    'Forest0': 'Eene',
-    'Forest1': 'EnGnwneEe',
-    'Forest2': 'GnwMseEwneGswMnwswGnenws',
-    'Forest3': 'GenEeMneEseGwswMseswEwGsMwGnMesese',
-    'Forest4': 'GeswnesnMenGwswMwswGseMnGwEwnwsGnesEwneMenws',
-    'ForestBonus': ('GesnMsEwGsesEeGnenEsMneEnesMsGswsenenwseMneswseGswswMnGe'
-                    'MswnwseEw'),
-    'Forest6': 'EnMeneswswnwseGeswsMwsenGnenwEwsGeseMesenEesenGwsMeswsGwnwswn',
-    'Farm0': 'MenwsEenMwEsMenwEnwMseswnenGnwsMeGnMwsGeMnGwsMeswn',
-    'Farm1': 'GnweMeEswnMwnenwGwseneswnwswneneMeGswneMswneEsenw',
-    'Farm2': 'MeswsenGswnwnEwneGsEwGnwswnMswneEneGenenenEwGseEeneGwsen',
-    'FarmBonus': ('MesEneseswseGwseMwneswneEnenwMnwsEenwswsMwnwnwsenwEnwsenw'
-                  'MswnesGswnese'),
-    'Farm4': 'EseneMswnEwsMwswnEwneGwneEsenMeseneEesenMws',
-    'Mountain0': 'GeMeeseeEweseeMsswGesswwnesMenes',
-    'Mountain1': 'EwMwGswMnEenGnnewEeswMsEeGeMeeGnwEwnwGsenwsMsn',
-    'MountainBonusA': ('MnEwneswwMsesGwsenEeMnwsGwseseMeneseEwGnEeseMwnGswnEwn'
-                       'MesGnMwwGsEsewMnesEwnesMwneses'),
-    'Mountain3': ('GeMeswseGnwsenMenwswGeswsnGenwsMenEsenesMwEnGwnMeGeenEeMe'
-                  'EswnesMesEeMnwswne'),
-    'MountainBonusB': ('EwMsenGsenewwMwwGenesewswseEewMwsenwEswsMewswneGnwe'
-                       'EenweenwMwwGwMenGwsen'),
-    'Mountain5': 'MwwGneswseMnwseeGnenEnwseenMwnenseGeswEseswswGsesEsenGn',
-    'Lake0': 'GsEsenwsGeMswnEeGswEswGesMswnGwnwsMsesGesEs',
-    'Lake1': 'EneGnwswnMwneEswnGesMwnesGwseneswnwMwseneswsw',
-    'LakeBonus': 'MseswnGnenwEwswGseswnwseMsGwMneseswsenGenMswnEws',
-    'Lake3': 'GwsEsMwnwswwsGwwswnesMnGewwMsGsMnEwnwesGeMwne',
-    'Lake4': ('GneMswnwEswGwsesMeswEnGeMseGwnwMnwnEwsGeMsGwneEneMsenenEwse'
-              'MnwswseEe'),
-    'Sewer0': ('GnEwsesenGesesenEenwGswEeMsEwswnGenEeneMnGwEwsesGesMwseEwsen'
-               'Mnw'),
-    'Sewer1': 'MnEessGsEnwGsweEeswswewnGwwwEsensweMsenwse',
-    'Sewer2': ('MnwGnEwneMeGnMwEneseswnMeseseGesesMwEwsGnwseEnGwEseGesEwse'
-               'Gnesenes'),
-    'Sewer3': ('EsGwwseEnGwEsewGenEenneGsenEsenMsEwGsEeswMesEnMwEsGnMeGsw'
-               'MswwEseswwMnsene'),
-    'SewerBonus': ('EwGwsesEeneGnewnEsGeEnewnwnGwEseneseeMnwneseGneseeneses'
-                   'EswGnwnwseEenesesweswMwnwswsEnwswswnwnGwswnwEseGnMnwne'
-                   'EwneMswsesGseswMnwneseenese'),
-    'Sewer5': ('EwnMeGswnenswnMswEswnewsGseEnGwEseGsEwseGnEwGseEenenMene'
-               'EswsMnEeMswEwnenGnMn'),
-    'City0': ('EwsGesenMenEnGeneMeneGsEeswMseGwEnwsGenwnesEwnwGnwEneGsEwGne'
-              'EeswMs'),
-    'City1': 'GwenwseMwseEwsGneEesenMsGwEwMenwGnesenwsMeGnMwGsenw',
-    'City2': ('EeGneMnwsenesenwnEwnesenwMswswEnwswnewseseGwMnGeseMeEswGnwsEs'
-              'GeEnwn'),
-    'CityBonus': 'GeswneMneGswnEeMnesGeMnwEnwGnMneseGeswMnwsesGnMwnGeswnMw',
-    'City4': ('GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEe'
-              'MesEwnwssw'),
-    'Space0': 'GeswnMswGesMesEsenGnwsenwMwnEswnGeMen',
-    'Space1': ('EsGnenwnEenwnenGeEsenMwGssMswnGnenEwnsenMswswnenwnGnwsw'
-               'MenwsesGeMnwGsMe'),
-    'SpaceBonusA': 'MsEneseswGwseEeGsEwGneMnwGseEsGwseEneMsGwnesMenwEwMsen',
-    'Space3': ('GesenesMnwesEenesGeMsenEesGwMseGeneEneswneMwneEnwnwGswnwsEsGw'
-               'EnenenwsesMeEnMwsEwswnMnen'),
-    'SpaceBonusB': ('GeEwsenenwnenMeseEseswswsenMnsEsMensEwnMwsenwGnEse'
-                    'MeswnwseGswneEnwMenwGwEsenGeEseGwseEn'),
-    'Space5': ('GneMesEwneswseswewsMswseseGwseseEnnMwsGnwsenswwEwnwsweneMseEs'
-               'GsEwwnMnGnwsEesMswEnwsewseswMnEeMsEwnnwsMnenEwneswnwMwEsnwse'),
-}
+SOLUTIONS = [
+    ('Forest0', 0, 'Eene'),
+    ('Forest1', 0, 'EnGnwneEe'),
+    ('Forest2', 0, 'EwnesGwMseGnMwEwGwMws'),
+    ('Forest3', 0, 'GenEeMneEseGwswMseswEwGsMwGnMesese'),
+    ('Forest3', 1, 'MnEesMeGeMsEwGseMwGswEswGswMesGeMese'),
+    ('Forest4', 0, 'GeswnesnMenGwswMwswGseMnGwEwnwsGnesEwneMenws'),
+    ('ForestBonus', 0,
+     'GesnMsEwGsesEeGnenEsMneEnesMsGswsenenwseMneswseGswswMnGeMswnwseEw'),
+    ('ForestBonus', 1,
+     'GesnMsEwGseEesMneGswnenEnesMnGswseneneswMsGswMeswsenGeMswnwseEw'),
+    ('Forest6', 0,
+     'EnMeneswswnwseGeswsMwsenGnenwEwsGeseMesenEesenGwsMeswsGwnwswn'),
+    ('Forest6', 4,
+     'GeMnEwneswswnwseGswsEwnenGnenwMsGesenMeEesenwGswsMsGwnwswn'),
+    ('Farm0', 0, 'MenwsEenMwEsMenwEnwMseswnenGnwsMeGnMwsGeMnGwsMeswn'),
+    ('Farm0', 5, 'MenwsEenMwEsMenwEnwMseswneneGwnMswnGwseMn'),
+    ('Farm1', 0, 'GnweMeEswnMwnenwGwseneswnwswneneMeGswneMswneEsenw'),
+    ('Farm2', 0, 'MeswsenGswnwnEwneGsEwGnwswnMswneEneGenenenEwGseEeneGwsen'),
+    ('Farm2', 3, 'MeswsenGswnwnEwneGsEwGnEneGwsMswGwneMnGnenenswsenEwne'),
+    ('FarmBonus', 0,
+     'MesEneseswseGwseMwneswneEnenwMnwsEenwswsMwnwnwsenwEnwsenwMswnesGswnese'),
+    ('FarmBonus', 5,
+     'GwseMesEneMnesEseswMnwsEswsGwEnenwswsMwnwnwsenwEnwsenwMswnesGswnese'),
+    ('Farm4', 0, 'EseneMswnEwsMwswnEwneGwneEsenMeseneEesenMws'),
+    ('Mountain0', 0, 'GeMeeseeEweseeMsswGesswwnesMenes'),
+    ('Mountain0', 1, 'EsseGeMeeseGeEseMwswGsswwnesMenes'),
+    ('Mountain1', 0, 'EwMwGswMnEenGnnewEeswMsEeGeMeeGnwEwnwGsenwsMsn'),
+    ('Mountain1', 3, 'EwGswMwGnEenMnnEeseGseseMeeGnwEwnMsnEwGseMn'),
+    ('MountainBonusA', 0,
+     'MnEwneswwMsesGwsenEeMnwsGwseseMeneseEwGnEeseMwnGswnEwnMesGnMwwGsEsew'
+     'MnesEwnesMwneses'),
+    ('MountainBonusA', 9,
+     'EwneswGswMnEwMsEsMesGenwseMnwsEeneseMeGsMsGwnMnEwnMwGsEseMwEwMnesEwnes'
+     'Mwneses'),
+    ('Mountain3', 0,
+     'GeMeswseGnwsenMenwswGeswsnGenwsMenEsenesMwEnGwnMeGeenEeMeEswnesMesEe'
+     'Mnwswne'),
+    ('Mountain3', 13,
+     'EseGeMeswGnwnMenwswnGwsMeGneEnesGwEnGeEsMsEeMnwswneGswnesenMe'),
+    ('MountainBonusB', 0,
+     'EwMsenGsenewwMwwGenesewswseEewMwsenwEswsMewswneGnweEenweenwMwwGwMen'
+     'Gwsen'),
+    ('MountainBonusB', 7,
+     'GsenewMsGwMenwwGenwsEwseGewMwsenwGswseEnMewswGnweEweenwMwGwMwsenGen'),
+    ('Mountain5', 0,
+     'MwwGneswseMnwseeGnenEnwseenMwnenseGeswEseswswGsesEsenGn'),
+    ('Lake0', 0, 'GsEsenwsGeMswnEeGswEswGesMswnGwnwsMsesGesEs'),
+    ('Lake0', 3, 'EesGseMswsGwsMeswswsEenGnEeswneswsGs'),
+    ('Lake1', 0, 'EneGnwswnMwneEswnGesMwnesGwseneswnwMwseneswsw'),
+    ('Lake1', 8, 'GwswsewMwGnEwGeEneGwEnwseMseneEswnMeswsw'),
+    ('LakeBonus', 0, 'MseswnGnenwEwswGseswnwseMsGwMneseswsenGenMswnEws'),
+    ('LakeBonus', 2, 'MesGnenwMnwGseEwswMwsGwMnesGsewnMeswsenGeMswnGnEws'),
+    ('Lake3', 0, 'GwsEsMwnwswwsGwwswnesMnGewwMsGsMnEwnwesGeMwne'),
+    ('Lake3', 6, 'MwEsGwMnGsMwGwMswsGwsswneseEwMneEnMwneGws'),
+    ('Lake4', 0,
+     'GneMswnwEswGwsesMeswEnGeMseGwnwMnwnEwsGeMsGwneEneMsenenEwseMnwswseEe'),
+    ('Lake4', 5,
+     'GneMswnGwsMwGesEswMeswEneGenwEwsMnGeMsEnGeEseGswneMsenenwswseEe'),
+    ('Sewer0', 0,
+     'GnEwsesenGesesenEenwGswEeMsEwswnGenEeneMnGwEwsesGesMwseEwsenMnw'),
+    ('Sewer0', 6,
+     'GnEwsesesGeseseEneGnEwnwGsEsMswEnMeEsMwGnwMnwEwnesMsEwnMenw'),
+    ('Sewer1', 0, 'MnEessGsEnwGsweEeswswewnGwwwEsensweMsenwse'),
+    ('Sewer1', 11, 'MnEesGsEsGswwEwGewEesweGwMsenwse'),
+    ('Sewer2', 0,
+     'MnwGnEwneMeGnMwEneseswnMeseseGesesMwEwsGnwseEnGwEseGesEwseGnesenes'),
+    ('Sewer2', 7,
+     'GnEwMnwswEneMsEwnesesGsMenEwnMeseEsMwEnwseswGesEeGnesenes'),
+    ('Sewer3', 0,
+     'EsGwwseEnGwEsewGenEenneGsenEsenMsEwGsEeswMesEnMwEsGnMeGswMswwEsesww'
+     'Mnsene'),
+    ('Sewer3', 9,
+     'GwwsenwEsesGenEnGsEnesMsGeEsGwEnMenEenwMsEesMwwEweswwMnsene'),
+    ('SewerBonus', 0,
+     'EwGwsesEeneGnewnEsGeEnewnwnGwEseneseeMnwneseGneseenesesEswGnwnwseEenese'
+     'sweswMwnwswsEnwswswnwnGwswnwEseGnMnwneEwneMswsesGseswMnwneseenese'),
+    ('SewerBonus', 29,
+     'EwGseEeneGneEnGwneEnewnwneseGwneseeMnEeneseMwGnwneseEsweGsneEnwnGwnEws'
+     'GwMnEwnwsGwMwEnwnMnwEsesMeswnEnGwMeseenese'),
+    ('Sewer5', 0,
+     'EwnMeGswnenswnMswEswnewsGseEnGwEseGsEwseGnEwGseEenenMeneEswsMnEeMsw'
+     'EwnenGnMn'),
+    ('Sewer5', 5,
+     'MseGswsEnwsGeMenGnseMsGwnEwnMwEewsesGseEnenenMeneEswMnEseMswEwnenGnMn'),
+    ('City0', 0,
+     'EwsGesenMenEnGeneMeneGsEeswMseGwEnwsGenwnesEwnwGnwEneGsEwGneEeswMs'),
+    ('City0', 5,
+     'GesEswGnMenwEenGsenMeGsEswMseGwEnwsGeneEnwGwneEnGwsEwGneEeswMs'),
+    ('City1', 0, 'GwenwseMwseEwsGneEesenMsGwEwMenwGnesenwsMeGnMwGsenw'),
+    ('City1', 9, 'EwsGnEenwsMsGeEsesenwGnesMeneGenMwGsenw'),
+    ('City2', 0,
+     'EeGneMnwsenesenwnEwnesenwMswswEnwswnewseseGwMnGeseMeEswGnwsEsGeEnwn'),
+    ('City2', 2,
+     'EeGneMnwsenesenwnEwMsEnesenwMnwseEnwswneseMnwGseEsGwEnesenwnwnMe'),
+    ('CityBonus', 0,
+     'GeswneMneGswnEeMnesGeMnwEnwGnMneseGeswMnwsesGnMwnGeswnMw'),
+    ('CityBonus', 6, 'EnwGseMneswnesEeswMnEeGnEwMsEeGwMnwseGnMswnGeswnMw'),
+    ('City4', 0,
+     'GneseEswnwswsenesMsseEwnMneneGwEsenweGeMsenwEswsGwEnesGwnesEeMes'
+     'Ewnwssw'),
+    ('City4', 8,
+     'GneseEswnwswsenMsseEesGwEwnMnesEeseMneEnwsMsEeGnMeGwEwGnesEwnwssw'),
+    ('Space0', 0, 'GeswnesMwGnMesEsenGwsenwMwnEswnGeMen'),
+    ('Space1', 0,
+     'EsGnenwnEenwnenGeEsenMwGssMswnGnenEwnsenMswswnenwnGnwswMenwsesGeMnwGs'
+     'Me'),
+    ('Space1', 3,
+     'EsGnenwnEenwnenGeEseMwswsGesEwsMwnenwnEeGnEwnsenGnwsMenwGwMsesGeMnwGs'
+     'Me'),
+    ('SpaceBonusA', 0,
+     'MsEneseswGwseEeGsEwGneMnwGseEsGwseEneMsGwnesMenwEwMsen'),
+    ('SpaceBonusA', 7, 'GwsEneseswGnenMwsGessEneGewnesMenwEwMsen'),
+    ('Space3', 0,
+     'GesenesMnwesEenesGeMsenEesGwMseGeneEneswneMwneEnwnwGswnwsEsGwEnenenwses'
+     'MeEnMwsEwswnMnen'),
+    ('Space3', 14,
+     'MnweGesenesEenesMsEnMnEsMsEeGnMnwEeGeEwGeEnMneswGnMsenGsnMenwseswGwEwsw'
+     'MnenEn'),
+    ('SpaceBonusB', 0,
+     'GeEwsenenwnenMeseEseswswsenMnsEsMensEwnMwsenwGnEseMeswnwseGswneEnwMenw'
+     'GwEsenGeEseGwseEn'),
+    ('SpaceBonusB', 21,
+     'GnEwsenenwnenMeseEseswswMnsEseMnGwMsGensMwnGwMsenEenGeEsGwEeGseEn'),
+    ('Space5', 0,
+     'MesGeEwneswsneswMswsGwMwsGseEnnGnwseEwsGnwnswwneEnwswseMseEnwssMwGs'
+     'EenwseMnEwssweMsEwnnenwMnenEswMsEsenwMnwEsnenwse'),
+]
+
+ELEPHANT = 0
+GOAT = 1
+MOUSE = 2
+NUM_ANIMALS = 3
 
 #=============================================================================#
 
@@ -115,7 +189,7 @@ def load_puzzles():
         assert len(terrain_grid) == 9
         animals = [(int(match.group(1), 16), int(match.group(2), 16)) for
                    match in RE_ANIM.finditer(asm, start, end)]
-        assert len(animals) == 3, (puzz_name, animals)
+        assert len(animals) == NUM_ANIMALS, (puzz_name, animals)
         puzzles[puzz_name] = {
             'animals': animals,
             'par': int(RE_PAR.search(asm, start, end).group(1)),
@@ -125,10 +199,6 @@ def load_puzzles():
     return puzzles
 
 #=============================================================================#
-
-ELEPHANT = 0
-GOAT = 1
-MOUSE = 2
 
 def check_on_goal(position, terrain, goal):
     if position[1] < 10 and terrain[position] != goal:
@@ -142,52 +212,62 @@ def apply_direction(position, direction):
     elif direction == 'w': return (position[0], position[1] - 1)
     else: raise ValueError('invalid direction: {}'.format(direction))
 
-def is_blocked(position, direction, current_animal, animals, terrain,
+def is_blocked(position, direction, current_animal, animals, terrain, mods,
                allow_jump=True):
     if (position[0] < 0 or position[0] > 8 or
         position[1] < 0 or position[1] > 9):
         return True
     if position in animals: return True
-    tile = terrain[position]
+    tile = mods.get(position) or terrain[position]
     if tile.startswith('W_'): return True
     if tile.startswith('M_') and current_animal != MOUSE: return True
     if tile.startswith('R_'):
         if current_animal != GOAT or not allow_jump: return True
         return is_blocked(apply_direction(position, direction), direction,
-                          GOAT, animals, terrain, allow_jump=False)
+                          GOAT, animals, terrain, mods, allow_jump=False)
     if tile == 'S_BSH': return current_animal != GOAT
     if tile == 'S_PPW':
         return (current_animal != ELEPHANT or direction != 'e' or
                 is_blocked((position[0], position[1] + 2), 'e', ELEPHANT,
-                           animals, terrain))
+                           animals, terrain, mods))
     if tile == 'S_PPE':
         return (current_animal != ELEPHANT or direction != 'w' or
                 is_blocked((position[0], position[1] - 2), 'w', ELEPHANT,
-                           animals, terrain))
+                           animals, terrain, mods))
     return False
 
-def make_move(direction, current_animal, animals, terrain, teleport):
+def make_move(direction, current_animal, animals, terrain, teleport, mods):
     moved = False
     while True:
         position = apply_direction(animals[current_animal], direction)
-        if is_blocked(position, direction, current_animal, animals, terrain):
+        if is_blocked(position, direction, current_animal, animals, terrain,
+                      mods):
             if not moved:
                 raise RuntimeError('pointless move {}'.format(direction))
             return
         moved = True
         animals[current_animal] = position
-        tile = terrain[position]
-        if tile == 'S_BSH': terrain[position] = 'O_BST'
+        tile = mods.get(position) or terrain[position]
+        if tile == 'S_BSH':
+            mods[position] = 'O_BST'
         elif tile == 'S_ARN': direction = 'n'
         elif tile == 'S_ARS': direction = 's'
         elif tile == 'S_ARE': direction = 'e'
         elif tile == 'S_ARW': direction = 'w'
         elif tile == 'S_PPW':
-            terrain[position] = 'O_EMP'
-            terrain[(position[0], position[1] + 2)] = 'S_PPE'
+            if terrain[position] == 'S_PPW':
+                mods[position] = 'O_EMP'
+                mods[(position[0], position[1] + 2)] = 'S_PPE'
+            else:
+                del mods[position]
+                del mods[(position[0], position[1] + 2)]
         elif tile == 'S_PPE':
-            terrain[position] = 'O_EMP'
-            terrain[(position[0], position[1] - 2)] = 'S_PPW'
+            if terrain[position] == 'S_PPE':
+                mods[position] = 'O_EMP'
+                mods[(position[0], position[1] - 2)] = 'S_PPW'
+            else:
+                del mods[position]
+                del mods[(position[0], position[1] - 2)]
         elif tile == 'S_MTP' and current_animal == MOUSE:
             raise RuntimeError('mouse hit mousetrap at {}'.format(position))
         elif (tile == 'S_TGE' and current_animal == GOAT or
@@ -199,7 +279,7 @@ def make_move(direction, current_animal, animals, terrain, teleport):
             dest = teleport[(position[0], 'F')]
             if dest not in animals: animals[current_animal] = dest
 
-def test_solution(puzzle, solution):
+def test_solution(puzzle, solution, delta):
     animals = list(puzzle['animals'])
     terrain = {(row, col): tile for
                (row, tiles) in enumerate(puzzle['terrain']) for
@@ -207,20 +287,87 @@ def test_solution(puzzle, solution):
     teleport = puzzle['teleport']
     current_animal = ELEPHANT
     num_moves = 0
+    mods = {}
     for char in solution:
         if char == ' ': pass
         elif char == 'E': current_animal = ELEPHANT
         elif char == 'G': current_animal = GOAT
         elif char == 'M': current_animal = MOUSE
         else:
-            make_move(char, current_animal, animals, terrain, teleport)
+            make_move(char, current_animal, animals, terrain, teleport, mods)
             num_moves += 1
     check_on_goal(animals[ELEPHANT], terrain, 'G_PNT')
     check_on_goal(animals[GOAT], terrain, 'G_APL')
     check_on_goal(animals[MOUSE], terrain, 'G_CHS')
-    if num_moves != puzzle['par']:
-        raise RuntimeError('solved puzzle in {} moves, but par is {}'
-                           .format(num_moves, puzzle['par']))
+    if num_moves + delta != puzzle['par']:
+        raise RuntimeError('solved puzzle in {} moves ({} under), '
+                           'but par is {}'
+                           .format(num_moves, delta, puzzle['par']))
+
+#=============================================================================#
+
+MOVES = [(direction, animal)
+         for animal in [MOUSE, GOAT, ELEPHANT]
+         for direction in 'nsew']
+
+def simplify(moves):
+    simplified = ''
+    animal = ''
+    for char in moves:
+        if char in 'EGM':
+            if animal != char:
+                simplified += char
+                animal = char
+        else:
+            simplified += char
+    return simplified
+
+def is_solved(animals, terrain):
+    (e_pos, g_pos, m_pos) = animals
+    return ((e_pos[1] > 9 or terrain[e_pos] == 'G_PNT') and
+            (g_pos[1] > 9 or terrain[g_pos] == 'G_APL') and
+            (m_pos[1] > 9 or terrain[m_pos] == 'G_CHS'))
+
+def solve_puzzle(puzzles, name):
+    puzzle = puzzles[name]
+    terrain = {(row, col): tile for
+               (row, tiles) in enumerate(puzzle['terrain']) for
+               (col, tile) in enumerate(tiles)}
+    teleport = puzzle['teleport']
+    initial_animals = tuple(puzzle['animals'])
+    queue = collections.deque([('', initial_animals, {})])
+    enqueued = set([(initial_animals, frozenset())])
+    moves_length = 0
+    while queue:
+        (moves, old_animals, old_mods) = queue.popleft()
+        if len(moves) > moves_length:
+            moves_length = len(moves)
+            print(moves_length // 2, ':', len(queue))
+        for (direction, animal) in MOVES:
+            animals = list(old_animals)
+            mods = dict(old_mods)
+            try:
+                make_move(direction, animal, animals, terrain, teleport, mods)
+            except RuntimeError:
+                continue
+            new_state = (tuple(animals), frozenset(mods))
+            if new_state in enqueued:
+                continue
+            new_moves = moves + ('EGM'[animal] + direction)
+            if is_solved(animals, terrain):
+                return (len(new_moves) // 2, simplify(new_moves))
+            queue.append((new_moves, animals, mods))
+            enqueued.add(new_state)
+    raise RuntimeError('no solution')
+
+def solve_puzzles(puzzle_names):
+    puzzles = load_puzzles()
+    for puzzle_name in puzzle_names:
+        (num_moves, moves) = solve_puzzle(puzzles, puzzle_name)
+        print(puzzle_name)
+        print(moves)
+        print(num_moves)
+        print()
 
 #=============================================================================#
 
@@ -228,10 +375,10 @@ def run_tests():
     puzzles = load_puzzles()
     num_passed = 0
     num_failed = 0
-    for (name, solution) in SOLUTIONS.iteritems():
+    for (name, delta, solution) in SOLUTIONS:
         try:
             if name not in puzzles: raise RuntimeError('no such puzzle')
-            test_solution(puzzles[name], solution)
+            test_solution(puzzles[name], solution, delta)
         except RuntimeError as err:
             print('FAILED: {}: {}'.format(name, err))
             num_failed += 1
@@ -240,6 +387,9 @@ def run_tests():
     return (num_passed, num_failed)
 
 if __name__ == '__main__':
-    run_tests()
+    if len(sys.argv) > 1:
+        solve_puzzles(sys.argv[1:])
+    else:
+        run_tests()
 
 #=============================================================================#
