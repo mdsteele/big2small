@@ -1,6 +1,9 @@
 # Big2Small
 
-Big2Small is a homebrew puzzle game for the Game Boy (still in progress).
+Big2Small is a goofy homebrew puzzle game for the original Game Boy and Game
+Boy Color.
+
+https://mdsteele.games/big2small/
 
 ## Building
 
