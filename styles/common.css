@@ -59,11 +59,10 @@ header > nav > a {
     display: inline-block;
     font-family: 'PressStart2P';
     font-size: 18px;
-    margin: 7px 3px;
+    margin: 7px 12px;
     padding: 3px;
     text-decoration: none;
     text-shadow: 2px 2px 0 #84a563;
-    width: 160px;
 }
 header > nav > a.selected { color: #396139; }
 header > nav > a:hover { color: #ff1810; }
