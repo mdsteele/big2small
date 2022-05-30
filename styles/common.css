@@ -73,6 +73,23 @@ header > nav > a:active {
     top: 2px;
 }
 
+.video {
+  margin-bottom: 20px;
+  text-align: center;
+}
+@media (max-width: 520px) {
+  .video iframe {
+    width: 336px;
+    height: 189px;
+  }
+}
+@media (max-width: 336px) {
+  .video iframe {
+    width: 224px;
+    height: 126px;
+  }
+}
+
 .floatleft, .floatright {
     border: 4px solid #396139;
     border-radius: 10px;
