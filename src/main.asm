@@ -58,7 +58,7 @@ Main::
     xcall FuncX_InitObjColorPalettes
     call Func_InitSaveSummaries
     call Func_InitAudio
-    ;; Go to title screen.
-    jp Main_TitleScreen
+    ;; Go to the splash screen.
+    jp Main_SplashScreen
 
 ;;;=========================================================================;;;

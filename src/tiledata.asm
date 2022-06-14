@@ -73,6 +73,12 @@ DataX_ObjTiles_end::
 ;;;=========================================================================;;;
 ;;; Title screen tiles:
 
+SECTION "SplashTiles", ROMX
+DataX_SplashTiles_start::
+    INCBIN "out/data/tiles/retro1.2bpp"
+    INCBIN "out/data/tiles/retro2.2bpp"
+DataX_SplashTiles_end::
+
 SECTION "TitleTiles", ROMX
 DataX_TitleTiles_start::
     INCBIN "out/data/tiles/url.2bpp"
@@ -81,6 +87,7 @@ DataX_TitleTiles_start::
     INCBIN "out/data/tiles/title2b.2bpp"
     INCBIN "out/data/tiles/title2c.2bpp"
     INCBIN "out/data/tiles/title2d.2bpp"
+    INCBIN "out/data/tiles/title3.2bpp"
 DataX_TitleTiles_end::
 
 ;;;=========================================================================;;;

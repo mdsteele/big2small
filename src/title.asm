@@ -28,8 +28,13 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
-;;; The BG palette number to use for the title background.
-TITLE_BG_PALETTE EQU 0
+SPLASH_ROWS EQU 8
+SPLASH_COLS EQU 10
+SPLASH_START_ROW EQU ((SCRN_Y_B - SPLASH_ROWS) / 2)
+SPLASH_START_COL EQU ((SCRN_X_B - SPLASH_COLS) / 2)
+
+SPLASH_OBJ_X EQU $2c
+SPLASH_OBJ_Y EQU $5a
 
 INTRO_LINES_SEP_ROW EQU 22
 INTRO_LINES_COL EQU 6
@@ -40,6 +45,7 @@ TITLE_SCROLL_OFFSET EQU (SCRN_Y / 2 - TILE_HEIGHT * TITLE_SEP_ROW)
 
 TITLE1_ROWS EQU 4
 TITLE1_COLS EQU 18
+TITLE1_BIG_COLS EQU 6  ; cols for the word "BIG" in the title
 TITLE1_START_ROW EQU (TITLE_SEP_ROW - TITLE1_ROWS)
 TITLE1_START_COL EQU ((SCRN_X_B - TITLE1_COLS) / 2)
 
@@ -70,6 +76,10 @@ TITLE1_START_TILEID EQU $90
 
 SECTION "TitleState", WRAM0
 
+;;; How many more frame to display the splash screen for.
+Ram_SplashTimer_u8:
+    DB
+
 ;;; Which item of the title menu the cursor is on.
 Ram_TitleMenuItem_u8:
     DB
@@ -83,12 +93,71 @@ Ram_TitleMenuIsErasing_bool:
 SECTION "TitleFunctions", ROM0
 
 ;;; @prereq LCD is off.
+Main_SplashScreen::
+    ;; Load tileset.
+    ld b, TILESET_SPLASH  ; param: tileset
+    call Func_LoadTileset
+    ;; Load colorset.
+    ld c, COLORSET_SPLASH  ; param: colorset
+    xcall FuncX_Colorset_Load
+    ;; Initialize state.
+    ld a, 180
+    ld [Ram_SplashTimer_u8], a
+_SplashScreen_ClearBgMap:
+    ld c, " "  ; param: tile value
+    call Func_TitleClearBgMap
+    if_cgb call, Func_SplashBgColor
+_SplashScreen_DrawLogo:
+    ld hl, Vram_BgMap + SCRN_VX_B * SPLASH_START_ROW + SPLASH_START_COL
+    ld de, SCRN_VX_B - SPLASH_COLS
+    ld b, SPLASH_ROWS
+    .rowLoop
+    ld a, $80 + SPLASH_ROWS
+    sub b
+    ld c, SPLASH_COLS
+    .colLoop
+    ld [hl+], a
+    add SPLASH_ROWS
+    dec c
+    jr nz, .colLoop
+    add hl, de
+    dec b
+    jr nz, .rowLoop
+_SplashScreen_DrawObjects:
+    call Func_ClearOam
+    if_dmg call, Func_SplashDrawGrayscaleObjs
+    if_cgb call, Func_SplashDrawColorObjs
+_SplashScreen_FadeIn:
+    call Func_MusicStop
+    xor a
+    ldh [rSCX], a
+    ldh [rSCY], a
+    ld d, LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16  ; param: display flags
+    call Func_FadeIn
+_SplashScreen_RunLoop:
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
+    call Func_UpdateButtonState
+_SplashScreen_HandleButtons:
+    ldh a, [Hram_ButtonsPressed_u8]
+    and PADF_START | PADF_A | PADF_B
+    jr nz, _SplashScreen_FadeOut
+    ld a, [Ram_SplashTimer_u8]
+    dec a
+    jr z, _SplashScreen_FadeOut
+    ld [Ram_SplashTimer_u8], a
+    jr _SplashScreen_RunLoop
+_SplashScreen_FadeOut:
+    call Func_FadeOut
+    ;; fall through to Main_TitleScreen
+
+;;; @prereq LCD is off.
 Main_TitleScreen::
     ;; Load tileset.
     ld b, TILESET_TITLE  ; param: tileset
     call Func_LoadTileset
     ;; Load colorset.
-    ld c, COLORSET_SUMMER  ; param: colorset
+    ld c, COLORSET_TITLE  ; param: colorset
     xcall FuncX_Colorset_Load
     ;; Initialize state.
     xor a
@@ -97,7 +166,7 @@ Main_TitleScreen::
 _TitleScreen_ClearBgMap:
     ld c, " "  ; param: tile value
     call Func_TitleClearBgMap
-    if_cgb call, Func_TitleClearBgColor
+    if_cgb call, Func_TitleBgColor
 _TitleScreen_DrawUpperTitle:
     ld hl, Vram_BgMap + SCRN_VX_B * TITLE1_START_ROW + TITLE1_START_COL
     ld de, SCRN_VX_B - TITLE1_COLS
@@ -170,9 +239,9 @@ FILE_NUMBER = FILE_NUMBER + 1
     COPY_FROM_ROM0 Data_StartEraseStr_start, Data_StartEraseStr_end
     ld c, ">"  ; cursor tile ID
     call Func_TitleMenuSetCursorTile
-_TitleScreen_FadeIn:
+_TitleScreen_SetUpStat:
     ;; Set up the STAT interrupt table.
-    ld a, LCDCF_ON | LCDCF_BGON
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON
     ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_Lcdc_u8], a
     ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_Lcdc_u8], a
     xor a
@@ -181,25 +250,55 @@ _TitleScreen_FadeIn:
     ldh [Hram_StatTable_hlcd_arr8 + 0 * sizeof_HLCD + HLCD_NextLyc_u8], a
     ld a, 255
     ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_NextLyc_u8], a
-    ;; Fade in, then start playing the music.
+_TitleScreen_SetUpObjects:
     call Func_ClearOam
+    ld a, 64
+    ld [Ram_ArrowN_oama + OAMA_X], a
+    ld [Ram_ArrowS_oama + OAMA_X], a
+    ld a, 80
+    ld [Ram_ArrowE_oama + OAMA_X], a
+    ld [Ram_ArrowW_oama + OAMA_X], a
+    ld [Ram_Avatar_oama + OAMA_X], a
+    ld a, 1
+    ld [Ram_ArrowN_oama + OAMA_FLAGS], a
+    ld [Ram_ArrowS_oama + OAMA_FLAGS], a
+    ld a, 7
+    ld [Ram_ArrowE_oama + OAMA_FLAGS], a
+    ld [Ram_ArrowW_oama + OAMA_FLAGS], a
+    ld [Ram_Avatar_oama + OAMA_FLAGS], a
+    ld a, $fb
+    ld [Ram_ArrowN_oama + OAMA_TILEID], a
+    inc a
+    ld [Ram_ArrowS_oama + OAMA_TILEID], a
+    inc a
+    ld [Ram_ArrowE_oama + OAMA_TILEID], a
+    inc a
+    ld [Ram_ArrowW_oama + OAMA_TILEID], a
+    inc a
+    ld [Ram_Avatar_oama + OAMA_TILEID], a
+_TitleScreen_FadeIn:
+    ;; Fade in, then start playing the music.
     call Func_MusicStop
     xor a
     ldh [rSCX], a
     ld a, INTRO_LINES_SCY
     ldh [rSCY], a
-    ld d, LCDCF_BGON  ; param: display flags
+    ld d, LCDCF_BGON | LCDCF_OBJON  ; param: display flags
     call Func_FadeIn
     PLAY_SONG DataX_Title_song
 _TitleScreen_Intro:
     call Func_TitleIntro
+    ld c, 0  ; param: scroll offset
+    if_cgb call, Func_TitlePositionColorObjs
+    call Func_UpdateAudio
+    call Func_WaitForVBlankAndPerformDma
     xor a
     ldh [rSCY], a
     ld a, 7
     ldh [rWX], a
     ld a, TITLE_WINDOW_TOP
     ldh [rWY], a
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_WINON | LCDCF_WIN9C00
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
 _TitleScreen_RunLoop:
     call Func_UpdateAudio
@@ -372,8 +471,11 @@ _TitleIntro_IntroSlam:
     ldh [Hram_StatTable_hlcd_arr8 + 1 * sizeof_HLCD + HLCD_Scy_u8], a
     ;; Process frame.
     push bc
+    add 51
+    ld c, a  ; param: scroll offset
+    if_cgb call, Func_TitlePositionColorObjs
     call Func_UpdateAudio
-    call Func_WaitForVBlank
+    call Func_WaitForVBlankAndPerformDma
     call Func_UpdateButtonState
     pop bc
     ldh a, [Hram_ButtonsPressed_u8]
@@ -392,22 +494,19 @@ _TitleIntro_IntroShake:
     ld c, 31
     .loop
     push bc
+    inc c
+    call Func_GetIntroShake_a
+    add 48
+    ld c, a  ; param: scroll offset
+    if_cgb call, Func_TitlePositionColorObjs
     call Func_UpdateAudio
-    call Func_WaitForVBlank
+    call Func_WaitForVBlankAndPerformDma
     call Func_UpdateButtonState
     pop bc
     ldh a, [Hram_ButtonsPressed_u8]
     and PADF_START | PADF_A | PADF_B
     ret nz
-    ld a, -TITLE_SCROLL_OFFSET - 1
-    bit 1, c
-    jr z, .shake
-    bit 4, c
-    jr z, .small
-    inc a
-    .small
-    inc a
-    .shake
+    call Func_GetIntroShake_a  ; preserves c
     ldh [rSCY], a
     dec c
     jr nz, .loop
@@ -418,7 +517,7 @@ _TitleIntro_IntroWait:
     .loop
     push bc
     call Func_UpdateAudio
-    call Func_WaitForVBlank
+    call Func_WaitForVBlankAndPerformDma
     call Func_UpdateButtonState
     pop bc
     ldh a, [Hram_ButtonsPressed_u8]
@@ -432,14 +531,15 @@ _TitleIntro_IntroScroll:
     ldh [rWX], a
     ld a, SCRN_Y - 2
     ldh [rWY], a
-    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_WINON | LCDCF_WIN9C00
+    ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_WINON | LCDCF_WIN9C00
     ldh [rLCDC], a
     ;; Loop, scrolling title and scrolling window into view.
     ld c, TITLE_SCROLL_OFFSET - 1
     .loop
     push bc
+    if_cgb call, Func_TitlePositionColorObjs
     call Func_UpdateAudio
-    call Func_WaitForVBlank
+    call Func_WaitForVBlankAndPerformDma
     call Func_UpdateButtonState
     pop bc
     ldh a, [Hram_ButtonsPressed_u8]
@@ -459,9 +559,79 @@ _TitleIntro_IntroScroll:
     jr nz, .loop
     ret
 
+;;; @param c Shake counter.
+;;; @preserve c
+Func_GetIntroShake_a:
+    ld a, -TITLE_SCROLL_OFFSET - 1
+    bit 1, c
+    ret z
+    bit 4, c
+    jr z, .small
+    inc a
+    .small
+    inc a
+    ret
+
 ;;;=========================================================================;;;
 
 SECTION "TitleDrawFunctions", ROM0
+
+Func_SplashDrawGrayscaleObjs:
+    ld a, $d0
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_ElephantR_oama + OAMA_TILEID], a
+    xor a
+    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_ElephantR_oama + OAMA_FLAGS], a
+    ld a, SPLASH_OBJ_Y
+    ld [Ram_ElephantL_oama + OAMA_Y], a
+    ld [Ram_ElephantR_oama + OAMA_Y], a
+    ld a, SPLASH_OBJ_X
+    ld [Ram_ElephantL_oama + OAMA_X], a
+    add TILE_WIDTH
+    ld [Ram_ElephantR_oama + OAMA_X], a
+    ret
+
+;;; @prereq Color is enabled.
+Func_SplashDrawColorObjs:
+    ld a, $d4
+    ld [Ram_ElephantL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_ElephantR_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_GoatL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_GoatR_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseL_oama + OAMA_TILEID], a
+    add 2
+    ld [Ram_MouseR_oama + OAMA_TILEID], a
+    ld a, 6
+    ld [Ram_ElephantL_oama + OAMA_FLAGS], a
+    ld [Ram_ElephantR_oama + OAMA_FLAGS], a
+    ld a, 0
+    ld [Ram_GoatL_oama + OAMA_FLAGS], a
+    ld [Ram_GoatR_oama + OAMA_FLAGS], a
+    ld a, 7
+    ld [Ram_MouseL_oama + OAMA_FLAGS], a
+    ld [Ram_MouseR_oama + OAMA_FLAGS], a
+    ld a, SPLASH_OBJ_Y
+    ld [Ram_ElephantL_oama + OAMA_Y], a
+    ld [Ram_ElephantR_oama + OAMA_Y], a
+    ld [Ram_GoatL_oama + OAMA_Y], a
+    ld [Ram_GoatR_oama + OAMA_Y], a
+    ld [Ram_MouseL_oama + OAMA_Y], a
+    ld [Ram_MouseR_oama + OAMA_Y], a
+    ld a, SPLASH_OBJ_X
+    ld [Ram_ElephantL_oama + OAMA_X], a
+    ld [Ram_GoatL_oama + OAMA_X], a
+    ld [Ram_MouseL_oama + OAMA_X], a
+    add TILE_WIDTH
+    ld [Ram_ElephantR_oama + OAMA_X], a
+    ld [Ram_GoatR_oama + OAMA_X], a
+    ld [Ram_MouseR_oama + OAMA_X], a
+    ret
 
 ;;; @param b The menu item number.
 ;;; @return hl A pointer to the first BG map tile of the menu item.
@@ -594,16 +764,55 @@ Func_TitleMenuColor:
     ldh [rVBK], a
     ret
 
-;;; Sets all tiles in the BG map to use TITLE_BG_PALETTE.
 ;;; @prereq Color is enabled.
 ;;; @prereq LCD is off.
-Func_TitleClearBgColor:
+Func_SplashBgColor:
     ;; Switch to VRAM bank 1.
     ld a, 1
     ldh [rVBK], a
-    ;; Fill the BG map with TITLE_BG_PALETTE.
-    ld c, TITLE_BG_PALETTE  ; param: tile value
+    ;; Fill the screen with palette 0.
+    ld c, 0  ; param: tile value
     call Func_TitleClearBgMap
+    ;; Fill the bottom half of the splash logo with palette 1.
+    ld hl, Vram_BgMap + SCRN_VX_B * (SPLASH_START_ROW + SPLASH_ROWS / 2)
+    ld a, 1
+    ld c, SCRN_VX_B * (SPLASH_ROWS / 2)
+    .loop
+    ld [hl+], a
+    dec c
+    jr nz, .loop
+    ;; Switch back to VRAM bank 0.
+    xor a
+    ldh [rVBK], a
+    ret
+
+;;; Sets all tiles in the BG map to use TITLE_BG_PALETTE.
+;;; @prereq Color is enabled.
+;;; @prereq LCD is off.
+Func_TitleBgColor:
+    ;; Switch to VRAM bank 1.
+    ld a, 1
+    ldh [rVBK], a
+    ;; Fill the BG map with palette 0.
+    ld c, 0  ; param: tile value
+    call Func_TitleClearBgMap
+    ;; Fill the word "BIG" with palette 1.
+    ld hl, Vram_BgMap + SCRN_VX_B * TITLE1_START_ROW + TITLE1_START_COL
+    ld de, SCRN_VX_B - TITLE1_BIG_COLS - 2
+    ld b, TITLE1_ROWS
+    .rowLoop
+    ld a, 1
+    ld c, TITLE1_BIG_COLS
+    .colLoop
+    dec c
+    ld [hl+], a
+    jr nz, .colLoop
+    ld a, 7
+    ld [hl+], a
+    ld [hl+], a
+    add hl, de
+    dec b
+    jr nz, .rowLoop
     ;; Switch back to VRAM bank 0.
     xor a
     ldh [rVBK], a
@@ -623,6 +832,23 @@ Func_TitleClearBgMap:
     ld [hl+], a
     dec c
     jr nz, .loop
+    ret
+
+;;; @prereq Color is enabled.
+;;; @param c The title scroll offset.
+Func_TitlePositionColorObjs:
+    ld a, c
+    add TILE_HEIGHT * 4 + 6
+    ld [Ram_ArrowN_oama + OAMA_Y], a
+    add TILE_HEIGHT
+    ld [Ram_ArrowS_oama + OAMA_Y], a
+    ld a, c
+    add TILE_HEIGHT * 4
+    ld [Ram_ArrowE_oama + OAMA_Y], a
+    add TILE_HEIGHT
+    ld [Ram_ArrowW_oama + OAMA_Y], a
+    add TILE_HEIGHT * 2
+    ld [Ram_Avatar_oama + OAMA_Y], a
     ret
 
 ;;;=========================================================================;;;

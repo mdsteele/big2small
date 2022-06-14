@@ -126,7 +126,7 @@ DataX_ObjColorPalettes_start:
     ;; Palette 6 (thrust)
     D_COLOR 255, 255, 255
     D_COLOR 255, 255, 0
-    D_COLOR 255, 128, 0
+    D_COLOR 240, 128, 64
     D_COLOR 192, 0, 0
 DataX_ObjColorPalettes_end:
 
@@ -212,8 +212,12 @@ DataX_Colorset_Table_cset_ptr_arr:
     DW DataX_Colorset_Sewer_cset
     ASSERT @ - .begin == sizeof_PTR * COLORSET_SPACE
     DW DataX_Colorset_Space_cset
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_SPLASH
+    DW DataX_Colorset_Splash_cset
     ASSERT @ - .begin == sizeof_PTR * COLORSET_SUMMER
     DW DataX_Colorset_Summer_cset
+    ASSERT @ - .begin == sizeof_PTR * COLORSET_TITLE
+    DW DataX_Colorset_Title_cset
     ASSERT @ - .begin == sizeof_PTR * COLORSET_WINTER
     DW DataX_Colorset_Winter_cset
     ASSERT @ - .begin == sizeof_PTR * COLORSET_WORLD
@@ -440,6 +444,50 @@ DataX_Colorset_Space_cset:
     D_COLOR 0, 0, 0
 ASSERT @ - .begin == sizeof_CSET
 
+DataX_Colorset_Splash_cset:
+    .begin
+    ;; Palette 0 (upper)
+    D_COLOR 255, 255, 255
+    D_COLOR 136, 192, 112
+    D_COLOR 52, 105, 87
+    D_COLOR 0, 0, 0
+    ;; Palette 1 (lower)
+    D_COLOR 255, 255, 255
+    D_COLOR 136, 192, 112
+    D_COLOR 160, 64, 160
+    D_COLOR 0, 0, 0
+    ;; Palette 2 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 3 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 4 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 5 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 6 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 7 (person)
+    D_COLOR 255, 255, 255
+    D_COLOR 249, 212, 186
+    D_COLOR 77, 92, 168
+    D_COLOR 53, 68, 156
+ASSERT @ - .begin == sizeof_CSET
+
 DataX_Colorset_Summer_cset:
     .begin
     ;; Palette 0 (menu)
@@ -481,6 +529,50 @@ DataX_Colorset_Summer_cset:
     D_COLOR 255, 240, 224
     D_COLOR 192, 192, 192
     D_COLOR 96, 96, 96
+    D_COLOR 0, 0, 0
+ASSERT @ - .begin == sizeof_CSET
+
+DataX_Colorset_Title_cset:
+    .begin
+    ;; Palette 0 (title "SMALL")
+    D_COLOR 255, 255, 255
+    D_COLOR 172, 96, 139
+    D_COLOR 98, 48, 48
+    D_COLOR 0, 0, 0
+    ;; Palette 1 (title "BIG")
+    D_COLOR 255, 255, 255
+    D_COLOR 15, 139, 172
+    D_COLOR 48, 48, 98
+    D_COLOR 0, 0, 0
+    ;; Palette 2 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 3 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 4 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 5 (unused)
+    D_COLOR 255, 255, 255
+    D_COLOR 170, 170, 170
+    D_COLOR 85, 85, 85
+    D_COLOR 0, 0, 0
+    ;; Palette 6 (menu)
+    D_COLOR 255, 255, 255
+    D_COLOR 192, 160, 160
+    D_COLOR 128, 70, 70
+    D_COLOR 32, 0, 0
+    ;; Palette 7 (title "2")
+    D_COLOR 255, 255, 255
+    D_COLOR 192, 192, 32
+    D_COLOR 224, 224, 64
     D_COLOR 0, 0, 0
 ASSERT @ - .begin == sizeof_CSET
 

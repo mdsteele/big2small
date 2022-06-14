@@ -51,7 +51,9 @@ Func_LoadTileset::
     ld a, b
     ld [Ram_LastTileset_u8], a
     if_ge TILESET_PUZZ_MIN, jr, _LoadTileset_Puzz
-    if_lt TILESET_MAP_MIN, jr, _LoadTileset_Title
+    if_ge TILESET_MAP_MIN, jr, _LoadTileset_Map
+    if_eq TILESET_SPLASH, jr, _LoadTileset_Splash
+    jr _LoadTileset_Title
 _LoadTileset_Map:
     push af
     COPY_FROM_ROMX DataX_SharedMapTiles_start, DataX_SharedMapTiles_end
@@ -74,6 +76,10 @@ _LoadTileset_Puzz:
     if_eq TILESET_PUZZ_SPACE, jp, _LoadTileset_PuzzSpace
     ret
 
+_LoadTileset_Splash:
+    SKIP_TO_TILE $80
+    COPY_FROM_ROMX DataX_SplashTiles_start, DataX_SplashTiles_end
+    ret
 _LoadTileset_Title:
     SKIP_TO_TILE $80
     COPY_FROM_ROMX DataX_TitleTiles_start, DataX_TitleTiles_end
