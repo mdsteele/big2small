@@ -224,6 +224,7 @@ _WorldMapResume_WalkToNextArea:
     call Func_FadeIn
     pop hl
     ;; Walk to the next area.
+    romb BANK("LocationData")
     deref hl  ; param: pointer to PATH struct
     ld e, 1   ; param: area number delta
     jp Main_WorldMapWalk
