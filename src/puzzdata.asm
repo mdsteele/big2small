@@ -25,7 +25,7 @@ INCLUDE "src/tileset.inc"
 
 ;;;=========================================================================;;;
 
-D_ANIM: MACRO
+MACRO D_ANIM
     STATIC_ASSERT _NARG == 2 || _NARG == 6
     DB (\1), (\2)
     IF _NARG > 2
@@ -35,7 +35,7 @@ D_ANIM: MACRO
     ENDC
 ENDM
 
-D_BPTR: MACRO
+MACRO D_BPTR
     STATIC_ASSERT _NARG == 1 || _NARG == 4
     DB BANK(\1), LOW(\1), HIGH(\1)
     IF _NARG > 1
@@ -45,7 +45,7 @@ D_BPTR: MACRO
     ENDC
 ENDM
 
-D_PAR: MACRO
+MACRO D_PAR
     STATIC_ASSERT _NARG == 1 || _NARG == 5
     DB LOW(\1), HIGH(\1)
     IF _NARG > 1
@@ -55,7 +55,7 @@ D_PAR: MACRO
     ENDC
 ENDM
 
-D_SETS: MACRO
+MACRO D_SETS
     STATIC_ASSERT _NARG == 2 || _NARG == 6
     DB (\1), (\2)
     IF _NARG > 2

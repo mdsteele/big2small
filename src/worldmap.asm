@@ -42,7 +42,7 @@ PSFX_RomBank_u8 RB 1
 PSFX_SfxPtr_ptr RW 1
 sizeof_PSFX     RB 0
 
-D_PSFX: MACRO
+MACRO D_PSFX
     STATIC_ASSERT _NARG == 2
     STATIC_ASSERT (\2) == 1 || (\2) == 4
     DB (\2), BANK(\1), LOW(\1), HIGH(\1)

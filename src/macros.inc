@@ -25,7 +25,7 @@
 ;;;     if_eq 9, jr, .label  ; jump-relative to .label if a == 9
 ;;;     if_eq b, call, Func  ; call Func if a == b
 ;;;     if_eq 0, ret         ; return if a == 0
-if_eq: MACRO
+MACRO if_eq
     IF _NARG < 2
     FAIL "Too few arguments to if_eq macro"
     ENDC
@@ -47,7 +47,7 @@ ENDM
 ;;;     if_ne 9, jr, .label  ; jump-relative to .label if a != 9
 ;;;     if_ne b, call, Func  ; call Func if a != b
 ;;;     if_ne 0, ret         ; return if a != 0
-if_ne: MACRO
+MACRO if_ne
     IF _NARG < 2
     FAIL "Too few arguments to if_ne macro"
     ENDC
@@ -69,7 +69,7 @@ ENDM
 ;;;     if_lt 9, jr, .label  ; jump-relative to .label if a < 9 (unsigned)
 ;;;     if_lt b, call, Func  ; call Func if a < b (unsigned)
 ;;;     if_lt 7, ret         ; return if a < 7 (unsigned)
-if_lt: MACRO
+MACRO if_lt
     IF _NARG < 2
     FAIL "Too few arguments to if_lt macro"
     ENDC
@@ -91,7 +91,7 @@ ENDM
 ;;;     if_ge 9, jr, .label  ; jump-relative to .label if a >= 9 (unsigned)
 ;;;     if_ge b, call, Func  ; call Func if a >= b (unsigned)
 ;;;     if_ge 1, ret         ; return if a >= 1 (unsigned)
-if_ge: MACRO
+MACRO if_ge
     IF _NARG < 2
     FAIL "Too few arguments to if_ge macro"
     ENDC
@@ -112,7 +112,7 @@ ENDM
 ;;;     if_cgb jr, .label  ; jump-relative to .label if running on a CGB
 ;;;     if_cgb call, Func  ; call Func if running on a CGB
 ;;;     if_cgb ret         ; return if running on a CGB
-if_cgb: MACRO
+MACRO if_cgb
     ldh a, [Hram_ColorEnabled_bool]
     or a
     IF _NARG == 1
@@ -131,7 +131,7 @@ ENDM
 ;;;     if_dmg jr, .label  ; jump-relative to .label if running on a DMG
 ;;;     if_dmg call, Func  ; call Func if running on a DMG
 ;;;     if_dmg ret         ; return if running on a DMG
-if_dmg: MACRO
+MACRO if_dmg
     ldh a, [Hram_ColorEnabled_bool]
     or a
     IF _NARG == 1
@@ -153,7 +153,7 @@ ENDM
 ;;;     deref de, hl  ; stores [hl] in e and [hl+1] in d, destroying a and hl
 ;;;     deref hl, hl  ; replaces hl with the value hl pointed to, destroying a
 ;;;     deref hl      ; shorthand for "deref hl, hl"
-deref: MACRO
+MACRO deref
     IF _NARG < 1
     FAIL "Too few arguments to deref macro"
     ELIF _NARG == 1
@@ -177,7 +177,7 @@ ENDM
 ;;;     ldb bc, a     ; sets c to a, and sets b to 0
 ;;;     ldb de, d     ; sets e to d, then sets d to 0
 ;;;     ldb hl, [hl]  ; sets l to [hl], then sets h to 0
-ldb: MACRO
+MACRO ldb
     IF _NARG < 2
     FAIL "Too few arguments to ldb macro"
     ELIF _NARG > 2
@@ -192,7 +192,7 @@ ENDM
 ;;; Examples:
 ;;;     ldw bc, de  ; sets c to e, and sets b to d
 ;;;     ldw hl, bc  ; sets l to c, and sets h to b
-ldw: MACRO
+MACRO ldw
     IF _NARG < 2
     FAIL "Too few arguments to ldw macro"
     ELIF _NARG > 2
@@ -209,7 +209,7 @@ ENDM
 ;;; Examples:
 ;;;     mult 2  ; multiplies a by 2
 ;;;     mult 4  ; multiplies a by 4
-mult: MACRO
+MACRO mult
     STATIC_ASSERT _NARG == 1
     IF (\1) == 2
     add a
@@ -227,7 +227,7 @@ ENDM
 
 ;;; Negates the `a` register.  Sets/clears the `z` flag if the result is
 ;;; zero/nonzero.
-neg: MACRO
+MACRO neg
     IF _NARG > 0
     FAIL "Too many arguments to neg macro"
     ENDC
@@ -245,7 +245,7 @@ ENDM
 ;;;     romb [Ram_Bank_u8]   ; sets both a and ROM bank to value of Ram_Bank_u8
 ;;;     romb BANK(DataX_Foo) ; sets both a and ROM bank to given bank number
 ;;;     romb                 ; sets ROM bank to value of a
-romb: MACRO
+MACRO romb
     IF _NARG > 1
     FAIL "Too many arguments to romb macro"
     ELIF _NARG > 0
@@ -260,7 +260,7 @@ ENDM
 ;;; Examples:
 ;;;     xld hl, DataX_Sb  ; sets hl to DataX_Sb and ROM bank to BANK(DataX_Sb)
 ;;;     xld de, DataX_Ag  ; sets de to DataX_Ag and ROM bank to BANK(DataX_Ag)
-xld: MACRO
+MACRO xld
     IF _NARG < 2
     FAIL "Too few arguments to xld macro"
     ELIF _NARG > 2
@@ -278,7 +278,7 @@ ENDM
 ;;;
 ;;; Examples:
 ;;;     xcall FuncX_Foo
-xcall: MACRO
+MACRO xcall
     IF _NARG < 1
     FAIL "Too few arguments to xcall macro"
     ELIF _NARG > 1
@@ -290,25 +290,10 @@ xcall: MACRO
     call \1
 ENDM
 
-;;; Allows code in ROMX to safely call a function in ROM0 that doesn't
-;;; preserve the ROM bank.  The hl register is destroyed in the process, so
-;;; this cannot be used to call functions that use hl as a parameter.
-;;;
-;;; Examples:
-;;;     zcall Func_Foo
-zcall: MACRO
-    STATIC_ASSERT _NARG == 1
-    ASSERT BANK(@) != 0
-    ASSERT BANK(\1) == 0
-    ld a, BANK(@)
-    ld hl, \1
-    rst Rst_Trampoline
-ENDM
-
 ;;;=========================================================================;;;
 
 ;;; Copies data from the current ROM bank.
-COPY_FROM_CURR: MACRO
+MACRO COPY_FROM_CURR
     IF _NARG < 2
     FAIL "Too few arguments to COPY_FROM_CURR macro"
     ELIF _NARG > 2
@@ -321,7 +306,7 @@ COPY_FROM_CURR: MACRO
 ENDM
 
 ;;; Copies data from ROMX, after first changing the current ROM bank.
-COPY_FROM_ROMX: MACRO
+MACRO COPY_FROM_ROMX
     IF _NARG < 2
     FAIL "Too few arguments to COPY_FROM_ROMX macro"
     ELIF _NARG > 2
@@ -338,7 +323,7 @@ ENDM
 ;;;
 ;;; Examples:
 ;;;     COPY_FROM_ROM0 Data_Foo_start, Data_Foo_end  ; must be in bank zero
-COPY_FROM_ROM0: MACRO
+MACRO COPY_FROM_ROM0
     IF _NARG < 2
     FAIL "Too few arguments to COPY_FROM_ROM0 macro"
     ELIF _NARG > 2
@@ -351,7 +336,7 @@ ENDM
 
 ;;; Copies data from the same ROM bank as the calling function (without
 ;;; changing the current ROM bank).
-COPY_FROM_SAME: MACRO
+MACRO COPY_FROM_SAME
     IF _NARG < 2
     FAIL "Too few arguments to COPY_FROM_SAME macro"
     ELIF _NARG > 2
@@ -364,7 +349,7 @@ ENDM
 
 ;;;=========================================================================;;;
 
-PLAY_SFX1: MACRO
+MACRO PLAY_SFX1
     IF _NARG < 1
     FAIL "Too few arguments to PLAY_SFX1 macro"
     ELIF _NARG > 1
@@ -376,7 +361,7 @@ PLAY_SFX1: MACRO
     call Func_PlaySfx1
 ENDM
 
-PLAY_SFX4: MACRO
+MACRO PLAY_SFX4
     IF _NARG < 1
     FAIL "Too few arguments to PLAY_SFX4 macro"
     ELIF _NARG > 1
@@ -388,7 +373,7 @@ PLAY_SFX4: MACRO
     call Func_PlaySfx4
 ENDM
 
-PLAY_SONG: MACRO
+MACRO PLAY_SONG
     IF _NARG < 1
     FAIL "Too few arguments to PLAY_SONG macro"
     ELIF _NARG > 1

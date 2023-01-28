@@ -37,7 +37,7 @@ POBJ_INVIS EQU 5
 ;;;
 ;;; Example:
 ;;;     PATH_PSFX PSFX_JUMP  ; Plays the "jump" sound effect.
-PATH_PSFX: MACRO
+MACRO PATH_PSFX
     STATIC_ASSERT _NARG == 1
     DB %11100000 | (\1)
 ENDM
@@ -46,7 +46,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     PATH_SETJ 2  ; Sets the current jump height to 2.
-PATH_SETJ: MACRO
+MACRO PATH_SETJ
     STATIC_ASSERT _NARG == 1
     DB %11000000 | (\1)
 ENDM
@@ -55,7 +55,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     PATH_POBJ POBJ_EAST | POBJF_UNDER  ; Makes avatar face east, under BG.
-PATH_POBJ: MACRO
+MACRO PATH_POBJ
     STATIC_ASSERT _NARG == 1
     DB %10000000 | (\1)
 ENDM
@@ -64,7 +64,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     PATH_STEP 2, -1  ; Walks at speed x=2 y=-1 for one frame.
-PATH_STEP: MACRO
+MACRO PATH_STEP
     STATIC_ASSERT _NARG == 2
     STATIC_ASSERT -3 <= (\1) && (\1) <= 3
     STATIC_ASSERT -3 <= (\2) && (\2) <= 3
@@ -75,7 +75,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     PATH_REPT 2  ; Repeats previous speed for 2 more frames.
-PATH_REPT: MACRO
+MACRO PATH_REPT
     STATIC_ASSERT _NARG == 1
     ASSERT (\1) > 0
     ASSERT (\1) < 64
@@ -86,7 +86,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     PATH_WALK 2, -1, 8  ; Walks at speed x=2 y=-1 for eight frames.
-PATH_WALK: MACRO
+MACRO PATH_WALK
     STATIC_ASSERT _NARG == 3
     STATIC_ASSERT (\3) >= 1
     STATIC_ASSERT (\3) <= 64
@@ -101,7 +101,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     PATH_JUMP -1, 1  ; Jumps with ground speed x=-1 y=1.
-PATH_JUMP: MACRO
+MACRO PATH_JUMP
     STATIC_ASSERT _NARG == 2
     IF (\1) >= 0
 GND_X0 = ((0 + (\1)) / 3)
@@ -183,7 +183,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     PATH_HALT
-PATH_HALT: MACRO
+MACRO PATH_HALT
     STATIC_ASSERT _NARG == 0
     DB 0
 ENDM

@@ -17,7 +17,7 @@
 ;;; with Big2Small.  If not, see <http://www.gnu.org/licenses/>.            ;;;
 ;;;=========================================================================;;;
 
-D_ENV: MACRO
+MACRO D_ENV
     IF (\2) < 0
     DB ((\1) << 4) | ((\2) & $7)
     ELSE
@@ -25,7 +25,7 @@ D_ENV: MACRO
     ENDC
 ENDM
 
-D_TONE: MACRO
+MACRO D_TONE
     IF "\1" == "C"
 BASE_FREQ = 16.35160
     ELIF "\1" == "C#" || "\1" == "Db"

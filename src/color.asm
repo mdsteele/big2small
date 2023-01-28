@@ -25,7 +25,7 @@ INCLUDE "src/puzzle.inc"
 
 ;;;=========================================================================;;;
 
-D_COLOR: MACRO
+MACRO D_COLOR
     IF _NARG < 3
     FAIL "Too few arguments to D_COLOR macro"
     ELIF _NARG > 3

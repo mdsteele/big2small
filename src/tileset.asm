@@ -23,7 +23,7 @@ INCLUDE "src/vram.inc"
 
 ;;;=========================================================================;;;
 
-SKIP_TO_TILE: MACRO
+MACRO SKIP_TO_TILE
     STATIC_ASSERT _NARG == 1
     ld hl, Vram_SharedTiles + ((\1) - $80) * sizeof_TILE
 ENDM

@@ -301,7 +301,7 @@ Func_GetSaveSummaryPtr_hl::
 
 ;;;=========================================================================;;;
 
-UPDATE_AREA: MACRO
+MACRO UPDATE_AREA
     STATIC_ASSERT _NARG == 2
     ld c, (\2)
     ld a, $ff

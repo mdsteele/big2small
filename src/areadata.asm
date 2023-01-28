@@ -32,7 +32,7 @@ INCLUDE "src/tileset.inc"
 ;;;
 ;;; Example:
 ;;;     D_BPTR DataX_Foo
-D_BPTR: MACRO
+MACRO D_BPTR
     STATIC_ASSERT _NARG == 1
     DB BANK(\1), LOW(\1), HIGH(\1)
 ENDM
@@ -43,7 +43,7 @@ ENDM
 ;;;
 ;;; Example:
 ;;;     D_TITLE 16, "Foo Bar"
-D_TITLE: MACRO
+MACRO D_TITLE
     ASSERT _NARG == 2
     ASSERT STRLEN(\2) <= (\1)
     DS ((\1) - STRLEN(\2)) / 2, " "
@@ -77,7 +77,7 @@ UW3 EQU (TRAIL_WEST  | 3 | TRAILF_UNDER)
 ;;;
 ;;; Example:
 ;;;     D_TRAIL TS1, TS1, TS1, TE1, TE2, TE1
-D_TRAIL: MACRO
+MACRO D_TRAIL
 _TRAIL_LENGTH = _NARG
     ASSERT _TRAIL_LENGTH >= 1 && _TRAIL_LENGTH <= MAX_TRAIL_LENGTH
     REPT _TRAIL_LENGTH - 1

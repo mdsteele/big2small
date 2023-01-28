@@ -37,7 +37,7 @@ SHORE_START    EQU $b0
 TELEPORT_START EQU $94
 TREE_START     EQU $a0
 
-D_TERR: MACRO
+MACRO D_TERR
     STATIC_ASSERT _NARG == 6
 ANI = ANIMATED_TILEID - (\6)
 EMP = $00 - (\6)
@@ -45,7 +45,7 @@ EMP = $00 - (\6)
     DB (\2) + (\6), (\3) + (\6), (\4) + (\6), (\5) + (\6)
 ENDM
 
-D_PAL: MACRO
+MACRO D_PAL
     STATIC_ASSERT _NARG >= 2 && _NARG <= 3
     ASSERT @ - DataX_TerrainPaletteTable == 2 * (\1)
     IF _NARG < 3

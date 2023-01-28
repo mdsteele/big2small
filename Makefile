@@ -52,7 +52,7 @@ run: $(ROMFILE)
 
 .PHONY: test
 test:
-	python tests/all.py
+	python3 tests/all.py
 
 .PHONY: clean
 clean:
@@ -104,7 +104,7 @@ $(ROMFILE): $(OBJFILES)
 define compile-asm
 	@echo "Compiling $<"
 	@mkdir -p $(@D)
-	@rgbasm -Wall -Werror -o $@ $<
+	@rgbasm -Wall -Werror --nop-after-halt -o $@ $<
 endef
 
 $(OBJDIR)/mapdata.o: $(SRCDIR)/mapdata.asm $(INCFILES) $(MAPFILES)
